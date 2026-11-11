@@ -380,7 +380,6 @@ body.touring .startbar{display:none}
           <div class="qsres" id="qsRes" hidden></div>
         </div>
         <button class="tbtn gold" data-act="newPerson" id="btnNew">+ איש קשר חדש</button>
-        <button class="tbtn" data-act="tourOpen" id="btnHelp"><span class="pl"></span>הדרכה</button>
       </div>
     </div>
     <nav class="tabs" id="tabs" aria-label="תפריט ראשי"></nav>
@@ -402,23 +401,6 @@ body.touring .startbar{display:none}
 <aside class="drawer" id="drawer" aria-label="כרטיס אדם" aria-hidden="true"></aside>
 <div class="modal" id="modal"><div class="mbox" id="mbox" role="dialog" aria-modal="true"></div></div>
 <div class="toast" id="toast" role="status"></div>
-
-<div class="pick" id="pick"><div class="pickbox" id="pickbox" role="dialog" aria-modal="true"></div></div>
-<div class="tcatch" id="tcatch"></div>
-<div class="tveil" id="tveil"></div>
-<div class="spot" id="spot"></div>
-<div class="tbub" id="tbub" role="dialog" aria-live="polite">
-  <div class="step" id="tStep"></div>
-  <h3 id="tTitle"></h3>
-  <p id="tText"></p>
-  <span class="bar"><i id="tBar"></i></span>
-  <div class="rw">
-    <button class="tb main" id="tNext">הבא</button>
-    <button class="tb" id="tPrev">הקודם</button>
-    <span class="sp"></span>
-    <button class="tb ghost" id="tEnd">סיום ההדרכה</button>
-  </div>
-</div>
 
 <script type="text/plain" id="mapsrc"><!DOCTYPE html>
 <html lang="he" dir="rtl">
@@ -5020,9 +5002,7 @@ const ACT = {
   evDelete: async () => { const ev = S.events.find(e => e.id === E.sel); if (!ev || !(await ask('מחיקת אירוע', 'למחוק את „' + esc(ev.name) + '”? האנשים שנרשמו יישארו במאגר.', 'מחיקה', true))) return; S.events = S.events.filter(e => e !== ev); E.sel = S.events[0] ? S.events[0].id : ''; await saveKV('events'); renderTabs(); RENDER.events({}); },
   /* חיפוש מהיר */
   qsOpen: el => { $('#qsRes').hidden = true; $('#qs').value = ''; openCard(el.dataset.v); },
-  qsAll: () => { const q = $('#qs').value.trim(); $('#qsRes').hidden = true; $('#qs').value = ''; go('search', { filter: { q } }); },
-  /* הדרכה */
-  tourOpen: () => tourPick()
+  qsAll: () => { const q = $('#qs').value.trim(); $('#qsRes').hidden = true; $('#qs').value = ''; go('search', { filter: { q } }); }
 };
 
 /* ---------------------------------------------------- האזנה כללית */
@@ -5086,112 +5066,7 @@ document.addEventListener('keydown', e => {
 });
 setInterval(() => { if (S.view === 'sms' && $('#smsJobs')) renderSmsJobs(); }, 60000);
 
-/* ========================================================== הדרכה */
-const firstUid = () => { const p = S.people.find(x => x.dyn && Object.keys(x.dyn).length >= 2 && x._site) || S.people[0]; return p ? p.uid : null; };
-const STEPS = [
-  { ch: 'home', view: 'home', sel: '#tabs', t: 'התפריט', x: 'כל חלקי המערכת נמצאים בשורה אחת. לוחצים על לשונית — ועוברים למסך.' },
-  { ch: 'home', view: 'home', sel: '#homeKpis', t: 'תמונת מצב', x: 'כמה אנשים יש במאגר וכמה מהם תומכים או מתלבטים. לחיצה על מספר פותחת את הרשימה.' },
-  { ch: 'home', view: 'home', sel: '#homeCities', t: 'לפי עיר', x: 'הפס הכהה — תומכים, הבהיר — מתלבטים. לחיצה על עיר פותחת את האנשים בה.' },
-  { ch: 'home', view: 'home', sel: '#qsWrap', t: 'חיפוש מהיר מכל מקום', x: 'מקלידים שם, ת.ז או טלפון ומגיעים ישר לכרטיס של האדם — בלי לעבור לחיפוש המתקדם.' },
-  { ch: 'home', view: 'home', pre: () => { const u = firstUid(); if (u) openCard(u, 'det'); }, sel: '#drawer', t: 'כרטיס אדם', x: 'לחיצה על שם של אדם פותחת את הכרטיס שלו: כל הפרטים, הטלפונים, הקלפי והמוקד שבו הוא מצביע. משנים שדה ולוחצים „שמירה” — והשינוי נכנס למאגר.', wait: 300 },
-  { ch: 'home', sel: '#drawer .stbtns', t: 'סטטוס תמיכה בלחיצה', x: 'אחרי שיחה מסמנים כאן תומך, מתלבט או לא תומך. כל שינוי נרשם בהיסטוריה של האדם עם התאריך.' },
-  { ch: 'home', sel: '#drawer .dtabs', t: 'עוד בכרטיס', x: 'פרטים דינמיים שהוספתם בעצמכם, שיוך למאגרים ותגיות, והיסטוריה מלאה של כל מה שקרה עם האדם — עדכון מאקסל, סמס, הרשמה לאירוע.', post: () => closeCard(true) },
-  { ch: 'search', view: 'search', pre: () => closeCard(true), sel: '#srchPanel', t: 'חיפוש מתקדם', x: 'שם, עיר, סטטוס וקלפי — ובלחיצה על „עוד סינונים”: שפה, גיל, איש קשר אחראי, מאגר, תגית וכל פרט דינמי.' },
-  { ch: 'search', view: 'search', sel: '#srchKalpi', t: 'סינון לפי קלפי', x: 'כותבים מספר קלפי אחד או כמה, ואם צריך בוחרים גם עיר — ומקבלים רק את מי שמצביע בהן.' },
-  { ch: 'search', view: 'search', sel: '#srchActions', t: 'מה עושים עם התוצאות', x: 'מסמנים אנשים ושולחים להם סמס, מייצאים לאקסל, משנים סטטוס או תגית לכולם בבת אחת, או שומרים את החיפוש כקבוצה קבועה שמתעדכנת לבד.' },
-  { ch: 'map', view: 'map', sel: '#mapFrame', t: 'מפת הקלפיות', x: 'זו מפת מוקדי ההצבעה של המטה — אותה מפה, בתוך המערכת. מכרטיס של אדם, לחיצה על „הצגה במפה” מקרבת ישר למוקד שלו.', wait: 300 },
-  { ch: 'upload', view: 'upload', sel: '#upDbs', t: '1. איזה מאגר מעדכנים', x: 'בוחרים לאיזה מאגר הקובץ נכנס — ראשי, מתנדבים, נרשמים לאירועים או מאגר חדש. אדם יכול להיות בכמה מאגרים.' },
-  { ch: 'upload', view: 'upload', sel: '#upDrop', t: '2. גוררים את הקובץ', x: 'אקסל או CSV, בכל סדר עמודות. הקובץ נקרא כאן בדפדפן ולא עולה לשום מקום.' },
-  { ch: 'upload', view: 'upload', sel: '#upHow', t: '3. המערכת מסדרת לבד', x: 'כל עמודה מזוהה לפי הכותרת וגם לפי התוכן. לפני שמעדכנים רואים סיכום: כמה חדשים, כמה יעודכנו וכמה שגיאות — ואפשר לשנות כל עמודה.' },
-  { ch: 'fields', view: 'fields', sel: '#fldList', t: 'פרטים דינמיים', x: 'פרטים שאתם מוסיפים לכרטיס — „מתנדב ביום הבחירות”, „זקוק להסעה” וכל מה שצריך. אפשר לבחור אם יופיעו בכרטיס ובחיפוש.' },
-  { ch: 'fields', view: 'fields', sel: '#fldAdd', t: 'הוספת פרט', x: 'שם, סוג (כן/לא, רשימה, תאריך, מספר…) ואם צריך — אפשרויות. הפרט מופיע מיד בכל הכרטיסים, בחיפוש ובהעלאת אקסל.' },
-  { ch: 'sms', view: 'sms', sel: '#smsRcp', t: 'למי שולחים', x: 'קבוצה ששמרתם, מאגר שלם, תוצאות החיפוש האחרון, נרשמים לאירוע, אדם אחד או רשימת מספרים. כפילויות ומספרים בלי נייד מוסרים לבד.' },
-  { ch: 'sms', view: 'sms', sel: '#smsMsg', t: 'הודעה אישית לכל אחד', x: 'לחיצה על שדה מוסיפה אותו להודעה, וכל נמען מקבל את שלו — כולל המוקד והכתובת שבהם הוא מצביע. המונה מראה כמה הודעות זה יעלה.' },
-  { ch: 'sms', view: 'sms', sel: '#smsTpl', t: 'תבניות', x: 'הודעות שחוזרות על עצמן נשמרות כתבנית ונטענות בלחיצה. מתחת לזה: תזמון, והורדת קובץ מוכן לשליחה ב-b-elect.' },
-  { ch: 'events', view: 'events', sel: '#evList', t: 'אירועים', x: 'כל אירוע עם מספר הנרשמים והמשתתפים. מכאן גם שולחים סמס לכל הנרשמים.' },
-  { ch: 'events', view: 'events', sel: '#evPrev', t: 'דף הנחיתה', x: 'כך ייראה דף ההזמנה. מי שממלא את הטופס נכנס למאגר לבד, מקבל את התגית של האירוע ומופיע ברשימת הנרשמים. אפשר לנסות כאן — זה עובד.' },
-  { ch: 'end', sel: '#btnHelp', t: 'זהו, אפשר להתחיל', x: 'ההדרכה זמינה תמיד בכפתור הזה, בראש הדף.' }
-];
-const CHAPTERS = [['home', 'דף ראשי וכרטיס אדם', 'תמונת המצב, חיפוש מהיר ועדכון פרטים'], ['search', 'חיפוש מתקדם', 'סינון לפי כל פרמטר וגם לפי קלפיות'], ['map', 'מפת הקלפיות', 'איפה האנשים מצביעים'],
-  ['upload', 'העלאת אקסלים', 'מעדכנים את המאגר מקובץ'], ['fields', 'פרטים דינמיים', 'מוסיפים פרטים לכרטיס'], ['sms', 'שליחת סמסים', 'נמענים, הודעה אישית ותזמון'], ['events', 'אירועים ודפי נחיתה', 'הרשמה שנכנסת למאגר לבד']];
-const T = { on: false, i: 0, steps: [] };
-function tourPick() {
-  const box = $('#pickbox');
-  box.innerHTML = '<div class="eyebrow">ברוכים הבאים</div><h3>זה מאגר התומכים של המטה. רוצים סיור קצר?</h3>' +
-    '<p>בכמה דקות עוברים על כל מה שיש כאן — מהכרטיס של אדם ועד שליחת סמס ובניית דף הרשמה. אפשר גם לבחור רק נושא אחד.</p>' +
-    '<button class="chap big" data-tour="all"><span><b>סיור מלא במערכת</b><span>כל המסכים, אחד אחרי השני</span></span><span class="n">' + STEPS.length + ' שלבים</span></button>' +
-    CHAPTERS.map(([k, t, s]) => '<button class="chap" data-tour="' + k + '"><span><b>' + t + '</b><span>' + s + '</span></span><span class="n">' + STEPS.filter(x => x.ch === k).length + ' שלבים</span></button>').join('') +
-    '<button class="skipt" data-tour="skip">אני מכיר/ה את המערכת — אפשר לדלג</button>';
-  $('#pick').classList.add('on');
-  setTimeout(() => { const b = $('.chap.big', box); if (b) b.focus(); }, 50);
-}
-$('#pickbox').addEventListener('click', e => {
-  const b = e.target.closest('[data-tour]'); if (!b) return;
-  $('#pick').classList.remove('on');
-  S.settings.tourSeen = true; saveKV('settings');
-  if (b.dataset.tour === 'skip') return;
-  tourStart(b.dataset.tour === 'all' ? null : b.dataset.tour);
-});
-$('#pick').addEventListener('click', e => { if (e.target.id === 'pick') { $('#pick').classList.remove('on'); S.settings.tourSeen = true; saveKV('settings'); } });
-function tourStart(ch) {
-  T.steps = ch ? STEPS.filter(s => s.ch === ch) : STEPS.slice();
-  T.i = 0; T.on = true;
-  document.body.classList.add('touring');
-  $('#tcatch').classList.add('on');
-  tShow();
-}
-async function tShow() {
-  const st = T.steps[T.i]; if (!st) return tourEnd();
-  if (st.view && S.view !== st.view) go(st.view);
-  if (st.pre) st.pre();
-  await wait(st.wait || 80);
-  const el = st.sel ? $(st.sel) : null;
-  const spot = $('#spot'), veil = $('#tveil'), bub = $('#tbub');
-  $('#tStep').textContent = 'שלב ' + (T.i + 1) + ' מתוך ' + T.steps.length;
-  $('#tTitle').textContent = st.t; $('#tText').textContent = st.x;
-  $('#tBar').style.width = Math.round((T.i + 1) / T.steps.length * 100) + '%';
-  $('#tPrev').disabled = T.i === 0;
-  $('#tNext').textContent = T.i === T.steps.length - 1 ? 'סיום' : 'הבא';
-  bub.classList.add('on');
-  if (el && el.getBoundingClientRect().width) {
-    const r0 = el.getBoundingClientRect();
-    if (r0.top < 60 || r0.bottom > innerHeight - 40) { el.scrollIntoView({ block: r0.height > innerHeight * .6 ? 'start' : 'center' }); await wait(60); }
-    tPlace(el);
-  } else { spot.classList.remove('on'); veil.classList.add('on'); bub.style.top = '50%'; bub.style.left = '50%'; bub.style.transform = 'translate(-50%,-50%)'; }
-  $('#tNext').focus();
-}
-function tPlace(el) {
-  const spot = $('#spot'), veil = $('#tveil'), bub = $('#tbub');
-  const r = el.getBoundingClientRect(), pad = 6;
-  const top = Math.max(4, r.top - pad), left = Math.max(4, r.left - pad);
-  const w = Math.min(innerWidth - 8, r.width + pad * 2), h = Math.min(innerHeight - top - 4, r.height + pad * 2);
-  Object.assign(spot.style, { top: top + 'px', left: left + 'px', width: w + 'px', height: h + 'px' });
-  spot.classList.add('on'); veil.classList.remove('on');
-  bub.style.transform = '';
-  const bw = bub.offsetWidth, bh = bub.offsetHeight, m = 14;
-  let bt, bl;
-  if (top + h + m + bh < innerHeight) { bt = top + h + m; bl = left + w / 2 - bw / 2; }
-  else if (top - m - bh > 0) { bt = top - m - bh; bl = left + w / 2 - bw / 2; }
-  else if (left - m - bw > 0) { bl = left - m - bw; bt = top + 20; }
-  else if (left + w + m + bw < innerWidth) { bl = left + w + m; bt = top + 20; }
-  else { bt = innerHeight - bh - 16; bl = innerWidth / 2 - bw / 2; }
-  bub.style.top = Math.max(10, Math.min(innerHeight - bh - 10, bt)) + 'px';
-  bub.style.left = Math.max(10, Math.min(innerWidth - bw - 10, bl)) + 'px';
-}
-function tGo(d) { const st = T.steps[T.i]; if (st && st.post && d > 0) st.post(); T.i += d; if (T.i >= T.steps.length) return tourEnd(); if (T.i < 0) T.i = 0; tShow(); }
-function tourEnd() {
-  T.on = false;
-  ['#spot', '#tveil', '#tbub', '#tcatch'].forEach(s => $(s).classList.remove('on'));
-  document.body.classList.remove('touring');
-  if (C) closeCard(true);
-  S.settings.tourSeen = true; saveKV('settings');
-}
-$('#tNext').onclick = () => tGo(1);
-$('#tPrev').onclick = () => tGo(-1);
-$('#tEnd').onclick = () => tourEnd();
-document.addEventListener('keydown', e => { if (!T.on) return; if (e.key === 'Escape') tourEnd(); if (e.key === 'ArrowLeft') tGo(1); if (e.key === 'ArrowRight') tGo(-1); });
-window.addEventListener('resize', () => { if (T.on) { const st = T.steps[T.i]; const el = st && st.sel ? $(st.sel) : null; if (el) tPlace(el); } });
-window.addEventListener('scroll', () => { if (T.on) { const st = T.steps[T.i]; const el = st && st.sel ? $(st.sel) : null; if (el) tPlace(el); } }, { passive: true });
+const T = { on: false };
 
 /* ========================================================== הפעלה */
 (async function init() {
@@ -5214,7 +5089,6 @@ window.addEventListener('scroll', () => { if (T.on) { const st = T.steps[T.i]; c
   if (!idb) toast('שימו לב: הדפדפן לא מאפשר שמירה — שינויים יימחקו ברענון');
   const h = (location.hash || '').replace('#', '');
   go(VIEWS.some(v => v[0] === h) ? h : 'home');
-  if (!S.settings.tourSeen) setTimeout(tourPick, 500);
 })();
 window.addEventListener('hashchange', () => { const h = location.hash.replace('#', ''); if (VIEWS.some(v => v[0] === h) && h !== S.view) go(h); });
 
