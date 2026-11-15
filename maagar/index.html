@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
-<meta name="build" content="20261115-203948">
+<meta name="build" content="20261115-210348">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>דאטה ביתנו — מאגר התומכים</title>
 <style>
@@ -151,24 +151,25 @@ button.kpi{font:inherit;color:inherit;cursor:pointer}
 /* ============ דאטה ביתנו — מבנה: header, תפריט צד, מראה כללי של המסכים ============ */
 /* ---------- ראש הדף ---------- */
 body{padding-inline-start:68px}
-.top{position:relative;z-index:6;color:#fff;padding:16px 0 18px;overflow:visible;
-  background:radial-gradient(700px 260px at 92% -80%,#1C4F92 0%,rgba(28,79,146,0) 70%),radial-gradient(560px 260px at 6% 170%,#13427F 0%,rgba(19,66,127,0) 65%),#061A35}
+.top{position:relative;z-index:6;color:#fff;height:132px;padding:16px 0 44px;overflow:visible;
+  background:radial-gradient(640px 230px at 48% -70%,#1C4F92 0%,rgba(28,79,146,0) 70%),radial-gradient(560px 260px at 4% 150%,#13427F 0%,rgba(19,66,127,0) 65%),var(--dark)}
+/* המעבר לגוף הדף: הדף הבהיר "עולה" לתוך ה-header עם פינות עגולות — ויוצר מסגרת אחת עם תפריט הצד */
+.top::after{content:"";position:absolute;inset-inline:0;bottom:-1px;height:28px;background:var(--bg);border-radius:28px 28px 0 0;pointer-events:none}
 .top::before{content:"";position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(rgba(255,255,255,.09) 1px,transparent 1.2px);background-size:24px 24px;
   -webkit-mask-image:linear-gradient(90deg,transparent,#000 30%,#000 70%,transparent);mask-image:linear-gradient(90deg,transparent,#000 30%,#000 70%,transparent)}
-.topin{position:relative;display:grid;grid-template-columns:minmax(220px,1fr) minmax(260px,600px) minmax(160px,1fr);align-items:center;gap:22px}
+.topin{position:relative;height:72px;display:grid;grid-template-columns:minmax(220px,1fr) minmax(260px,600px) minmax(160px,1fr);align-items:center;gap:22px}
 .tbrand{min-width:0}
 .top h1{margin:0;font-size:25px;line-height:1.15;font-weight:900;letter-spacing:-.02em}
 .hello{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;margin-top:4px;font-size:13px;color:#A9C4E0;animation:aUp .6s .15s both}
 .hello b{color:#F3D58B;font-weight:700;font-size:13.5px}
 .qs{position:relative;width:100%}
-.qs .qsi{position:absolute;inset-inline-start:15px;top:50%;transform:translateY(-50%);width:20px;height:20px;pointer-events:none;color:#8FAFD4;transition:color .2s}
+.qs .qsi{position:absolute;inset-inline-start:15px;top:50%;transform:translateY(-50%);width:20px;height:20px;pointer-events:none;color:var(--navy-l);transition:color .2s}
 .qs .qsi svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
-.qs input{width:100%;height:48px;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.16);color:#fff;border-radius:16px;padding:0 48px 0 16px;font-size:15px;
-  transition:background .2s,border-color .2s,box-shadow .2s}
-.qs input:hover{background:rgba(255,255,255,.11)}
-.qs input:focus{outline:none;background:rgba(255,255,255,.14);border-color:#8FAFD4;box-shadow:0 0 0 4px rgba(143,175,212,.16)}
-.qs input:focus+.qsi,.qs:focus-within .qsi{color:#fff}
-.qs input::-webkit-search-cancel-button{filter:invert(1);opacity:.6}
+.qs input{width:100%;height:48px;background:#fff;border:1.5px solid transparent;color:var(--ink);border-radius:16px;padding:0 48px 0 16px;font-size:15px;
+  box-shadow:0 12px 28px -16px rgba(0,0,0,.6);transition:border-color .2s,box-shadow .2s}
+.qs input:hover{border-color:#C9D7E8}
+.qs input:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 4px rgba(232,184,75,.25),0 12px 28px -16px rgba(0,0,0,.6)}
+.qs input:focus+.qsi,.qs:focus-within .qsi{color:var(--navy)}
 .qsres{position:absolute;inset-inline-start:0;top:calc(100% + 8px);width:100%;min-width:300px;background:#fff;color:var(--ink);
   border-radius:16px;box-shadow:0 22px 50px -14px rgba(7,31,62,.6);overflow:hidden;z-index:30;animation:aUp .22s ease both}
 .qsres button{display:flex;justify-content:space-between;gap:10px;width:100%;border:0;background:#fff;padding:11px 16px;text-align:start;font-size:14px;border-bottom:1px solid var(--line3)}
@@ -191,10 +192,10 @@ body{padding-inline-start:68px}
 
 /* ---------- תפריט צד ---------- */
 .rail{position:fixed;inset-block:0;inset-inline-start:0;z-index:35;width:68px;display:flex;flex-direction:column;align-items:stretch;
-  background:linear-gradient(180deg,#071B37 0%,#0B2E5B 100%);box-shadow:-1px 0 0 rgba(255,255,255,.04) inset;
+  background:linear-gradient(180deg,var(--dark) 0,var(--dark) 104px,#0B2E5B 100%);
   transition:width .32s cubic-bezier(.2,.8,.2,1),box-shadow .32s;overflow:hidden}
 .rail:hover,.rail:focus-within{width:236px;box-shadow:0 0 0 1px rgba(255,255,255,.04),-24px 0 60px -10px rgba(4,16,34,.55)}
-.rlogo{flex:none;display:flex;align-items:center;gap:12px;height:82px;padding:0 12px;border-bottom:1px solid rgba(255,255,255,.07)}
+.rlogo{flex:none;display:flex;align-items:center;gap:12px;height:104px;padding:0 12px;border-bottom:1px solid rgba(255,255,255,.06)}
 .rlogo .alogo{width:44px;height:44px;border-radius:14px}
 .rlogo .alogo svg{width:27px;height:27px}
 .rlogo b{white-space:nowrap;font-size:16px;font-weight:900;color:#fff;opacity:0;transform:translateX(8px);transition:opacity .2s,transform .3s}
@@ -216,7 +217,7 @@ body{padding-inline-start:68px}
 .ri:focus-visible{outline:2px solid #8FAFD4;outline-offset:-2px}
 
 /* ---------- עיצוב כללי (סגנון מסך הכניסה) ---------- */
-main{padding:26px 0 70px}
+main{padding:4px 0 70px}
 .screen{display:none}
 .screen.on{display:block;animation:scrIn .42s cubic-bezier(.2,.8,.2,1)}
 @keyframes scrIn{from{opacity:0;transform:translateY(10px)}}
@@ -305,6 +306,115 @@ button.kpi:hover{transform:translateY(-3px);border-color:#C9D7E8;box-shadow:0 2p
 .qk.gold .qki{background:var(--gold)}
 .qk.gold .qki svg{stroke:#12233d}
 .qk.gold:hover{border-color:var(--gold)}
+
+/* ---------- סרגל: תקופה, השוואה, סינון, ייצוא ---------- */
+.htb{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:18px;position:relative;z-index:12}
+.htb .sp{flex:1}
+.hpw{position:relative}
+.hsel{display:flex;align-items:center;gap:10px;min-height:50px;padding:6px 10px 6px 12px;border-radius:15px;border:1.5px solid var(--line2);background:#fff;font:inherit;text-align:start;cursor:pointer;
+  box-shadow:var(--sh-card);transition:border-color .2s,box-shadow .2s,transform .2s}
+.hsel:hover{border-color:#C9D7E8;transform:translateY(-1px)}
+.hpw.on .hsel{border-color:var(--navy-l);box-shadow:0 0 0 3px rgba(27,75,138,.12)}
+.hsi{flex:none;width:34px;height:34px;border-radius:11px;display:grid;place-items:center;background:var(--bbg)}
+.hsi svg,.hcv svg,.hclr svg,.hchip svg,.hopt svg{fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.hsi svg{width:18px;height:18px;stroke:var(--navy)}
+.hst{display:flex;flex-direction:column;line-height:1.25}
+.hsl{font-size:11.5px;font-weight:700;color:var(--ink3);white-space:nowrap}
+.hsl .num{direction:ltr;unicode-bidi:isolate}
+.hst b{font-size:14.5px;color:var(--navy);white-space:nowrap}
+.hexp{display:inline-flex;align-items:center;gap:8px;height:44px;padding:0 16px;border-radius:14px;border:0;background:var(--navy);color:#fff;font:inherit;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 12px 24px -14px rgba(11,46,91,.9);transition:background .2s,transform .2s}
+.hexp:hover{background:var(--navy-d);transform:translateY(-1px)}
+.hexp svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.hsd{font-size:12px;color:var(--ink2);padding-inline-start:10px;border-inline-start:1px solid var(--line2);direction:ltr}
+.hcv{width:16px;height:16px;color:var(--ink3);transition:transform .25s}
+.hcv svg{width:16px;height:16px}
+.hpw.on .hcv{transform:rotate(180deg)}
+.hclr{width:36px;height:36px;border-radius:50%;border:0;background:#fff;color:var(--ink2);display:grid;place-items:center;box-shadow:var(--sh-card);cursor:pointer}
+.hclr svg{width:16px;height:16px}
+.hclr:hover{color:var(--rtx)}
+.hpop{position:absolute;top:calc(100% + 8px);inset-inline-start:0;min-width:280px;max-width:440px;background:#fff;border-radius:18px;border:1px solid var(--line2);
+  box-shadow:0 26px 60px -20px rgba(7,31,62,.45);padding:10px;z-index:40;animation:aUp .22s var(--ease) both}
+.htb .hpw:last-child .hpop{inset-inline-start:auto;inset-inline-end:0}
+.hpl{display:flex;flex-direction:column;gap:2px}
+.hopt{display:flex;align-items:center;gap:12px;width:100%;padding:10px 12px;border:0;border-radius:11px;background:transparent;font:inherit;font-size:14px;color:var(--ink);text-align:start;cursor:pointer}
+.hopt:hover{background:#F3F6FA}
+.hopt.on{background:var(--bbg);color:var(--navy);font-weight:800}
+.hopt.big svg{width:22px;height:22px;stroke:var(--navy);flex:none}
+.hopt.big b{display:block;font-size:14.5px;color:var(--navy)}
+.hopt.big small{display:block;font-size:12px;color:var(--ink3)}
+.hdr{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:10px 6px 4px;border-top:1px solid var(--line3);margin-top:6px}
+.hfs{padding:8px 6px}
+.hfs+.hfs{border-top:1px solid var(--line3)}
+.hchips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.hchip{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;border:1.5px solid var(--line2);background:#fff;font:inherit;font-size:13px;font-weight:600;color:var(--ink2);cursor:pointer}
+.hchip:hover{border-color:var(--navy-l);color:var(--navy)}
+.hchip.on{background:var(--navy);border-color:var(--navy);color:#fff}
+.hchip svg{width:12px;height:12px}
+.hfoot{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 6px 4px;border-top:1px solid var(--line3)}
+.pop-w{min-width:380px}
+.hpw:has(.hfs) .hpop{width:420px}
+
+/* ---------- שינוי מול תקופת ההשוואה ---------- */
+.dl{display:inline-flex;align-items:center;gap:2px;font-size:12px;font-weight:800;border-radius:999px;padding:1px 8px;white-space:nowrap}
+.dl.up{background:var(--gbg);color:var(--gtx)}
+.dl.dn{background:var(--rbg);color:var(--rtx)}
+.dl.z{background:#F1F3F6;color:var(--ink3)}
+.kpi .ft{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.kpi .ft span:not(.dl){color:var(--ink3)}
+.kpi.hero .dl.up{background:rgba(120,230,170,.18);color:#B8F2D2}
+.kpi.hero .dl.dn{background:rgba(255,150,140,.18);color:#FFC9C2}
+.kpi.hero .dl.z{background:rgba(255,255,255,.12);color:#C9DCF3}
+
+/* ---------- מדדים נוספים ---------- */
+.hminis{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:18px}
+.hm1{position:relative;display:flex;align-items:center;gap:11px;padding:12px 14px;border-radius:16px;border:1px solid var(--line2);background:#fff;box-shadow:var(--sh-card);font:inherit;text-align:start;color:inherit;
+  animation:aUp .5s var(--ease) both;animation-delay:.22s}
+button.hm1{cursor:pointer;transition:transform .2s,box-shadow .25s,border-color .2s}
+button.hm1:hover{transform:translateY(-2px);border-color:#C9D7E8;box-shadow:var(--sh-hover)}
+.hmi{flex:none;width:34px;height:34px;border-radius:11px;display:grid;place-items:center;background:var(--bbg)}
+.hmi svg{width:18px;height:18px;fill:none;stroke:var(--navy);stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.hmt{display:flex;flex-direction:column;min-width:0;line-height:1.25}
+.hml{font-size:11.5px;font-weight:700;color:var(--ink2);white-space:nowrap}
+.hmt b{font-size:19px;font-weight:900;color:var(--navy)}
+.hms{font-size:11.5px;color:var(--ink3);white-space:nowrap}
+.hmv{display:flex;align-items:center;gap:6px}
+.hmv .dl{font-size:10.5px;padding:0 6px}
+
+/* ---------- תומכים לפי עיר ---------- */
+#homeCities .ch{gap:10px;justify-content:flex-start}
+#homeCities .legend{margin-inline-start:auto}
+.chbtn{border:0;background:none;padding:0;font:inherit;font-size:14px;font-weight:800;color:var(--navy);cursor:pointer;text-decoration:underline;text-decoration-color:transparent;text-underline-offset:4px;transition:text-decoration-color .2s}
+.chbtn:hover{text-decoration-color:var(--navy-l)}
+.seg{display:inline-flex;gap:2px;padding:3px;border-radius:12px;background:#EEF2F7}
+.sg2{border:0;background:transparent;border-radius:9px;padding:5px 11px;font:inherit;font-size:12.5px;font-weight:700;color:var(--ink2);cursor:pointer;display:inline-flex;align-items:center;gap:4px}
+.sg2:hover{color:var(--navy)}
+.sg2.on{background:#fff;color:var(--navy);box-shadow:0 2px 6px -2px rgba(11,46,91,.3)}
+.sg2 i{font-style:normal;font-size:11px}
+.ctbl{display:flex;flex-direction:column}
+.crow{display:grid;grid-template-columns:minmax(130px,1.1fr) minmax(160px,2fr) 120px 130px 120px;align-items:center;gap:14px;width:100%;padding:9px 20px;border:0;border-bottom:1px solid var(--line3);
+  background:#fff;font:inherit;font-size:14px;color:inherit;text-align:start;cursor:pointer;animation:aUp .45s var(--ease) both;animation-delay:var(--d,0ms)}
+button.crow:hover{background:#F5F8FC}
+.crow.chd{cursor:default;background:#FAFBFD;font-size:11.5px;font-weight:800;color:var(--ink3);padding-block:8px;animation:none;position:sticky;top:0;z-index:1}
+.cscroll{max-height:470px;overflow-y:auto}
+.cscroll .crow:last-child{border-bottom:0}
+.cn{display:flex;flex-direction:column;min-width:0;line-height:1.3}
+.cn b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cn small{font-size:11.5px;color:var(--ink3)}
+.crow .bar{height:10px}
+.crow .bar i{animation:barIn 1s var(--ease) both;animation-delay:calc(var(--d,0ms) + .1s)}
+.cs{color:var(--ink3);font-size:13px}
+.cs b{color:var(--ink);font-size:14px}
+.cc{display:flex;align-items:center;gap:6px}
+.cc b{font-size:14.5px;color:var(--navy);min-width:48px}
+.cc .dl{font-size:11px;padding:0 6px}
+.spk{display:block;overflow:visible}
+.spk polyline{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.spk circle{fill:currentColor}
+.spk.up{color:#15944F}.spk.dn{color:#C2453B}.spk.z{color:#9AA7B6}
+.cfoot{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 20px;border-top:1px solid var(--line2);background:#FAFBFD;font-size:12px;color:var(--ink3)}
+
+/* רינדור חוזר (שינוי תקופה/מיון/סינון) — בלי אנימציות כניסה */
+#v-home.still .kpi,#v-home.still .hm1,#v-home.still .crow,#v-home.still .crow .bar i,#v-home.still .qkact{animation:none}
 
 /* ---------- css/features/card.css ---------- */
 /* ============ דאטה ביתנו — כרטיס אדם ============ */
@@ -4304,7 +4414,7 @@ Object.assign(ACT, {
 /* ---------- js/features/home.js ---------- */
 /* ============================================================
    דאטה ביתנו — דף ראשי
-   מסך הבית: כרטיסי מספרים, תומכים לפי עיר, פעילות, אירועים ופעולות מהירות.
+   מסך הבית: תקופה והשוואה, סינון ערים, מדדים, תומכים לפי עיר (כיסוי + מגמה), ייצוא, פעילות ופעולות מהירות.
    ============================================================ */
 /* ========================================================== דף ראשי */
 const HI = {
@@ -4316,7 +4426,17 @@ const HI = {
   up: '<path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/>',
   find: '<circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/>',
   cal: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
-  msg: '<path d="M4 5h16v11H9l-5 4z"/>'
+  msg: '<path d="M4 5h16v11H9l-5 4z"/>',
+  no: '<circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/>',
+  unk: '<circle cx="12" cy="12" r="9"/><path d="M8 12h8"/>',
+  cov: '<path d="M12 3a9 9 0 1 0 9 9h-9z"/><path d="M15 3.5A9 9 0 0 1 20.5 9H15z"/>',
+  phone: '<rect x="6.5" y="2.5" width="11" height="19" rx="2.5"/><path d="M10.5 18.5h3"/>',
+  pin: '<path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.6"/>',
+  city: '<path d="M3 21h18M5 21V8l6-4v17M11 21V10h8v11M8 9h.01M8 12h.01M8 15h.01M14 13h2M14 16h2"/>',
+  chev: '<path d="M6 9l6 6 6-6"/>',
+  dl: '<path d="M12 4v11M7 10l5 5 5-5"/><path d="M4 18v1a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-1"/>',
+  flt: '<path d="M4 5h16l-6 7.5V19l-4 2v-8.5z"/>',
+  x: '<path d="M6 6l12 12M18 6L6 18"/>'
 };
 const hic = k => '<svg viewBox="0 0 24 24" aria-hidden="true">' + HI[k] + '</svg>';
 function countUp(root) {
@@ -4328,16 +4448,242 @@ function countUp(root) {
     el.textContent = '0'; requestAnimationFrame(step);
   });
 }
+/* ---------------------------------------------------------- תקופה והשוואה */
+const DAY = 864e5;
+const HM = Object.assign({ preset: '30d', from: '', to: '', cmp: 'prev', cfrom: '', cto: '', sort: 'sup', dir: -1, cities: [], region: '', cat: '' },
+  (() => { try { return JSON.parse(localStorage.getItem('maagar-home') || '{}') || {}; } catch (e) { return {}; } })());
+HM.open = '';
+function hmSave() { try { const o = Object.assign({}, HM); delete o.open; localStorage.setItem('maagar-home', JSON.stringify(o)); } catch (e) {} }
+const dayStart = t => { const d = new Date(t); d.setHours(0, 0, 0, 0); return d.getTime(); };
+const isoMs = iso => { const p = String(iso).split('-').map(Number); return new Date(p[0], p[1] - 1, p[2]).getTime(); };
+const dlab = t => { const d = new Date(t); return pad2(d.getDate()) + '.' + pad2(d.getMonth() + 1) + '.' + d.getFullYear(); };
+const rlab = (a, b) => dlab(a) === dlab(b) ? dlab(a) : dlab(a) + ' – ' + dlab(b);
+const rshort = (a, b) => { const x = dlab(a), y = dlab(b); return x === y ? x : x.slice(-4) === y.slice(-4) ? x.slice(0, 5) + '–' + y : x + '–' + y; };
+const PRESETS = [['today', 'היום'], ['7d', '7 הימים האחרונים'], ['week', 'השבוע (מיום ראשון)'], ['30d', '30 הימים האחרונים'], ['month', 'החודש'], ['90d', '3 החודשים האחרונים'], ['all', 'מההתחלה'], ['custom', 'טווח תאריכים…']];
+const CMPS = [['prev', 'התקופה הקודמת'], ['year', 'אותה תקופה בשנה שעברה'], ['custom', 'טווח תאריכים…'], ['none', 'בלי השוואה']];
+function hmRange() {
+  const now = Date.now(), today = dayStart(now);
+  let a, b = now;
+  switch (HM.preset) {
+    case 'today': a = today; break;
+    case '7d': a = today - 6 * DAY; break;
+    case 'week': a = today - new Date(today).getDay() * DAY; break;
+    case 'month': { const d = new Date(today); a = new Date(d.getFullYear(), d.getMonth(), 1).getTime(); break; }
+    case '90d': a = today - 89 * DAY; break;
+    case 'all': { a = today; for (const p of S.people) if (p.created && p.created < a) a = p.created; a = dayStart(a); break; }
+    case 'custom': a = HM.from ? isoMs(HM.from) : today - 29 * DAY; b = HM.to ? Math.min(now, isoMs(HM.to) + DAY - 1) : now; break;
+    default: a = today - 29 * DAY;
+  }
+  if (b < a) { const t = a; a = b; b = t; }
+  let c = null;
+  if (HM.cmp === 'prev') c = [a - (b - a) - 1, a - 1];
+  else if (HM.cmp === 'year') { const y = t => { const d = new Date(t); d.setFullYear(d.getFullYear() - 1); return d.getTime(); }; c = [y(a), y(b)]; }
+  else if (HM.cmp === 'custom' && HM.cfrom) { const x = isoMs(HM.cfrom), y = HM.cto ? isoMs(HM.cto) : x; c = [Math.min(x, y), Math.max(x, y) + DAY - 1]; }
+  return { a, b, c };
+}
+
+/* ---------------------------------------------------------- סטטוס לאורך זמן */
+/* ההיסטוריה נבנית מתאריך ההוספה של כל אדם ומהשורות "סטטוס שונה: X ← Y" שבהיסטוריה שלו */
+const SCH = /^סטטוס שונה: (.+?) ← (.+)$/;
+function stHist(p) {
+  const lg = p.log || [];
+  if (p._sh && p._shN === lg.length) return p._sh;
+  const h = [];
+  for (let i = lg.length - 1; i >= 0; i--) { const m = SCH.exec((lg[i] && lg[i].text) || ''); if (m) h.push({ t: lg[i].t || 0, from: m[1], to: m[2] }); }
+  h.sort((x, y) => x.t - y.t);
+  p._sh = h; p._shN = lg.length;
+  return h;
+}
+function stAt(p, t) {
+  if ((p.created || 0) > t) return null;
+  const h = stHist(p);
+  if (!h.length) return stOf(p);
+  let s = null;
+  for (const x of h) { if (x.t <= t) s = x.to; else { if (s == null) s = x.from; break; } }
+  return s || stOf(p);
+}
+
+/* ---------------------------------------------------------- מרחבים וקטגוריות */
+/* מרחב לפי מיקום מוקדי ההצבעה של העיר (בערך). אפשר לתקן עיר ספציפית ב-REGION_FIX */
+const REGIONS = ['צפון', 'חיפה', 'שרון', 'מרכז', 'ירושלים', 'דרום'];
+const REGION_FIX = {};
+let CITY_GEO = null;
+function cityGeo() {
+  if (CITY_GEO) return CITY_GEO;
+  CITY_GEO = new Map();
+  SITES.forEach(s => {
+    const la = +s.lat, ln = +s.lng;
+    const o = CITY_GEO.get(s.ck) || { la: 0, ln: 0, n: 0, strong: false, voters: 0 };
+    if (la && ln) { o.la += la; o.ln += ln; o.n++; }
+    if (s.strong) o.strong = true;
+    o.voters += +s.b26 || 0;
+    CITY_GEO.set(s.ck, o);
+  });
+  return CITY_GEO;
+}
+function regionOf(city) {
+  const k = ckey(city);
+  if (REGION_FIX[k]) return REGION_FIX[k];
+  const g = cityGeo().get(k); if (!g || !g.n) return '';
+  const la = g.la / g.n, ln = g.ln / g.n;
+  if (la >= 31.70 && la <= 31.95 && ln >= 34.95) return 'ירושלים';
+  if (la >= 32.95) return 'צפון';
+  if (la >= 32.40) return ln <= 35.10 ? 'חיפה' : 'צפון';
+  if (la >= 32.12) return 'שרון';
+  if (la >= 31.82) return 'מרכז';
+  return 'דרום';
+}
+const CATS = [['big', 'ערים גדולות (100+ במאגר)'], ['low', 'כיסוי נמוך (מתחת ל-20%)'], ['high', 'כיסוי גבוה (40% ומעלה)'], ['strong', 'ערים עם מוקד הצבעה חזק'], ['up', 'ערים בעלייה בתקופה'], ['down', 'ערים בירידה בתקופה']];
+const hmFiltered = () => !!(HM.cities.length || HM.region || HM.cat);
+
+/* ---------------------------------------------------------- חישוב הנתונים */
+const PTS = 10;   // נקודות בקו המגמה
+function homeData() {
+  const R = hmRange();
+  const ts = []; for (let i = 0; i < PTS; i++) ts.push(Math.round(R.a + (R.b - R.a) * i / (PTS - 1)));
+  const blank = (k, c) => ({ k, c, n: 0, sup: 0, und: 0, no: 0, unk: 0, add: 0, cn: 0, csup: 0, cund: 0, cno: 0, cunk: 0, cadd: 0, ph: 0, kal: 0, tn: Array(PTS).fill(0), tsup: Array(PTS).fill(0) });
+  const map = new Map(), none = blank('', '');
+  const ST = { 'תומך': 'sup', 'מתלבט': 'und', 'לא תומך': 'no', 'לא ידוע': 'unk' };
+  for (const p of S.people) {
+    const o = p.city ? (map.get(ckey(p.city)) || (map.set(ckey(p.city), blank(ckey(p.city), p.city)), map.get(ckey(p.city)))) : none;
+    const cr = p.created || 0;
+    const sb = stAt(p, R.b);
+    if (sb) { o.n++; o[ST[sb] || 'unk']++; if (isMobile(p.phone) || (p.phones || []).some(isMobile)) o.ph++; if (p._site) o.kal++; }
+    if (cr >= R.a && cr <= R.b) o.add++;
+    if (R.c) { const sc = stAt(p, R.c[1]); if (sc) { o.cn++; o['c' + (ST[sc] || 'unk')]++; } if (cr >= R.c[0] && cr <= R.c[1]) o.cadd++; }
+    for (let i = 0; i < PTS; i++) { const s = stAt(p, ts[i]); if (s) { o.tn[i]++; if (s === 'תומך') o.tsup[i]++; } }
+  }
+  const geo = cityGeo();
+  const cities = Array.from(map.values()).filter(o => o.n || o.cn).map(o => {
+    o.cov = o.n ? o.sup / o.n : 0;
+    o.ccov = o.cn ? o.csup / o.cn : null;
+    o.trend = o.tn.map((n, i) => n ? o.tsup[i] / n : null);
+    o.reg = regionOf(o.c);
+    const g = geo.get(o.k); o.strong = !!(g && g.strong); o.voters = g ? g.voters : 0;
+    const tr = o.trend.filter(x => x != null); o.dir = tr.length > 1 ? Math.sign(Math.round((tr[tr.length - 1] - tr[0]) * 1000)) : 0;
+    return o;
+  });
+  const keep = o => {
+    if (HM.cities.length && !HM.cities.includes(o.k)) return false;
+    if (HM.region && o.reg !== HM.region) return false;
+    if (HM.cat === 'big' && o.n < 100) return false;
+    if (HM.cat === 'low' && !(o.cov < 0.2)) return false;
+    if (HM.cat === 'high' && !(o.cov >= 0.4)) return false;
+    if (HM.cat === 'strong' && !o.strong) return false;
+    if (HM.cat === 'up' && o.dir <= 0) return false;
+    if (HM.cat === 'down' && o.dir >= 0) return false;
+    return true;
+  };
+  const shown = cities.filter(keep);
+  const T = blank('*', 'סה״כ');
+  (hmFiltered() ? shown : cities.concat([none])).forEach(o => {
+    ['n', 'sup', 'und', 'no', 'unk', 'add', 'cn', 'csup', 'cund', 'cno', 'cunk', 'cadd', 'ph', 'kal'].forEach(f => { T[f] += o[f]; });
+    for (let i = 0; i < PTS; i++) { T.tn[i] += o.tn[i]; T.tsup[i] += o.tsup[i]; }
+  });
+  T.cov = T.n ? T.sup / T.n : 0; T.ccov = R.c && T.cn ? T.csup / T.cn : null;
+  T.trend = T.tn.map((n, i) => n ? T.tsup[i] / n : null);
+  const srt = { abc: (x, y) => x.c.localeCompare(y.c, 'he'), sup: (x, y) => x.sup - y.sup || x.n - y.n, cov: (x, y) => x.cov - y.cov || x.n - y.n, size: (x, y) => x.n - y.n };
+  /* ברירת מחדל (dir = -1): א׳–ב׳ מהתחלה, מספרים מהגדול לקטן. לחיצה נוספת הופכת */
+  const f = srt[HM.sort] || srt.sup, asc = HM.sort === 'abc' ? HM.dir < 0 : HM.dir > 0;
+  shown.sort((x, y) => (asc ? f(x, y) : -f(x, y)) || x.c.localeCompare(y.c, 'he'));
+  return { R, ts, T, cities, shown };
+}
+
+/* ---------------------------------------------------------- רכיבי תצוגה */
+function spark(vals) {
+  const w = 104, h = 28, v = vals.filter(x => x != null);
+  if (v.length < 2) return '<span class="mut sm">—</span>';
+  const mn = Math.min(...v), mx = Math.max(...v), rg = mx - mn;
+  const first = v[0], last = v[v.length - 1], cls = Math.round((last - first) * 1000) > 0 ? 'up' : Math.round((last - first) * 1000) < 0 ? 'dn' : 'z';
+  const pts = [];
+  vals.forEach((x, i) => { if (x == null) return; const X = 3 + (i / (vals.length - 1)) * (w - 6), Y = rg ? (h - 4) - ((x - mn) / rg) * (h - 8) : h / 2; pts.push(X.toFixed(1) + ',' + Y.toFixed(1)); });
+  const lp = pts[pts.length - 1].split(',');
+  return '<svg class="spk ' + cls + '" viewBox="0 0 ' + w + ' ' + h + '" width="' + w + '" height="' + h + '" aria-hidden="true"><polyline points="' + pts.join(' ') + '"/><circle cx="' + lp[0] + '" cy="' + lp[1] + '" r="2.4"/></svg>';
+}
+const pc1 = x => (Math.round(x * 1000) / 10).toLocaleString('he-IL', { maximumFractionDigits: 1 }) + '%';
+function dlt(cur, prev, opt) {
+  opt = opt || {};
+  if (prev == null) return '';
+  const d = cur - prev, r = opt.pts ? Math.round(d * 1000) / 10 : d;
+  if (!r) return '<span class="dl z">ללא שינוי</span>';
+  const good = opt.invert ? r < 0 : r > 0;
+  return '<span class="dl ' + (good ? 'up' : 'dn') + '">' + (r > 0 ? '▲ ' : '▼ ') + (opt.pts ? Math.abs(r).toLocaleString('he-IL') + ' נק׳' : nf(Math.abs(r))) + '</span>';
+}
+const cmpLabel = R => !R.c ? '' : HM.cmp === 'prev' ? 'מול התקופה הקודמת' : HM.cmp === 'year' ? 'מול שנה שעברה' : 'מול ' + rlab(R.c[0], R.c[1]);
+function fltLabel() {
+  const parts = [];
+  if (HM.region) parts.push('מרחב ' + HM.region);
+  if (HM.cat) parts.push((CATS.find(c => c[0] === HM.cat) || [, ''])[1].replace(/ \(.*\)$/, ''));
+  if (HM.cities.length) parts.push(HM.cities.length === 1 ? (KCITY.get(HM.cities[0]) || HM.cities[0]) : HM.cities.length + ' ערים');
+  return parts.join(' · ') || 'כל הערים';
+}
+
+/* ---------------------------------------------------------- סרגל העליון: תקופה, השוואה, סינון, ייצוא */
+function hmBar(D) {
+  const R = D.R, open = HM.open;
+  const sel = (id, lb, val, sub, ic) => '<div class="hpw' + (open === id ? ' on' : '') + '"><button class="hsel" data-act="hmOpen" data-v="' + id + '" aria-expanded="' + (open === id) + '">' +
+    '<span class="hsi">' + hic(ic) + '</span><span class="hst"><span class="hsl">' + lb + (sub ? ' · <span class="num">' + sub + '</span>' : '') + '</span><b>' + val + '</b></span><span class="hcv">' + hic('chev') + '</span></button>' +
+    (open === id ? '<div class="hpop" role="dialog">' + hmPop(id, D) + '</div>' : '') + '</div>';
+  const per = (PRESETS.find(p => p[0] === HM.preset) || PRESETS[3])[1].replace('…', '');
+  const cmp = (CMPS.find(p => p[0] === HM.cmp) || CMPS[0])[1].replace('…', '');
+  const many = D.cities.length > 1;
+  const demo = S.people.some(p => (p.tags || []).includes('דמו'));
+  return sel('per', 'תקופה', per, rshort(R.a, R.b), 'cal') +
+    sel('cmp', 'מושווה מול', R.c ? cmp : 'בלי השוואה', R.c ? rshort(R.c[0], R.c[1]) : '', 'week') +
+    (many || hmFiltered() ? sel('flt', 'ערים', esc(fltLabel()), hmFiltered() ? (D.shown.length === 1 ? 'עיר אחת' : nf(D.shown.length) + ' ערים') : '', 'flt') : '') +
+    (hmFiltered() ? '<button class="hclr" data-act="hmClear" title="ניקוי הסינון">' + hic('x') + '</button>' : '') +
+    '<span class="sp"></span>' +
+    (demo ? '<span class="pill y">נתוני דמו' + (can('edit') ? ' · <button class="link" style="font-size:11.5px" data-act="clearDemo">מחיקה</button>' : '') + '</span>' : '') +
+    (can('export') ? '<div class="hpw' + (open === 'exp' ? ' on' : '') + '"><button class="hexp" data-act="hmOpen" data-v="exp">' + hic('dl') + 'ייצוא</button>' + (open === 'exp' ? '<div class="hpop">' + hmPop('exp', D) + '</div>' : '') + '</div>' : '');
+}
+function hmPop(id, D) {
+  if (id === 'per') return '<div class="hpl">' + PRESETS.map(([k, lb]) => '<button class="hopt' + (HM.preset === k ? ' on' : '') + '" data-act="hmPreset" data-v="' + k + '">' + lb + '</button>').join('') + '</div>' +
+    (HM.preset === 'custom' ? '<div class="hdr"><label><span class="fl">מתאריך</span><input type="date" data-hm="from" value="' + esc(HM.from || isoDay(new Date(D.R.a))) + '"></label><label><span class="fl">עד תאריך</span><input type="date" data-hm="to" value="' + esc(HM.to || isoDay(new Date(D.R.b))) + '"></label></div>' : '');
+  if (id === 'cmp') return '<div class="hpl">' + CMPS.map(([k, lb]) => '<button class="hopt' + (HM.cmp === k ? ' on' : '') + '" data-act="hmCmp" data-v="' + k + '">' + lb + '</button>').join('') + '</div>' +
+    (HM.cmp === 'custom' ? '<div class="hdr"><label><span class="fl">מתאריך</span><input type="date" data-hm="cfrom" value="' + esc(HM.cfrom || '') + '"></label><label><span class="fl">עד תאריך</span><input type="date" data-hm="cto" value="' + esc(HM.cto || '') + '"></label></div>' : '');
+  if (id === 'flt') {
+    const all = D.cities.slice().sort((x, y) => x.c.localeCompare(y.c, 'he'));
+    return '<div class="hfs"><span class="fl">ערים מסוימות</span><input type="text" id="hmCityIn" list="hmCityDl" placeholder="מקלידים שם עיר…" autocomplete="off">' +
+      '<datalist id="hmCityDl">' + all.filter(o => !HM.cities.includes(o.k)).map(o => '<option value="' + esc(o.c) + '">').join('') + '</datalist>' +
+      (HM.cities.length ? '<div class="hchips">' + HM.cities.map(k => '<button class="hchip on" data-act="hmCityDel" data-v="' + esc(k) + '">' + esc((D.cities.find(o => o.k === k) || {}).c || KCITY.get(k) || k) + hic('x') + '</button>').join('') + '</div>' : '') + '</div>' +
+      '<div class="hfs"><span class="fl">מרחב</span><div class="hchips">' + REGIONS.map(r => '<button class="hchip' + (HM.region === r ? ' on' : '') + '" data-act="hmRegion" data-v="' + r + '">' + r + '</button>').join('') + '</div></div>' +
+      '<div class="hfs"><span class="fl">קטגוריה</span><div class="hchips">' + CATS.map(([k, lb]) => '<button class="hchip' + (HM.cat === k ? ' on' : '') + '" data-act="hmCat" data-v="' + k + '">' + lb + '</button>').join('') + '</div></div>' +
+      '<div class="hfoot"><span class="mut sm">המרחב מחושב לפי מיקום מוקדי ההצבעה של העיר</span><button class="btn sec sm" data-act="hmClear">ניקוי</button></div>';
+  }
+  if (id === 'exp') return '<div class="hpl"><button class="hopt big" data-act="hmXlsx">' + hic('dl') + '<span><b>קובץ אקסל</b><small>סיכום, כל הערים וקו המגמה — מוכן לשליחה</small></span></button>' +
+    '<button class="hopt big" data-act="hmReport">' + hic('msg') + '<span><b>דוח עדכון</b><small>עמוד מסודר להדפסה או לשמירה כ-PDF</small></span></button></div>';
+  return '';
+}
+function hmBarRender() {
+  const el = $('#htb'); if (!el) return;
+  el.innerHTML = hmBar(HM._D || homeData());
+  hmWire();
+}
+function hmWire() {
+  $$('#htb [data-hm]').forEach(inp => inp.addEventListener('change', () => { HM[inp.dataset.hm] = inp.value; hmSave(); RENDER.home({ refresh: true, keepOpen: true }); }));
+  const ci = $('#hmCityIn');
+  if (ci) {
+    setTimeout(() => ci.focus(), 30);
+    const add = () => { const k = ckey(ci.value); if (!k) return; const D = HM._D; if (D && D.cities.some(o => o.k === k) && !HM.cities.includes(k)) { HM.cities.push(k); hmSave(); RENDER.home({ refresh: true, keepOpen: true }); } };
+    ci.addEventListener('change', add);
+    ci.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); add(); } });
+  }
+}
+document.addEventListener('click', e => { if (HM.open && !e.target.closest('.hpw')) { HM.open = ''; hmBarRender(); } });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && HM.open) { HM.open = ''; hmBarRender(); } });
+
+/* ---------------------------------------------------------- המסך */
 RENDER.home = function (opts) {
-  const P = S.people, tot = P.length;
-  const c = { 'תומך': 0, 'מתלבט': 0, 'לא תומך': 0, 'לא ידוע': 0 };
-  P.forEach(p => { c[stOf(p)]++; });
-  const wk = Date.now() - 7 * 864e5;
-  const nw = P.filter(p => (p.created || 0) >= wk).length;
-  const cities = cityCounts().slice(0, 6);
-  const demo = P.some(p => (p.tags || []).includes('דמו'));
+  opts = opts || {};
+  if (!opts.keepOpen) HM.open = '';
+  const D = homeData(); HM._D = D;
+  const { R, T } = D;
+  const tot = S.people.length;
   const up = S.events.filter(e => !e.date || e.date >= isoDay(new Date())).sort((a, b) => (a.date || '').localeCompare(b.date || '')).slice(0, 3);
-  const kpi = (lb, v, ft, act, val, ic, cls) => '<button class="kpi ' + (cls || '') + '" data-act="' + act + '" data-v="' + (val || '') + '"><span class="ki">' + hic(ic) + '</span><div class="lb">' + lb + '</div><div class="vl" data-count="' + v + '">' + nf(v) + '</div><div class="ft">' + ft + '</div></button>';
+  const cl = cmpLabel(R);
+  const ft = (d, plain) => d ? '<div class="ft">' + d + ' <span>' + cl + '</span></div>' : '<div class="ft">' + plain + '</div>';
+  const kpi = (lb, v, foot, act, val, ic, cls) => '<button class="kpi ' + (cls || '') + '" data-act="' + act + '" data-v="' + (val || '') + '"><span class="ki">' + hic(ic) + '</span><div class="lb">' + lb + '</div><div class="vl" data-count="' + v + '">' + nf(v) + '</div>' + foot + '</button>';
+  const mini = (lb, v, sub, d, ic, act, val) => '<' + (act ? 'button data-act="' + act + '" data-v="' + (val || '') + '"' : 'div') + ' class="hm1"><span class="hmi">' + hic(ic) + '</span><span class="hmt"><span class="hml">' + lb + '</span><span class="hmv"><b class="num">' + v + '</b>' + (d || '') + '</span>' + (sub ? '<span class="hms">' + sub + '</span>' : '') + '</span></' + (act ? 'button' : 'div') + '>';
   const qa = (act, v, ic, b, t, cls) => '<button class="qk ' + (cls || '') + '" data-act="' + act + '"' + (v ? ' data-v="' + v + '"' : '') + '><span class="qki">' + hic(ic) + '</span><span class="qkt"><b>' + b + '</b><span>' + t + '</span></span></button>';
   const quick = [
     can('edit') ? qa('newPerson', '', 'add', 'איש קשר חדש', 'הוספה ידנית למאגר', 'gold') : '',
@@ -4345,27 +4691,97 @@ RENDER.home = function (opts) {
     qa('go', 'search', 'find', 'חיפוש מתקדם', 'סינון לפי עיר, קלפי וסטטוס'),
     can('sms') ? qa('go', 'sms', 'msg', 'שליחת סמס', 'לקבוצה, לרשימה או לאדם') : qa('go', 'events', 'cal', 'אירועים', 'דפי נחיתה ונרשמים')
   ].join('');
+  const sortBtn = (k, lb) => '<button class="sg2' + (HM.sort === k ? ' on' : '') + '" data-act="hmSort" data-v="' + k + '">' + lb + (HM.sort === k ? '<i>' + (HM.dir < 0 ? '▾' : '▴') + '</i>' : '') + '</button>';
+  const crow = (o, i) => '<button class="crow" data-act="goCity" data-v="' + esc(o.c) + '" style="--d:' + Math.min(i, 12) * 40 + 'ms">' +
+    '<span class="cn"><b>' + esc(o.c) + '</b>' + (o.reg ? '<small>' + o.reg + '</small>' : '') + '</span>' +
+    '<span class="bar"><i class="g" style="width:' + pct(o.sup, o.n) + '%"></i><i class="y" style="width:' + pct(o.und, o.n) + '%"></i></span>' +
+    '<span class="num cs"><b>' + nf(o.sup) + '</b> מתוך ' + nf(o.n) + '</span>' +
+    '<span class="num cc"><b>' + pc1(o.cov) + '</b>' + (R.c && o.ccov != null ? dlt(o.cov, o.ccov, { pts: true }) : '') + '</span>' +
+    '<span class="ct">' + spark(o.trend) + '</span></button>';
+
+  $('#v-home').classList.toggle('still', !!opts.refresh);
   $('#v-home').innerHTML =
-    '<div class="shead"><div><h2>דף ראשי</h2><p>תמונת מצב של המאגר' + (CLOUD && ME && ME.hq === 'city' ? ' · ' + esc(ME.city) : '') + '</p></div>' + (demo ? '<span class="pill y">נתוני דמו' + (can('edit') ? ' · <button class="link" style="font-size:11.5px" data-act="clearDemo">מחיקה</button>' : '') + '</span>' : '') + '</div>' +
+    '<div class="htb" id="htb">' + hmBar(D) + '</div>' +
     (!tot ? '<div class="card"><div class="empty"><b>המאגר עדיין ריק</b>אפשר להעלות קובץ אקסל או להוסיף איש קשר ידנית.<div class="row" style="justify-content:center;margin-top:14px">' + (can('import') ? '<button class="btn" data-act="go" data-v="upload">העלאת אקסל</button>' : '') + (can('edit') ? '<button class="btn sec" data-act="newPerson">+ איש קשר חדש</button>' : '') + (CLOUD && ME && ME.hq === 'central' && can('edit') ? '<button class="btn sec" data-act="seedCloud">טעינת נתוני דמו לבדיקה</button>' : '') + '</div></div></div>' : '') +
     '<div class="kpis" id="homeKpis">' +
-      kpi('אנשים במאגר', tot, 'בכל המאגרים', 'goStatus', '', 'people', 'hero') +
-      kpi('תומכים', c['תומך'], pct(c['תומך'], tot) + '% מהמאגר', 'goStatus', 'תומך', 'sup', 'g') +
-      kpi('מתלבטים', c['מתלבט'], pct(c['מתלבט'], tot) + '% מהמאגר', 'goStatus', 'מתלבט', 'und', 'y') +
-      kpi('נוספו השבוע', nw, 'ב-7 הימים האחרונים', 'goNew', '', 'week') +
+      kpi('אנשים במאגר', T.n, ft(dlt(T.n, R.c ? T.cn : null), hmFiltered() ? 'בערים שנבחרו' : 'בכל המאגרים'), 'goStatus', '', 'people', 'hero') +
+      kpi('תומכים', T.sup, ft(dlt(T.sup, R.c ? T.csup : null), pc1(T.cov) + ' מהמאגר'), 'goStatus', 'תומך', 'sup', 'g') +
+      kpi('מתלבטים', T.und, ft(dlt(T.und, R.c ? T.cund : null), pct(T.und, T.n) + '% מהמאגר'), 'goStatus', 'מתלבט', 'und', 'y') +
+      kpi('נוספו בתקופה', T.add, ft(dlt(T.add, R.c ? T.cadd : null), rlab(R.a, R.b)), 'goNew', '', 'week') +
     '</div>' +
-    '<div class="card" id="homeCities"><div class="ch">תומכים לפי עיר<span class="legend"><span><i style="background:var(--navy)"></i>תומכים</span><span><i style="background:#7FA3CF"></i>מתלבטים</span></span></div><div class="cb">' +
-      (cities.length ? cities.map((o, i) => '<button class="barrow" data-act="goCity" data-v="' + esc(o.c) + '" style="--d:' + (i * 70) + 'ms"><b>' + esc(o.c) + '</b><span class="bar"><i class="g" style="width:' + pct(o.sup, o.n) + '%"></i><i class="y" style="width:' + pct(o.und, o.n) + '%"></i></span><span class="mut num sm">' + nf(o.sup) + ' מתוך ' + nf(o.n) + '</span></button>').join('') : '<div class="mut">אין עדיין אנשים עם עיר</div>') +
-    '</div></div>' +
+    '<div class="hminis">' +
+      mini('כיסוי תומכים', pc1(T.cov), 'מתוך המאגר', R.c && T.ccov != null ? dlt(T.cov, T.ccov, { pts: true }) : '', 'cov') +
+      mini('לא תומכים', nf(T.no), pct(T.no, T.n) + '%', dlt(T.no, R.c ? T.cno : null, { invert: true }), 'no', 'goStatus', 'לא תומך') +
+      mini('ללא סטטוס', nf(T.unk), pct(T.unk, T.n) + '%', dlt(T.unk, R.c ? T.cunk : null, { invert: true }), 'unk', 'goStatus', 'לא ידוע') +
+      mini('עם טלפון נייד', pct(T.ph, T.n) + '%', nf(T.ph) + ' אנשים', '', 'phone') +
+      mini('משויכים לקלפי', pct(T.kal, T.n) + '%', nf(T.kal) + ' אנשים', '', 'pin') +
+      mini('ערים', nf(D.shown.length), hmFiltered() ? 'אחרי הסינון' : 'במאגר', '', 'city') +
+    '</div>' +
+    '<div class="card" id="homeCities"><div class="ch">' +
+      '<button class="chbtn" data-act="hmSort" data-v="abc" title="סידור לפי א׳–ב׳">תומכים לפי עיר</button>' +
+      '<div class="seg">' + sortBtn('abc', 'א׳–ב׳') + sortBtn('sup', 'מספר תומכים') + sortBtn('cov', 'כיסוי') + sortBtn('size', 'גודל במאגר') + '</div>' +
+      '<span class="legend"><span><i style="background:var(--navy)"></i>תומכים</span><span><i style="background:#7FA3CF"></i>מתלבטים</span></span></div>' +
+      '<div class="ctbl"><div class="crow chd"><span>עיר</span><span>תומכים ומתלבטים</span><span>תומכים</span><span>כיסוי' + (R.c ? ' ושינוי' : '') + '</span><span>מגמה</span></div>' +
+      '<div class="cscroll">' + (D.shown.length ? D.shown.map(crow).join('') : '<div class="empty" style="padding:26px">אין ערים שמתאימות לסינון</div>') + '</div></div>' +
+      '<div class="cfoot"><span>' + nf(D.shown.length) + ' ערים · כיסוי = תומכים מתוך האנשים במאגר של העיר · המגמה: ' + rlab(R.a, R.b) + '</span>' + spark(T.trend) + '</div>' +
+    '</div>' +
     '<div class="cols"><div class="c2"><div class="card"><div class="ch">פעילות אחרונה</div><div class="cb" style="padding-block:6px"><div class="feed">' +
       (S.activity.slice(0, 4).map(a => '<div class="it"><span class="dot"></span><div><div>' + esc(a.text) + '</div><div class="when">' + fmtWhen(a.t) + '</div></div></div>').join('') || '<div class="mut" style="padding:10px 0">עוד לא הייתה פעילות</div>') +
     '</div></div></div></div><div class="c1"><div class="card"><div class="ch">אירועים קרובים</div><div class="cb" style="padding-block:6px"><div class="feed">' +
       (up.map(e => '<div class="it"><div style="flex:1"><button class="link" data-act="openEvent" data-v="' + e.id + '">' + esc(e.name) + '</button><div class="when">' + fmtDate(e.date) + (e.time ? ' · ' + e.time : '') + '</div></div><span class="pill">' + nf(e.regs.length) + '</span></div>').join('') || '<div class="mut" style="padding:10px 0">אין אירועים קרובים</div>') +
     '</div></div></div></div></div>' +
     '<div class="qkact"><div class="qkh">פעולות מהירות</div><div class="qkg">' + quick + '</div></div>';
-  if (!opts || !opts.refresh) countUp($('#homeKpis'));
+  hmWire();
+  if (!opts.refresh) countUp($('#homeKpis'));
 };
 
+/* ---------------------------------------------------------- ייצוא: אקסל ודוח */
+function hmSummaryRows(D) {
+  const { R, T } = D, c = !!R.c;
+  const row = (lb, v, pv, unit) => [lb, v, c ? pv : '', c ? (typeof v === 'number' && typeof pv === 'number' ? Math.round((v - pv) * 10) / 10 : '') : ''].concat(unit ? [unit] : []);
+  const cv = x => x == null ? '' : Math.round(x * 1000) / 10;
+  return [
+    ['מדד', 'בתקופה', c ? 'בהשוואה' : '', c ? 'שינוי' : ''],
+    row('אנשים במאגר', T.n, T.cn), row('תומכים', T.sup, T.csup), row('מתלבטים', T.und, T.cund), row('לא תומכים', T.no, T.cno), row('ללא סטטוס', T.unk, T.cunk),
+    row('כיסוי תומכים (%)', cv(T.cov), cv(T.ccov)), row('נוספו בתקופה', T.add, T.cadd),
+    ['עם טלפון נייד (%)', pct(T.ph, T.n)], ['משויכים לקלפי (%)', pct(T.kal, T.n)], ['ערים', D.shown.length]
+  ];
+}
+function hmMeta(D) {
+  const { R } = D;
+  return [['דאטה ביתנו — דוח מצב'], ['תקופה', rlab(R.a, R.b)], ['השוואה', R.c ? rlab(R.c[0], R.c[1]) : 'בלי השוואה'], ['ערים', fltLabel()],
+    ['הופק', dlab(Date.now()) + ' ' + new Date().toTimeString().slice(0, 5) + (CLOUD && ME ? ' · ' + (ME.full_name || ME.email || '') : '')]];
+}
+function hmXlsx() {
+  const D = HM._D || homeData(), R = D.R;
+  const cv = x => x == null ? '' : Math.round(x * 1000) / 10;
+  const cities = [['עיר', 'מרחב', 'אנשים במאגר', 'תומכים', 'מתלבטים', 'לא תומכים', 'ללא סטטוס', 'כיסוי (%)'].concat(R.c ? ['כיסוי בהשוואה (%)', 'שינוי (נק׳)'] : []).concat(['נוספו בתקופה'])]
+    .concat(D.shown.map(o => [o.c, o.reg, o.n, o.sup, o.und, o.no, o.unk, cv(o.cov)].concat(R.c ? [cv(o.ccov), o.ccov == null ? '' : Math.round((o.cov - o.ccov) * 1000) / 10] : []).concat([o.add])));
+  const trend = [['תאריך', 'אנשים במאגר', 'תומכים', 'כיסוי (%)']].concat(D.ts.map((t, i) => [dlab(t), D.T.tn[i], D.T.tsup[i], D.T.tn[i] ? Math.round(D.T.tsup[i] / D.T.tn[i] * 1000) / 10 : '']));
+  saveXlsx([['סיכום', hmMeta(D).concat([[]]).concat(hmSummaryRows(D))], ['ערים', cities], ['מגמה', trend]], 'דאטה ביתנו — דוח מצב ' + dlab(Date.now()) + '.xlsx');
+  toast('קובץ האקסל ירד');
+}
+function hmReport() {
+  const D = HM._D || homeData(), R = D.R, T = D.T;
+  const w = window.open('', '_blank');
+  if (!w) return toast('הדפדפן חסם חלון חדש — צריך לאשר חלונות קופצים לאתר');
+  const k = (lb, v, d) => '<div class="k"><span>' + lb + '</span><b>' + v + '</b>' + (d ? '<em>' + d + '</em>' : '') + '</div>';
+  const dd = (cur, prev, pts) => R.c && prev != null ? (cur - prev > 0 ? '▲ ' : cur - prev < 0 ? '▼ ' : '') + (pts ? (Math.round(Math.abs(cur - prev) * 1000) / 10) + ' נק׳' : nf(Math.abs(cur - prev))) : '';
+  const css = 'body{font-family:Heebo,Arial,sans-serif;direction:rtl;margin:0;color:#14202E;background:#fff}.top{background:linear-gradient(130deg,#0B2E5B,#1550A0 55%,#2366C2);color:#fff;padding:26px 36px}' +
+    '.top h1{margin:0;font-size:26px}.top p{margin:4px 0 0;color:#C9DCF3;font-size:14px}main{padding:24px 36px}.ks{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:22px}' +
+    '.k{border:1px solid #E3E8EF;border-radius:14px;padding:12px 14px}.k span{display:block;font-size:12px;color:#5A6A7D;font-weight:700}.k b{font-size:26px;color:#0B2E5B}.k em{display:block;font-style:normal;font-size:12px;color:#0F7A43}' +
+    'table{width:100%;border-collapse:collapse;font-size:13px}th{background:#F3F6FA;text-align:right;padding:8px;color:#0B2E5B}td{padding:7px 8px;border-bottom:1px solid #EEF1F5}h2{font-size:17px;color:#0B2E5B;margin:6px 0 10px}' +
+    '.bar{position:fixed;left:20px;top:20px}.bar button{font:inherit;font-weight:700;background:#E8B84B;border:0;border-radius:10px;padding:9px 16px;cursor:pointer}@media print{.bar{display:none}.top{-webkit-print-color-adjust:exact;print-color-adjust:exact}}';
+  const html = '<!DOCTYPE html><html lang="he" dir="rtl"><head><meta charset="utf-8"><title>דאטה ביתנו — דוח מצב ' + dlab(Date.now()) + '</title><style>' + css + '</style></head><body>' +
+    '<div class="bar"><button onclick="print()">הדפסה / שמירה כ-PDF</button></div>' +
+    '<div class="top"><h1>דאטה ביתנו — דוח מצב</h1><p>תקופה: ' + rlab(R.a, R.b) + (R.c ? ' · השוואה: ' + rlab(R.c[0], R.c[1]) : '') + ' · ' + esc(fltLabel()) + ' · הופק ' + dlab(Date.now()) + '</p></div><main>' +
+    '<div class="ks">' + k('אנשים במאגר', nf(T.n), dd(T.n, T.cn)) + k('תומכים', nf(T.sup), dd(T.sup, T.csup)) + k('כיסוי תומכים', pc1(T.cov), dd(T.cov, T.ccov, true)) + k('נוספו בתקופה', nf(T.add), dd(T.add, T.cadd)) +
+      k('מתלבטים', nf(T.und), dd(T.und, T.cund)) + k('לא תומכים', nf(T.no), dd(T.no, T.cno)) + k('עם טלפון נייד', pct(T.ph, T.n) + '%') + k('משויכים לקלפי', pct(T.kal, T.n) + '%') + '</div>' +
+    '<h2>תומכים לפי עיר</h2><table><thead><tr><th>עיר</th><th>מרחב</th><th>אנשים</th><th>תומכים</th><th>מתלבטים</th><th>כיסוי</th>' + (R.c ? '<th>שינוי</th>' : '') + '</tr></thead><tbody>' +
+      D.shown.map(o => '<tr><td><b>' + esc(o.c) + '</b></td><td>' + o.reg + '</td><td>' + nf(o.n) + '</td><td>' + nf(o.sup) + '</td><td>' + nf(o.und) + '</td><td>' + pc1(o.cov) + '</td>' + (R.c ? '<td>' + (o.ccov == null ? '—' : dd(o.cov, o.ccov, true)) + '</td>' : '') + '</tr>').join('') +
+    '</tbody></table></main></body></html>';
+  w.document.open(); w.document.write(html); w.document.close();
+}
 
 /* ---- הפעולות (כפתורי data-act) של המסך הזה ---- */
 Object.assign(ACT, {
@@ -4393,6 +4809,19 @@ Object.assign(ACT, {
     activity('נתוני הדמו נמחקו');
     go('home'); toast('נתוני הדמו נמחקו');
   }
+});
+
+Object.assign(ACT, {
+  hmOpen: el => { HM.open = HM.open === el.dataset.v ? '' : el.dataset.v; hmBarRender(); },
+  hmPreset: el => { HM.preset = el.dataset.v; hmSave(); RENDER.home({ refresh: true, keepOpen: el.dataset.v === 'custom' }); },
+  hmCmp: el => { HM.cmp = el.dataset.v; hmSave(); RENDER.home({ refresh: true, keepOpen: el.dataset.v === 'custom' }); },
+  hmRegion: el => { HM.region = HM.region === el.dataset.v ? '' : el.dataset.v; hmSave(); RENDER.home({ refresh: true, keepOpen: true }); },
+  hmCat: el => { HM.cat = HM.cat === el.dataset.v ? '' : el.dataset.v; hmSave(); RENDER.home({ refresh: true, keepOpen: true }); },
+  hmCityDel: el => { HM.cities = HM.cities.filter(k => k !== el.dataset.v); hmSave(); RENDER.home({ refresh: true, keepOpen: true }); },
+  hmClear: () => { HM.cities = []; HM.region = ''; HM.cat = ''; HM.open = ''; hmSave(); RENDER.home({ refresh: true }); },
+  hmSort: el => { const k = el.dataset.v; if (HM.sort === k) HM.dir = -HM.dir; else { HM.sort = k; HM.dir = -1; } hmSave(); RENDER.home({ refresh: true }); },
+  hmXlsx: () => { if (!can('export')) return toast('אין לך הרשאה לייצא'); HM.open = ''; hmBarRender(); hmXlsx(); },
+  hmReport: () => { if (!can('export')) return toast('אין לך הרשאה לייצא'); HM.open = ''; hmBarRender(); hmReport(); }
 });
 
 /* ---------- js/features/search.js ---------- */
