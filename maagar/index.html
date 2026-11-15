@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
-<meta name="build" content="20261115-222800">
+<meta name="build" content="20261115-223414">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>דאטה ביתנו — מאגר התומכים</title>
 <style>
@@ -323,7 +323,7 @@ button.kpi:hover{transform:translateY(-3px);border-color:#C9D7E8;box-shadow:0 2p
 .kpi.hero .ki svg{stroke:#fff}
 .kpi.hero .lb,.kpi.hero .ft{color:#C9DCF3}
 .kpi.hero .vl{color:#fff}
-.kpi.hero:hover{box-shadow:0 26px 44px -20px rgba(21,80,160,1)}
+.kpi{cursor:default}
 .kpi.g .ki{background:var(--gbg)}.kpi.g .ki svg{stroke:var(--gtx)}.kpi.g .vl{color:var(--gtx)}
 .kpi.y .ki{background:#EEF3FA}.kpi.y .ki svg{stroke:#4D78B0}
 .barrow{border-radius:12px;padding:8px 10px;margin:0 -10px;animation:aUp .5s cubic-bezier(.2,.8,.2,1) both;animation-delay:var(--d,0ms)}
@@ -5069,7 +5069,7 @@ RENDER.home = function (opts) {
   const tot = S.people.length;
   const up = S.events.filter(e => !e.date || e.date >= isoDay(new Date())).sort((a, b) => (a.date || '').localeCompare(b.date || '')).slice(0, 3);
   const ft = (d, plain) => '<div class="ft">' + plain + '</div>';
-  const kpi = (lb, v, foot, act, val, ic, cls) => '<button class="kpi ' + (cls || '') + '" data-act="' + act + '" data-v="' + (val || '') + '"><span class="ki">' + hic(ic) + '</span><div class="lb">' + lb + '</div><div class="vl" data-count="' + v + '">' + nf(v) + '</div>' + foot + '</button>';
+  const kpi = (lb, v, foot, act, val, ic, cls) => '<div class="kpi ' + (cls || '') + '"><span class="ki">' + hic(ic) + '</span><div class="lb">' + lb + '</div><div class="vl" data-count="' + v + '">' + nf(v) + '</div>' + foot + '</div>';   /* כרטיסי מידע בלבד — לא לחיצים */
   const qa = (act, v, ic, b, t, cls) => '<button class="qk ' + (cls || '') + '" data-act="' + act + '"' + (v ? ' data-v="' + v + '"' : '') + '><span class="qki">' + hic(ic) + '</span><span class="qkt"><b>' + b + '</b><span>' + t + '</span></span></button>';
   const quick = [
     can('edit') ? qa('newPerson', '', 'add', 'איש קשר חדש', 'הוספה ידנית למאגר', 'gold') : '',
