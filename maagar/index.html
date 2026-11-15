@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
-<meta name="build" content="20261115-214833">
+<meta name="build" content="20261115-222800">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>דאטה ביתנו — מאגר התומכים</title>
 <style>
@@ -73,6 +73,43 @@ input[type=text],input[type=search],input[type=date],input[type=time],input[type
   transition:border-color .16s,box-shadow .16s;min-height:42px}
 input:focus,select:focus,textarea:focus{outline:none;border-color:var(--navy-l);box-shadow:0 0 0 3px rgba(27,75,138,.13)}
 textarea{resize:vertical;min-height:74px;line-height:1.6}
+/* תאריך ושעה — לוח השנה של הדפדפן מוחלף בבוחר שלנו (core/30-ui.js) */
+input[type=date],input[type=time]{cursor:pointer;background-repeat:no-repeat;background-position:left 11px center;background-size:18px;padding-left:38px;text-align:right}
+input[type=date]{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231B4B8A' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='5' width='18' height='16' rx='2'/%3E%3Cpath d='M3 10h18M8 3v4M16 3v4'/%3E%3C/svg%3E")}
+input[type=time]{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231B4B8A' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='M12 7v5l3 2'/%3E%3C/svg%3E")}
+input[type=date]::-webkit-calendar-picker-indicator,input[type=time]::-webkit-calendar-picker-indicator{display:none}
+input[type=date]::-webkit-datetime-edit,input[type=time]::-webkit-datetime-edit{cursor:text}
+.dtp{position:fixed;z-index:85;background:var(--card);border:1px solid var(--line2);border-radius:16px;box-shadow:0 26px 60px -20px rgba(7,31,62,.45);
+  padding:12px;width:296px;animation:aUp .2s var(--ease) both;user-select:none}
+.dtp.tm{width:200px;padding:8px}
+.dtp button{font:inherit;border:0;background:none;color:var(--ink);cursor:pointer}
+.dtp button:disabled{cursor:default;opacity:.32}
+.dtp-h{display:flex;align-items:center;gap:6px;margin-bottom:8px}
+.dtp-t{flex:1;font-weight:800!important;font-size:15px!important;color:var(--navy)!important;padding:6px;border-radius:9px;transition:background .15s}
+.dtp-t:hover{background:var(--bbg)}
+.dtp-nv{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;transition:background .15s}
+.dtp-nv:hover{background:var(--bbg)}
+.dtp-nv svg{width:18px;height:18px;fill:none;stroke:var(--navy);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.dtp-w{display:grid;grid-template-columns:repeat(7,1fr);font-size:11.5px;font-weight:800;color:var(--ink3);text-align:center;padding:2px 0 6px}
+.dtp-g{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.dtp-d{height:36px;border-radius:10px;font-size:14px!important;font-weight:600!important;font-variant-numeric:tabular-nums;transition:background .12s,color .12s}
+.dtp-d:not(:disabled):hover{background:var(--bbg);color:var(--navy)!important}
+.dtp-d.out{color:var(--ink3)!important;opacity:.55}
+.dtp-d.now{box-shadow:inset 0 0 0 1.5px var(--gold);font-weight:800!important}
+.dtp-d.on,.dtp-c.on,.dtp-ti.on{background:var(--navy)!important;color:#fff!important;font-weight:800!important;opacity:1}
+.dtp-g3{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.dtp-c{height:44px;border-radius:11px;font-size:14px!important;font-weight:600!important;transition:background .12s}
+.dtp-c:hover{background:var(--bbg);color:var(--navy)!important}
+.dtp-c.now{box-shadow:inset 0 0 0 1.5px var(--gold)}
+.dtp-f{display:flex;align-items:center;justify-content:space-between;gap:8px;border-top:1px solid var(--line3);margin-top:10px;padding-top:8px}
+.dtp-l{font-size:13px!important;font-weight:800!important;color:var(--navy-l)!important;padding:5px 10px;border-radius:8px}
+.dtp-l:hover{background:var(--bbg)}
+.dtp-l.mut{color:var(--ink3)!important}
+.dtp-tl{max-height:250px;overflow-y:auto;display:flex;flex-direction:column;gap:1px;padding-inline-end:2px}
+.dtp-ti{padding:7px 12px;border-radius:9px;font-size:14px!important;font-variant-numeric:tabular-nums;text-align:right;color:var(--ink2)!important;transition:background .12s}
+.dtp-ti.hr{color:var(--ink)!important;font-weight:700!important}
+.dtp-ti:hover{background:var(--bbg);color:var(--navy)!important}
+.dtp.tm .dtp-f{margin-top:6px;padding:6px 4px 0}
 input[type=checkbox],input[type=radio]{width:17px;height:17px;accent-color:var(--navy);flex:none;margin:0}
 .btn{background:var(--navy);color:#fff;border:none;border-radius:10px;padding:10px 18px;font-size:14px;font-weight:700;
   transition:background .16s,box-shadow .16s,transform .1s;display:inline-flex;align-items:center;gap:7px;justify-content:center;white-space:nowrap}
@@ -636,24 +673,165 @@ button.crow:hover{background:#F5F8FC}
 
 /* ---------- css/features/events.css ---------- */
 /* ============ דאטה ביתנו — אירועים ודפי נחיתה ============ */
-/* ---------- אירועים ---------- */
-.evgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px;margin-bottom:16px}
-.ev{background:#fff;border:1.5px solid var(--line2);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:8px;box-shadow:var(--sh);text-align:start}
-.ev.on{border-color:var(--navy);box-shadow:0 0 0 1px var(--navy),var(--sh)}
-.ev h3{margin:0;font-size:16px;font-weight:900;color:var(--navy)}
-.ev .n{font-size:26px;font-weight:900;color:var(--navy);line-height:1}
-.lp{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#fff;box-shadow:0 14px 30px -18px rgba(11,46,91,.45)}
+#v-events svg{fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+
+/* ---------- כותרת המסך: הכפתור מתחת לכותרת, בצד ימין ---------- */
+.evhd{margin-bottom:22px}
+.evhd h2{margin:0;font-size:26px;font-weight:900;color:var(--navy);letter-spacing:-.02em}
+.evhd p{margin:4px 0 0;color:var(--ink2);font-size:14.5px}
+.evadd{margin-top:16px;padding:11px 20px;font-size:14.5px;border-radius:var(--r-btn);box-shadow:0 10px 22px -14px rgba(11,46,91,.9)}
+
+/* ---------- רשימת האירועים ---------- */
+.evsec{margin-bottom:26px}
+.evsec h3{display:flex;align-items:center;gap:8px;margin:0 0 12px;font-size:15px;font-weight:900;color:var(--navy)}
+.evsec h3 span{font-size:12px;font-weight:800;color:var(--ink2);background:#fff;border:1px solid var(--line2);border-radius:999px;padding:1px 9px}
+.evlist{display:grid;grid-template-columns:repeat(auto-fill,minmax(440px,1fr));gap:14px}
+.evnone{color:var(--ink3);font-size:14px;padding:6px 2px}
+.evc{display:flex;align-items:center;gap:16px;text-align:start;background:var(--card);border:1px solid var(--line2);border-radius:var(--r-card);
+  padding:16px 18px;box-shadow:var(--sh-card);font:inherit;color:inherit;transition:transform .2s var(--ease),box-shadow .2s var(--ease),border-color .2s;
+  animation:aUp .5s var(--ease) both}
+.evc:hover{transform:translateY(-3px);box-shadow:var(--sh-hover);border-color:var(--bbd)}
+.evc:active{transform:scale(.99)}
+.evdt{flex:none;width:62px;height:66px;border-radius:15px;background:var(--hero);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  box-shadow:var(--hero-sh);line-height:1}
+.evdt b{font-size:26px;font-weight:900}
+.evdt small{font-size:12px;font-weight:700;color:#C9DCF3;margin-top:4px}
+.evc.past .evdt{background:var(--line3);color:var(--ink2);box-shadow:none}
+.evc.past .evdt small{color:var(--ink3)}
+.evbd{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.evn{font-size:16px;font-weight:800;color:var(--navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.evm{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.evm svg{width:15px;height:15px;flex:none;color:var(--ink3)}
+.evct{flex:none;display:flex;flex-direction:column;align-items:center;min-width:54px;padding-inline-start:14px;border-inline-start:1px solid var(--line3)}
+.evct b{font-size:24px;font-weight:900;color:var(--navy);line-height:1.1}
+.evct small{font-size:11.5px;color:var(--ink3);font-weight:700}
+.evc.past .evn,.evc.past .evct b{color:var(--ink2)}
+.evempty .empty{padding:54px 20px}
+.evei{display:inline-grid;place-items:center;width:58px;height:58px;border-radius:16px;background:var(--bbg);color:var(--navy);margin-bottom:12px}
+.evei svg{width:28px;height:28px}
+
+/* ---------- חזרה ---------- */
+.evback{display:inline-flex;align-items:center;gap:4px;border:0;background:none;font:inherit;font-size:14px;font-weight:700;color:var(--navy-l);
+  padding:4px 8px 4px 12px;margin:0 -8px 14px 0;border-radius:9px;transition:background .15s}
+.evback:hover{background:#fff}
+.evback svg{width:18px;height:18px}
+
+/* ---------- אירוע אחד ---------- */
+.evhero{position:relative;overflow:hidden;display:flex;gap:24px;align-items:stretch;background:var(--hero);color:#fff;border-radius:var(--r-card);
+  padding:26px 28px;box-shadow:var(--hero-sh);margin-bottom:16px;animation:aUp .5s var(--ease) both}
+.evhero::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.13) 50%,transparent 60%);
+  transform:translateX(-100%);animation:shine 7s ease-in-out 1.2s infinite;pointer-events:none}
+.evhi{flex:1;min-width:0;position:relative;z-index:1}
+.evey{font-size:12px;font-weight:800;letter-spacing:.14em;color:var(--gold)}
+.evhero h2{margin:6px 0 8px;font-size:28px;font-weight:900;line-height:1.2;letter-spacing:-.01em}
+.evwh{display:flex;flex-wrap:wrap;gap:6px 20px;color:#DCE7F4;font-size:15px}
+.evwh span{display:inline-flex;align-items:center;gap:7px}
+.evwh svg{width:17px;height:17px;color:#F3D58B}
+.evhero p{margin:12px 0 0;color:#C9DCF3;font-size:14.5px;line-height:1.65;white-space:pre-wrap;max-width:720px}
+.evact{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:20px}
+.evact .sp{flex:1}
+.evhb{display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.12);color:#fff;font:inherit;font-size:13.5px;font-weight:700;
+  padding:8px 14px;border-radius:10px;transition:background .15s,transform .1s}
+.evhb:hover:not(:disabled){background:rgba(255,255,255,.22)}
+.evhb:active{transform:scale(.98)}
+.evhb:disabled{opacity:.45;cursor:default}
+.evhb svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.evhb.dl{background:none;border-color:transparent;color:#C9DCF3;font-weight:600}
+.evhb.dl:hover{background:rgba(255,255,255,.1);color:#fff}
+.evhn{position:relative;z-index:1;flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:120px;
+  border-inline-start:1px solid rgba(255,255,255,.16);padding-inline-start:24px}
+.evhn b{font-size:48px;font-weight:900;line-height:1}
+.evhn span{color:#C9DCF3;font-weight:700;font-size:14px;margin-top:4px}
+
+.evrow{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:16px;align-items:start}
+.evrow .card,.evregs,.edmain,.edside .card{border-radius:var(--r-card);box-shadow:var(--sh-card)}
+.evshare .ch svg{width:17px;height:17px;margin-inline-end:6px;vertical-align:-3px}
+.evshare .ch{justify-content:flex-start}
+.evshare .ch .sub{margin-inline-start:auto}
+.evlink{display:flex;gap:8px}
+.evlink input{flex:1;font-size:15px!important;font-weight:600;color:var(--navy)!important;background:var(--bbg)!important;border-color:var(--bbd)!important;text-align:left}
+.evlink .btn svg,.evsh svg{width:17px;height:17px}
+.evsh{display:flex;gap:8px;margin-top:10px}
+.evsh .btn{text-decoration:none}
+.evwa{display:inline-flex;align-items:center;gap:8px;border:0;border-radius:10px;padding:10px 18px;font:inherit;font-size:14px;font-weight:800;color:#fff;background:var(--gtx);
+  transition:filter .15s,transform .1s}
+.evwa:hover{filter:brightness(1.1)}
+.evwa:active{transform:scale(.98)}
+.evpv{margin-top:18px;padding-top:16px;border-top:1px solid var(--line3)}
+.evpvt{font-size:12px;font-weight:800;color:var(--ink3);margin-bottom:8px}
+.evbub{background:var(--gbg);border:1px solid var(--gbd);border-radius:14px 14px 4px 14px;padding:6px;max-width:380px}
+.evog{background:#fff;border-radius:10px;overflow:hidden}
+.evog img{display:block;width:100%;aspect-ratio:1200/630;object-fit:cover}
+.evogph{display:grid;place-items:center;aspect-ratio:1200/630;background:var(--line3);color:var(--ink3)}
+.evogph svg{width:34px;height:34px}
+.evogt{display:flex;flex-direction:column;gap:2px;padding:8px 10px}
+.evogt b{font-size:13.5px;color:var(--ink)}
+.evogt span{font-size:12px;color:var(--ink2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.evogt small{font-size:11px;color:var(--ink3);text-align:right}
+.evbtx{font-size:12.5px;color:var(--navy-l);padding:6px 6px 2px;text-align:left;word-break:break-all}
+.evst{display:flex;align-items:flex-start;gap:8px;margin-top:12px;font-size:13px;color:var(--ink2);line-height:1.55}
+.evdot{flex:none;width:9px;height:9px;border-radius:50%;background:var(--line);margin-top:6px}
+.evdot.g{background:var(--gtx);box-shadow:0 0 0 4px var(--gbg)}
+.evdot.y{background:var(--gold);box-shadow:0 0 0 4px var(--ybg)}
+
+.evstats{display:flex;flex-direction:column;gap:10px}
+.evs{background:var(--card);border:1px solid var(--line2);border-radius:16px;padding:14px 18px;box-shadow:var(--sh-card);display:flex;flex-direction:column;gap:2px;
+  animation:aUp .5s var(--ease) both}
+.evs:nth-child(2){animation-delay:60ms}.evs:nth-child(3){animation-delay:120ms}.evs:nth-child(4){animation-delay:180ms}
+.evs span{font-size:12.5px;font-weight:700;color:var(--ink3)}
+.evs b{font-size:28px;font-weight:900;color:var(--navy);line-height:1.2}
+.evs b.sm{font-size:15px;font-weight:800}
+.evregs{margin-top:16px}
+.evregs .ch{justify-content:flex-start}
+.evregs .ch .sp{flex:1}
+.evregs .ch .btn svg{width:15px;height:15px}
+
+/* ---------- עריכה ---------- */
+.eded{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:18px;align-items:start}
+.edf{display:flex;flex-direction:column;gap:18px;padding:22px 24px}
+.edg2{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:end}
+.edloc{display:grid;grid-template-columns:2fr 2fr 1fr 1fr;gap:10px;background:#FAFBFD;border:1px solid var(--line3);border-radius:14px;padding:12px}
+.fl.sub{font-size:11.5px;color:var(--ink3);margin-bottom:4px}
+.edchips{display:flex;flex-wrap:wrap;gap:8px}
+.edchip{display:inline-flex;align-items:center;gap:7px;border:1.5px solid var(--line);border-radius:999px;padding:7px 14px 7px 16px;font-size:14px;font-weight:700;color:var(--ink2);
+  cursor:pointer;background:#fff;transition:all .18s var(--ease);user-select:none}
+.edchip input{position:absolute;opacity:0;pointer-events:none}
+.edchip svg{width:0;height:16px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;transition:width .18s var(--ease)}
+.edchip:hover{border-color:var(--navy-l)}
+.edchip.on{background:var(--navy);border-color:var(--navy);color:#fff}
+.edchip.on svg{width:16px;color:var(--gold)}
+.edchip:focus-within{box-shadow:0 0 0 3px rgba(27,75,138,.18)}
+.edconf{min-height:42px}
+.edside{position:sticky;top:18px;display:flex;flex-direction:column}
+.edside .ch svg{width:17px;height:17px;margin-inline-end:6px;vertical-align:-3px}
+.edside .ch{justify-content:flex-start}
+.edside .ch .sub{margin-inline-start:auto}
+.edimg{border-radius:12px;overflow:hidden;background:var(--line3);aspect-ratio:1200/630;box-shadow:0 10px 24px -16px rgba(11,46,91,.6)}
+.edimg img{display:block;width:100%;height:100%;object-fit:cover}
+.edpvt{font-weight:700;margin:4px 2px 8px}
+.edbar{position:sticky;bottom:0;z-index:5;display:flex;align-items:center;gap:10px;margin:18px -24px 0;padding:14px 24px;
+  background:rgba(239,242,246,.92);backdrop-filter:blur(8px);border-top:1px solid var(--line2)}
+.edbar .btn{min-width:120px;min-height:44px;font-size:15px}
+
+/* ---------- תצוגת דף ההרשמה ---------- */
+.lp{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#fff;box-shadow:0 14px 30px -18px rgba(11,46,91,.45)}
 .lp .chrome{display:flex;align-items:center;gap:6px;padding:9px 12px;background:#E8EDF3}
 .lp .chrome i{width:10px;height:10px;border-radius:50%;background:#C3CBD6}
-.lp .chrome span{margin-inline-start:10px;font-size:12px;color:var(--ink2);background:#fff;border-radius:6px;padding:2px 10px}
-.lp .hero{background:var(--navy);color:#fff;padding:26px 22px}
+.lp .chrome span{margin-inline-start:10px;font-size:11.5px;color:var(--ink2);background:#fff;border-radius:6px;padding:2px 10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lp .lpimg{display:block;width:100%;aspect-ratio:1200/630;object-fit:cover}
+.lp .hero{background:var(--hero);color:#fff;padding:24px 22px}
 .lp .hero .ey{font-size:11px;letter-spacing:.18em;color:var(--gold);font-weight:800}
-.lp .hero h3{margin:6px 0 4px;font-size:26px;font-weight:900;line-height:1.2}
-.lp .hero .wh{font-size:14.5px;color:#DCE7F4}
-.lp .hero p{margin:10px 0 0;font-size:14px;color:#A9C4E0;line-height:1.6;white-space:pre-wrap}
+.lp .hero h3{margin:6px 0 6px;font-size:24px;font-weight:900;line-height:1.2}
+.lp .hero .wh{font-size:14px;color:#DCE7F4}
+.lp .hero p{margin:10px 0 0;font-size:13.5px;color:#A9C4E0;line-height:1.6;white-space:pre-wrap}
 .lp form{padding:20px 22px;display:flex;flex-direction:column;gap:12px}
+.lp input:disabled{background:#fff;cursor:default}
+.lp .btn:disabled{opacity:1;cursor:default}
 .lp .done{padding:30px 22px;text-align:center}
 .lp .done b{display:block;font-size:20px;color:var(--navy);margin-bottom:4px}
+
+/* ---------- css/features/pniyot.css ---------- */
+/* ============ דאטה ביתנו — פניות הציבור ============ */
 
 /* ---------- css/features/auth.css ---------- */
 /* ============ דאטה ביתנו — מסך הכניסה ============ */
@@ -836,6 +1014,7 @@ body.ro .drawer .db::before{content:"צפייה בלבד — אין לך הרש�
   <section class="screen" id="v-fields"></section>
   <section class="screen" id="v-sms"></section>
   <section class="screen" id="v-events"></section>
+  <section class="screen" id="v-pniyot"></section>
   <section class="screen" id="v-users"></section>
   <div class="foot">הנתונים נשמרים בדפדפן של המחשב הזה בלבד ולא נשלחים לשום שרת.</div>
 </main>
@@ -4167,11 +4346,13 @@ const ICON = {
   sliders: '<path d="M4 6h9M19 6h1M4 12h3M13 12h7M4 18h11"/><circle cx="16" cy="6" r="2.2"/><circle cx="10" cy="12" r="2.2"/><circle cx="18" cy="18" r="2.2"/>',
   msg: '<path d="M4 5h16v11H9l-5 4z"/>',
   cal: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+  inbox: '<path d="M3 13l2.6-8h12.8L21 13v6H3z"/><path d="M3 13h5l1.5 2.5h5L16 13h5"/>',
   users: '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.6-3.6 3.2-5.5 6.5-5.5s5.9 1.9 6.5 5.5M16 4.5a3.5 3.5 0 0 1 0 7M18 14.6c2 .6 3.2 2.4 3.5 5.4"/>'
 };
 const svg = k => '<svg viewBox="0 0 24 24" aria-hidden="true">' + ICON[k] + '</svg>';
 const VIEWS = [['home', 'דף ראשי', 'home'], ['search', 'חיפוש מתקדם', 'search'], ['map', 'מפת קלפיות', 'map'], ['upload', 'העלאת אקסלים', 'up'],
-  ['fields', 'פרטים דינמיים', 'sliders'], ['sms', 'שליחת סמסים', 'msg'], ['events', 'אירועים', 'cal']];
+  ['fields', 'פרטים דינמיים', 'sliders'], ['sms', 'שליחת סמסים', 'msg'], ['events', 'אירועים', 'cal'],
+  ['pniyot', 'פניות הציבור', 'inbox']];
 
 /* ------------------------------------------------------- מוקדי ההצבעה */
 /* KALPI: [יישוב, שם המוקד, כתובת, קלפיות, lat, lng, מיקום מדויק, בזב26, מצביעים26, ישראל ביתנו26, בזב25, מצביעים25, ישראל ביתנו25, מוקד חזק] */
@@ -4505,6 +4686,115 @@ function go(v, opts) {
   if (!opts || !opts.keepScroll) window.scrollTo({ top: 0 });
 }
 function refresh() { renderTabs(); RENDER[S.view]({ keepScroll: true, refresh: true }); }
+
+/* ======================================== בוחר תאריך ושעה — לכל המערכת
+   כל <input type="date"> ו-<input type="time"> בכל מסך מקבל לבד לוח שנה / רשימת שעות בעיצוב שלנו.
+   אפשר להמשיך להקליד בשדה כרגיל; לחיצה על השדה פותחת את הבחירה. הערך נשמר באותו פורמט (YYYY-MM-DD / HH:MM)
+   ונשלחים אירועי input ו-change רגילים — כך שאף מסך לא צריך לדעת על זה. */
+(function () {
+  const MON = ['ינואר', 'פברואר', 'מרץ', 'אפריל', 'מאי', 'יוני', 'יולי', 'אוגוסט', 'ספטמבר', 'אוקטובר', 'נובמבר', 'דצמבר'];
+  const WD = ['א׳', 'ב׳', 'ג׳', 'ד׳', 'ה׳', 'ו׳', 'ש׳'];
+  const CH = d => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="' + (d > 0 ? 'm10 6 6 6-6 6' : 'm14 6-6 6 6 6') + '"/></svg>';
+  let box = null, inp = null, vm = null, view = 'd';
+  const isDT = el => el && el.tagName === 'INPUT' && (el.type === 'date' || el.type === 'time') && !el.disabled && !el.readOnly;
+  const parse = s => { const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s || ''); return m ? new Date(+m[1], +m[2] - 1, +m[3]) : null; };
+  function ensure() {
+    if (box) return;
+    box = document.createElement('div'); box.className = 'dtp'; box.hidden = true; box.setAttribute('role', 'dialog');
+    document.body.appendChild(box);
+    box.addEventListener('mousedown', e => e.preventDefault());           // הפוקוס נשאר בשדה
+    box.addEventListener('click', e => {
+      e.stopPropagation();                                                // שלא ייסגרו חלונות קופצים שהשדה נמצא בתוכם
+      const b = e.target.closest('button'); if (!b || !inp) return;
+      const d = b.dataset;
+      if (d.nav) { if (view === 'd') vm.setMonth(vm.getMonth() + +d.nav); else if (view === 'm') vm.setFullYear(vm.getFullYear() + +d.nav); else vm.setFullYear(vm.getFullYear() + 12 * +d.nav); draw(); }
+      else if (d.view) { view = d.view; draw(); }
+      else if (d.y) { vm.setFullYear(+d.y); view = 'm'; draw(); }
+      else if (d.m) { vm.setMonth(+d.m); view = 'd'; draw(); }
+      else if (d.v != null) set(d.v);
+    });
+  }
+  function set(v) {
+    const el = inp; close(); if (!el) return;
+    el.value = v;
+    el.dispatchEvent(new Event('input', { bubbles: true }));
+    el.dispatchEvent(new Event('change', { bubbles: true }));
+    el.focus();
+  }
+  function place() {
+    if (!box || box.hidden || !inp) return;
+    const r = inp.getBoundingClientRect();
+    if (!r.width || r.bottom < 0 || r.top > innerHeight) { close(); return; }
+    const w = box.offsetWidth, h = box.offsetHeight;
+    box.style.left = Math.max(8, Math.min(innerWidth - w - 8, r.right - w)) + 'px';
+    box.style.top = (innerHeight - r.bottom < h + 12 && r.top > h + 12 ? r.top - h - 6 : r.bottom + 6) + 'px';
+  }
+  function drawDate() {
+    const sel = inp.value, today = isoDay(new Date()), mn = inp.min || '', mx = inp.max || '';
+    const y = vm.getFullYear(), m = vm.getMonth();
+    const head = (lb, v) => '<div class="dtp-h"><button type="button" class="dtp-nv" data-nav="-1" aria-label="הקודם">' + CH(1) + '</button>' +
+      '<button type="button" class="dtp-t" data-view="' + v + '">' + lb + '</button><button type="button" class="dtp-nv" data-nav="1" aria-label="הבא">' + CH(-1) + '</button></div>';
+    if (view === 'y') {
+      const y0 = y - (y % 12);
+      return head('<span dir="ltr">' + y0 + ' – ' + (y0 + 11) + '</span>', 'd') + '<div class="dtp-g3">' + Array.from({ length: 12 }, (_, i) => y0 + i).map(Y =>
+        '<button type="button" class="dtp-c' + (sel.slice(0, 4) === String(Y) ? ' on' : '') + (Y === new Date().getFullYear() ? ' now' : '') + '" data-y="' + Y + '">' + Y + '</button>').join('') + '</div>';
+    }
+    if (view === 'm') {
+      return head(String(y), 'y') + '<div class="dtp-g3">' + MON.map((lb, i) =>
+        '<button type="button" class="dtp-c' + (sel.slice(0, 7) === y + '-' + pad2(i + 1) ? ' on' : '') + '" data-m="' + i + '">' + lb + '</button>').join('') + '</div>';
+    }
+    const first = new Date(y, m, 1), start = new Date(y, m, 1 - first.getDay());
+    let cells = '';
+    for (let i = 0; i < 42; i++) {
+      const d = new Date(start.getFullYear(), start.getMonth(), start.getDate() + i), iso = isoDay(d);
+      const off = (mn && iso < mn) || (mx && iso > mx);
+      cells += '<button type="button" class="dtp-d' + (d.getMonth() !== m ? ' out' : '') + (iso === today ? ' now' : '') + (iso === sel ? ' on' : '') + '"' +
+        (off ? ' disabled' : ' data-v="' + iso + '"') + '>' + d.getDate() + '</button>';
+    }
+    const tOff = (mn && today < mn) || (mx && today > mx);
+    return head(MON[m] + ' ' + y, 'm') + '<div class="dtp-w">' + WD.map(w => '<span>' + w + '</span>').join('') + '</div><div class="dtp-g">' + cells + '</div>' +
+      '<div class="dtp-f"><button type="button" class="dtp-l"' + (tOff ? ' disabled' : ' data-v="' + today + '"') + '>היום</button>' +
+      (inp.required ? '' : '<button type="button" class="dtp-l mut" data-v="">ניקוי</button>') + '</div>';
+  }
+  function drawTime() {
+    const sel = inp.value.slice(0, 5), st = Math.max(5, Math.min(60, (+inp.step || 900) / 60)) | 0, out = [];
+    for (let t = 0; t < 1440; t += st) out.push(pad2(Math.floor(t / 60)) + ':' + pad2(t % 60));
+    if (sel && !out.includes(sel)) { out.push(sel); out.sort(); }
+    return '<div class="dtp-tl">' + out.map(v => '<button type="button" class="dtp-ti' + (v === sel ? ' on' : '') + (v.endsWith(':00') ? ' hr' : '') + '" data-v="' + v + '">' + v + '</button>').join('') + '</div>' +
+      '<div class="dtp-f"><span class="mut sm">או מקלידים בשדה</span>' + (inp.required ? '' : '<button type="button" class="dtp-l mut" data-v="">ניקוי</button>') + '</div>';
+  }
+  function draw() {
+    box.className = 'dtp ' + (inp.type === 'time' ? 'tm' : 'dt');
+    box.innerHTML = inp.type === 'time' ? drawTime() : drawDate();
+    box.hidden = false; place();
+    if (inp.type === 'time') {
+      const l = box.querySelector('.dtp-tl'), on = box.querySelector('.dtp-ti.on') || box.querySelector('[data-v="19:00"]') || box.querySelector('[data-v="09:00"]');
+      if (l && on) l.scrollTop = on.offsetTop - l.clientHeight / 2 + on.offsetHeight / 2;
+    }
+  }
+  function open(el) {
+    ensure(); inp = el; view = 'd';
+    vm = parse(el.value) || parse(el.min && el.min > isoDay(new Date()) ? el.min : '') || new Date();
+    vm = new Date(vm.getFullYear(), vm.getMonth(), 1);
+    draw();
+  }
+  function close() { if (box) box.hidden = true; inp = null; }
+  document.addEventListener('mousedown', e => {
+    if (box && !box.hidden && box.contains(e.target)) return;
+    const el = e.target;
+    if (isDT(el)) { if (el === inp && !box.hidden) close(); else open(el); return; }
+    close();
+  }, true);
+  document.addEventListener('keydown', e => {
+    if (!isDT(e.target)) return;
+    if (e.key === 'Escape' && box && !box.hidden) { e.stopPropagation(); close(); }
+    else if ((e.key === 'ArrowDown' && e.altKey) || e.key === 'F4') { e.preventDefault(); open(e.target); }
+    else if (e.key === 'Tab') close();
+  }, true);
+  document.addEventListener('input', e => { if (e.isTrusted && e.target === inp && box && !box.hidden) { const d = parse(inp.value); if (d && inp.type === 'date') { vm = new Date(d.getFullYear(), d.getMonth(), 1); view = 'd'; } draw(); } });
+  document.addEventListener('focusout', e => { if (e.target === inp) setTimeout(() => { if (inp && document.activeElement !== inp) close(); }, 0); });
+  addEventListener('scroll', place, true); addEventListener('resize', place);
+})();
 
 
 /* ---- הפעולות (כפתורי data-act) של המסך הזה ---- */
@@ -6134,121 +6424,465 @@ Object.assign(ACT, {
 /* ---------- js/features/events.js ---------- */
 /* ============================================================
    דאטה ביתנו — אירועים ודפי נחיתה
-   אירועים, דף נחיתה לכל אירוע, נרשמים וייבוא.
+   שלושה מצבים במסך:
+   • list — רק האירועים: קרובים ושעברו. "+ אירוע חדש" מתחת לכותרת.
+   • view — אירוע אחד: קישור ההרשמה לשליחה (עם תמונה לווטסאפ), מספרים, והטבלה של הנרשמים.
+   • edit — יצירה/עריכה. עובדים על טיוטה, ושום דבר לא נשמר עד "שמירה".
+   דף ההרשמה הציבורי: maarehet_mate/e/ (נבנה מ-landing/landing.html). הפרטים הציבוריים נשמרים ב-events_pub,
+   ההרשמות מגיעות ל-event_regs, והמערכת מושכת אותן לבד אל המאגר (evSync).
    ============================================================ */
-/* ===================================================== אירועים */
-const E = { sel: '', sim: null, simDone: false };
-const FLD_EV = [['first', 'שם פרטי'], ['last', 'שם משפחה'], ['phone', 'טלפון'], ['tz', 'ת.ז'], ['city', 'עיר'], ['count', 'כמה תגיעו?']];
-function newEventObj() { const d = new Date(Date.now() + 10 * 864e5); return { id: 'ev' + uid(), name: 'אירוע חדש', date: isoDay(d), time: '19:30', place: '', desc: '', fields: { first: true, last: true, phone: true, tz: false, city: true, count: true }, db: 'events', tag: '', confirm: true, intake: '', created: Date.now(), regs: [] }; }
-RENDER.events = function (o) {
-  if (o.sel) E.sel = o.sel;
-  if (!E.sel && S.events[0]) E.sel = S.events[0].id;
-  const ev = S.events.find(e => e.id === E.sel);
-  const today = isoDay(new Date());
-  $('#v-events').innerHTML =
-    '<div class="shead"><div><h2>אירועים ודפי נחיתה</h2><p>מי שנרשם בדף נכנס למאגר לבד</p></div><button class="btn" data-act="newEvent">+ אירוע חדש</button></div>' +
-    '<div class="evgrid" id="evList">' + (S.events.map(e => '<div class="ev' + (e.id === E.sel ? ' on' : '') + '"><div class="row" style="justify-content:space-between"><h3>' + esc(e.name) + '</h3>' + (e.date && e.date < today ? '<span class="pill n">עבר</span>' : '<span class="pill g">דף פעיל</span>') + '</div>' +
-      '<span class="mut sm">' + fmtDate(e.date) + (e.time ? ' · ' + e.time : '') + (e.place ? ' · ' + esc(e.place.split('·')[0].trim()) : '') + '</span>' +
-      '<div class="row" style="align-items:baseline;gap:6px"><span class="n num">' + nf(e.regs.length) + '</span><span class="mut sm">נרשמו · ' + nf(e.regs.reduce((a, r) => a + (r.count || 1), 0)) + ' משתתפים</span></div>' +
-      '<div class="row" style="gap:6px"><button class="btn sm' + (e.id === E.sel ? '' : ' sec') + '" data-act="selEvent" data-v="' + e.id + '">' + (e.id === E.sel ? 'בעריכה' : 'עריכה') + '</button><button class="btn sec sm" data-act="evSms" data-v="' + e.id + '"' + (e.regs.length ? '' : ' disabled') + '>סמס לנרשמים</button></div></div>').join('') ||
-      '<div class="card"><div class="empty"><b>אין עדיין אירועים</b><button class="btn" style="margin-top:10px" data-act="newEvent">+ אירוע חדש</button></div></div>') + '</div>' +
-    (ev ? '<div class="cols"><div class="c1"><div class="card"><div class="ch">פרטי האירוע<span class="sub">נשמר אוטומטית</span></div><div class="cb" style="display:flex;flex-direction:column;gap:12px">' +
-        '<div><label class="fl" for="ev_name">שם האירוע</label><input id="ev_name" type="text" data-ev="name" value="' + esc(ev.name) + '"></div>' +
-        '<div class="grid" style="grid-template-columns:1fr 1fr"><div><label class="fl" for="ev_date">תאריך</label><input id="ev_date" type="date" data-ev="date" value="' + esc(ev.date) + '"></div><div><label class="fl" for="ev_time">שעה</label><input id="ev_time" type="time" data-ev="time" value="' + esc(ev.time) + '"></div></div>' +
-        '<div><label class="fl" for="ev_place">מיקום</label><input id="ev_place" type="text" data-ev="place" value="' + esc(ev.place) + '"></div>' +
-        '<div><label class="fl" for="ev_desc">תיאור</label><textarea id="ev_desc" data-ev="desc" rows="3">' + esc(ev.desc) + '</textarea></div>' +
-        '<div><span class="fl">שדות בטופס ההרשמה</span><div class="grid" style="grid-template-columns:1fr 1fr;gap:0 12px">' + FLD_EV.map(([k, l]) => '<label class="opt"><input type="checkbox" data-evf="' + k + '"' + (ev.fields[k] ? ' checked' : '') + '>' + l + '</label>').join('') + '</div><div class="sm mut">טלפון או ת.ז — לפחות אחד מהם, כדי לזהות את האדם במאגר.</div></div>' +
-        '<div class="grid" style="grid-template-columns:1fr 1fr"><div><label class="fl" for="ev_db">הנרשמים ייכנסו למאגר</label><select id="ev_db" data-ev="db">' + S.dbs.map(d => '<option value="' + d.id + '"' + (ev.db === d.id ? ' selected' : '') + '>' + esc(d.name) + '</option>').join('') + '</select></div>' +
-        '<div><label class="fl" for="ev_tag">תגית אוטומטית</label><input id="ev_tag" type="text" data-ev="tag" value="' + esc(ev.tag) + '" placeholder="למשל: חוג בית אשקלון"></div></div>' +
-        '<label class="opt"><input type="checkbox" data-ev="confirm"' + (ev.confirm ? ' checked' : '') + '>לשלוח סמס אישור לכל נרשם</label>' +
-        '<div><label class="fl" for="ev_intake">כתובת קליטה לדף המפורסם (Apps Script, לא חובה)</label><input id="ev_intake" type="url" data-ev="intake" value="' + esc(ev.intake) + '" placeholder="https://script.google.com/macros/s/…/exec" style="direction:ltr;text-align:right"></div>' +
-        '<div class="row"><button class="btn sec sm" data-act="evDownload">הורדת דף הנחיתה</button><button class="btn sec sm" data-act="evImport">ייבוא נרשמים מקובץ</button><span style="flex:1"></span><button class="btn red sm" data-act="evDelete">מחיקת האירוע</button></div>' +
-      '</div></div></div>' +
-      '<div class="c1" id="evPrev"><div class="sm mut" style="font-weight:700;margin-bottom:8px">תצוגה מקדימה — אפשר למלא ולנסות, ההרשמה נכנסת באמת למאגר</div><div id="evPrevBox"></div></div></div>' +
-      '<div class="card"><div class="ch">הנרשמים<span class="sub">' + nf(ev.regs.length) + ' נרשמו</span></div><div class="cb tight" id="evRegs"></div></div>' : '');
-  if (ev) { renderEvPreview(ev); renderEvRegs(ev); }
+const E = { mode: 'list', sel: '', draft: null, isNew: false, simDone: false, pub: {}, lastSync: 0, syncing: false, cities: null, streets: {}, imgUrl: '' };
+const LP_BASE = 'https://davidaidulman.github.io/maarehet_mate/e/';
+const FLD_EV = [['first', 'שם פרטי'], ['last', 'שם משפחה'], ['phone', 'טלפון נייד'], ['tz', 'תעודת זהות']];
+const WDAY = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'];
+const MON_S = ['ינו׳', 'פבר׳', 'מרץ', 'אפר׳', 'מאי', 'יוני', 'יולי', 'אוג׳', 'ספט׳', 'אוק׳', 'נוב׳', 'דצמ׳'];
+const EVI = {
+  back: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>',
+  link: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4.5 4.5 0 0 0 6.4 0l3-3a4.5 4.5 0 0 0-6.4-6.4l-1.2 1.2"/><path d="M14 10a4.5 4.5 0 0 0-6.4 0l-3 3a4.5 4.5 0 0 0 6.4 6.4l1.2-1.2"/></svg>',
+  copy: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2.5"/><path d="M16 8V5.5A1.5 1.5 0 0 0 14.5 4h-9A1.5 1.5 0 0 0 4 5.5v9A1.5 1.5 0 0 0 5.5 16H8"/></svg>',
+  wa: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l1.3-3.9A8 8 0 1 1 8 19z"/><path d="M9.2 8.6c.2-.4.5-.5.8-.5h.5c.2 0 .4.1.5.4l.6 1.5c.1.2 0 .5-.1.6l-.5.6c.6 1.1 1.5 2 2.6 2.6l.6-.5c.2-.2.4-.2.6-.1l1.5.6c.3.1.4.3.4.5v.5c0 .3-.1.6-.5.8-1.6.9-6.8-2.6-7-6.9z"/></svg>',
+  open: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9"/><path d="M18 14v4.5A1.5 1.5 0 0 1 16.5 20h-11A1.5 1.5 0 0 1 4 18.5v-11A1.5 1.5 0 0 1 5.5 6H10"/></svg>',
+  edit: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13.5 6.5 4 4"/></svg>',
+  pin: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.6"/></svg>',
+  clock: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
+  img: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"/><circle cx="9" cy="10" r="1.8"/><path d="m21 16-5-5-8 8"/></svg>',
+  sync: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14.3-4.6L4 8M4 4v4h4M4 13a8 8 0 0 0 14.3 4.6L20 16M20 20v-4h-4"/></svg>'
 };
-function renderEvPreview(ev) {
-  const F = ev.fields;
-  const inp = (k, lb, type) => '<div><label class="fl" for="sim_' + k + '">' + lb + '</label><input id="sim_' + k + '" type="' + (type || 'text') + '" data-sim="' + k + '"' + (k === 'phone' ? ' style="direction:ltr;text-align:right"' : '') + '></div>';
-  $('#evPrevBox').innerHTML = '<div class="lp"><div class="chrome"><i></i><i></i><i></i><span>דף הרשמה · ' + esc(ev.name) + '</span></div>' +
-    '<div class="hero"><div class="ey">הזמנה</div><h3>' + esc(ev.name) + '</h3><div class="wh">' + [fmtDate(ev.date), ev.time, ev.place].filter(Boolean).map(esc).join(' · ') + '</div>' + (ev.desc ? '<p>' + esc(ev.desc) + '</p>' : '') + '</div>' +
-    (E.simDone ? '<div class="done"><b>תודה, נרשמת!</b><div class="mut">' + (ev.confirm ? 'בדף האמיתי יישלח עכשיו גם סמס אישור.' : '') + '</div><button class="btn sec" style="margin-top:14px" data-act="simAgain">הרשמה נוספת</button></div>' :
-    '<form id="simForm" onsubmit="return false"><div class="grid" style="grid-template-columns:1fr 1fr">' + (F.first ? inp('first', 'שם פרטי') : '') + (F.last ? inp('last', 'שם משפחה') : '') + '</div>' +
-      (F.phone ? inp('phone', 'טלפון נייד', 'tel') : '') + (F.tz ? inp('tz', 'תעודת זהות') : '') +
-      '<div class="grid" style="grid-template-columns:1fr 1fr">' + (F.city ? inp('city', 'עיר') : '') + (F.count ? '<div><label class="fl" for="sim_count">כמה תגיעו?</label><select id="sim_count" data-sim="count"><option>1</option><option>2</option><option>3</option><option>4</option><option>5+</option></select></div>' : '') + '</div>' +
-      '<button class="btn" style="min-height:48px;font-size:16px" data-act="simSubmit">אני מגיע/ה</button></form>') + '</div>';
+
+/* ------------------------------------------------------------------ עזרים */
+function evCode() { const a = 'abcdefghjkmnpqrstuvwxyz23456789', r = crypto.getRandomValues(new Uint8Array(8)); let s = ''; r.forEach(x => { s += a[x % a.length]; }); return s; }
+function newEventObj() {
+  const d = new Date(Date.now() + 7 * 864e5);
+  return { id: 'ev' + uid(), code: '', name: '', date: isoDay(d), time: '19:30', loc: { city: isCityUser() ? ME.city : '', street: '', house: '', apt: '' }, place: '', desc: '',
+    fields: { first: true, last: true, phone: true, tz: true }, db: 'main', tag: '', confirm: true, img: '', imgCustom: false, created: Date.now(), regs: [] };
+}
+const evLoc = ev => ev.loc || { city: '', street: '', house: '', apt: '' };
+function evPlace(ev) {
+  const l = evLoc(ev);
+  if (!l.city && !l.street) return ev.place || '';
+  const st = [l.street, l.house].filter(Boolean).join(' ') + (l.apt ? ', דירה ' + l.apt : '');
+  return [st, l.city].filter(Boolean).join(', ');
+}
+const evCity = ev => evLoc(ev).city || String(ev.place || '').split(/[·,]/)[0].trim();
+function evDay(ev) { const p = /^(\d{4})-(\d{2})-(\d{2})$/.exec(ev.date || ''); return p ? new Date(+p[1], +p[2] - 1, +p[3]) : null; }
+function evWhen(ev, withTime) { const d = evDay(ev); return (d ? 'יום ' + WDAY[d.getDay()] + ', ' + fmtDate(ev.date) : '') + (withTime !== false && ev.time ? ' · ' + ev.time : ''); }
+const evPast = ev => !!ev.date && ev.date < isoDay(new Date());
+const evLink = ev => ev.code ? LP_BASE + ev.code + '/' : '';
+const evSel = () => S.events.find(e => e.id === E.sel);
+const evNew = ev => (ev.regs || []).filter(r => r.n).length;
+function evShareText(ev) { return 'הוזמנת ל' + (ev.name || 'אירוע') + '\n' + evWhen(ev) + (evPlace(ev) ? '\n' + evPlace(ev) : '') + '\n\nלהרשמה: ' + evLink(ev); }
+function evPubData(ev) {
+  const l = evLoc(ev);
+  return { name: ev.name, date: ev.date, time: ev.time, place: evPlace(ev), city: l.city, street: l.street, house: l.house, apt: l.apt, desc: ev.desc,
+    fields: { first: !!ev.fields.first, last: !!ev.fields.last, phone: !!ev.fields.phone, tz: !!ev.fields.tz }, img: ev.img || '', imgCustom: !!ev.imgCustom };
+}
+
+/* ------------------------------------------------------------- המסך עצמו */
+RENDER.events = function (o) {
+  o = o || {};
+  if (o.sel) { E.sel = o.sel; E.mode = 'view'; E.simDone = false; }
+  else if (!o.refresh && !o.keepMode) { if (E.mode === 'edit' && o.keepScroll) return; E.mode = 'list'; }
+  if (E.mode === 'edit') { if (o.refresh) return; renderEvEdit(); return; }
+  if (E.mode === 'view' && !evSel()) E.mode = 'list';
+  if (E.mode === 'view') renderEvView(); else renderEvList();
+  if (CLOUD && ME && Date.now() - E.lastSync > 15000) evSync(true);
+};
+
+function evCard(e, i) {
+  const d = evDay(e), past = evPast(e), n = e.regs.length;
+  return '<button class="evc' + (past ? ' past' : '') + '" data-act="evOpen" data-v="' + e.id + '" style="animation-delay:' + Math.min(i, 12) * 50 + 'ms">' +
+    '<span class="evdt"><b class="num">' + (d ? d.getDate() : '—') + '</b><small>' + (d ? MON_S[d.getMonth()] : 'ללא תאריך') + '</small></span>' +
+    '<span class="evbd"><b class="evn">' + esc(e.name || 'אירוע ללא שם') + '</b>' +
+      '<span class="evm">' + EVI.clock + esc(evWhen(e).replace(/^יום /, '')) + '</span>' +
+      (evPlace(e) ? '<span class="evm">' + EVI.pin + esc(evPlace(e)) + '</span>' : '') + '</span>' +
+    '<span class="evct"><b class="num">' + nf(n) + '</b><small>' + (n === 1 ? 'נרשם/ה' : 'נרשמו') + '</small></span></button>';
+}
+function renderEvList() {
+  const today = isoDay(new Date());
+  const up = S.events.filter(e => !e.date || e.date >= today).sort((a, b) => (a.date || '9').localeCompare(b.date || '9') || (a.time || '').localeCompare(b.time || ''));
+  const past = S.events.filter(e => e.date && e.date < today).sort((a, b) => b.date.localeCompare(a.date));
+  const sec = (t, list, empty) => '<div class="evsec"><h3>' + t + '<span class="num">' + nf(list.length) + '</span></h3>' +
+    (list.length ? '<div class="evlist">' + list.map(evCard).join('') + '</div>' : '<div class="evnone">' + empty + '</div>') + '</div>';
+  $('#v-events').innerHTML =
+    '<div class="evhd"><h2>אירועים ודפי נחיתה</h2><p>חוגי בית ואירועים — לכל אירוע קישור הרשמה לשליחה, ומי שנרשם נכנס למאגר לבד</p>' +
+      '<button class="btn evadd" data-act="newEvent">+ אירוע חדש</button></div>' +
+    (S.events.length ? sec('אירועים קרובים', up, 'אין אירועים קרובים. יוצרים אחד ב„+ אירוע חדש”.') + (past.length ? sec('אירועים שעברו', past, '') : '') :
+      '<div class="card evempty"><div class="empty"><span class="evei">' + svg('cal') + '</span><b>עוד אין אירועים</b>יוצרים אירוע או חוג בית, שולחים את הקישור — והנרשמים נכנסים למאגר.</div></div>');
+}
+
+function renderEvView() {
+  const ev = evSel(), n = ev.regs.length, past = evPast(ev), link = evLink(ev);
+  const last = ev.regs.reduce((a, r) => Math.max(a, r.t || 0), 0);
+  const share = CLOUD && !ev.code ? '<div class="card evshare"><div class="ch">' + EVI.link + 'קישור ההרשמה</div><div class="cb"><div class="note b" style="margin:0 0 14px">לאירוע הזה עוד אין דף הרשמה. יוצרים אותו בלחיצה — ומקבלים קישור לשליחה.</div><button class="btn" data-act="evMakeLink">' + EVI.link + 'יצירת קישור הרשמה</button></div></div>' :
+    !CLOUD ? '<div class="card evshare"><div class="ch">דף ההרשמה<span class="sub">מצב מקומי</span></div><div class="cb"><div class="note y" style="margin:0 0 14px">קישור הרשמה לשליחה נוצר רק במערכת המחוברת (עם כניסה). כאן אפשר לנסות את הטופס — ההרשמה נכנסת באמת למאגר המקומי.</div><div id="evSim"></div></div></div>' :
+    '<div class="card evshare"><div class="ch">' + EVI.link + 'קישור ההרשמה<span class="sub">שולחים לאנשים — הם נרשמים, ואתם רואים אותם כאן</span></div><div class="cb">' +
+      '<div class="evlink"><input type="text" readonly value="' + esc(link) + '" id="evLinkIn" dir="ltr" aria-label="קישור ההרשמה"><button class="btn" data-act="evCopy">' + EVI.copy + 'העתקה</button></div>' +
+      '<div class="evsh"><button class="evwa" data-act="evWa">' + EVI.wa + 'שליחה בווטסאפ</button><a class="btn sec" href="' + esc(link) + '" target="_blank" rel="noopener">' + EVI.open + 'פתיחת הדף</a></div>' +
+      '<div class="evpv"><div class="evpvt">כך זה נראה בווטסאפ</div><div class="evbub"><div class="evog">' + (ev.img ? '<img src="' + esc(ev.img) + '" alt="">' : '<span class="evogph">' + EVI.img + '</span>') +
+        '<div class="evogt"><b>' + esc(ev.name) + '</b><span>' + esc(evWhen(ev) + (evPlace(ev) ? ' · ' + evPlace(ev) : '')) + '</span><small dir="ltr">davidaidulman.github.io</small></div></div>' +
+        '<div class="evbtx" dir="ltr">' + esc(link) + '</div></div><div id="evPubSt" class="evst"></div></div>' +
+    '</div></div>';
+  $('#v-events').innerHTML =
+    '<button class="evback" data-act="evBack">' + EVI.back + 'כל האירועים</button>' +
+    '<div class="evhero"><div class="evhi"><span class="evey">' + (past ? 'אירוע שעבר' : 'אירוע קרוב') + '</span><h2>' + esc(ev.name || 'אירוע ללא שם') + '</h2>' +
+      '<div class="evwh"><span>' + EVI.clock + esc(evWhen(ev)) + '</span>' + (evPlace(ev) ? '<span>' + EVI.pin + esc(evPlace(ev)) + '</span>' : '') + '</div>' +
+      (ev.desc ? '<p>' + esc(ev.desc) + '</p>' : '') +
+      '<div class="evact"><button class="evhb" data-act="evEdit">' + EVI.edit + 'עריכה</button><button class="evhb" data-act="evSms"' + (n ? '' : ' disabled') + '>' + svg('msg') + 'סמס לנרשמים</button>' +
+        '<button class="evhb" data-act="evImport">' + svg('up') + 'ייבוא נרשמים מקובץ</button><span class="sp"></span><button class="evhb dl" data-act="evDelete">מחיקת האירוע</button></div></div>' +
+      '<div class="evhn"><b class="num">' + nf(n) + '</b><span>' + (n === 1 ? 'נרשם/ה' : 'נרשמו') + '</span></div></div>' +
+    '<div class="evrow">' + share +
+      '<div class="evstats"><div class="evs"><span>חדשים במאגר</span><b class="num">' + nf(evNew(ev)) + '</b></div>' +
+        '<div class="evs"><span>הרשמה אחרונה</span><b class="sm">' + (last ? fmtWhen(last) : '—') + '</b></div>' +
+        (ev.tag ? '<div class="evs"><span>תגית לנרשמים</span><b class="sm">' + esc(ev.tag) + '</b></div>' : '') + '</div></div>' +
+    '<div class="card evregs"><div class="ch">הנרשמים<span class="sub">' + nf(n) + ' נרשמו</span><span class="sp"></span>' +
+      (CLOUD ? '<button class="btn sec sm" data-act="evSyncNow" title="בדיקה אם יש הרשמות חדשות">' + EVI.sync + 'רענון</button>' : '') +
+      (n ? '<button class="btn sec sm" data-act="evExport">ייצוא לאקסל</button><button class="btn sec sm" data-act="evSearch">פתיחה בחיפוש</button>' : '') + '</div>' +
+    '<div class="cb tight" id="evRegs"></div></div>';
+  renderEvRegs(ev);
+  if (!CLOUD) renderEvSim(ev); else evPubCheck(ev);
 }
 function renderEvRegs(ev) {
   const rows = ev.regs.slice().sort((a, b) => b.t - a.t).map(r => ({ r, p: S.by.get(r.uid) })).filter(x => x.p);
-  $('#evRegs').innerHTML = rows.length ? '<div class="row" style="padding:10px 16px;border-bottom:1px solid var(--line3)"><button class="btn sec sm" data-act="evExport">ייצוא הנרשמים לאקסל</button><button class="btn sec sm" data-act="evSearch">פתיחה בחיפוש המתקדם</button></div><div class="tw"><table class="tbl"><thead><tr><th>שם</th><th>טלפון</th><th>עיר</th><th>משתתפים</th><th>סטטוס</th><th>נרשם/ה</th></tr></thead><tbody>' +
-    rows.slice(0, 200).map(({ r, p }) => '<tr><td><button class="link" data-act="openCard" data-v="' + p.uid + '">' + esc(fullName(p)) + '</button></td><td class="num"><span class="sg">' + esc(fmtPhone(p.phone)) + '</span></td><td>' + esc(p.city || '') + '</td><td class="num">' + (r.count || 1) + '</td><td>' + stPill(stOf(p)) + '</td><td class="mut">' + fmtWhen(r.t) + '</td></tr>').join('') +
-    '</tbody></table></div>' : '<div class="empty">עוד אין נרשמים. אפשר לנסות את הטופס בתצוגה המקדימה.</div>';
+  $('#evRegs').innerHTML = rows.length ? '<div class="tw"><table class="tbl"><thead><tr><th>שם</th><th>טלפון</th><th>ת.ז</th><th>עיר</th><th>סטטוס</th><th>נרשם/ה</th></tr></thead><tbody>' +
+    rows.slice(0, 500).map(({ r, p }) => '<tr><td><button class="link" data-act="openCard" data-v="' + p.uid + '">' + esc(fullName(p)) + '</button>' + (r.n ? ' <span class="pill b">חדש/ה</span>' : '') + '</td>' +
+      '<td class="num"><span class="sg">' + esc(fmtPhone(p.phone)) + '</span></td><td class="num">' + esc(p.tz || '') + '</td><td>' + esc(p.city || '') + '</td><td>' + stPill(stOf(p)) + '</td><td class="mut">' + fmtWhen(r.t) + '</td></tr>').join('') +
+    '</tbody></table></div>' : '<div class="empty"><b>עוד אין נרשמים</b>' + (CLOUD ? 'שולחים את הקישור — וכל מי שנרשם יופיע כאן.' : 'אפשר לנסות את הטופס למעלה.') + '</div>';
 }
-async function simSubmit() {
-  const ev = S.events.find(e => e.id === E.sel); if (!ev) return;
-  const v = {}; $$('[data-sim]').forEach(el => { v[el.dataset.sim] = el.value.trim(); });
-  const ph = v.phone ? nph(v.phone) : '', tz = v.tz ? nid(v.tz) : '';
-  if (ev.fields.phone && !isMobile(ph)) { toast('צריך מספר נייד תקין'); $('#sim_phone') && $('#sim_phone').focus(); return; }
-  if (ev.fields.tz && (!tz || !validId(tz))) { toast('תעודת הזהות לא תקינה'); return; }
-  if (!ph && !tz) { toast('צריך טלפון או ת.ז'); return; }
-  if (ev.fields.first && !v.first) { toast('חסר שם פרטי'); return; }
-  let p = (tz && S.byTz.get(tz)) || (ph && S.byPhone.get(ph)) || null;
-  const isNew = !p;
-  if (isNew) { p = newPersonObj(); p.dbs = []; p.created = Date.now(); S.people.push(p); }
-  ['first', 'last', 'city'].forEach(k => { if (v[k] && !p[k]) p[k] = v[k]; });
-  if (isCityUser() && !p.city) p.city = ME.city;
-  if (tz && !p.tz) p.tz = tz;
-  if (ph && p.phone !== ph && !(p.phones || []).includes(ph)) { if (!p.phone) p.phone = ph; else p.phones.push(ph); }
-  if (!p.dbs.includes(ev.db)) p.dbs.push(ev.db);
-  if (ev.tag && !p.tags.includes(ev.tag)) p.tags.push(ev.tag);
-  if (fieldById('f_src') && !p.dyn.f_src) p.dyn.f_src = 'דף נחיתה';
-  const cnt = v.count ? parseInt(v.count, 10) || 1 : 1;
-  const ex = ev.regs.find(r => r.uid === p.uid);
-  if (ex) { ex.count = cnt; ex.t = Date.now(); } else ev.regs.push({ uid: p.uid, t: Date.now(), count: cnt });
-  p.updated = Date.now();
-  plog(p, 'נרשם/ה לאירוע "' + ev.name + '" דרך דף הנחיתה' + (isNew ? ' — נוסף/ה למאגר' : ''));
-  rebuild();
-  await putPeople([p]); await saveKV('events');
-  activity((isNew ? 'נרשם/ה חדש/ה' : 'נרשם/ה') + ' לאירוע "' + ev.name + '": ' + fullName(p));
-  E.simDone = true;
-  renderTabs(); RENDER.events({});
-  toast(isNew ? fullName(p) + ' נוסף/ה למאגר ונרשם/ה לאירוע' : fullName(p) + ' כבר במאגר — סומן/ה כנרשם/ה');
-}
-function landingHtml(ev) {
-  const F = ev.fields;
-  const fld = (k, lb, t) => '<label>' + lb + '<input name="' + k + '" type="' + (t || 'text') + '"' + (k === 'phone' ? ' dir="ltr" inputmode="tel" required' : '') + (k === 'first' ? ' required' : '') + '></label>';
-  const data = JSON.stringify({ event: ev.id, name: ev.name, intake: ev.intake || '' });
-  return '<!DOCTYPE html><html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>' + esc(ev.name) + '</title>' +
-    '<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;600;800;900&display=swap" rel="stylesheet"><style>' +
-    'body{margin:0;font-family:Heebo,Arial,sans-serif;background:#EFF2F6;color:#14202E}.w{max-width:520px;margin:0 auto;min-height:100vh;background:#fff}' +
-    '.h{background:#0B2E5B;color:#fff;padding:34px 26px}.e{font-size:12px;letter-spacing:.18em;color:#E8B84B;font-weight:800}h1{margin:8px 0 6px;font-size:30px;font-weight:900;line-height:1.2}' +
-    '.d{color:#DCE7F4;font-size:16px}.p{color:#A9C4E0;font-size:15px;line-height:1.6;margin:12px 0 0;white-space:pre-wrap}form{padding:24px 26px;display:flex;flex-direction:column;gap:14px}' +
-    'label{display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:700;color:#5A6A7D}input,select{border:1.5px solid #D5DCE5;border-radius:10px;padding:12px;font:inherit;font-size:16px;color:#14202E}' +
-    'button{background:#0B2E5B;color:#fff;border:0;border-radius:12px;padding:15px;font:inherit;font-size:17px;font-weight:800;cursor:pointer}.ok{padding:40px 26px;text-align:center}.ok b{display:block;font-size:24px;color:#0B2E5B}</style></head><body><div class="w">' +
-    '<div class="h"><div class="e">הזמנה</div><h1>' + esc(ev.name) + '</h1><div class="d">' + [fmtDate(ev.date), ev.time, ev.place].filter(Boolean).map(esc).join(' · ') + '</div>' + (ev.desc ? '<p class="p">' + esc(ev.desc) + '</p>' : '') + '</div>' +
-    '<form id="f">' + (F.first ? fld('first', 'שם פרטי') : '') + (F.last ? fld('last', 'שם משפחה') : '') + (F.phone ? fld('phone', 'טלפון נייד', 'tel') : '') + (F.tz ? fld('tz', 'תעודת זהות') : '') + (F.city ? fld('city', 'עיר') : '') +
-    (F.count ? '<label>כמה תגיעו?<select name="count"><option>1</option><option>2</option><option>3</option><option>4</option><option>5+</option></select></label>' : '') +
-    '<button type="submit">אני מגיע/ה</button></form><div class="ok" id="ok" hidden><b>תודה, נרשמת!</b><p>נתראה באירוע.</p></div></div>' +
-    '<script>var C=' + data.replace(/</g, '\\u003c') + ';document.getElementById("f").onsubmit=function(e){e.preventDefault();var o={type:"event_registration",event:C.event,eventName:C.name,t:Date.now()};new FormData(e.target).forEach(function(v,k){o[k]=v});' +
-    'var done=function(){e.target.hidden=true;document.getElementById("ok").hidden=false};if(!C.intake){alert("הדף עוד לא מחובר לכתובת קליטה — ההרשמה לא נשמרה.");return}' +
-    'fetch(C.intake,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(o)}).then(done,done)};<\/script></body></html>';
+async function evPubCheck(ev) {
+  const el = $('#evPubSt'); if (!el || !ev.code) return;
+  const st = s => { const x = $('#evPubSt'); if (x) x.innerHTML = s; };
+  if (E.pub[ev.code] !== 'yes') {
+    st('<span class="evdot"></span>בודק אם הקישור כבר עלה לאוויר…');
+    try { const r = await fetch(evLink(ev), { method: 'HEAD', cache: 'no-store' }); E.pub[ev.code] = r.ok ? 'yes' : 'no'; } catch (e) { E.pub[ev.code] = 'no'; }
+  }
+  st(E.pub[ev.code] === 'yes' ? '<span class="evdot g"></span>הקישור באוויר — בווטסאפ תופיע התמונה עם שם האירוע.' :
+    '<span class="evdot y"></span>הקישור כבר עובד ואפשר לשלוח. כדי שבווטסאפ תופיע גם התמונה — לוחצים פעם אחת על <b>פרסום</b> בתיקייה, ואז שולחים.');
 }
 
+/* ------------------------------------------------------------------ עריכה */
+function renderEvEdit() {
+  const d = E.draft, l = d.loc, F = d.fields;
+  const cityDl = (E.cities || KCITIES.map(c => [0, c])).map(c => '<option value="' + esc(c[1]) + '">').join('');
+  $('#v-events').innerHTML =
+    '<button class="evback" data-act="evCancel">' + EVI.back + (E.isNew ? 'ביטול' : 'חזרה בלי לשמור') + '</button>' +
+    '<div class="evhd"><h2>' + (E.isNew ? 'אירוע חדש' : 'עריכת האירוע') + '</h2><p>' + (E.isNew ? 'ממלאים את הפרטים ושומרים — ומקבלים קישור הרשמה מוכן לשליחה' : 'השינויים יופיעו בדף ההרשמה מיד אחרי השמירה') + '</p></div>' +
+    '<div class="eded"><div class="card edmain"><div class="cb edf">' +
+      '<div><label class="fl" for="ed_name">שם האירוע</label><input id="ed_name" type="text" data-ed="name" value="' + esc(d.name) + '" placeholder="למשל: חוג בית אצל משפחת כהן" maxlength="80"></div>' +
+      '<div class="edg2"><div><label class="fl" for="ed_date">תאריך</label><input id="ed_date" type="date" data-ed="date" value="' + esc(d.date) + '" required></div>' +
+        '<div><label class="fl" for="ed_time">שעה</label><input id="ed_time" type="time" data-ed="time" value="' + esc(d.time) + '" step="900"></div></div>' +
+      '<div><span class="fl">מיקום</span><div class="edloc">' +
+        '<div><label class="fl sub" for="ed_city">עיר</label><input id="ed_city" type="text" data-edl="city"' + (isCityUser() ? ' readonly' : ' list="evCityDl"') + ' value="' + esc(l.city) + '" placeholder="בוחרים עיר"><datalist id="evCityDl">' + cityDl + '</datalist></div>' +
+        '<div><label class="fl sub" for="ed_street">רחוב</label><input id="ed_street" type="text" data-edl="street" list="evStDl" value="' + esc(l.street) + '" placeholder="' + (l.city ? 'בוחרים רחוב' : 'קודם עיר') + '"><datalist id="evStDl"></datalist></div>' +
+        '<div><label class="fl sub" for="ed_house">מס׳ בית</label><input id="ed_house" type="text" data-edl="house" value="' + esc(l.house) + '" inputmode="numeric" maxlength="8"></div>' +
+        '<div><label class="fl sub" for="ed_apt">דירה</label><input id="ed_apt" type="text" data-edl="apt" value="' + esc(l.apt) + '" inputmode="numeric" maxlength="8"></div>' +
+      '</div></div>' +
+      '<div><label class="fl" for="ed_desc">תיאור <span class="mut">(לא חובה)</span></label><textarea id="ed_desc" data-ed="desc" rows="3" maxlength="600" placeholder="על מה האירוע, מי ידבר, כיבוד…">' + esc(d.desc) + '</textarea></div>' +
+      '<div><span class="fl">שדות בטופס ההרשמה</span><div class="edchips">' + FLD_EV.map(([k, lb]) => '<label class="edchip' + (F[k] ? ' on' : '') + '"><input type="checkbox" data-edf="' + k + '"' + (F[k] ? ' checked' : '') + '>' + AI.check + lb + '</label>').join('') + '</div></div>' +
+      '<div class="edg2"><div><label class="fl" for="ed_tag">תגית לנרשמים</label><input id="ed_tag" type="text" data-ed="tag" value="' + esc(d.tag) + '" placeholder="למשל: חוג בית אשקלון"></div>' +
+        '<label class="opt edconf"><input type="checkbox" data-ed="confirm"' + (d.confirm ? ' checked' : '') + '>לשלוח סמס אישור לכל נרשם</label></div>' +
+    '</div></div>' +
+    '<div class="edside"><div class="card"><div class="ch">' + EVI.img + 'התמונה בווטסאפ<span class="sub">' + (d.imgCustom ? 'תמונה שהעליתם' : 'נוצרת לבד מפרטי האירוע') + '</span></div><div class="cb">' +
+        '<div class="edimg"><img id="edImg" alt="תמונת השיתוף"></div>' +
+        '<div class="row" style="gap:8px;margin-top:10px"><button class="btn sec sm" data-act="evImgPick">העלאת תמונה משלכם</button>' + (d.imgCustom ? '<button class="btn sec sm" data-act="evImgAuto">חזרה לתמונה האוטומטית</button>' : '') +
+        '<input type="file" id="edImgIn" accept="image/*" hidden></div></div></div>' +
+      '<div class="sm mut edpvt">כך ייראה דף ההרשמה</div><div id="edPrev"></div></div></div>' +
+    '<div class="edbar"><button class="btn" data-act="evSave" id="edSave">' + (E.isNew ? 'שמירה ויצירת קישור' : 'שמירת השינויים') + '</button><button class="btn sec" data-act="evCancel">ביטול</button><span class="sm mut" id="edMsg"></span></div>';
+  renderEdPreview(); evImgPreview();
+  if (!E.cities) evLoadCities().then(() => { const dl = $('#evCityDl'); if (dl && E.cities) dl.innerHTML = E.cities.map(c => '<option value="' + esc(c[1]) + '">').join(''); });
+  if (l.city) evFillStreets(l.city);
+  const fi = $('#edImgIn'); if (fi) fi.addEventListener('change', () => { if (fi.files[0]) evImgFile(fi.files[0]); fi.value = ''; });
+}
+function lpHtml(d, interactive) {
+  const F = d.fields, dis = interactive ? '' : ' disabled tabindex="-1"';
+  const inp = (k, lb, t) => '<div><label class="fl" for="sim_' + k + '">' + lb + '</label><input id="sim_' + k + '" type="' + (t || 'text') + '" data-sim="' + k + '"' + dis + (k === 'phone' || k === 'tz' ? ' inputmode="numeric" style="direction:ltr;text-align:right"' : '') + '></div>';
+  return '<div class="lp"><div class="chrome"><i></i><i></i><i></i><span dir="ltr">' + esc((evLink(d) || LP_BASE + '…').replace('https://', '')) + '</span></div>' +
+    (d.imgCustom && (E.imgUrl || d.img) ? '<img class="lpimg" src="' + esc(E.imgUrl || d.img) + '" alt="">' : '') +
+    '<div class="hero"><div class="ey">הזמנה</div><h3>' + esc(d.name || 'שם האירוע') + '</h3><div class="wh">' + esc(evWhen(d)) + '</div>' + (evPlace(d) ? '<div class="wh">' + esc(evPlace(d)) + '</div>' : '') + (d.desc ? '<p>' + esc(d.desc) + '</p>' : '') + '</div>' +
+    (interactive && E.simDone ? '<div class="done"><b>תודה, נרשמת!</b><div class="mut">ההרשמה נכנסה למאגר.</div><button class="btn sec" style="margin-top:14px" data-act="simAgain">הרשמה נוספת</button></div>' :
+    '<form onsubmit="return false"><div class="grid" style="grid-template-columns:1fr 1fr">' + (F.first ? inp('first', 'שם פרטי') : '') + (F.last ? inp('last', 'שם משפחה') : '') + '</div>' +
+      (F.phone ? inp('phone', 'טלפון נייד', 'tel') : '') + (F.tz ? inp('tz', 'תעודת זהות') : '') +
+      '<button class="btn" style="min-height:48px;font-size:16px"' + (interactive ? ' data-act="simSubmit"' : ' disabled tabindex="-1"') + '>אני מגיע/ה</button></form>') + '</div>';
+}
+function renderEdPreview() { const b = $('#edPrev'); if (b && E.draft) b.innerHTML = lpHtml(E.draft, false); }
+function renderEvSim(ev) { const b = $('#evSim'); if (b) b.innerHTML = lpHtml(ev, true); }
+function renderEvPreview() { /* תאימות לאחור (core/50-listeners) — העריכה עובדת עכשיו על טיוטה */ }
+
+function edField(e) {
+  const el = e.target, d = el.dataset; if (!E.draft || E.mode !== 'edit') return;
+  if (!(d.ed || d.edl || d.edf)) return;
+  const val = el.type === 'checkbox' ? el.checked : el.value;
+  if (d.edf) {
+    E.draft.fields[d.edf] = val; el.closest('.edchip').classList.toggle('on', val);
+    if (!E.draft.fields.phone && !E.draft.fields.tz) { E.draft.fields[d.edf === 'phone' ? 'tz' : 'phone'] = true; const o = $('[data-edf="' + (d.edf === 'phone' ? 'tz' : 'phone') + '"]'); if (o) { o.checked = true; o.closest('.edchip').classList.add('on'); } toast('צריך לפחות טלפון או ת.ז — כדי לזהות את האדם במאגר'); }
+  } else if (d.edl) {
+    E.draft.loc[d.edl] = val;
+    if (d.edl === 'city' && e.type === 'change') { E.draft.loc.street = ''; const s = $('#ed_street'); if (s) { s.value = ''; s.placeholder = val ? 'בוחרים רחוב' : 'קודם עיר'; } evFillStreets(val); }
+  } else E.draft[d.ed] = val;
+  renderEdPreview();
+  if (!E.draft.imgCustom && (['name', 'date', 'time'].includes(d.ed) || d.edl)) debounce('edimg', evImgPreview, 350);
+}
+document.addEventListener('input', edField);
+document.addEventListener('change', edField);
+
+/* ------------------------------------------------------- ערים ורחובות (data.gov.il) */
+const GOV = 'https://data.gov.il/api/3/action/', ST_RES = '9ad3862c-8391-4b2f-84a4-2d4c68625f4b';
+function lsGet(k, days) { try { const o = JSON.parse(localStorage.getItem(k) || 'null'); return o && Date.now() - o.t < days * 864e5 ? o.v : null; } catch (e) { return null; } }
+function lsSet(k, v) { try { localStorage.setItem(k, JSON.stringify({ t: Date.now(), v })); } catch (e) {} }
+async function evLoadCities() {
+  if (E.cities) return E.cities;
+  const c = lsGet('maagar-il-cities', 30); if (c) return (E.cities = c);
+  try {
+    const sql = 'SELECT DISTINCT "סמל_ישוב","שם_ישוב" FROM "' + ST_RES + '"';
+    const r = await fetch(GOV + 'datastore_search_sql?sql=' + encodeURIComponent(sql)).then(x => x.json());
+    const list = (r.result.records || []).map(x => [+x['סמל_ישוב'], String(x['שם_ישוב'] || '').trim().replace(/\s+/g, ' ')]).filter(x => x[0] && x[1])
+      .sort((a, b) => a[1].localeCompare(b[1], 'he'));
+    if (list.length > 500) { E.cities = list; lsSet('maagar-il-cities', list); }
+  } catch (e) { console.warn('cities', e); }
+  return E.cities;
+}
+async function evStreets(city) {
+  const k = ckey(city); if (!k) return [];
+  if (E.streets[k]) return E.streets[k];
+  const cached = lsGet('maagar-st-' + k, 30); if (cached) return (E.streets[k] = cached);
+  const cs = await evLoadCities(); const hit = (cs || []).find(c => ckey(c[1]) === k); if (!hit) return [];
+  try {
+    const url = GOV + 'datastore_search?resource_id=' + ST_RES + '&limit=5000&fields=' + encodeURIComponent('שם_רחוב') + '&filters=' + encodeURIComponent(JSON.stringify({ 'סמל_ישוב': hit[0] }));
+    const r = await fetch(url).then(x => x.json());
+    const set = new Set((r.result.records || []).map(x => String(x['שם_רחוב'] || '').trim().replace(/\s+/g, ' ')).filter(s => s && ckey(s) !== k));
+    const list = Array.from(set).sort((a, b) => a.localeCompare(b, 'he'));
+    E.streets[k] = list; if (list.length) lsSet('maagar-st-' + k, list);
+    return list;
+  } catch (e) { console.warn('streets', e); return []; }
+}
+async function evFillStreets(city) {
+  const list = await evStreets(city), dl = $('#evStDl');
+  if (dl && E.draft && ckey(E.draft.loc.city) === ckey(city)) dl.innerHTML = list.map(s => '<option value="' + esc(s) + '">').join('');
+}
+
+/* ------------------------------------------------------------- תמונת השיתוף */
+function evWrap(ctx, text, maxW, maxLines) {
+  const words = String(text).split(/\s+/), lines = []; let cur = '';
+  words.forEach(w => { const t = cur ? cur + ' ' + w : w; if (ctx.measureText(t).width > maxW && cur) { lines.push(cur); cur = w; } else cur = t; });
+  if (cur) lines.push(cur);
+  if (lines.length > maxLines) { lines.length = maxLines; let l = lines[maxLines - 1]; while (ctx.measureText(l + '…').width > maxW && l.length > 1) l = l.slice(0, -1); lines[maxLines - 1] = l + '…'; }
+  return lines;
+}
+async function evDrawImg(ev) {
+  try { await Promise.all(['900 70px Heebo', '700 38px Heebo', '600 30px Heebo'].map(f => document.fonts.load(f, 'אב'))); } catch (e) {}
+  const W = 1200, H = 630, c = document.createElement('canvas'); c.width = W; c.height = H;
+  const x = c.getContext('2d');
+  const g = x.createLinearGradient(0, 0, W, H); g.addColorStop(0, '#0B2E5B'); g.addColorStop(.55, '#1550A0'); g.addColorStop(1, '#2366C2');
+  x.fillStyle = g; x.fillRect(0, 0, W, H);
+  x.fillStyle = 'rgba(255,255,255,.06)'; x.beginPath(); x.arc(120, 560, 260, 0, 7); x.fill(); x.beginPath(); x.arc(40, 80, 150, 0, 7); x.fill();
+  x.fillStyle = '#E8B84B'; x.fillRect(W - 14, 0, 14, H);
+  x.direction = 'rtl'; x.textAlign = 'right'; x.textBaseline = 'alphabetic';
+  const R = W - 86;
+  x.fillStyle = '#E8B84B'; x.font = '800 30px Heebo, Arial'; x.fillText('הזמנה', R, 112);
+  x.fillStyle = '#FFFFFF'; x.font = '900 70px Heebo, Arial';
+  const ttl = evWrap(x, ev.name || 'אירוע', W - 200, 2);
+  let y = 200; ttl.forEach(l => { x.fillText(l, R, y); y += 84; });
+  y += 14;
+  x.fillStyle = '#F3D58B'; x.font = '700 38px Heebo, Arial'; x.fillText(evWhen(ev), R, y); y += 58;
+  const pl = evPlace(ev);
+  if (pl) { x.fillStyle = '#C9DCF3'; x.font = '600 32px Heebo, Arial'; x.fillText(evWrap(x, pl, W - 200, 1)[0], R, y); }
+  x.fillStyle = 'rgba(255,255,255,.14)'; x.fillRect(86, H - 104, W - 172, 2);
+  x.fillStyle = '#FFFFFF'; x.font = '700 30px Heebo, Arial'; x.fillText('להרשמה — לוחצים על הקישור', R, H - 52);
+  x.textAlign = 'left'; x.direction = 'ltr'; x.fillStyle = '#A9C4E0'; x.font = '600 26px Heebo, Arial'; x.fillText('ישראל ביתנו', 86, H - 52);
+  return c;
+}
+function evCanvasBlob(c) {
+  return new Promise(res => { const tryQ = q => c.toBlob(b => { if (b && b.size > 290000 && q > .5) tryQ(q - .1); else res(b); }, 'image/jpeg', q); tryQ(.88); });
+}
+async function evImgPreview() {
+  const d = E.draft, im = $('#edImg'); if (!d || !im) return;
+  if (d.imgCustom) { im.src = E.imgUrl || d.img || ''; return; }
+  const c = await evDrawImg(d); if ($('#edImg')) $('#edImg').src = c.toDataURL('image/jpeg', .8);
+}
+function evImgFile(f) {
+  if (!/^image\//.test(f.type)) { toast('צריך קובץ תמונה'); return; }
+  const url = URL.createObjectURL(f), im = new Image();
+  im.onload = async () => {
+    const W = 1200, H = 630, c = document.createElement('canvas'); c.width = W; c.height = H; const x = c.getContext('2d');
+    const s = Math.max(W / im.width, H / im.height), w = im.width * s, h = im.height * s;
+    x.fillStyle = '#0B2E5B'; x.fillRect(0, 0, W, H); x.drawImage(im, (W - w) / 2, (H - h) / 2, w, h);
+    URL.revokeObjectURL(url);
+    E.draft._blob = await evCanvasBlob(c); E.draft.imgCustom = true;
+    if (E.imgUrl) URL.revokeObjectURL(E.imgUrl); E.imgUrl = URL.createObjectURL(E.draft._blob);
+    renderEvEdit();
+  };
+  im.onerror = () => { URL.revokeObjectURL(url); toast('לא הצלחתי לקרוא את התמונה'); };
+  im.src = url;
+}
+async function evUploadImg(ev) {
+  let blob = ev._blob;
+  if (!ev.imgCustom) blob = await evCanvasBlob(await evDrawImg(ev));
+  delete ev._blob;
+  if (!blob) return true;
+  const path = ev.code + '.jpg';
+  const { error } = await sb.storage.from('events').upload(path, blob, { upsert: true, contentType: 'image/jpeg', cacheControl: '60' });
+  if (error) { console.error('img', error); return false; }
+  ev.img = sb.storage.from('events').getPublicUrl(path).data.publicUrl + '?v=' + Date.now().toString(36);
+  return true;
+}
+
+/* ------------------------------------------------------------------ שמירה */
+async function evPushPub(ev) {
+  if (!ev.code) ev.code = evCode();
+  if (!(await evUploadImg(ev))) toast('התמונה לא נשמרה — הקישור יעבוד גם בלי תמונה');
+  const { error } = await sb.from('events_pub').upsert({ code: ev.code, ev_id: ev.id, scope: SCOPE, data: evPubData(ev), active: true, updated_at: new Date().toISOString() });
+  if (error) { cloudErr(error, 'דף ההרשמה'); return false; }
+  E.pub[ev.code] = '';
+  return true;
+}
+async function evSave() {
+  const d = E.draft; if (!d) return;
+  d.name = String(d.name || '').trim(); ['city', 'street', 'house', 'apt'].forEach(k => { d.loc[k] = String(d.loc[k] || '').trim(); });
+  const bad = (sel, msg) => { toast(msg); const f = $(sel); if (f) f.focus(); return false; };
+  if (!d.name) return bad('#ed_name', 'חסר שם לאירוע');
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(d.date || '')) return bad('#ed_date', 'חסר תאריך');
+  if (!d.loc.city) return bad('#ed_city', 'חסרה עיר');
+  if (!d.fields.phone && !d.fields.tz) return toast('צריך לפחות טלפון או ת.ז בטופס');
+  const btn = $('#edSave'); if (btn) { btn.disabled = true; btn.textContent = 'שומר…'; }
+  const done = () => { if (btn) { btn.disabled = false; btn.textContent = E.isNew ? 'שמירה ויצירת קישור' : 'שמירת השינויים'; } };
+  d.place = evPlace(d);
+  if (!d.code) d.code = evCode();
+  let ev = S.events.find(e => e.id === d.id);
+  const blob = d._blob; delete d._blob;
+  if (ev) { const regs = ev.regs; Object.assign(ev, clone(d)); ev.regs = regs; }
+  else { ev = clone(d); ev.regs = []; S.events.unshift(ev); }
+  ev._blob = blob;
+  if (CLOUD) { if (!(await evPushPub(ev))) { done(); return; } } else delete ev._blob;
+  await saveKV('events');
+  activity((E.isNew ? 'נוצר אירוע' : 'עודכן אירוע') + ' "' + ev.name + '"');
+  const wasNew = E.isNew;
+  E.draft = null; E.mode = 'view'; E.sel = ev.id; E.simDone = false;
+  if (E.imgUrl) { URL.revokeObjectURL(E.imgUrl); E.imgUrl = ''; }
+  renderTabs(); RENDER.events({ keepMode: true }); window.scrollTo({ top: 0 });
+  toast(wasNew ? (CLOUD ? 'האירוע נשמר — הקישור מוכן לשליחה' : 'האירוע נשמר') : 'השינויים נשמרו');
+}
+async function evDelete() {
+  const ev = evSel(); if (!ev || !(await ask('מחיקת אירוע', 'למחוק את „' + esc(ev.name) + '”? דף ההרשמה ייסגר. האנשים שנרשמו יישארו במאגר.', 'מחיקה', true))) return;
+  if (CLOUD && ev.code) {
+    await evSync(true);
+    const { error } = await sb.from('events_pub').delete().eq('code', ev.code);
+    if (error) { cloudErr(error, 'מחיקת דף ההרשמה'); return; }
+    sb.storage.from('events').remove([ev.code + '.jpg']).catch(() => {});
+  }
+  S.events = S.events.filter(e => e !== ev); E.sel = ''; E.mode = 'list';
+  await saveKV('events'); renderTabs(); RENDER.events({ keepMode: true });
+  toast('האירוע נמחק');
+}
+
+/* ------------------------------------------------- הרשמה → אדם במאגר */
+function regPerson(ev, v, t) {
+  const ph = v.phone ? nph(v.phone) : '', tz = v.tz ? nid(v.tz) : '';
+  if (!ph && !tz) return null;
+  let p = (tz && S.byTz.get(tz)) || (ph && S.byPhone.get(ph)) || null;
+  const isNew = !p;
+  if (isNew) { p = newPersonObj(); p.dbs = []; p.created = t || Date.now(); S.people.push(p); S.by.set(p.uid, p); }
+  ['first', 'last'].forEach(k => { if (v[k] && !p[k]) p[k] = String(v[k]).trim(); });
+  if (!p.city) p.city = isCityUser() ? ME.city : evCity(ev);
+  if (tz && !p.tz) { p.tz = tz; S.byTz.set(tz, p); }
+  if (ph && p.phone !== ph && !(p.phones || []).includes(ph)) { if (!p.phone) p.phone = ph; else p.phones.push(ph); }
+  if (ph) S.byPhone.set(ph, p);
+  const db = (S.dbs[0] && S.dbs[0].id) || 'main'; if (!p.dbs.includes(db)) p.dbs.push(db);
+  if (ev.tag && !p.tags.includes(ev.tag)) p.tags.push(ev.tag);
+  if (fieldById('f_src') && !p.dyn.f_src) p.dyn.f_src = 'דף נחיתה';
+  const ex = ev.regs.find(r => r.uid === p.uid);
+  if (ex) ex.t = t || Date.now(); else ev.regs.push({ uid: p.uid, t: t || Date.now(), count: 1, n: isNew ? 1 : 0 });
+  p.updated = Date.now();
+  plog(p, 'נרשם/ה לאירוע "' + ev.name + '" דרך דף ההרשמה' + (isNew ? ' — נוסף/ה למאגר' : ''));
+  return { p, isNew };
+}
+async function simSubmit() {
+  const ev = evSel(); if (!ev) return;
+  const v = {}; $$('[data-sim]').forEach(el => { v[el.dataset.sim] = el.value.trim(); });
+  const ph = v.phone ? nph(v.phone) : '', tz = v.tz ? nid(v.tz) : '';
+  if (ev.fields.first && !v.first) { toast('חסר שם פרטי'); return; }
+  if (ev.fields.phone && !isMobile(ph)) { toast('צריך מספר נייד תקין'); $('#sim_phone') && $('#sim_phone').focus(); return; }
+  if (ev.fields.tz && (!tz || !validId(tz))) { toast('תעודת הזהות לא תקינה'); return; }
+  const r = regPerson(ev, v, Date.now()); if (!r) { toast('צריך טלפון או ת.ז'); return; }
+  rebuild(); await putPeople([r.p]); await saveKV('events');
+  activity((r.isNew ? 'נרשם/ה חדש/ה' : 'נרשם/ה') + ' לאירוע "' + ev.name + '": ' + fullName(r.p));
+  E.simDone = true; renderTabs(); RENDER.events({ keepMode: true });
+  toast(r.isNew ? fullName(r.p) + ' נוסף/ה למאגר ונרשם/ה לאירוע' : fullName(r.p) + ' כבר במאגר — סומן/ה כנרשם/ה');
+}
+
+/* מושך הרשמות חדשות מהדף הציבורי. "תופס" אותן קודם (synced=true) כדי ששני משתמשים לא יכניסו פעמיים */
+async function evSync(quiet) {
+  if (!CLOUD || !ME || E.syncing) return 0;
+  const codes = S.events.filter(e => e.code).map(e => e.code);
+  E.lastSync = Date.now();
+  if (!codes.length) return 0;
+  E.syncing = true;
+  try {
+    const { data, error } = await sb.from('event_regs').update({ synced: true }).eq('synced', false).in('code', codes).select('id,code,data,phone,tz,created_at');
+    if (error) { if (!quiet) cloudErr(error, 'הרשמות'); return 0; }
+    if (!data || !data.length) { if (!quiet) toast('אין הרשמות חדשות'); return 0; }
+    const touched = new Map(); let nNew = 0; const byEv = new Map();
+    data.sort((a, b) => a.id - b.id).forEach(r => {
+      const ev = S.events.find(e => e.code === r.code); if (!ev) return;
+      const res = regPerson(ev, Object.assign({}, r.data, { phone: r.phone || '', tz: r.tz || '' }), Date.parse(r.created_at) || Date.now());
+      if (!res) return; touched.set(res.p.uid, res.p); if (res.isNew) nNew++; byEv.set(ev.name, (byEv.get(ev.name) || 0) + 1);
+    });
+    rebuild();
+    if (!(await putPeople(Array.from(touched.values())))) { await sb.from('event_regs').update({ synced: false }).in('id', data.map(r => r.id)); return 0; }
+    await saveKV('events');
+    byEv.forEach((n, name) => activity(n + ' ' + (n === 1 ? 'הרשמה חדשה' : 'הרשמות חדשות') + ' לאירוע "' + name + '" מדף ההרשמה'));
+    toast(data.length === 1 ? 'הרשמה חדשה נקלטה' + (nNew ? ' — נוסף/ה למאגר' : '') : data.length + ' הרשמות חדשות נקלטו' + (nNew ? ' · ' + nNew + ' חדשים במאגר' : ''));
+    renderTabs();
+    if (S.view === 'events' && E.mode !== 'edit') RENDER.events({ keepMode: true });
+    else if (S.view === 'home') RENDER.home({ refresh: true });
+    return data.length;
+  } catch (e) { console.warn('evSync', e); return 0; }
+  finally { E.syncing = false; }
+}
+setInterval(() => { if (CLOUD && ME && !document.hidden && S.events.some(e => e.code)) evSync(true); }, 45000);
+setTimeout(function first() { if (CLOUD && ME) evSync(true); else if (CLOUD) setTimeout(first, 3000); }, 4000);
 
 /* ---- הפעולות (כפתורי data-act) של המסך הזה ---- */
 Object.assign(ACT, {
-  newEvent: async () => { const e = newEventObj(); S.events.unshift(e); await saveKV('events'); E.sel = e.id; E.simDone = false; go('events', { sel: e.id }); setTimeout(() => { const n = $('#ev_name'); if (n) { n.focus(); n.select(); } }, 60); },
-  selEvent: el => { E.sel = el.dataset.v; E.simDone = false; RENDER.events({}); },
-  openEvent: el => { closeCard(true); E.sel = el.dataset.v; E.simDone = false; go('events', { sel: el.dataset.v }); },
-  evSms: el => { const e = S.events.find(x => x.id === el.dataset.v); go('sms', { src: 'event', event: el.dataset.v, name: e ? 'תזכורת — ' + e.name : '' }); },
+  newEvent: () => { E.draft = newEventObj(); E.isNew = true; E.mode = 'edit'; E.imgUrl = ''; if (S.view !== 'events') { S.view = 'events'; go('events', { keepMode: true }); } else RENDER.events({ keepMode: true }); window.scrollTo({ top: 0 }); setTimeout(() => { const n = $('#ed_name'); if (n) n.focus(); }, 80); },
+  evOpen: el => { E.sel = el.dataset.v; E.mode = 'view'; E.simDone = false; RENDER.events({ keepMode: true }); window.scrollTo({ top: 0 }); },
+  selEvent: el => ACT.evOpen(el),
+  openEvent: el => { closeCard(true); go('events', { sel: el.dataset.v }); },
+  evBack: () => { E.mode = 'list'; RENDER.events({ keepMode: true }); },
+  evEdit: () => {
+    const ev = evSel(); if (!ev) return;
+    E.draft = clone(Object.assign({}, ev, { regs: [] })); E.draft.loc = Object.assign({ city: evCity(ev), street: '', house: '', apt: '' }, ev.loc || {});
+    E.draft.fields = { first: !!ev.fields.first, last: !!ev.fields.last, phone: !!ev.fields.phone, tz: !!ev.fields.tz };
+    E.isNew = false; E.mode = 'edit'; E.imgUrl = ''; RENDER.events({ keepMode: true }); window.scrollTo({ top: 0 });
+  },
+  evCancel: () => { E.draft = null; if (E.imgUrl) { URL.revokeObjectURL(E.imgUrl); E.imgUrl = ''; } E.mode = E.isNew || !evSel() ? 'list' : 'view'; RENDER.events({ keepMode: true }); window.scrollTo({ top: 0 }); },
+  evSave: () => evSave(),
+  evMakeLink: async el => { const ev = evSel(); if (!ev) return; el.disabled = true; el.textContent = 'יוצר…'; if (await evPushPub(ev)) { await saveKV('events'); toast('הקישור מוכן לשליחה'); } RENDER.events({ keepMode: true }); },
+  evImgPick: () => { const f = $('#edImgIn'); if (f) f.click(); },
+  evImgAuto: () => { if (!E.draft) return; E.draft.imgCustom = false; delete E.draft._blob; if (E.imgUrl) { URL.revokeObjectURL(E.imgUrl); E.imgUrl = ''; } renderEvEdit(); },
+  evCopy: async () => { const ev = evSel(); if (!ev) return; try { await navigator.clipboard.writeText(evLink(ev)); toast('הקישור הועתק'); } catch (e) { const i = $('#evLinkIn'); i.select(); document.execCommand('copy'); toast('הקישור הועתק'); } },
+  evWa: () => { const ev = evSel(); if (ev) window.open('https://wa.me/?text=' + encodeURIComponent(evShareText(ev)), '_blank', 'noopener'); },
+  evSyncNow: async el => { el.disabled = true; await evSync(false); el.disabled = false; },
+  evSms: el => { const id = el.dataset.v || E.sel, e = S.events.find(x => x.id === id); go('sms', { src: 'event', event: id, name: e ? 'תזכורת — ' + e.name : '' }); },
   simSubmit: () => simSubmit(),
-  simAgain: () => { E.simDone = false; renderEvPreview(S.events.find(e => e.id === E.sel)); },
-  evDownload: () => { const ev = S.events.find(e => e.id === E.sel); if (!ev) return; const b = new Blob([landingHtml(ev)], { type: 'text/html' }); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = 'דף הרשמה — ' + ev.name.replace(/[\\\/:*?"<>|]/g, ' ') + '.html'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000); if (!ev.intake) toast('הדף ירד. כדי שהרשמות ממנו ייקלטו צריך כתובת קליטה'); },
+  simAgain: () => { E.simDone = false; renderEvSim(evSel()); },
   evImport: () => go('upload', { eventId: E.sel }),
-  evExport: () => { const ev = S.events.find(e => e.id === E.sel); const list = ev.regs.map(r => S.by.get(r.uid)).filter(Boolean); saveXlsx([['נרשמים', peopleAoa(list)]], 'נרשמים — ' + ev.name + '.xlsx'); },
-  evSearch: () => { const ev = S.events.find(e => e.id === E.sel); if (ev.tag) go('search', { filter: { tag: ev.tag } }); else toast('לאירוע אין תגית — אפשר להוסיף תגית בפרטי האירוע'); },
-  evDelete: async () => { const ev = S.events.find(e => e.id === E.sel); if (!ev || !(await ask('מחיקת אירוע', 'למחוק את „' + esc(ev.name) + '”? האנשים שנרשמו יישארו במאגר.', 'מחיקה', true))) return; S.events = S.events.filter(e => e !== ev); E.sel = S.events[0] ? S.events[0].id : ''; await saveKV('events'); renderTabs(); RENDER.events({}); }
+  evExport: () => { const ev = evSel(); const list = ev.regs.map(r => S.by.get(r.uid)).filter(Boolean); saveXlsx([['נרשמים', peopleAoa(list)]], 'נרשמים — ' + ev.name + '.xlsx'); },
+  evSearch: () => { const ev = evSel(); if (ev.tag) go('search', { filter: { tag: ev.tag } }); else toast('לאירוע אין תגית — אפשר להוסיף תגית בעריכה'); },
+  evDelete: () => evDelete()
+});
+
+/* ---------- js/features/pniyot.js ---------- */
+/* ============================================================
+   דאטה ביתנו — פניות הציבור
+   (מסך חדש — עדיין ריק)
+   ============================================================ */
+RENDER.pniyot = function () {
+  $('#v-pniyot').innerHTML =
+    '<div class="shead"><div><h2>פניות הציבור</h2><p>ניהול הפניות שמגיעות מהציבור</p></div></div>' +
+    '<div class="card"><div class="empty"><b>בקרוב</b>המסך בבנייה.</div></div>';
+};
+
+/* ---- הפעולות (כפתורי data-act) של המסך הזה — קידומת pn ---- */
+Object.assign(ACT, {
 });
 
 /* ---------- js/core/40-header.js ---------- */
@@ -6358,7 +6992,7 @@ const isAdmin = () => !CLOUD || !!(ME && ME.role === 'admin');
 const can = k => !CLOUD || !!(ME && (ME.role === 'admin' || (ME.perms || {})[k]));
 const ACT_PERM = { newPerson: 'edit', cardSave: 'edit', cardDelete: 'edit', cardStatus: 'edit', cardAddTag: 'edit', cardDelTag: 'edit', cardAddPhone: 'edit',
   cardDelPhone: 'edit', cardAddField: 'edit', cardMulti: 'edit', bulk: 'edit', fldAdd: 'edit', fldEdit: 'edit', fldDel: 'edit', newDb: 'edit', dbRename: 'edit',
-  dbDel: 'edit', clearDemo: 'edit', seedCloud: 'edit', evDelete: 'edit', newEvent: 'edit',
+  dbDel: 'edit', clearDemo: 'edit', seedCloud: 'edit', evDelete: 'edit', newEvent: 'edit', evEdit: 'edit', evSave: 'edit', evMakeLink: 'edit',
   pickFile: 'import', upRun: 'import', evImport: 'import',
   exportRes: 'export', evExport: 'export', evDownload: 'export', smsExport: 'export', smsJobExport: 'export',
   smsSend: 'sms', cardSms: 'sms', evSms: 'sms', smsRes: 'sms', smsList: 'sms' };
