@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
-<meta name="build" content="20261115-210348">
+<meta name="build" content="20261115-212104">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>דאטה ביתנו — מאגר התומכים</title>
 <style>
@@ -176,6 +176,9 @@ body{padding-inline-start:68px}
 .qsres button:hover,.qsres button.on{background:var(--bbg)}
 .qsres .mut{font-size:12.5px}
 .tside{display:flex;justify-content:flex-end;gap:6px}
+/* רענון ויציאה — צמודים לקצה השמאלי של העמוד */
+.top .topin{position:static}
+.top .tside{position:absolute;top:16px;inset-inline-end:22px;height:72px;align-items:center;z-index:2}
 .hact{display:inline-flex;flex-direction:column;align-items:center;gap:3px;min-width:56px;padding:7px 8px 6px;border-radius:13px;border:0;background:transparent;color:#A9C4E0;font:inherit;font-size:11.5px;font-weight:700;cursor:pointer;transition:background .2s,color .2s}
 .hact svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;transition:transform .35s ease}
 .hact:hover{background:rgba(255,255,255,.08);color:#fff}
@@ -308,7 +311,7 @@ button.kpi:hover{transform:translateY(-3px);border-color:#C9D7E8;box-shadow:0 2p
 .qk.gold:hover{border-color:var(--gold)}
 
 /* ---------- סרגל: תקופה, השוואה, סינון, ייצוא ---------- */
-.htb{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:18px;position:relative;z-index:12}
+.htb{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:2px 0 16px;position:relative;z-index:12}
 .htb .sp{flex:1}
 .hpw{position:relative}
 .hsel{display:flex;align-items:center;gap:10px;min-height:50px;padding:6px 10px 6px 12px;border-radius:15px;border:1.5px solid var(--line2);background:#fff;font:inherit;text-align:start;cursor:pointer;
@@ -365,24 +368,12 @@ button.kpi:hover{transform:translateY(-3px);border-color:#C9D7E8;box-shadow:0 2p
 .kpi.hero .dl.dn{background:rgba(255,150,140,.18);color:#FFC9C2}
 .kpi.hero .dl.z{background:rgba(255,255,255,.12);color:#C9DCF3}
 
-/* ---------- מדדים נוספים ---------- */
-.hminis{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:18px}
-.hm1{position:relative;display:flex;align-items:center;gap:11px;padding:12px 14px;border-radius:16px;border:1px solid var(--line2);background:#fff;box-shadow:var(--sh-card);font:inherit;text-align:start;color:inherit;
-  animation:aUp .5s var(--ease) both;animation-delay:.22s}
-button.hm1{cursor:pointer;transition:transform .2s,box-shadow .25s,border-color .2s}
-button.hm1:hover{transform:translateY(-2px);border-color:#C9D7E8;box-shadow:var(--sh-hover)}
-.hmi{flex:none;width:34px;height:34px;border-radius:11px;display:grid;place-items:center;background:var(--bbg)}
-.hmi svg{width:18px;height:18px;fill:none;stroke:var(--navy);stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
-.hmt{display:flex;flex-direction:column;min-width:0;line-height:1.25}
-.hml{font-size:11.5px;font-weight:700;color:var(--ink2);white-space:nowrap}
-.hmt b{font-size:19px;font-weight:900;color:var(--navy)}
-.hms{font-size:11.5px;color:var(--ink3);white-space:nowrap}
-.hmv{display:flex;align-items:center;gap:6px}
-.hmv .dl{font-size:10.5px;padding:0 6px}
-
 /* ---------- תומכים לפי עיר ---------- */
-#homeCities .ch{gap:10px;justify-content:flex-start}
+#homeCities{overflow:visible}
+#homeCities .ch{gap:10px;justify-content:flex-start;border-radius:20px 20px 0 0;position:relative;z-index:5}
 #homeCities .legend{margin-inline-start:auto}
+.cht{font-size:14.5px;font-weight:800;color:var(--navy);margin-inline-end:6px}
+.cfoot{border-radius:0 0 20px 20px}
 .chbtn{border:0;background:none;padding:0;font:inherit;font-size:14px;font-weight:800;color:var(--navy);cursor:pointer;text-decoration:underline;text-decoration-color:transparent;text-underline-offset:4px;transition:text-decoration-color .2s}
 .chbtn:hover{text-decoration-color:var(--navy-l)}
 .seg{display:inline-flex;gap:2px;padding:3px;border-radius:12px;background:#EEF2F7}
@@ -414,7 +405,33 @@ button.crow:hover{background:#F5F8FC}
 .cfoot{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 20px;border-top:1px solid var(--line2);background:#FAFBFD;font-size:12px;color:var(--ink3)}
 
 /* רינדור חוזר (שינוי תקופה/מיון/סינון) — בלי אנימציות כניסה */
-#v-home.still .kpi,#v-home.still .hm1,#v-home.still .crow,#v-home.still .crow .bar i,#v-home.still .qkact{animation:none}
+#v-home.still .kpi,#v-home.still .crow,#v-home.still .crow .bar i,#v-home.still .qkact{animation:none}
+
+/* כפתור טווח מוכן (קטן, ליד טווח התאריכים) */
+.hpre{display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 12px 0 14px;border-radius:12px;border:1.5px solid var(--line2);background:#fff;font:inherit;font-size:13.5px;font-weight:700;color:var(--navy);cursor:pointer;box-shadow:var(--sh-card);transition:border-color .2s}
+.hpre:hover,.hpw.on .hpre{border-color:var(--navy-l)}
+.hpre .hcv{width:14px;height:14px}.hpre .hcv svg{width:14px;height:14px}
+/* כלים בכותרת הטבלה: סינון ערים, ייצוא */
+.htool{display:inline-flex;align-items:center;gap:7px;height:34px;padding:0 10px 0 12px;border-radius:10px;border:1.5px solid var(--line2);background:#fff;font:inherit;font-size:13px;font-weight:700;color:var(--ink2);cursor:pointer;transition:border-color .2s,color .2s}
+.htool:hover,.hpw.on .htool{border-color:var(--navy-l);color:var(--navy)}
+.htool.act{border-color:var(--navy);background:var(--bbg);color:var(--navy)}
+.htool>svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.htool .hcv{width:13px;height:13px}.htool .hcv svg{width:13px;height:13px}
+#homeCities .hclr{width:30px;height:30px;box-shadow:none;border:1.5px solid var(--line2)}
+#homeCities .hpop{top:calc(100% + 6px)}
+.hpw .hpop .hdr{border-top:0;margin-top:0;padding-top:4px}
+
+/* ---------- css/features/search.css ---------- */
+/* ============================================================
+   דאטה ביתנו — חיפוש מתקדם
+   ============================================================ */
+#srchPanel .sgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px 14px}
+#srchPanel .sgrid + .sgrid{margin-top:12px}
+#srchPanel .ssec{display:flex;align-items:center;gap:10px;margin:22px 0 12px;font-size:13px;font-weight:800;color:var(--navy)}
+#srchPanel .ssec::before{content:'';width:4px;height:16px;border-radius:2px;background:var(--gold)}
+#srchPanel .ssec::after{content:'';flex:1;height:1px;background:var(--line2)}
+#srchPanel .sdyn-miss{opacity:.55}
+#srchPanel select:disabled{cursor:not-allowed}
 
 /* ---------- css/features/card.css ---------- */
 /* ============ דאטה ביתנו — כרטיס אדם ============ */
@@ -4453,14 +4470,14 @@ const DAY = 864e5;
 const HM = Object.assign({ preset: '30d', from: '', to: '', cmp: 'prev', cfrom: '', cto: '', sort: 'sup', dir: -1, cities: [], region: '', cat: '' },
   (() => { try { return JSON.parse(localStorage.getItem('maagar-home') || '{}') || {}; } catch (e) { return {}; } })());
 HM.open = '';
+if (!['sup', 'cov', 'abc'].includes(HM.sort)) { HM.sort = 'sup'; HM.dir = -1; }
 function hmSave() { try { const o = Object.assign({}, HM); delete o.open; localStorage.setItem('maagar-home', JSON.stringify(o)); } catch (e) {} }
 const dayStart = t => { const d = new Date(t); d.setHours(0, 0, 0, 0); return d.getTime(); };
 const isoMs = iso => { const p = String(iso).split('-').map(Number); return new Date(p[0], p[1] - 1, p[2]).getTime(); };
 const dlab = t => { const d = new Date(t); return pad2(d.getDate()) + '.' + pad2(d.getMonth() + 1) + '.' + d.getFullYear(); };
 const rlab = (a, b) => dlab(a) === dlab(b) ? dlab(a) : dlab(a) + ' – ' + dlab(b);
 const rshort = (a, b) => { const x = dlab(a), y = dlab(b); return x === y ? x : x.slice(-4) === y.slice(-4) ? x.slice(0, 5) + '–' + y : x + '–' + y; };
-const PRESETS = [['today', 'היום'], ['7d', '7 הימים האחרונים'], ['week', 'השבוע (מיום ראשון)'], ['30d', '30 הימים האחרונים'], ['month', 'החודש'], ['90d', '3 החודשים האחרונים'], ['all', 'מההתחלה'], ['custom', 'טווח תאריכים…']];
-const CMPS = [['prev', 'התקופה הקודמת'], ['year', 'אותה תקופה בשנה שעברה'], ['custom', 'טווח תאריכים…'], ['none', 'בלי השוואה']];
+const PRESETS = [['today', 'היום', 'היום'], ['7d', '7 הימים האחרונים', '7 ימים'], ['week', 'השבוע (מיום ראשון)', 'השבוע'], ['30d', '30 הימים האחרונים', '30 יום'], ['month', 'החודש', 'החודש'], ['90d', '3 החודשים האחרונים', '3 חודשים'], ['all', 'מההתחלה', 'הכול']];
 function hmRange() {
   const now = Date.now(), today = dayStart(now);
   let a, b = now;
@@ -4475,10 +4492,7 @@ function hmRange() {
     default: a = today - 29 * DAY;
   }
   if (b < a) { const t = a; a = b; b = t; }
-  let c = null;
-  if (HM.cmp === 'prev') c = [a - (b - a) - 1, a - 1];
-  else if (HM.cmp === 'year') { const y = t => { const d = new Date(t); d.setFullYear(d.getFullYear() - 1); return d.getTime(); }; c = [y(a), y(b)]; }
-  else if (HM.cmp === 'custom' && HM.cfrom) { const x = isoMs(HM.cfrom), y = HM.cto ? isoMs(HM.cto) : x; c = [Math.min(x, y), Math.max(x, y) + DAY - 1]; }
+  const c = null;   /* השוואה הוסרה לבקשת דוד — הקוד שמשתמש ב-c נשאר מוכן אם יחזור */
   return { a, b, c };
 }
 
@@ -4609,7 +4623,6 @@ function dlt(cur, prev, opt) {
   const good = opt.invert ? r < 0 : r > 0;
   return '<span class="dl ' + (good ? 'up' : 'dn') + '">' + (r > 0 ? '▲ ' : '▼ ') + (opt.pts ? Math.abs(r).toLocaleString('he-IL') + ' נק׳' : nf(Math.abs(r))) + '</span>';
 }
-const cmpLabel = R => !R.c ? '' : HM.cmp === 'prev' ? 'מול התקופה הקודמת' : HM.cmp === 'year' ? 'מול שנה שעברה' : 'מול ' + rlab(R.c[0], R.c[1]);
 function fltLabel() {
   const parts = [];
   if (HM.region) parts.push('מרחב ' + HM.region);
@@ -4618,29 +4631,25 @@ function fltLabel() {
   return parts.join(' · ') || 'כל הערים';
 }
 
-/* ---------------------------------------------------------- סרגל העליון: תקופה, השוואה, סינון, ייצוא */
-function hmBar(D) {
-  const R = D.R, open = HM.open;
-  const sel = (id, lb, val, sub, ic) => '<div class="hpw' + (open === id ? ' on' : '') + '"><button class="hsel" data-act="hmOpen" data-v="' + id + '" aria-expanded="' + (open === id) + '">' +
-    '<span class="hsi">' + hic(ic) + '</span><span class="hst"><span class="hsl">' + lb + (sub ? ' · <span class="num">' + sub + '</span>' : '') + '</span><b>' + val + '</b></span><span class="hcv">' + hic('chev') + '</span></button>' +
-    (open === id ? '<div class="hpop" role="dialog">' + hmPop(id, D) + '</div>' : '') + '</div>';
-  const per = (PRESETS.find(p => p[0] === HM.preset) || PRESETS[3])[1].replace('…', '');
-  const cmp = (CMPS.find(p => p[0] === HM.cmp) || CMPS[0])[1].replace('…', '');
-  const many = D.cities.length > 1;
+/* ---------------------------------------------------------- תקופה (מעל הטבלה) + כלי הטבלה */
+const hpw = (id, btn, pop) => '<div class="hpw' + (HM.open === id ? ' on' : '') + '">' + btn + (HM.open === id ? '<div class="hpop" role="dialog">' + pop() + '</div>' : '') + '</div>';
+function hmPeriodBar(D) {
+  const R = D.R, pr = PRESETS.find(p => p[0] === HM.preset);
   const demo = S.people.some(p => (p.tags || []).includes('דמו'));
-  return sel('per', 'תקופה', per, rshort(R.a, R.b), 'cal') +
-    sel('cmp', 'מושווה מול', R.c ? cmp : 'בלי השוואה', R.c ? rshort(R.c[0], R.c[1]) : '', 'week') +
-    (many || hmFiltered() ? sel('flt', 'ערים', esc(fltLabel()), hmFiltered() ? (D.shown.length === 1 ? 'עיר אחת' : nf(D.shown.length) + ' ערים') : '', 'flt') : '') +
-    (hmFiltered() ? '<button class="hclr" data-act="hmClear" title="ניקוי הסינון">' + hic('x') + '</button>' : '') +
+  return hpw('rng', '<button class="hsel" data-act="hmOpen" data-v="rng" aria-expanded="' + (HM.open === 'rng') + '"><span class="hsi">' + hic('cal') + '</span><span class="hst"><span class="hsl">טווח תאריכים</span><b class="num">' + rlab(R.a, R.b) + '</b></span><span class="hcv">' + hic('chev') + '</span></button>',
+      () => '<div class="hdr"><label><span class="fl">מתאריך</span><input type="date" data-hm="from" value="' + esc(isoDay(new Date(R.a))) + '"></label><label><span class="fl">עד תאריך</span><input type="date" data-hm="to" value="' + esc(isoDay(new Date(R.b))) + '"></label></div>') +
+    hpw('per', '<button class="hpre" data-act="hmOpen" data-v="per" aria-expanded="' + (HM.open === 'per') + '">' + (pr ? pr[2] : 'טווח אישי') + '<span class="hcv">' + hic('chev') + '</span></button>',
+      () => '<div class="hpl">' + PRESETS.map(([k, lb]) => '<button class="hopt' + (HM.preset === k ? ' on' : '') + '" data-act="hmPreset" data-v="' + k + '">' + lb + '</button>').join('') + '</div>') +
     '<span class="sp"></span>' +
-    (demo ? '<span class="pill y">נתוני דמו' + (can('edit') ? ' · <button class="link" style="font-size:11.5px" data-act="clearDemo">מחיקה</button>' : '') + '</span>' : '') +
-    (can('export') ? '<div class="hpw' + (open === 'exp' ? ' on' : '') + '"><button class="hexp" data-act="hmOpen" data-v="exp">' + hic('dl') + 'ייצוא</button>' + (open === 'exp' ? '<div class="hpop">' + hmPop('exp', D) + '</div>' : '') + '</div>' : '');
+    (demo ? '<span class="pill y">נתוני דמו' + (can('edit') ? ' · <button class="link" style="font-size:11.5px" data-act="clearDemo">מחיקה</button>' : '') + '</span>' : '');
+}
+function hmCityTools(D) {
+  const many = D.cities.length > 1;
+  return (many || hmFiltered() ? hpw('flt', '<button class="htool' + (hmFiltered() ? ' act' : '') + '" data-act="hmOpen" data-v="flt">' + hic('flt') + '<span>' + esc(fltLabel()) + '</span><span class="hcv">' + hic('chev') + '</span></button>', () => hmPop('flt', D)) : '') +
+    (hmFiltered() ? '<button class="hclr" data-act="hmClear" title="ניקוי הסינון">' + hic('x') + '</button>' : '') +
+    (can('export') ? hpw('exp', '<button class="htool" data-act="hmOpen" data-v="exp">' + hic('dl') + '<span>ייצוא</span><span class="hcv">' + hic('chev') + '</span></button>', () => hmPop('exp', D)) : '');
 }
 function hmPop(id, D) {
-  if (id === 'per') return '<div class="hpl">' + PRESETS.map(([k, lb]) => '<button class="hopt' + (HM.preset === k ? ' on' : '') + '" data-act="hmPreset" data-v="' + k + '">' + lb + '</button>').join('') + '</div>' +
-    (HM.preset === 'custom' ? '<div class="hdr"><label><span class="fl">מתאריך</span><input type="date" data-hm="from" value="' + esc(HM.from || isoDay(new Date(D.R.a))) + '"></label><label><span class="fl">עד תאריך</span><input type="date" data-hm="to" value="' + esc(HM.to || isoDay(new Date(D.R.b))) + '"></label></div>' : '');
-  if (id === 'cmp') return '<div class="hpl">' + CMPS.map(([k, lb]) => '<button class="hopt' + (HM.cmp === k ? ' on' : '') + '" data-act="hmCmp" data-v="' + k + '">' + lb + '</button>').join('') + '</div>' +
-    (HM.cmp === 'custom' ? '<div class="hdr"><label><span class="fl">מתאריך</span><input type="date" data-hm="cfrom" value="' + esc(HM.cfrom || '') + '"></label><label><span class="fl">עד תאריך</span><input type="date" data-hm="cto" value="' + esc(HM.cto || '') + '"></label></div>' : '');
   if (id === 'flt') {
     const all = D.cities.slice().sort((x, y) => x.c.localeCompare(y.c, 'he'));
     return '<div class="hfs"><span class="fl">ערים מסוימות</span><input type="text" id="hmCityIn" list="hmCityDl" placeholder="מקלידים שם עיר…" autocomplete="off">' +
@@ -4654,13 +4663,14 @@ function hmPop(id, D) {
     '<button class="hopt big" data-act="hmReport">' + hic('msg') + '<span><b>דוח עדכון</b><small>עמוד מסודר להדפסה או לשמירה כ-PDF</small></span></button></div>';
   return '';
 }
-function hmBarRender() {
-  const el = $('#htb'); if (!el) return;
-  el.innerHTML = hmBar(HM._D || homeData());
-  hmWire();
-}
+function hmBarRender() { RENDER.home({ refresh: true, keepOpen: true, reuse: true }); }
 function hmWire() {
-  $$('#htb [data-hm]').forEach(inp => inp.addEventListener('change', () => { HM[inp.dataset.hm] = inp.value; hmSave(); RENDER.home({ refresh: true, keepOpen: true }); }));
+  $$('#v-home [data-hm]').forEach(inp => inp.addEventListener('change', () => {
+    const R = (HM._D || homeData()).R;
+    if (!HM.from) HM.from = isoDay(new Date(R.a));
+    if (!HM.to) HM.to = isoDay(new Date(R.b));
+    HM[inp.dataset.hm] = inp.value; HM.preset = 'custom'; hmSave(); RENDER.home({ refresh: true, keepOpen: true });
+  }));
   const ci = $('#hmCityIn');
   if (ci) {
     setTimeout(() => ci.focus(), 30);
@@ -4669,21 +4679,19 @@ function hmWire() {
     ci.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); add(); } });
   }
 }
-document.addEventListener('click', e => { if (HM.open && !e.target.closest('.hpw')) { HM.open = ''; hmBarRender(); } });
-document.addEventListener('keydown', e => { if (e.key === 'Escape' && HM.open) { HM.open = ''; hmBarRender(); } });
+document.addEventListener('click', e => { if (HM.open && S.view === 'home' && !e.target.closest('.hpw')) { HM.open = ''; hmBarRender(); } });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && HM.open && S.view === 'home') { HM.open = ''; hmBarRender(); } });
 
 /* ---------------------------------------------------------- המסך */
 RENDER.home = function (opts) {
   opts = opts || {};
   if (!opts.keepOpen) HM.open = '';
-  const D = homeData(); HM._D = D;
+  const D = opts.reuse && HM._D ? HM._D : homeData(); HM._D = D;
   const { R, T } = D;
   const tot = S.people.length;
   const up = S.events.filter(e => !e.date || e.date >= isoDay(new Date())).sort((a, b) => (a.date || '').localeCompare(b.date || '')).slice(0, 3);
-  const cl = cmpLabel(R);
-  const ft = (d, plain) => d ? '<div class="ft">' + d + ' <span>' + cl + '</span></div>' : '<div class="ft">' + plain + '</div>';
+  const ft = (d, plain) => '<div class="ft">' + plain + '</div>';
   const kpi = (lb, v, foot, act, val, ic, cls) => '<button class="kpi ' + (cls || '') + '" data-act="' + act + '" data-v="' + (val || '') + '"><span class="ki">' + hic(ic) + '</span><div class="lb">' + lb + '</div><div class="vl" data-count="' + v + '">' + nf(v) + '</div>' + foot + '</button>';
-  const mini = (lb, v, sub, d, ic, act, val) => '<' + (act ? 'button data-act="' + act + '" data-v="' + (val || '') + '"' : 'div') + ' class="hm1"><span class="hmi">' + hic(ic) + '</span><span class="hmt"><span class="hml">' + lb + '</span><span class="hmv"><b class="num">' + v + '</b>' + (d || '') + '</span>' + (sub ? '<span class="hms">' + sub + '</span>' : '') + '</span></' + (act ? 'button' : 'div') + '>';
   const qa = (act, v, ic, b, t, cls) => '<button class="qk ' + (cls || '') + '" data-act="' + act + '"' + (v ? ' data-v="' + v + '"' : '') + '><span class="qki">' + hic(ic) + '</span><span class="qkt"><b>' + b + '</b><span>' + t + '</span></span></button>';
   const quick = [
     can('edit') ? qa('newPerson', '', 'add', 'איש קשר חדש', 'הוספה ידנית למאגר', 'gold') : '',
@@ -4696,32 +4704,24 @@ RENDER.home = function (opts) {
     '<span class="cn"><b>' + esc(o.c) + '</b>' + (o.reg ? '<small>' + o.reg + '</small>' : '') + '</span>' +
     '<span class="bar"><i class="g" style="width:' + pct(o.sup, o.n) + '%"></i><i class="y" style="width:' + pct(o.und, o.n) + '%"></i></span>' +
     '<span class="num cs"><b>' + nf(o.sup) + '</b> מתוך ' + nf(o.n) + '</span>' +
-    '<span class="num cc"><b>' + pc1(o.cov) + '</b>' + (R.c && o.ccov != null ? dlt(o.cov, o.ccov, { pts: true }) : '') + '</span>' +
+    '<span class="num cc"><b>' + pc1(o.cov) + '</b></span>' +
     '<span class="ct">' + spark(o.trend) + '</span></button>';
 
   $('#v-home').classList.toggle('still', !!opts.refresh);
   $('#v-home').innerHTML =
-    '<div class="htb" id="htb">' + hmBar(D) + '</div>' +
     (!tot ? '<div class="card"><div class="empty"><b>המאגר עדיין ריק</b>אפשר להעלות קובץ אקסל או להוסיף איש קשר ידנית.<div class="row" style="justify-content:center;margin-top:14px">' + (can('import') ? '<button class="btn" data-act="go" data-v="upload">העלאת אקסל</button>' : '') + (can('edit') ? '<button class="btn sec" data-act="newPerson">+ איש קשר חדש</button>' : '') + (CLOUD && ME && ME.hq === 'central' && can('edit') ? '<button class="btn sec" data-act="seedCloud">טעינת נתוני דמו לבדיקה</button>' : '') + '</div></div></div>' : '') +
     '<div class="kpis" id="homeKpis">' +
-      kpi('אנשים במאגר', T.n, ft(dlt(T.n, R.c ? T.cn : null), hmFiltered() ? 'בערים שנבחרו' : 'בכל המאגרים'), 'goStatus', '', 'people', 'hero') +
-      kpi('תומכים', T.sup, ft(dlt(T.sup, R.c ? T.csup : null), pc1(T.cov) + ' מהמאגר'), 'goStatus', 'תומך', 'sup', 'g') +
-      kpi('מתלבטים', T.und, ft(dlt(T.und, R.c ? T.cund : null), pct(T.und, T.n) + '% מהמאגר'), 'goStatus', 'מתלבט', 'und', 'y') +
-      kpi('נוספו בתקופה', T.add, ft(dlt(T.add, R.c ? T.cadd : null), rlab(R.a, R.b)), 'goNew', '', 'week') +
+      kpi('אנשים במאגר', T.n, ft(0, hmFiltered() ? 'בערים שנבחרו' : 'בכל המאגרים'), 'goStatus', '', 'people', 'hero') +
+      kpi('תומכים', T.sup, ft(0, pc1(T.cov) + ' מהמאגר'), 'goStatus', 'תומך', 'sup', 'g') +
+      kpi('מתלבטים', T.und, ft(0, pct(T.und, T.n) + '% מהמאגר'), 'goStatus', 'מתלבט', 'und', 'y') +
+      kpi('נוספו בתקופה', T.add, ft(0, rlab(R.a, R.b)), 'goNew', '', 'week') +
     '</div>' +
-    '<div class="hminis">' +
-      mini('כיסוי תומכים', pc1(T.cov), 'מתוך המאגר', R.c && T.ccov != null ? dlt(T.cov, T.ccov, { pts: true }) : '', 'cov') +
-      mini('לא תומכים', nf(T.no), pct(T.no, T.n) + '%', dlt(T.no, R.c ? T.cno : null, { invert: true }), 'no', 'goStatus', 'לא תומך') +
-      mini('ללא סטטוס', nf(T.unk), pct(T.unk, T.n) + '%', dlt(T.unk, R.c ? T.cunk : null, { invert: true }), 'unk', 'goStatus', 'לא ידוע') +
-      mini('עם טלפון נייד', pct(T.ph, T.n) + '%', nf(T.ph) + ' אנשים', '', 'phone') +
-      mini('משויכים לקלפי', pct(T.kal, T.n) + '%', nf(T.kal) + ' אנשים', '', 'pin') +
-      mini('ערים', nf(D.shown.length), hmFiltered() ? 'אחרי הסינון' : 'במאגר', '', 'city') +
-    '</div>' +
+    '<div class="htb" id="htb">' + hmPeriodBar(D) + '</div>' +
     '<div class="card" id="homeCities"><div class="ch">' +
-      '<button class="chbtn" data-act="hmSort" data-v="abc" title="סידור לפי א׳–ב׳">תומכים לפי עיר</button>' +
-      '<div class="seg">' + sortBtn('abc', 'א׳–ב׳') + sortBtn('sup', 'מספר תומכים') + sortBtn('cov', 'כיסוי') + sortBtn('size', 'גודל במאגר') + '</div>' +
-      '<span class="legend"><span><i style="background:var(--navy)"></i>תומכים</span><span><i style="background:#7FA3CF"></i>מתלבטים</span></span></div>' +
-      '<div class="ctbl"><div class="crow chd"><span>עיר</span><span>תומכים ומתלבטים</span><span>תומכים</span><span>כיסוי' + (R.c ? ' ושינוי' : '') + '</span><span>מגמה</span></div>' +
+      '<span class="cht">תומכים לפי עיר</span>' + hmCityTools(D) +
+      '<span class="legend"><span><i style="background:var(--navy)"></i>תומכים</span><span><i style="background:#7FA3CF"></i>מתלבטים</span></span>' +
+      '<div class="seg">' + sortBtn('sup', 'מספר תומכים') + sortBtn('cov', 'כיסוי') + sortBtn('abc', 'א׳–ב׳') + '</div></div>' +
+      '<div class="ctbl"><div class="crow chd"><span>עיר</span><span>תומכים ומתלבטים</span><span>תומכים</span><span>כיסוי</span><span>מגמה</span></div>' +
       '<div class="cscroll">' + (D.shown.length ? D.shown.map(crow).join('') : '<div class="empty" style="padding:26px">אין ערים שמתאימות לסינון</div>') + '</div></div>' +
       '<div class="cfoot"><span>' + nf(D.shown.length) + ' ערים · כיסוי = תומכים מתוך האנשים במאגר של העיר · המגמה: ' + rlab(R.a, R.b) + '</span>' + spark(T.trend) + '</div>' +
     '</div>' +
@@ -4813,8 +4813,7 @@ Object.assign(ACT, {
 
 Object.assign(ACT, {
   hmOpen: el => { HM.open = HM.open === el.dataset.v ? '' : el.dataset.v; hmBarRender(); },
-  hmPreset: el => { HM.preset = el.dataset.v; hmSave(); RENDER.home({ refresh: true, keepOpen: el.dataset.v === 'custom' }); },
-  hmCmp: el => { HM.cmp = el.dataset.v; hmSave(); RENDER.home({ refresh: true, keepOpen: el.dataset.v === 'custom' }); },
+  hmPreset: el => { HM.preset = el.dataset.v; HM.from = ''; HM.to = ''; HM.open = ''; hmSave(); RENDER.home({ refresh: true }); },
   hmRegion: el => { HM.region = HM.region === el.dataset.v ? '' : el.dataset.v; hmSave(); RENDER.home({ refresh: true, keepOpen: true }); },
   hmCat: el => { HM.cat = HM.cat === el.dataset.v ? '' : el.dataset.v; hmSave(); RENDER.home({ refresh: true, keepOpen: true }); },
   hmCityDel: el => { HM.cities = HM.cities.filter(k => k !== el.dataset.v); hmSave(); RENDER.home({ refresh: true, keepOpen: true }); },
@@ -4829,12 +4828,39 @@ Object.assign(ACT, {
    דאטה ביתנו — חיפוש מתקדם
    סינון, טבלת תוצאות, בחירה, קבוצות שמורות ופעולות על נבחרים.
    ============================================================ */
+/* ---- פרטים דינמיים בחיפוש — הסדר הקבוע (לפי שם הפרט; שמות חלופיים מופרדים ב-|) ---- */
+const SRCH_DYN = [
+  ['מתפקדים', 'מתפקד|מתפקדים'], ['מעוניין להתפקד', 'מעוניין להתפקד|מעוניינת להתפקד'], ['הוראות קבע', 'הוראות קבע|הוראת קבע'], ['הסרה מדיוור', 'הסרה מדיוור|הסרה מדיוורים'],
+  ['מאפיין עליית ברית המועצות', 'מאפיין עליית ברית המועצות|מאפין עליית ברית המועצות|עליית ברית המועצות'], ['מילואמניק', 'מילואמניק|מילואימניק'], ['מתלבט ישראל ביתנו VS ליכוד', 'מתלבט ישראל ביתנו vs ליכוד|מתלבט ישראל ביתנו ליכוד'], ['הצביע לגוש השינוי', 'הצביע לגוש השינוי'],
+  ['התנדבות לשטח', 'התנדבות לשטח'], ['התנדבות לסושיאל/דוברות', 'התנדבות לסושיאל/דוברות|התנדבות לסושיאל דוברות|התנדבות לסושיאל']
+];
+const SRCH_DYN_ROWS = [4, 4, 2];
+const fkey = s => norm(s).replace(/[^א-תa-z0-9]/g, '');
+function srchDynFields() {
+  const used = new Set();
+  const fixed = SRCH_DYN.map(([lbl, alts]) => {
+    const ks = alts.split('|').map(fkey);
+    const f = S.fields.find(x => !used.has(x.id) && ks.includes(fkey(x.name)));
+    if (f) used.add(f.id);
+    return { lbl, f };
+  });
+  const own = new Set(Object.keys(SRCH_OWN).map(ownField).filter(Boolean).map(x => x.id));
+  const rest = S.fields.filter(x => x.inSearch && !used.has(x.id) && !own.has(x.id)).map(f => ({ lbl: f.name, f }));
+  return { fixed, rest };
+}
+/* פרטים שיש להם סינון משלהם בטופס (או שלא מציגים בחיפוש) — לא חוזרים ברשימת הפרטים הדינמיים */
+const SRCH_OWN = { zip: ['מיקוד'], gender: ['מין', 'מגדר'], email: ['דואר אלקטרוני', 'אימייל', 'מייל', 'email', 'דוא״ל'], notes: ['הערות', 'הערה'] };
+const ownField = k => { const ks = SRCH_OWN[k].map(fkey); return S.fields.find(x => ks.includes(fkey(x.name))); };
+const ownVal = (p, k) => { if (p[k]) return p[k]; const f = ownField(k); const v = f ? (p.dyn || {})[f.id] : ''; return v == null ? '' : Array.isArray(v) ? v.join(', ') : String(v); };
+const zipOf = p => digits(ownVal(p, 'zip'));
+const phKey = d => d.startsWith('972') ? '0' + d.slice(3) : d;
+
 /* ======================================================= חיפוש מתקדם */
 function matchQ(p, q) {
   const d = digits(q);
   if (d.length >= 3) {
     if ((p.tz || '').includes(d)) return true;
-    if (allPhones(p).some(x => x.includes(d.startsWith('972') ? '0' + d.slice(3) : d))) return true;
+    if (allPhones(p).some(x => x.includes(phKey(d)))) return true;
   }
   const t = norm(q);
   if (!t || /^\d+$/.test(t)) return false;
@@ -4845,10 +4871,22 @@ function filterPeople(f) {
   const kset = new Set(String(f.kalpis || '').split(/[\s,;]+/).map(kkey).filter(Boolean));
   const kc = f.kcity ? ckey(f.kcity) : (kset.size && f.city ? ckey(f.city) : '');
   const fd = f.dyn ? fieldById(f.dyn) : null;
+  const dtz = digits(f.tz), dph = phKey(digits(f.phone)), dzip = digits(f.zip);
+  const tFirst = norm(f.first), tLast = norm(f.last), tHouse = norm(f.house), tMail = norm(f.email);
+  const dyns = Object.keys(f).filter(k => k.startsWith('d_') && f[k] !== '' && f[k] != null).map(k => [fieldById(k.slice(2)), f[k]]).filter(x => x[0]);
   return S.people.filter(p => {
     if (f.q && !matchQ(p, f.q)) return false;
+    if (dtz && !digits(p.tz).includes(dtz)) return false;
+    if (tFirst && !norm(p.first).includes(tFirst)) return false;
+    if (tLast && !norm(p.last).includes(tLast)) return false;
+    if (dph && !allPhones(p).some(x => phKey(digits(x)).includes(dph))) return false;
     if (f.city && ckey(p.city) !== ckey(f.city)) return false;
     if (f.street && !norm(p.street).includes(norm(f.street))) return false;
+    if (tHouse && norm(p.house) !== tHouse) return false;
+    if (dzip && !zipOf(p).startsWith(dzip)) return false;
+    if (f.gender && norm(ownVal(p, 'gender')) !== norm(f.gender)) return false;
+    if (tMail && !norm(ownVal(p, 'email')).includes(tMail)) return false;
+    if (f.age !== '' && f.age != null) { if (ageOf(p) !== +f.age) return false; }
     if (f.lang && p.lang !== f.lang) return false;
     if (f.status && stOf(p) !== f.status) return false;
     if (f.owner && p.owner !== f.owner) return false;
@@ -4868,6 +4906,13 @@ function filterPeople(f) {
       else if (fd.type === 'select') { if (v !== f.dynVal) return false; }
       else if (!norm(v).includes(norm(f.dynVal))) return false;
     }
+    for (const [df, want] of dyns) {
+      const v = (p.dyn || {})[df.id];
+      if (df.type === 'bool') { if ((want === 'כן') !== (v === true)) return false; }
+      else if (df.type === 'multi') { if (!(v || []).includes(want)) return false; }
+      else if (df.type === 'select') { if (v !== want) return false; }
+      else if (!norm(v).includes(norm(want))) return false;
+    }
     if (f.hasPhone === 'mobile' && !isMobile(p.phone) && !(p.phones || []).some(isMobile)) return false;
     if (f.hasPhone === 'none' && allPhones(p).length) return false;
     return true;
@@ -4881,42 +4926,68 @@ RENDER.search = function (o) {
   if (!o.refresh || !$('#srchPanel')) renderSearchPanel();
   renderResults();
 };
+/* אשכולות קלפי (מוקדי הצבעה) של העיר שנבחרה */
+function srchSites() {
+  const site = SR.f.site !== '' && SR.f.site != null ? SITES[+SR.f.site] : null;
+  const c = SR.f.city || (site && site.c) || '';
+  if (!c) return null;
+  const ck = ckey(c);
+  return SITES.filter(s => s.ck === ck).sort((a, b) => (a.n || a.s || '').localeCompare(b.n || b.s || '', 'he'));
+}
 function renderSearchPanel() {
   const f = SR.f;
-  const opt = (arr, cur, all) => '<option value="">' + (all || 'הכל') + '</option>' + arr.map(x => { const v = Array.isArray(x) ? x[0] : x, l = Array.isArray(x) ? x[1] : x; return '<option value="' + esc(v) + '"' + (String(cur) === String(v) ? ' selected' : '') + '>' + esc(l) + '</option>'; }).join('');
+  const opt = (arr, cur, all) => '<option value="">' + (all || 'הכל') + '</option>' + arr.map(x => { const v = Array.isArray(x) ? x[0] : x, l = Array.isArray(x) ? x[1] : x; return '<option value="' + esc(v) + '"' + (String(cur == null ? '' : cur) === String(v) ? ' selected' : '') + '>' + esc(l) + '</option>'; }).join('');
   const cities = cityCounts().map(c => c.c);
-  const fs = S.fields.filter(x => x.inSearch);
-  const fd = f.dyn ? fieldById(f.dyn) : null;
-  let dynVal = '<input type="text" data-sf="dynVal" value="' + esc(f.dynVal) + '" placeholder="כל ערך" aria-label="ערך"' + (fd ? '' : ' disabled') + '>';
-  if (fd && fd.type === 'bool') dynVal = '<select data-sf="dynVal" aria-label="ערך">' + opt(['כן', 'לא'], f.dynVal, 'יש ערך') + '</select>';
-  if (fd && (fd.type === 'select' || fd.type === 'multi')) dynVal = '<select data-sf="dynVal" aria-label="ערך">' + opt(fd.options || [], f.dynVal, 'יש ערך') + '</select>';
-  const nMore = ['street', 'lang', 'ageFrom', 'ageTo', 'owner', 'db', 'tag', 'hasPhone', 'dyn'].filter(k => f[k]).length;
+  const val = k => esc(f[k] == null ? '' : f[k]);
+  const txt = (k, lbl, ph, extra) => '<div><label class="fl" for="sf_' + k + '">' + lbl + '</label><input id="sf_' + k + '" type="text" data-sf="' + k + '" value="' + val(k) + '"' + (ph ? ' placeholder="' + ph + '"' : '') + (extra || '') + '></div>';
+  const sel = (k, lbl, arr, all) => '<div><label class="fl" for="sf_' + k + '">' + lbl + '</label><select id="sf_' + k + '" data-sf="' + k + '">' + opt(arr, f[k], all) + '</select></div>';
+  const row = cells => '<div class="sgrid">' + cells.join('') + '</div>';
+  const sites = srchSites();
+  const siteSel = '<div><label class="fl" for="sf_site">אשכול קלפי</label>' + (sites
+    ? '<select id="sf_site" data-sf="site">' + opt(sites.map(s => [s.i, (s.n || s.s) + (s.ksRaw ? ' · קלפיות ' + s.ksRaw : '')]), f.site, 'כל האשכולות') + '</select>'
+    : '<select id="sf_site" disabled title="בוחרים קודם עיר"><option>בחרו עיר קודם</option></select>') + '</div>';
+  /* פרטים דינמיים */
+  const dynCtl = (it, i) => {
+    const id = 'sfd_' + i;
+    if (!it.f) return '<div class="sdyn-miss" title="הפרט „' + esc(it.lbl) + '” עוד לא קיים — אפשר להוסיף אותו במסך פרטים דינמיים"><label class="fl" for="' + id + '">' + esc(it.lbl) + '</label><select id="' + id + '" disabled><option>הפרט עוד לא קיים</option></select></div>';
+    const k = 'd_' + it.f.id, lbl = esc(it.f.name);
+    if (it.f.type === 'bool') return '<div><label class="fl" for="' + id + '">' + lbl + '</label><select id="' + id + '" data-sf="' + k + '">' + opt(['כן', 'לא'], f[k]) + '</select></div>';
+    if (it.f.type === 'select' || it.f.type === 'multi') return '<div><label class="fl" for="' + id + '">' + lbl + '</label><select id="' + id + '" data-sf="' + k + '">' + opt(it.f.options || [], f[k]) + '</select></div>';
+    return '<div><label class="fl" for="' + id + '">' + lbl + '</label><input id="' + id + '" type="text" data-sf="' + k + '" value="' + val(k) + '" placeholder="כל ערך"></div>';
+  };
+  const { fixed, rest } = srchDynFields();
+  let dynHtml = '', n = 0;
+  SRCH_DYN_ROWS.forEach(c => { dynHtml += row(fixed.slice(n, n + c).map((it, j) => dynCtl(it, n + j))); n += c; });
+  for (let i = 0; i < rest.length; i += 4) dynHtml += row(rest.slice(i, i + 4).map((it, j) => dynCtl(it, 100 + i + j)));
+  const gf = ownField('gender');
+  const genders = Array.from(new Set(['זכר', 'נקבה'].concat(gf && gf.options ? gf.options : [], S.people.map(p => ownVal(p, 'gender')).filter(Boolean))));
+  dynHtml += row([sel('gender', 'מין', genders),
+    txt('email', 'דואר אלקטרוני', '', ' inputmode="email"'),
+    '<div><label class="fl" for="sf_age">גיל</label><input id="sf_age" type="number" min="0" max="120" data-sf="age" value="' + val('age') + '" placeholder="גיל מדויק"></div>',
+    '<div><span class="fl">טווח גילאים</span><div class="row" style="flex-wrap:nowrap;gap:6px"><input type="number" min="0" max="120" data-sf="ageFrom" value="' + val('ageFrom') + '" placeholder="מגיל" aria-label="מגיל"><input type="number" min="0" max="120" data-sf="ageTo" value="' + val('ageTo') + '" placeholder="עד גיל" aria-label="עד גיל"></div></div>']);
+  /* סינונים פעילים שאין להם שדה בטופס (מגיעים מהמפה, מדף הבית, מקבוצה שמורה וכו') */
   const site = f.site !== '' && f.site != null ? SITES[+f.site] : null;
   const chips = [];
-  if (site) chips.push(['site', 'מוקד: ' + (site.n || site.s) + ' · ' + site.c]);
+  if (f.q) chips.push(['q', 'חיפוש: ' + f.q]);
+  if (site && !sites) chips.push(['site', 'מוקד: ' + (site.n || site.s) + ' · ' + site.c]);
   if (f.kcity) chips.push(['kcity', 'יישוב קלפי: ' + f.kcity]);
   if (f.upl) chips.push(['upl', 'מהקובץ: ' + ((S.uploads.find(u => u.id === f.upl) || {}).file || '')]);
   if (f.noKalpi) chips.push(['noKalpi', 'בלי קלפי מזוהה']);
+  if (f.db) chips.push(['db', 'מאגר: ' + ((S.dbs.find(d => d.id === f.db) || {}).name || f.db)]);
+  if (f.hasPhone) chips.push(['hasPhone', f.hasPhone === 'mobile' ? 'רק עם נייד' : 'רק בלי טלפון']);
+  if (f.dyn) { const df = fieldById(f.dyn); chips.push(['dyn', (df ? df.name : 'פרט') + (f.dynVal ? ': ' + f.dynVal : ' — יש ערך')]); }
   $('#v-search').innerHTML =
     '<div class="shead"><div><h2>חיפוש מתקדם</h2><p>התוצאות מתעדכנות תוך כדי הקלדה</p></div></div>' +
     '<div class="card" id="srchPanel"><div class="cb">' +
-      '<div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(170px,1fr))">' +
-        '<div><label class="fl" for="sf_q">שם / ת.ז / טלפון</label><input id="sf_q" type="search" data-sf="q" value="' + esc(f.q) + '"></div>' +
-        '<div><label class="fl" for="sf_city">עיר</label><select id="sf_city" data-sf="city">' + opt(cities, f.city, 'כל הערים') + '</select></div>' +
-        '<div><label class="fl" for="sf_status">סטטוס תמיכה</label><select id="sf_status" data-sf="status">' + opt(STATUSES, f.status) + '</select></div>' +
-        '<div id="srchKalpi"><label class="fl" for="sf_ks">קלפי</label><input id="sf_ks" type="text" data-sf="kalpis" value="' + esc(f.kalpis) + '" placeholder="למשל 12, 13.1"></div>' +
-      '</div>' +
-      (SR.more ? '<div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(170px,1fr));margin-top:12px">' +
-        '<div><label class="fl" for="sf_street">רחוב</label><input id="sf_street" type="text" data-sf="street" value="' + esc(f.street) + '"></div>' +
-        '<div><label class="fl" for="sf_lang">שפה</label><select id="sf_lang" data-sf="lang">' + opt(Array.from(new Set(LANGS.concat(S.people.map(p => p.lang).filter(Boolean)))), f.lang, 'כל השפות') + '</select></div>' +
-        '<div><span class="fl">גיל</span><div class="row" style="flex-wrap:nowrap;gap:6px"><input type="number" min="0" max="120" data-sf="ageFrom" value="' + esc(f.ageFrom) + '" placeholder="מ-" aria-label="מגיל"><input type="number" min="0" max="120" data-sf="ageTo" value="' + esc(f.ageTo) + '" placeholder="עד" aria-label="עד גיל"></div></div>' +
-        '<div><label class="fl" for="sf_owner">איש קשר אחראי</label><select id="sf_owner" data-sf="owner">' + opt(owners(), f.owner, 'כולם') + '</select></div>' +
-        '<div><label class="fl" for="sf_db">מאגר</label><select id="sf_db" data-sf="db">' + opt(S.dbs.map(d => [d.id, d.name]), f.db, 'כל המאגרים') + '</select></div>' +
-        '<div><label class="fl" for="sf_tag">תגית</label><select id="sf_tag" data-sf="tag">' + opt(allTags(), f.tag, 'כל התגיות') + '</select></div>' +
-        '<div><label class="fl" for="sf_ph">טלפון</label><select id="sf_ph" data-sf="hasPhone">' + opt([['mobile', 'רק עם נייד'], ['none', 'רק בלי טלפון']], f.hasPhone, 'לא משנה') + '</select></div>' +
-        '<div><span class="fl">פרט דינמי</span><div class="row" style="flex-wrap:nowrap;gap:6px"><select data-sf="dyn" aria-label="פרט דינמי">' + opt(fs.map(x => [x.id, x.name]), f.dyn, 'בחירה…') + '</select>' + dynVal + '</div></div>' +
-      '</div>' : '') +
-      '<div class="row" style="margin-top:12px;gap:14px"><button class="link sm" data-act="moreFilter" id="moreBtn">' + (SR.more ? 'פחות סינונים' : 'עוד סינונים' + (nMore ? ' (' + nMore + ' פעילים)' : '')) + '</button>' +
+      row([txt('tz', 'תעודת זהות', '', ' inputmode="numeric"'), txt('first', 'שם פרטי'), txt('last', 'שם משפחה'), txt('phone', 'מספר טלפון', '', ' inputmode="tel"')]) +
+      row([sel('status', 'סטטוס תמיכה', STATUSES),
+        sel('lang', 'שפה', Array.from(new Set(LANGS.concat(S.people.map(p => p.lang).filter(Boolean)))), 'כל השפות'),
+        sel('tag', 'מקושר לתגית', allTags(), 'כל התגיות'),
+        sel('owner', 'איש קשר אחראי', owners(), 'כולם')]) +
+      row([sel('city', 'עיר', cities, 'כל הערים'), txt('street', 'רחוב'), txt('house', 'מספר בית'), txt('zip', 'מיקוד', '', ' inputmode="numeric"')]) +
+      row([txt('kalpis', 'מספר קלפי', 'למשל 12, 13.1'), siteSel]) +
+      '<div class="ssec">פרטים דינמיים</div>' + dynHtml +
+      '<div class="row" style="margin-top:16px;gap:14px">' +
         '<button class="link sm" style="color:var(--ink2)" data-act="clearFilter">ניקוי</button>' +
         chips.map(([k, l]) => '<span class="tag">' + esc(l) + '<button data-act="clearChip" data-v="' + k + '" aria-label="הסרה">×</button></span>').join('') +
         (S.groups.length ? '<span style="flex:1"></span><select data-act-change="loadGroup" style="width:auto;min-height:34px;padding:4px 10px;font-size:13px" aria-label="קבוצה שמורה"><option value="">קבוצות שמורות…</option>' + S.groups.map(g => '<option value="' + g.id + '">' + esc(g.name) + '</option>').join('') + '</select>' : '') +
@@ -4924,6 +4995,13 @@ function renderSearchPanel() {
     '</div></div>' +
     '<div class="card" id="srchRes"></div>';
 }
+/* שינוי עיר → מעדכנים את רשימת אשכולות הקלפי */
+document.addEventListener('change', e => {
+  if (e.target.dataset.sf !== 'city' || !e.target.closest('#srchPanel')) return;
+  const s = SR.f.site !== '' && SR.f.site != null ? SITES[+SR.f.site] : null;
+  if (s && SR.f.city && s.ck !== ckey(SR.f.city)) SR.f.site = '';
+  renderSearchPanel(); renderResults();
+});
 function renderResults() {
   const res = filterPeople(SR.f).sort(SORTS[SR.sort] || SORTS.name);
   SR.last = res;
@@ -4962,7 +5040,7 @@ function renderResults() {
 Object.assign(ACT, {
   clearFilter: () => { SR.f = defFilter(); SR.page = 0; renderSearchPanel(); renderResults(); },
   clearSite: () => { SR.f.site = ''; renderSearchPanel(); renderResults(); },
-  clearChip: el => { const k = el.dataset.v; SR.f[k] = k === 'noKalpi' ? false : ''; renderSearchPanel(); renderResults(); },
+  clearChip: el => { const k = el.dataset.v; if (k === 'age') { SR.f.ageFrom = ''; SR.f.ageTo = ''; } else if (k === 'dyn') { SR.f.dyn = ''; SR.f.dynVal = ''; } else SR.f[k] = k === 'noKalpi' ? false : ''; renderSearchPanel(); renderResults(); },
   moreFilter: () => { SR.more = !SR.more; renderSearchPanel(); renderResults(); },
   clearUpl: () => { SR.f.upl = ''; renderSearchPanel(); renderResults(); },
   page: el => { SR.page += +el.dataset.v; renderResults(); $('#srchRes').scrollIntoView({ block: 'start' }); },
