@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
-<meta name="build" content="20261115-212104">
+<meta name="build" content="20261115-214833">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>דאטה ביתנו — מאגר התומכים</title>
 <style>
@@ -449,10 +449,6 @@ button.crow:hover{background:#F5F8FC}
 .dh .meta{font-size:13px;color:#A9C4E0}
 .dh .x{margin-inline-start:auto;width:38px;height:38px;border-radius:10px;border:1.5px solid rgba(255,255,255,.2);background:transparent;color:#fff;font-size:18px}
 .dh .x:hover{background:rgba(255,255,255,.1)}
-.stbtns{display:flex;gap:6px;flex-wrap:wrap;margin-top:14px}
-.stb{border:1.5px solid rgba(255,255,255,.22);background:transparent;color:#DCE7F4;border-radius:999px;padding:5px 13px;font-size:13px;font-weight:700}
-.stb:hover{background:rgba(255,255,255,.1)}
-.stb.on{background:#fff;color:var(--navy);border-color:#fff}
 .dtabs{display:flex;gap:4px;margin-top:14px}
 .dtabs .tab{padding:9px 13px;font-size:14px}
 .db{flex:1;overflow-y:auto;padding:18px 22px}
@@ -466,6 +462,30 @@ button.crow:hover{background:#F5F8FC}
 .phrow{display:flex;gap:8px;align-items:center}
 .log .it{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--line3);font-size:13.5px}
 .log .when{color:var(--ink3);font-size:12.5px;white-space:nowrap}
+
+/* ---------- סטטוס תמיכה — שורה מלאה מעל ת.ז ---------- */
+.stseg{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;padding:5px;background:#fff;border:1.5px solid var(--line);border-radius:var(--r-btn)}
+.stseg button{border:1.5px solid transparent;background:transparent;color:var(--ink2);border-radius:9px;min-height:38px;font-size:14px;font-weight:800;
+  transition:background .16s var(--ease),color .16s var(--ease),border-color .16s var(--ease),transform .12s var(--ease)}
+.stseg button:hover{background:var(--line3);color:var(--ink)}
+.stseg button:active{transform:scale(.99)}
+.stseg button.on.g{background:var(--gbg);border-color:var(--gbd);color:var(--gtx)}
+.stseg button.on.y{background:var(--ybg);border-color:var(--ybd);color:var(--ytx)}
+.stseg button.on.r{background:var(--rbg);border-color:var(--rbd);color:var(--rtx)}
+.stseg button.on.n{background:var(--navy);border-color:var(--navy);color:#fff}
+
+/* ---------- קלפי ---------- */
+.kbox{background:var(--card);border:1px solid var(--line2);border-radius:14px;padding:14px 16px;box-shadow:var(--sh-card)}
+.kbox .kh{font-size:13px;font-weight:800;color:var(--navy);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.kbox .kh::before{content:'';width:4px;height:14px;border-radius:2px;background:var(--gold)}
+.kval{min-height:42px;display:flex;align-items:center;padding:9px 12px;border-radius:var(--r-input);background:var(--bbg);border:1.5px solid var(--bbd);font-size:14px;color:var(--ink)}
+
+/* ---------- רשימת בחירה (במקום רשימת הדפדפן) — משותף לכל המסכים ---------- */
+.cmb{position:fixed;z-index:80;max-height:260px;overflow-y:auto;background:var(--card);border:1.5px solid var(--line);border-radius:var(--r-input);
+  box-shadow:var(--sh-hover);padding:5px;animation:aUp .18s var(--ease) both}
+.cmb[hidden]{display:none}
+.cmb-it{padding:8px 11px;border-radius:8px;font-size:14px;color:var(--ink);cursor:pointer}
+.cmb-it:hover,.cmb-it.on{background:var(--bbg);color:var(--navy);font-weight:700}
 
 /* ---------- css/features/map.css ---------- */
 /* ============ דאטה ביתנו — מפת קלפיות ============ */
@@ -511,12 +531,6 @@ button.crow:hover{background:#F5F8FC}
   align-items:center;gap:8px;transition:all .15s}
 .drop.over{border-color:var(--navy);background:var(--bbg)}
 .drop b{font-size:16.5px;color:var(--navy)}
-.dbopts{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
-.dbopt{display:flex;gap:10px;align-items:flex-start;padding:13px 14px;border:1.5px solid var(--line);border-radius:12px;cursor:pointer;background:#fff;text-align:start}
-.dbopt:hover{border-color:var(--navy-l)}
-.dbopt.on{border-color:var(--navy);background:var(--bbg);box-shadow:0 0 0 1px var(--navy)}
-.dbopt b{display:block;font-size:14.5px}
-.dbopt span{font-size:12.5px;color:var(--ink2)}
 .how{font-size:11.5px;font-weight:700;border-radius:6px;padding:1px 7px}
 .how.h{background:var(--bbg);color:var(--navy)}
 .how.c{background:var(--gbg);color:var(--gtx)}
@@ -525,10 +539,84 @@ button.crow:hover{background:#F5F8FC}
 .sumg>div{border-radius:12px;padding:12px 14px;background:var(--bbg);border:1px solid var(--bbd)}
 .sumg>div.r{background:var(--rbg);border-color:var(--rbd)}
 .sumg>div.y{background:var(--ybg);border-color:var(--ybd)}
+.sumg>div.g{background:var(--gbg);border-color:var(--gbd)}
+.sumg>div.g b{color:var(--gtx)}
+.sumg>div.n{background:#F4F6F9;border-color:var(--line2)}
 .sumg b{display:block;font-size:24px;font-weight:900;color:var(--navy);font-variant-numeric:tabular-nums}
 .sumg>div.r b{color:var(--rtx)}
 .sumg span{font-size:12.5px;color:var(--ink2);font-weight:600}
 .opt{display:flex;align-items:center;gap:10px;font-size:14px;min-height:34px;cursor:pointer}
+
+/* ---------- האשף: מסלול שלבים אנכי ---------- */
+.wz{display:flex;flex-direction:column;margin-bottom:18px}
+.wst{position:relative;display:flex;gap:16px;padding-bottom:16px}
+.wst:not(:last-child)::before{content:"";position:absolute;inset-inline-start:19px;top:42px;bottom:2px;width:2px;border-radius:2px;background:var(--line2)}
+.wst.done:not(:last-child)::before{background:linear-gradient(180deg,var(--navy-l),#9DB8D9)}
+.wnum{flex:none;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-weight:900;font-size:15px;background:#fff;color:var(--ink3);border:2px solid var(--line2);position:relative;z-index:1;transition:all .3s var(--ease)}
+.wnum svg{width:18px;height:18px;fill:none;stroke:#fff;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.wst.on .wnum{background:var(--hero);border-color:transparent;color:#fff;box-shadow:0 0 0 5px rgba(27,75,138,.13),var(--hero-sh)}
+.wst.done .wnum{background:var(--navy);border-color:var(--navy)}
+.wst.skip .wnum{background:#F4F6F9;color:#B7C2CF;border-style:dashed}
+.wbody{flex:1;min-width:0}
+.wh{display:flex;align-items:center;gap:10px;min-height:40px;flex-wrap:wrap}
+.wh b{font-size:17px;font-weight:800;color:var(--navy)}
+.wst.next .wh b,.wst.skip .wh b{color:var(--ink3);font-weight:700}
+.wsum{font-size:13px;color:var(--ink2);display:inline-flex;align-items:center;gap:6px}
+.wc{margin-top:8px;background:#fff;border:1px solid var(--line2);border-radius:var(--r-card);box-shadow:var(--sh-card);padding:20px 22px;animation:aUp .45s var(--ease) both}
+.wp{margin:0 0 14px;color:var(--ink2);font-size:14px;line-height:1.65}
+.wnav{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;padding-top:16px;border-top:1px solid var(--line3)}
+.btn.big{min-height:48px;padding:0 26px;font-size:15.5px;border-radius:14px}
+
+/* קובץ — אזור גדול */
+.drop.big{padding:54px 24px;border-radius:var(--r-card);border-color:#A9BCD4;background:linear-gradient(180deg,#F7FAFE,#EEF4FB);gap:10px}
+.drop.big .dic{width:64px;height:64px;border-radius:20px;display:grid;place-items:center;background:var(--hero);box-shadow:var(--hero-sh);margin-bottom:6px;animation:aUp .6s var(--ease) both}
+.drop.big .dic svg{width:30px;height:30px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.drop.big b{font-size:19px}
+.drop.big .mut{max-width:460px;line-height:1.6}
+.drop.big .btn{margin-top:8px}
+.drop.over .dic{transform:translateY(-4px) scale(1.05);transition:transform .25s var(--ease)}
+
+/* כרטיסי בחירה */
+.ugrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
+.ugrid.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.usub{font-size:12.5px;font-weight:800;color:var(--ink3);margin:18px 2px 8px}
+.ucard{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:6px;padding:14px 16px 13px 44px;border-radius:16px;border:1.5px solid var(--line2);background:#fff;font:inherit;text-align:start;cursor:pointer;
+  transition:border-color .2s,box-shadow .2s,transform .2s,background .2s}
+.ucard:hover:not(:disabled){border-color:#BFD0E5;transform:translateY(-1px);box-shadow:var(--sh-card)}
+.ucard.on{border-color:var(--navy);background:#F5F9FE;box-shadow:0 0 0 1px var(--navy)}
+.ucard.off{opacity:.55;cursor:not-allowed}
+.uck{position:absolute;top:14px;inset-inline-end:14px;width:22px;height:22px;border-radius:7px;border:1.5px solid #C3CFDE;display:grid;place-items:center;background:#fff;transition:all .2s}
+.uck svg{width:14px;height:14px;fill:none;stroke:#fff;stroke-width:2.8;stroke-linecap:round;stroke-linejoin:round;opacity:0;transform:scale(.5);transition:all .2s cubic-bezier(.3,1.4,.5,1)}
+.ucard.on .uck{background:var(--navy);border-color:var(--navy)}
+.ucard.on .uck svg{opacity:1;transform:none}
+.idc .uck{border-radius:50%}
+.uct{display:flex;flex-direction:column;line-height:1.35}
+.uct b{font-size:15px;color:var(--navy)}
+.uct small{font-size:12.5px;color:var(--ink3)}
+.ucs{display:flex;flex-direction:column;align-items:flex-start;gap:3px;margin-top:2px}
+.ucs small{font-size:12px;color:var(--ink2)}
+.uid{position:absolute;bottom:12px;inset-inline-end:14px;font-size:11px;font-weight:800;color:var(--navy-l);background:var(--bbg);border-radius:999px;padding:1px 8px}
+.useg{display:inline-flex;flex-wrap:wrap;gap:3px;padding:4px;border-radius:14px;background:#EEF2F7}
+.useg button{border:0;background:transparent;border-radius:10px;padding:8px 14px;font:inherit;font-size:13.5px;font-weight:700;color:var(--ink2);cursor:pointer}
+.useg button.on{background:#fff;color:var(--navy);box-shadow:0 2px 8px -3px rgba(11,46,91,.35)}
+.uopts{display:flex;gap:18px;flex-wrap:wrap;margin-top:14px}
+.umap{margin-top:10px;border:1px solid var(--line2);border-radius:14px}
+
+/* השלמה ידנית */
+.umrow{display:grid;grid-template-columns:minmax(180px,1fr) minmax(220px,1.4fr);gap:16px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line3)}
+.umrow:last-of-type{border-bottom:0}
+.umrow>div{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px}
+.umrow b{font-size:15px;color:var(--navy)}
+.umrow small{width:100%;font-size:12px;color:var(--ink3)}
+
+/* אישור וסיום */
+.upv{margin-top:6px;border:1px solid var(--line2);border-radius:14px}
+.upv .tbl td{font-size:13.5px}
+.udone{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+.udi{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#0F7A43,#22A563);box-shadow:0 14px 28px -14px rgba(15,122,67,.9);animation:aUp .5s var(--ease) both}
+.udi svg{width:26px;height:26px;fill:none;stroke:#fff;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.udone b{display:block;font-size:18px;color:var(--navy)}
+.udone span{font-size:13px;color:var(--ink2)}
 
 /* ---------- css/features/sms.css ---------- */
 /* ============ דאטה ביתנו — שליחת סמסים ============ */
@@ -5108,7 +5196,10 @@ function renderCard() {
   const langs = Array.from(new Set(LANGS.concat(p.lang ? [p.lang] : [])));
   let body = '';
   if (C.tab === 'det') {
+    const st0 = stOf(p);
     body = '<div class="fgrid">' +
+      '<div class="full"><span class="fl">סטטוס תמיכה</span><div class="stseg" role="group" aria-label="סטטוס תמיכה">' +
+        STATUSES.map(s => '<button class="' + (ST_CLS[s] || 'n') + (st0 === s ? ' on' : '') + '" data-act="cardStatus" data-v="' + s + '" aria-pressed="' + (st0 === s) + '">' + s + '</button>').join('') + '</div></div>' +
       fin('tz', 'ת.ז', ' inputmode="numeric"') + '<div><label class="fl" for="cf_birth">תאריך לידה</label><input id="cf_birth" type="date" data-cf="birth" value="' + esc(p.birth || '') + '">' + (ageOf(p) != null ? '<div class="sm mut" style="margin-top:3px">גיל ' + ageOf(p) + '</div>' : '') + '</div>' +
       fin('first', 'שם פרטי') + fin('last', 'שם משפחה') +
       '<div class="full"><label class="fl" for="cf_phone">מספר טלפון ראשי</label><input id="cf_phone" type="tel" data-cf="phone" value="' + esc(p.phone ? fmtPhone(p.phone) : '') + '" style="direction:ltr;text-align:right">' + (C.err.phone ? '<div class="inerr">' + esc(C.err.phone) + '</div>' : '') + '</div>' +
@@ -5117,10 +5208,7 @@ function renderCard() {
       fin('city', 'עיר', isCityUser() ? ' readonly title="מטה עירוני — רק העיר שלך"' : ' list="dl_kcities_c"') + fin('street', 'רחוב') + fin('house', 'מספר בית') +
       '<div><label class="fl" for="cf_lang">שפה</label><select id="cf_lang" data-cf="lang"><option value="">—</option>' + langs.map(l => '<option' + (p.lang === l ? ' selected' : '') + '>' + esc(l) + '</option>').join('') + '</select></div>' +
       '<div class="full"><label class="fl" for="cf_owner">איש קשר אחראי</label><input id="cf_owner" type="text" list="dl_owners" data-cf="owner" value="' + esc(p.owner || '') + '"></div>' +
-      '<div class="full" style="padding:12px 14px;border-radius:12px;background:#fff;border:1px solid var(--line2)"><div class="fgrid">' +
-        fin('kalpi', 'מספר קלפי') + fin('kcity', 'יישוב הקלפי (אם שונה מהעיר)', ' list="dl_kcities_c" placeholder="' + esc(p.city || '') + '"') +
-        '<div class="full sm">' + (p.kalpi ? (site ? '<b>מוקד ההצבעה:</b> ' + esc(site.n || 'מוקד') + ' · ' + esc(site.s) + ', ' + esc(site.c) + ' · <button class="link" data-act="mapFocus" data-v="' + site.i + '">הצגה במפה</button>' : '<span style="color:var(--ytx);font-weight:700">הקלפי לא נמצאה ברשימת מוקדי ההצבעה של היישוב הזה</span>') : '<span class="mut">אין עדיין קלפי — אפשר להשלים כאן או בהעלאת אקסל</span>') + '</div>' +
-      '</div></div>' +
+      cardKalpiBox(p, site) +
     '</div>';
   } else if (C.tab === 'dyn') {
     const fs = S.fields.filter(f => f.inCard);
@@ -5131,20 +5219,17 @@ function renderCard() {
         '<button class="btn" data-act="cardAddField">הוספה</button></div></div></div>';
   } else if (C.tab === 'dbs') {
     const evs = S.events.filter(e => e.regs.some(r => r.uid === p.uid));
-    body = '<div class="card"><div class="ch">שיוך למאגרים</div><div class="cb">' + S.dbs.map(d => '<label class="opt"><input type="checkbox" data-cdb="' + d.id + '"' + (p.dbs.includes(d.id) ? ' checked' : '') + '>' + esc(d.name) + '</label>').join('') + '</div></div>' +
-      '<div class="card"><div class="ch">תגיות</div><div class="cb"><div class="chips" style="margin-bottom:12px">' + (p.tags.map((t, i) => '<span class="tag">' + esc(t) + '<button data-act="cardDelTag" data-v="' + i + '" aria-label="הסרת התגית">×</button></span>').join('') || '<span class="mut sm">אין תגיות</span>') + '</div>' +
+    body = '<div class="card"><div class="ch">תגיות</div><div class="cb"><div class="chips" style="margin-bottom:12px">' + (p.tags.map((t, i) => '<span class="tag">' + esc(t) + '<button data-act="cardDelTag" data-v="' + i + '" aria-label="הסרת התגית">×</button></span>').join('') || '<span class="mut sm">אין תגיות</span>') + '</div>' +
         '<div class="row"><input id="newTag" type="text" list="dl_tags" placeholder="תגית חדשה" style="flex:1"><button class="btn sec" data-act="cardAddTag">הוספה</button></div></div></div>' +
       '<div class="card"><div class="ch">אירועים</div><div class="cb">' + (evs.map(e => '<div class="row" style="justify-content:space-between;padding:4px 0"><button class="link" data-act="openEvent" data-v="' + e.id + '">' + esc(e.name) + '</button><span class="mut sm">' + fmtDate(e.date) + '</span></div>').join('') || '<span class="mut sm">לא נרשם/ה לאירועים</span>') + '</div></div>';
   } else {
     body = '<div class="log">' + ((p.log || []).map(l => '<div class="it"><span class="when">' + fmtWhen(l.t) + '</span><span>' + esc(l.text) + '</span></div>').join('') || '<div class="mut">אין עדיין היסטוריה</div>') + '</div>';
   }
-  const st = stOf(p);
   d.innerHTML =
     '<div class="dh"><div class="row1"><div class="av">' + esc(initials(p)) + '</div><div style="min-width:0"><div class="nm">' + esc(C.isNew && !p.first && !p.last ? 'איש קשר חדש' : fullName(p)) + '</div>' +
       '<div class="meta">' + [p.tz ? 'ת.ז ' + p.tz : '', p.city, p.created ? 'במאגר מ-' + fmtWhen(p.created).replace('היום · ', 'היום ').split(' · ')[0] : ''].filter(Boolean).map(esc).join(' · ') + '</div></div>' +
       '<button class="x" data-act="closeCard" aria-label="סגירת הכרטיס">×</button></div>' +
-      '<div class="stbtns" role="group" aria-label="סטטוס תמיכה">' + STATUSES.map(s => '<button class="stb' + (st === s ? ' on' : '') + '" data-act="cardStatus" data-v="' + s + '">' + s + '</button>').join('') + '</div>' +
-      '<div class="dtabs">' + [['det', 'פרטים'], ['dyn', 'פרטים דינמיים'], ['dbs', 'מאגרים ותגיות'], ['log', 'היסטוריה' + (p.log && p.log.length ? ' (' + p.log.length + ')' : '')]].map(([k, l]) => '<button class="tab' + (C.tab === k ? ' on' : '') + '" data-act="cardTab" data-v="' + k + '">' + l + '</button>').join('') + '</div></div>' +
+      '<div class="dtabs">' + [['det', 'פרטים'], ['dyn', 'פרטים דינמיים'], ['dbs', 'תגיות ואירועים'], ['log', 'היסטוריה' + (p.log && p.log.length ? ' (' + p.log.length + ')' : '')]].map(([k, l]) => '<button class="tab' + (C.tab === k ? ' on' : '') + '" data-act="cardTab" data-v="' + k + '">' + l + '</button>').join('') + '</div></div>' +
     '<div class="db">' + body + '</div>' +
     '<div class="df"><button class="btn" data-act="cardSave">' + (C.isNew ? 'הוספה למאגר' : 'שמירה') + '</button><button class="btn sec" data-act="closeCard">' + (C.dirty ? 'ביטול' : 'סגירה') + '</button>' +
       (C.dirty ? '<span class="dirty">יש שינויים שלא נשמרו</span>' : '') + '<span class="sp"></span>' +
@@ -5154,6 +5239,85 @@ function renderCard() {
     '<datalist id="dl_tags">' + allTags().map(o => '<option value="' + esc(o) + '">').join('') + '</datalist>';
   if (!can('edit')) $$('#drawer .db input, #drawer .db select, #drawer .db textarea').forEach(x => { x.disabled = true; });
 }
+/* קלפי: בוחרים יישוב ואז קלפי מתוך הקלפיות שבמאגר; מקום וכתובת הקלפי מתמלאים לבד */
+function cardKalpiBox(p, site) {
+  const kc = p.kcity || p.city || '';
+  const ck = ckey(kc);
+  const list = [];
+  if (ck) SITES.filter(s => s.ck === ck).forEach(s => String(s.ksRaw || '').split(',').map(t => t.trim()).filter(Boolean).forEach(k => list.push([k, s])));
+  list.sort((a, b) => (parseFloat(a[0]) || 0) - (parseFloat(b[0]) || 0));
+  const cur = kkey(p.kalpi);
+  const inList = list.some(([k]) => kkey(k) === cur);
+  const ksel = '<select id="cf_kalpi" data-cf="kalpi"' + (ck || p.kalpi ? '' : ' disabled') + '><option value="">' + (ck ? (list.length ? 'בחירת קלפי…' : 'אין קלפיות ביישוב הזה') : 'בוחרים קודם יישוב') + '</option>' +
+    list.map(([k, s]) => '<option value="' + esc(k) + '"' + (cur && kkey(k) === cur ? ' selected' : '') + '>קלפי ' + esc(k) + ' · ' + esc(s.n || s.s || '') + '</option>').join('') +
+    (p.kalpi && !inList ? '<option value="' + esc(p.kalpi) + '" selected>' + esc(p.kalpi) + ' (לא ברשימה)</option>' : '') + '</select>';
+  const note = p.kalpi ? (site ? '<button class="link sm" data-act="mapFocus" data-v="' + site.i + '">הצגה במפה</button>' : '<span style="color:var(--ytx);font-weight:700">הקלפי לא נמצאה ברשימת הקלפיות של היישוב הזה</span>')
+    : '<span class="mut">בוחרים יישוב, ואז קלפי מתוך רשימת הקלפיות שבמאגר</span>';
+  return '<div class="full kbox"><div class="kh">קלפי</div><div class="fgrid">' +
+    '<div><label class="fl" for="cf_kcity">יישוב הקלפי</label><input id="cf_kcity" type="text" data-cf="kcity" list="dl_kcities_c" value="' + esc(p.kcity || '') + '" placeholder="' + esc(p.city || 'בחירת יישוב') + '" autocomplete="off"></div>' +
+    '<div><label class="fl" for="cf_kalpi">מספר קלפי</label>' + ksel + '</div>' +
+    '<div><span class="fl">מקום הקלפי</span><div class="kval">' + (site ? esc(site.n || '—') : '<span class="mut">—</span>') + '</div></div>' +
+    '<div><span class="fl">כתובת הקלפי</span><div class="kval">' + (site ? esc([site.s, site.c].filter(Boolean).join(', ')) : '<span class="mut">—</span>') + '</div></div>' +
+    '<div class="full sm">' + note + '</div>' +
+  '</div></div>';
+}
+
+/* ---- רשימות בחירה מעוצבות במקום רשימת ההשלמה של הדפדפן (datalist) ----
+   משותף לכל המערכת: כל <input list="..."> בכל מסך הופך לבד לרשימה בעיצוב שלנו.
+   (נמצא כאן לפי הכלל "אם משהו משותף חסר — קודם בקובץ של המסך"; אפשר להעביר ל-core בתיאום) */
+(function () {
+  let box = null, inp = null, items = [], hi = -1;
+  const conv = el => { el.dataset.combo = el.getAttribute('list'); el.removeAttribute('list'); el.setAttribute('autocomplete', 'off'); el.classList.add('cmb-in'); };
+  const scan = root => { if (root && root.querySelectorAll) root.querySelectorAll('input[list]').forEach(conv); };
+  new MutationObserver(ms => ms.forEach(m => m.addedNodes.forEach(n => { if (n.nodeType !== 1) return; if (n.matches('input[list]')) conv(n); else scan(n); })))
+    .observe(document.documentElement, { childList: true, subtree: true });
+  scan(document);
+  const all = () => { const dl = inp && document.getElementById(inp.dataset.combo); return dl ? Array.from(dl.options).map(o => o.value).filter(Boolean) : []; };
+  function place() {
+    if (!box || box.hidden || !inp) return;
+    const r = inp.getBoundingClientRect();
+    if (!r.width) { close(); return; }
+    box.style.left = r.left + 'px'; box.style.width = r.width + 'px';
+    const h = box.offsetHeight, below = innerHeight - r.bottom;
+    box.style.top = (below < h + 12 && r.top > below ? r.top - h - 4 : r.bottom + 4) + 'px';
+  }
+  function draw() {
+    if (!items.length) { close(); return; }
+    box.innerHTML = items.map((v, i) => '<div class="cmb-it' + (i === hi ? ' on' : '') + '" data-i="' + i + '" role="option">' + esc(v) + '</div>').join('');
+    box.hidden = false; place();
+    const on = box.querySelector('.on'); if (on) on.scrollIntoView({ block: 'nearest' });
+  }
+  function fill(showAll) {
+    if (!box) {
+      box = document.createElement('div'); box.className = 'cmb'; box.setAttribute('role', 'listbox'); box.hidden = true; document.body.appendChild(box);
+      box.addEventListener('mousedown', e => { e.preventDefault(); const it = e.target.closest('[data-i]'); if (it) pick(+it.dataset.i); });
+    }
+    const q = norm(inp.value), list = all();
+    items = (showAll || !q ? list : list.filter(v => norm(v).includes(q)).sort((a, b) => (norm(a).startsWith(q) ? 0 : 1) - (norm(b).startsWith(q) ? 0 : 1))).slice(0, 120);
+    hi = showAll && q ? items.findIndex(v => norm(v) === q) : -1;
+    draw();
+  }
+  function pick(i) {
+    const el = inp, v = items[i]; if (!el || v == null) return;
+    close(); el.value = v;
+    el.dispatchEvent(new Event('input', { bubbles: true }));
+    el.dispatchEvent(new Event('change', { bubbles: true }));
+  }
+  function close() { if (box) box.hidden = true; items = []; hi = -1; }
+  document.addEventListener('focusin', e => { if (e.target.classList && e.target.classList.contains('cmb-in')) { inp = e.target; fill(true); } });
+  document.addEventListener('focusout', e => { if (e.target === inp) close(); });
+  document.addEventListener('input', e => { if (e.target === inp && e.isTrusted) fill(false); });
+  document.addEventListener('mousedown', e => { if (e.target === inp && box && box.hidden) fill(true); });
+  document.addEventListener('keydown', e => {
+    if (e.target !== inp || !box) return;
+    if (box.hidden) { if (e.key === 'ArrowDown') { fill(true); e.preventDefault(); } return; }
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); hi = (hi + (e.key === 'ArrowDown' ? 1 : -1) + items.length) % items.length; draw(); }
+    else if (e.key === 'Enter' && hi >= 0) { e.preventDefault(); e.stopImmediatePropagation(); pick(hi); }
+    else if (e.key === 'Escape') { e.stopPropagation(); close(); }
+  }, true);
+  addEventListener('scroll', place, true); addEventListener('resize', place);
+})();
+
 function dynCtl(f, v) {
   const id = 'cd_' + f.id, lb = '<label class="fl" for="' + id + '">' + esc(f.name) + '</label>';
   if (f.type === 'bool') return '<div>' + lb + '<select id="' + id + '" data-cd="' + f.id + '"><option value="">—</option><option value="1"' + (v === true ? ' selected' : '') + '>כן</option><option value="0"' + (v === false ? ' selected' : '') + '>לא</option></select></div>';
@@ -5312,10 +5476,10 @@ Object.assign(ACT, {
 /* ---------- js/features/upload.js ---------- */
 /* ============================================================
    דאטה ביתנו — העלאת אקסלים
-   קריאת קובץ, סידור עמודות אוטומטי, תצוגה מקדימה ועדכון המאגר.
+   אשף בשלבים: העלאת קובץ ← מה לעדכן (הצעות לפי העמודות שזוהו) ← זיהוי האנשים ← השלמה ידנית ← אישור ← סיום.
    ============================================================ */
 /* ===================================================== העלאת אקסלים */
-const U = { db: 'main', file: '', rows: null, sheets: [], sheet: '', wb: null, head: [], body: [], map: [], how: [], opts: { mode: 'upsert', keepOld: true, tag: '', allowBadId: false }, pv: null, done: null, eventId: null, busy: false };
+const U = { db: 'main', file: '', rows: null, sheets: [], sheet: '', wb: null, head: [], body: [], map: [], how: [], auto: [], sel: {}, idBy: '', extra: [], manual: {}, adv: false, step: 1, opts: { mode: 'upsert', keepOld: true, tag: '', allowBadId: false }, pv: null, done: null, eventId: null, busy: false };
 const HINTS = {
   tz: ['תז', 'ת ז', 'ת.ז', 'תעודת זהות', 'מספר זהות', 'זהות', 'id', 'מס זהות'],
   first: ['שם פרטי', 'פרטי', 'first', 'first name'], last: ['שם משפחה', 'משפחה', 'last', 'last name'], full: ['שם מלא', 'שם', 'name', 'full name', 'שם המשתתף'],
@@ -5411,9 +5575,10 @@ function loadSheet(name) {
   const h = detectHeaderRow(rows);
   U.head = (rows[h] || []).map((x, i) => String(x == null || x === '' ? 'עמודה ' + (i + 1) : x).trim());
   U.body = rows.slice(h + 1).filter(r => r.some(c => String(c == null ? '' : c).trim() !== ''));
-  autoMap(); buildPreview();
+  autoMap(); U.auto = U.map.slice(); wzInit();
 }
 function rowRecord(r) {
+  if (U.extra.length) r = r.concat(U.extra.map(x => x.v));
   const rec = { dyn: {} }, errs = [], warns = [];
   U.map.forEach((t, j) => {
     if (t === 'skip') return;
@@ -5439,11 +5604,15 @@ function rowRecord(r) {
     }
     else rec[t] = s;
   });
-  if (!rec.tz && !rec.phone && !(rec.phones || []).length) errs.push('אין ת.ז או טלפון לזיהוי האדם');
+  if (U.idBy === 'tz' && !rec.tz) errs.push('חסרה ת.ז — לפיה מזהים את האנשים בקובץ הזה');
+  else if (U.idBy === 'phone' && !rec.phone && !(rec.phones || []).length) errs.push('חסר טלפון — לפיו מזהים את האנשים בקובץ הזה');
+  else if (!rec.tz && !rec.phone && !(rec.phones || []).length) errs.push('אין ת.ז או טלפון לזיהוי האדם');
   if (isCityUser()) { if (!rec.city) rec.city = ME.city; else if (ckey(rec.city) !== SCOPE) errs.push('עיר אחרת (' + rec.city + ') — אין הרשאה'); }
   return { rec, errs, warns };
 }
 function findExisting(rec) {
+  if (U.idBy === 'tz') return rec.tz ? S.byTz.get(rec.tz) || null : null;
+  if (U.idBy === 'phone') { const ph = rec.phone || (rec.phones || [])[0]; return ph ? S.byPhone.get(ph) || null : null; }
   if (rec.tz && S.byTz.has(rec.tz)) return S.byTz.get(rec.tz);
   const ph = rec.phone || (rec.phones || [])[0];
   if (ph && S.byPhone.has(ph)) { const o = S.byPhone.get(ph); if (!rec.tz || !o.tz) return o; }
@@ -5490,7 +5659,7 @@ async function runUpload() {
     const phs = [rec.phone].concat(rec.phones || []).filter(Boolean);
     phs.forEach(ph => { if (!p.phone) { p.phone = ph; if (!isNew) ch.push('טלפון ראשי'); } else if (p.phone !== ph && !(p.phones || []).includes(ph)) { (p.phones = p.phones || []).push(ph); if (!isNew) ch.push('טלפון נוסף'); } });
     if (!U.opts.keepOld) { /* בלי שמירה על ערכים קיימים: ערכים ריקים בקובץ מוחקים */
-      U.map.forEach((t, j) => { if (['first', 'last', 'city', 'street', 'house', 'lang', 'owner', 'kalpi', 'kcity'].includes(t) && String(U.body[x.ri][j] == null ? '' : U.body[x.ri][j]).trim() === '' && p[t]) { p[t] = ''; ch.push(LBL[t]); } });
+      U.map.forEach((t, j) => { if (j < U.head.length && ['first', 'last', 'city', 'street', 'house', 'lang', 'owner', 'kalpi', 'kcity'].includes(t) && String(U.body[x.ri][j] == null ? '' : U.body[x.ri][j]).trim() === '' && p[t]) { p[t] = ''; ch.push(LBL[t]); } });
     }
     Object.entries(rec.dyn).forEach(([id, v]) => { const f = fieldById(id); if (!f) return; if (JSON.stringify(p.dyn[id]) !== JSON.stringify(v)) { if (!isNew) ch.push(f.name); p.dyn[id] = v; } });
     if (fieldById('f_src') && !p.dyn.f_src) p.dyn.f_src = 'אקסל';
@@ -5508,7 +5677,7 @@ async function runUpload() {
   await saveKV('uploads'); await saveKV('fields'); if (ev) await saveKV('events');
   activity('הועלה הקובץ "' + fname + '" ל' + dbName(U.db) + ' — ' + c.new + ' נוספו, ' + c.upd + ' עודכנו' + (c.err ? ', ' + c.err + ' שגיאות' : ''));
   U.done = { id: upId, c: Object.assign({}, c), file: fname, errRows: U.pv.rows.filter(x => x.act === 'err'), head: U.head, body: U.body };
-  U.pv = null; U.body = []; U.head = []; U.file = ''; U.eventId = null;
+  U.pv = null; U.body = []; U.head = []; U.file = ''; U.eventId = null; U.extra = []; U.step = 6;
   renderTabs(); renderUpload();
   toast('העדכון הסתיים');
 }
@@ -5518,74 +5687,215 @@ function downloadErrors(src) {
   const head = (src ? src.head : U.head), body = (src ? src.body : U.body);
   saveXlsx([['שורות לבדיקה', [head.concat(['סיבה'])].concat(rows.map(x => body[x.ri].map(v => v == null ? '' : v).concat([x.errs.concat(x.warns).join(' · ')])))]], 'שורות-לבדיקה — ' + (src ? src.file : U.file).replace(/\.\w+$/, '') + '.xlsx');
 }
+/* ===================================================== האשף: מה לעדכן */
+/* כל "כרטיס" = שדה במערכת. לכל אחד: מאילו עמודות בקובץ הוא מגיע, ואם אין עמודה — האם אפשר למלא ערך אחד לכל השורות */
+function upGroups() {
+  return [
+    { id: 'name', lb: 'שם', ds: 'שם פרטי ושם משפחה', t: ['first', 'last', 'full'] },
+    { id: 'phone', lb: 'מספרי טלפון', ds: 'טלפון ראשי וטלפונים נוספים', t: ['phone', 'phone2'] },
+    { id: 'tz', lb: 'תעודת זהות', ds: 'הוספת ת.ז לאנשים', t: ['tz'] },
+    { id: 'status', lb: 'סטטוס תמיכה', ds: 'תומך / מתלבט / לא תומך', t: ['status'], man: 'status' },
+    { id: 'tags', lb: 'תגית', ds: 'סימון כל מי שבקובץ בתגית', t: ['tags'], man: 'tags' },
+    { id: 'owner', lb: 'איש קשר אחראי', ds: 'שיוך לרכז / ממריץ', t: ['owner'], man: 'owner' },
+    { id: 'city', lb: 'עיר', ds: 'עיר מגורים', t: ['city'], man: 'city' },
+    { id: 'addr', lb: 'כתובת', ds: 'רחוב ומספר בית', t: ['street', 'house', 'address'] },
+    { id: 'kalpi', lb: 'קלפי', ds: 'מספר קלפי ויישוב הקלפי', t: ['kalpi', 'kcity'] },
+    { id: 'lang', lb: 'שפה', ds: 'שפת אם', t: ['lang'], man: 'lang' },
+    { id: 'birth', lb: 'תאריך לידה', ds: '', t: ['birth'] }
+  ].concat(S.fields.map(f => ({ id: 'dyn:' + f.id, lb: f.name, ds: 'פרט דינמי', t: ['dyn:' + f.id], man: 'dyn:' + f.id, f })));
+}
+const upCols = g => U.auto.map((t, j) => g.t.includes(t) ? j : -1).filter(j => j >= 0);
+const idCol = k => U.auto.findIndex(t => k === 'tz' ? t === 'tz' : (t === 'phone' || t === 'phone2'));
+function wzInit() {
+  U.sel = {}; U.manual = {}; U.adv = false;
+  upGroups().forEach(g => { if (upCols(g).length) U.sel[g.id] = true; });
+  U.idBy = idCol('tz') >= 0 ? 'tz' : idCol('phone') >= 0 ? 'phone' : '';
+  if (U.idBy === 'tz') delete U.sel.tz;          /* לפי ת.ז מזהים — לא "מעדכנים" אותה */
+  if (U.eventId && !U.sel.name && upCols(upGroups()[0]).length) U.sel.name = true;
+  U.step = 2;
+  wzApply();
+}
+/* בונה את מיפוי העמודות בפועל מתוך הבחירה, ומוסיף "עמודות וירטואליות" לערכים שהוקלדו ידנית */
+function wzApply() {
+  const G = upGroups(), map = U.auto.map(() => 'skip');
+  G.forEach(g => { if (U.sel[g.id]) upCols(g).forEach(j => { map[j] = U.auto[j]; }); });
+  U.auto.forEach((t, j) => { if (t === 'new' || (t.startsWith('dyn:') && !G.some(g => g.t.includes(t)))) map[j] = t; });
+  if (U.idBy === 'tz') { const j = idCol('tz'); if (j >= 0) map[j] = 'tz'; }
+  if (U.idBy === 'phone') { const j = U.auto.indexOf('phone') >= 0 ? U.auto.indexOf('phone') : U.auto.indexOf('phone2'); if (j >= 0) map[j] = 'phone'; }
+  U.extra = G.filter(g => U.sel[g.id] && !upCols(g).length && g.man && String(U.manual[g.id] || '').trim()).map(g => ({ t: g.man, v: U.manual[g.id] }));
+  U.map = map.concat(U.extra.map(x => x.t));
+  U.how = U.head.map((h, j) => map[j] === 'skip' ? 'n' : 'h');
+  buildPreview();
+}
+const upNeedManual = () => upGroups().filter(g => U.sel[g.id] && !upCols(g).length);
+const upManualOk = () => upNeedManual().every(g => String(U.manual[g.id] || '').trim());
+
+/* ===================================================== האשף: תצוגה */
 RENDER.upload = function (o) {
   if (o.eventId) { const ev = S.events.find(e => e.id === o.eventId); if (ev) { U.eventId = ev.id; U.db = ev.db || 'events'; U.opts.tag = ''; } }
+  if (!U.eventId) U.db = (S.dbs[0] || { id: 'main' }).id;
   renderUpload();
 };
+const UPI = {
+  up: '<path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/>',
+  file: '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/>',
+  check: '<path d="M5 12.5l4.5 4.5L19 7.5"/>'
+};
+const upi = k => '<svg viewBox="0 0 24 24" aria-hidden="true">' + UPI[k] + '</svg>';
 function renderUpload() {
-  const step = U.done ? 4 : U.pv ? 3 : U.file ? 3 : 2;
   const ev = U.eventId ? S.events.find(e => e.id === U.eventId) : null;
-  const cnt = id => S.people.filter(p => (p.dbs || []).includes(id)).length;
-  const stp = (n, l) => '<span class="stp' + (step > n ? ' done' : step === n || (n === 1 && step >= 1) ? ' on' : '') + '"><b>' + (step > n ? '✓' : n) + '</b>' + l + '</span>';
-  let h = '<div class="shead"><div><h2>העלאת אקסלים</h2><p>בוחרים מאגר וגוררים קובץ — השאר קורה לבד</p></div></div>' +
-    (ev ? '<div class="note b">ייבוא נרשמים לאירוע <b>' + esc(ev.name) + '</b> — כל מי שבקובץ יסומן כנרשם, יקבל את התגית „' + esc(ev.tag || '') + '” וייכנס למאגר „' + esc(dbName(U.db)) + '”. <button class="link" data-act="upNoEvent">ביטול השיוך לאירוע</button></div>' : '') +
-    '<div class="steps">' + stp(1, 'בחירת מאגר') + stp(2, 'העלאת קובץ') + stp(3, 'בדיקת העמודות') + stp(4, 'עדכון המאגר') + '</div>';
-  h += '<div class="cols"><div class="c1"><div class="card" id="upDbs"><div class="ch">1. איזה מאגר מעדכנים?</div><div class="cb"><div class="dbopts">' +
-    S.dbs.map(d => '<button class="dbopt' + (U.db === d.id ? ' on' : '') + '" data-act="upDb" data-v="' + d.id + '"><input type="radio" tabindex="-1"' + (U.db === d.id ? ' checked' : '') + ' aria-hidden="true"><span><b>' + esc(d.name) + '</b><span class="num">' + nf(cnt(d.id)) + ' אנשים</span></span></button>').join('') +
-    '</div><button class="link sm" style="margin-top:10px" data-act="newDb">+ מאגר חדש</button></div></div></div>';
-  h += '<div class="c2"><div class="card"><div class="ch">2. העלאת קובץ</div><div class="cb">' +
-    '<div class="drop" id="upDrop"><b>' + (U.busy ? 'קורא את הקובץ…' : 'גוררים לכאן קובץ Excel או CSV') + '</b><span class="mut sm">xlsx · xls · csv — בכל סדר עמודות, גם עם שורות כותרת מעל</span><button class="btn sec" data-act="pickFile">בחירת קובץ מהמחשב</button></div>' +
-    (U.file ? '<div class="row" style="margin-top:12px;padding:10px 14px;border:1px solid var(--line2);border-radius:10px;background:#F7F9FB"><span class="pill">' + esc((U.file.split('.').pop() || '').toUpperCase()) + '</span><b>' + esc(U.file) + '</b>' +
-      (U.sheets.length > 1 ? '<select data-up="sheet" style="width:auto;min-height:34px;padding:4px 10px" aria-label="גיליון">' + U.sheets.map(s => '<option' + (s === U.sheet ? ' selected' : '') + '>' + esc(s) + '</option>').join('') + '</select>' : '') +
-      '<span class="mut sm" style="margin-inline-start:auto">' + nf(U.body.length) + ' שורות · ' + U.head.length + ' עמודות</span><button class="mini r" data-act="upReset">הסרה</button></div>' : '') +
-    '</div></div>' +
-    (!U.file && !U.done ? '<div class="card" id="upHow"><div class="cb sm" style="line-height:1.8;color:var(--ink2)">המערכת מזהה כל עמודה לבד — לפי הכותרת וגם לפי התוכן, בודקת ת.ז ומתקנת טלפונים. אנשים שכבר במאגר מתעדכנים ולא נוצרת כפילות. הקובץ לא עולה לשום שרת.</div></div>' : '') +
-    '</div></div>';
-  if (U.file && U.head.length) {
-    const tl = targetsList();
-    h += '<div class="card" id="upMap"><div class="ch">3. בדיקת העמודות<span class="sub">' + U.how.filter(x => x !== 'n').length + ' מתוך ' + U.head.length + ' עמודות זוהו אוטומטית — אפשר לשנות כל אחת</span></div><div class="tw"><table class="tbl"><thead><tr><th>עמודה בקובץ</th><th>ערכים לדוגמה</th><th>שדה במערכת</th><th>זוהה לפי</th></tr></thead><tbody>' +
-      U.head.map((hd, j) => { const ex = U.body.slice(0, 40).map(r => r[j]).filter(v => String(v == null ? '' : v).trim() !== '').slice(0, 3).map(v => String(v)).join(' · '); return '<tr><td><b>' + esc(hd) + '</b></td><td class="mut wrap" style="max-width:280px;font-size:13px">' + esc(ex) + '</td>' +
-        '<td style="min-width:260px"><select data-um="' + j + '" aria-label="שדה במערכת עבור ' + esc(hd) + '">' + tl.map(([k, l]) => '<option value="' + k + '"' + (U.map[j] === k ? ' selected' : '') + '>' + esc(l) + '</option>').join('') + '</select></td>' +
-        '<td>' + (U.map[j] === 'skip' ? '<span class="how n">לא מיובא</span>' : U.how[j] === 'h' ? '<span class="how h">כותרת</span>' : U.how[j] === 'c' ? '<span class="how c">תוכן העמודה</span>' : '<span class="how h">בחירה ידנית</span>') + '</td></tr>'; }).join('') +
-      '</tbody></table></div></div>';
-    if (U.pv) {
-      const c = U.pv.c;
-      const keyOk = U.map.some(t => t === 'tz' || t === 'phone' || t === 'phone2');
-      h += '<div class="cols"><div class="c1"><div class="card"><div class="ch">4. איך לעדכן?</div><div class="cb">' +
-        [['upsert', 'לעדכן קיימים ולהוסיף חדשים'], ['add', 'להוסיף רק אנשים חדשים'], ['update', 'לעדכן רק אנשים שכבר במאגר']].map(([k, l]) => '<label class="opt"><input type="radio" name="upmode" data-up="mode" value="' + k + '"' + (U.opts.mode === k ? ' checked' : '') + '>' + l + '</label>').join('') +
-        '<div style="height:1px;background:var(--line3);margin:8px 0"></div>' +
-        '<label class="opt"><input type="checkbox" data-up="keepOld"' + (U.opts.keepOld ? ' checked' : '') + '>תא ריק בקובץ לא מוחק ערך קיים</label>' +
-        '<label class="opt"><input type="checkbox" data-up="allowBadId"' + (U.opts.allowBadId ? ' checked' : '') + '>לקבל ת.ז עם ספרת ביקורת שגויה</label>' +
-        '<div style="margin-top:8px"><label class="fl" for="up_tag">תגית לכל מי שבקובץ (לא חובה)</label><input id="up_tag" type="text" list="dl_tags_u" data-up="tag" value="' + esc(U.opts.tag) + '" placeholder="למשל: רשימת אשקלון נובמבר"></div>' +
-        '<datalist id="dl_tags_u">' + allTags().map(t => '<option value="' + esc(t) + '">').join('') + '</datalist>' +
-        '</div></div></div><div class="c2"><div class="card"><div class="ch">סיכום לפני העדכון<span class="sub">לתוך: ' + esc(dbName(U.db)) + '</span></div><div class="cb">' +
-        (!keyOk ? '<div class="note r"><b>חסרה עמודת זיהוי.</b> צריך לסמן עמודה של ת.ז או טלפון, אחרת אי אפשר לדעת מי זה מי.</div>' : '') +
-        '<div class="sumg"><div><b>' + nf(c.new) + '</b><span>אנשים חדשים</span></div><div><b>' + nf(c.upd) + '</b><span>יעודכנו</span></div>' +
-        (c.skip ? '<div class="y"><b>' + nf(c.skip) + '</b><span>ידולגו</span></div>' : '') + (c.dup ? '<div class="y"><b>' + nf(c.dup) + '</b><span>כפולים בקובץ</span></div>' : '') +
-        '<div class="' + (c.err ? 'r' : '') + '"><b>' + nf(c.err) + '</b><span>שגיאות</span></div>' + (c.warn ? '<div class="y"><b>' + nf(c.warn) + '</b><span>עם הערות</span></div>' : '') + '</div>' +
-        '<div class="row" style="margin-top:14px"><button class="btn" data-act="upRun"' + (keyOk && (c.new + c.upd) ? '' : ' disabled') + '>עדכון המאגר (' + nf(c.new + c.upd) + ')</button>' +
-        (c.err || c.warn ? '<button class="btn sec" data-act="upErrors">הורדת השורות לבדיקה</button>' : '') + '</div></div></div></div></div>' +
-        '<div class="card"><div class="ch">תצוגה מקדימה<span class="sub">30 השורות הראשונות</span></div><div class="tw"><table class="tbl"><thead><tr><th>שורה</th><th>פעולה</th><th>שם</th><th>ת.ז</th><th>טלפון</th><th>עיר</th><th>קלפי</th><th>סטטוס</th><th>הערות</th></tr></thead><tbody>' +
-        U.pv.rows.slice(0, 30).map(x => { const r = x.rec; const A = { new: ['חדש', ''], upd: ['עדכון', 'g'], skip: ['דילוג', 'n'], err: ['שגיאה', 'r'], dup: ['כפול', 'y'] }[x.act];
-          return '<tr><td class="mut num">' + (x.ri + 1) + '</td><td><span class="pill ' + A[1] + '">' + A[0] + '</span></td><td>' + esc(((r.first || '') + ' ' + (r.last || '')).trim()) + (x.ex ? ' <span class="mut sm">(' + esc(fullName(x.ex)) + ')</span>' : '') + '</td><td class="num">' + esc(r.tz || '') + '</td><td class="num">' + esc(fmtPhone(r.phone || (r.phones || [])[0] || '')) + '</td><td>' + esc(r.city || '') + '</td><td>' + esc(r.kalpi || '') + '</td><td>' + (r.status ? stPill(r.status) : '') + '</td><td class="wrap sm" style="color:' + (x.errs.length ? 'var(--rtx)' : 'var(--ytx)') + '">' + esc(x.errs.concat(x.warns).join(' · ')) + '</td></tr>'; }).join('') +
-        '</tbody></table></div></div>';
-    }
-  }
-  if (U.done) {
-    const c = U.done.c;
-    h += '<div class="card"><div class="ch">העדכון הסתיים<span class="sub">' + esc(U.done.file) + '</span></div><div class="cb"><div class="sumg"><div><b>' + nf(c.new) + '</b><span>נוספו</span></div><div><b>' + nf(c.upd) + '</b><span>עודכנו</span></div><div class="' + (c.err ? 'r' : '') + '"><b>' + nf(c.err) + '</b><span>שגיאות</span></div></div>' +
-      '<div class="row" style="margin-top:14px"><button class="btn" data-act="upShow" data-v="' + U.done.id + '">צפייה באנשים מהקובץ</button>' + (c.err ? '<button class="btn sec" data-act="upErrorsDone">הורדת השגיאות</button>' : '') + '<button class="btn sec" data-act="upReset">העלאת קובץ נוסף</button></div></div></div>';
-  }
-  h += '<div class="card"><div class="ch">היסטוריית העלאות</div><div class="cb tight">' + (S.uploads.length ? '<div class="tw"><table class="tbl"><thead><tr><th>קובץ</th><th>מאגר</th><th>מתי</th><th>נוספו</th><th>עודכנו</th><th>שגיאות</th><th></th></tr></thead><tbody>' +
-    S.uploads.slice(0, 20).map(u => '<tr><td><b>' + esc(u.file) + '</b>' + (u.ev ? ' <span class="pill">' + esc(u.ev) + '</span>' : '') + '</td><td>' + esc(dbName(u.db)) + '</td><td class="mut">' + fmtWhen(u.t) + '</td><td class="num">' + nf(u.nw) + '</td><td class="num">' + nf(u.upd) + '</td><td class="num">' + nf(u.err) + '</td><td><button class="mini" data-act="upShow" data-v="' + u.id + '">אנשים</button></td></tr>').join('') +
+  const st = U.done && U.step === 6 ? 6 : !U.file ? 1 : U.step;
+  const hasManual = upNeedManual().length > 0;
+  const G = upGroups();
+  const selG = G.filter(g => U.sel[g.id]);
+  const colNames = g => upCols(g).map(j => '"' + esc(U.head[j]) + '"').join(', ');
+  const step = (n, title, sum, body, skip) => {
+    const cls = skip ? 'skip' : st > n ? 'done' : st === n ? 'on' : 'next';
+    return '<section class="wst ' + cls + '"><div class="wnum">' + (st > n && !skip ? upi('check') : n) + '</div><div class="wbody"><div class="wh"><b>' + title + '</b>' +
+      (st > n && sum ? '<span class="wsum">' + sum + '</span>' + (!skip && n > 1 && n < 6 && st < 6 ? '<button class="link sm" data-act="upGo" data-v="' + n + '">שינוי</button>' : '') : '') +
+      (skip ? '<span class="wsum">לא נדרש — כל הערכים נמצאים בקובץ</span>' : '') + '</div>' +
+      (st === n ? '<div class="wc">' + body() + '</div>' : '') + '</div></section>';
+  };
+  let h = '<div class="shead"><div><h2>העלאת אקסלים</h2><p>מעלים קובץ, בוחרים מה לעדכן — והמערכת עושה את השאר</p></div></div>' +
+    (ev ? '<div class="note b">ייבוא נרשמים לאירוע <b>' + esc(ev.name) + '</b> — כל מי שבקובץ יסומן כנרשם' + (ev.tag ? ' ויקבל את התגית „' + esc(ev.tag) + '”' : '') + '. <button class="link" data-act="upNoEvent">ביטול</button></div>' : '') +
+    '<div class="wz">';
+
+  /* 1. קובץ */
+  const fn = U.file || (st === 6 && U.done ? U.done.file : '');
+  h += step(1, 'העלאת קובץ', fn ? '<span class="pill">' + esc((fn.split('.').pop() || '').toUpperCase()) + '</span> ' + esc(fn) + (U.file ? ' · ' + nf(U.body.length) + ' שורות' : '') : '', () =>
+    '<div class="drop big" id="upDrop">' +
+      '<span class="dic">' + upi(U.busy ? 'file' : 'up') + '</span>' +
+      '<b>' + (U.busy ? 'קורא את הקובץ…' : 'גוררים לכאן קובץ Excel או CSV') + '</b>' +
+      '<span class="mut">xlsx · xls · csv — בכל סדר עמודות, גם עם שורות כותרת מעל. המערכת מזהה את העמודות לבד.</span>' +
+      '<button class="btn" data-act="pickFile">בחירת קובץ מהמחשב</button></div>');
+
+  /* 3. מה לעדכן (נבנה כאן, נכנס לדף אחרי שלב הזיהוי) */
+  const sFields = step(3, 'מה לעדכן?', selG.length ? selG.map(g => esc(g.lb)).join(' · ') : 'לא נבחר', () => {
+    const card = g => {
+      const cols = upCols(g), on = !!U.sel[g.id], ready = cols.length > 0, ok = ready || !!g.man;
+      const isId = g.id === U.idBy || (g.id === 'phone' && U.idBy === 'phone');
+      return '<button class="ucard' + (on ? ' on' : '') + (ok ? '' : ' off') + '" data-act="upPick" data-v="' + esc(g.id) + '"' + (ok ? '' : ' disabled') + '>' +
+        '<span class="uck">' + upi('check') + '</span>' +
+        '<span class="uct"><b>' + esc(g.lb) + '</b>' + (g.ds ? '<small>' + esc(g.ds) + '</small>' : '') + '</span>' +
+        '<span class="ucs">' + (ready ? '<span class="pill g">מוכן</span><small>מעמודה ' + colNames(g) + '</small>' : ok ? '<span class="pill y">צריך ערך ממך</span><small>אין עמודה בקובץ — תמלא ערך אחד לכולם</small>' : '<span class="pill n">אין בקובץ</span>') + '</span>' +
+        (isId ? '<span class="uid">לפיו מזהים</span>' : '') + '</button>';
+    };
+    const ready = G.filter(g => upCols(g).length), rest = G.filter(g => !upCols(g).length && g.man);
+    return '<p class="wp">זיהינו בקובץ את השדות המסומנים ב„מוכן”. בוחרים מה לעדכן במאגר — אפשר גם שדה שאין בקובץ, ואז ממלאים ערך אחד לכל השורות.</p>' +
+      '<div class="ugrid">' + ready.map(card).join('') + '</div>' +
+      (rest.length ? '<div class="usub">שדות שאין בקובץ</div><div class="ugrid">' + rest.map(card).join('') + '</div>' : '') +
+      '<button class="link sm" data-act="upAdv" style="margin-top:12px">' + (U.adv ? 'הסתרת' : 'איך זיהינו את העמודות? שינוי ידני') + '</button>' +
+      (U.adv ? upMapTable() : '') +
+      '<div class="wnav"><button class="btn" data-act="upGo" data-v="' + (hasManual ? 4 : 5) + '"' + (selG.length ? '' : ' disabled') + '>המשך</button><button class="btn sec" data-act="upGo" data-v="2">חזרה</button></div>';
+  });
+
+  /* 2. זיהוי האנשים */
+  const idOpt = (k, lb) => {
+    const j = idCol(k), ok = j >= 0;
+    const n = ok ? U.body.filter(r => { const s = String(r[j] == null ? '' : r[j]).trim(); return k === 'tz' ? validId(nid(s) || '') : okPhone(nph(s)); }).length : 0;
+    return '<button class="ucard idc' + (U.idBy === k ? ' on' : '') + (ok ? '' : ' off') + '" data-act="upIdBy" data-v="' + k + '"' + (ok ? '' : ' disabled') + '><span class="uck">' + upi('check') + '</span>' +
+      '<span class="uct"><b>' + lb + '</b><small>' + (ok ? 'עמודה "' + esc(U.head[j]) + '" · ' + nf(n) + ' מתוך ' + nf(U.body.length) + ' שורות תקינות' : 'אין עמודה כזאת בקובץ') + '</small></span></button>';
+  };
+  h += step(2, 'איך מזהים את האנשים?', (U.idBy === 'tz' ? 'לפי ת.ז' : U.idBy === 'phone' ? 'לפי טלפון' : '') + ' · ' + { upsert: 'מעדכנים קיימים ומוסיפים חדשים', add: 'רק מוסיפים חדשים', update: 'רק מעדכנים קיימים' }[U.opts.mode], () =>
+    '<p class="wp">לפי מה מוצאים כל שורה בקובץ את האדם שכבר במאגר.</p>' +
+    '<div class="ugrid two">' + idOpt('tz', 'לפי תעודת זהות') + idOpt('phone', 'לפי מספר טלפון') + '</div>' +
+    '<div class="usub">מה עושים עם השורות?</div><div class="useg">' +
+      [['upsert', 'מעדכנים קיימים ומוסיפים חדשים'], ['update', 'רק מעדכנים מי שכבר במאגר'], ['add', 'רק מוסיפים אנשים חדשים']].map(([k, l]) => '<button class="' + (U.opts.mode === k ? 'on' : '') + '" data-act="upMode" data-v="' + k + '">' + l + '</button>').join('') + '</div>' +
+    '<div class="uopts"><label class="opt"><input type="checkbox" data-uo="keepOld"' + (U.opts.keepOld ? ' checked' : '') + '>תא ריק בקובץ לא מוחק ערך קיים</label>' +
+      '<label class="opt"><input type="checkbox" data-uo="allowBadId"' + (U.opts.allowBadId ? ' checked' : '') + '>לקבל ת.ז עם ספרת ביקורת שגויה</label></div>' +
+    '<div class="wnav"><button class="btn" data-act="upGo" data-v="3"' + (U.idBy ? '' : ' disabled') + '>המשך</button></div>');
+  h += sFields;
+
+  /* 4. השלמה ידנית */
+  h += step(4, 'השלמה ידנית', upNeedManual().map(g => esc(g.lb) + ': ' + esc(U.manual[g.id] || '')).join(' · '), () =>
+    '<p class="wp">מה שאין בקובץ ואתם יודעים — נכתב פעם אחת ונכנס לכל השורות.</p>' +
+    upNeedManual().map(g => '<div class="umrow"><div><b>' + esc(g.lb) + '</b><span class="pill r">חובה</span><small>ערך לכל ' + nf(U.body.length) + ' השורות</small></div>' + upManualInput(g) + '</div>').join('') +
+    (!upManualOk() ? '<div class="note y" style="margin:12px 0 0">ממתינים להקלדה: ' + upNeedManual().filter(g => !String(U.manual[g.id] || '').trim()).map(g => esc(g.lb)).join(', ') + '.</div>' : '') +
+    '<div class="wnav"><button class="btn" data-act="upGo" data-v="5"' + (upManualOk() ? '' : ' disabled') + '>המשך</button><button class="btn sec" data-act="upGo" data-v="3">חזרה</button></div>', !hasManual && st > 3);
+
+  /* 5. אישור */
+  h += step(5, 'אישור', '', () => {
+    if (!U.pv) return '<div class="empty">אין שורות בקובץ</div>';
+    const c = U.pv.c;
+    const cols = [];
+    selG.forEach(g => { if (g.id === 'name') cols.push(['שם', r => ((r.first || '') + ' ' + (r.last || '')).trim()]); else if (g.id === 'phone') cols.push(['טלפון', r => [r.phone].concat(r.phones || []).filter(Boolean).map(fmtPhone).join(', ')]);
+      else if (g.id === 'addr') cols.push(['כתובת', r => [r.street, r.house].filter(Boolean).join(' ')]); else if (g.id === 'kalpi') cols.push(['קלפי', r => r.kalpi || '']);
+      else if (g.id === 'tags') cols.push(['תגית', r => (r.tags || []).join(', ')]); else if (g.id === 'birth') cols.push(['תאריך לידה', r => fmtDate(r.birth)]);
+      else if (g.f) cols.push([g.lb, r => dynText(g.f, r.dyn[g.f.id])]); else cols.push([g.lb, r => r[g.t[0]] || '']); });
+    const A = { new: ['חדש', 'b'], upd: ['עדכון', 'g'], skip: ['דילוג', 'n'], err: ['שגיאה', 'r'], dup: ['כפול', 'y'] };
+    return '<div class="sumg">' +
+      (U.opts.mode !== 'update' ? '<div><b>' + nf(c.new) + '</b><span>אנשים חדשים</span></div>' : '') +
+      (U.opts.mode !== 'add' ? '<div class="g"><b>' + nf(c.upd) + '</b><span>יעודכנו</span></div>' : '') +
+      (c.skip ? '<div class="n"><b>' + nf(c.skip) + '</b><span>ידולגו</span></div>' : '') + (c.dup ? '<div class="y"><b>' + nf(c.dup) + '</b><span>כפולים בקובץ</span></div>' : '') +
+      (c.err ? '<div class="r"><b>' + nf(c.err) + '</b><span>שגיאות</span></div>' : '') + '</div>' +
+      '<div class="usub">תצוגה מקדימה <span class="mut sm">— 8 השורות הראשונות</span></div>' +
+      '<div class="tw upv"><table class="tbl"><thead><tr><th>שורה</th><th>מה יקרה</th><th>' + (U.idBy === 'phone' ? 'טלפון' : 'ת.ז') + '</th><th>במאגר</th>' + cols.map(x => '<th>' + esc(x[0]) + '</th>').join('') + '</tr></thead><tbody>' +
+      U.pv.rows.slice(0, 8).map(x => { const r = x.rec, a = A[x.act];
+        return '<tr><td class="mut num">' + (x.ri + 1) + '</td><td><span class="pill ' + a[1] + '">' + a[0] + '</span>' + (x.errs.length ? '<div class="sm" style="color:var(--rtx)">' + esc(x.errs[0]) + '</div>' : '') + '</td><td class="num">' + esc(U.idBy === 'phone' ? fmtPhone(r.phone || (r.phones || [])[0] || '') : (r.tz || '')) + '</td><td>' + (x.ex ? esc(fullName(x.ex)) : '<span class="mut">—</span>') + '</td>' +
+          cols.map(cc => '<td>' + esc(cc[1](r) || '') + '</td>').join('') + '</tr>'; }).join('') +
+      '</tbody></table></div>' +
+      '<div class="wnav"><button class="btn big" data-act="upRun"' + (c.new + c.upd ? '' : ' disabled') + '>הוספה למאגר (' + nf(c.new + c.upd) + ')</button>' +
+      (c.err || c.warn ? '<button class="btn sec" data-act="upErrors">הורדת השורות לבדיקה</button>' : '') +
+      '<button class="btn sec" data-act="upGo" data-v="' + (hasManual ? 4 : 3) + '">חזרה</button></div>';
+  });
+
+  /* 6. סיום */
+  h += step(6, 'סיום', '', () => {
+    const d = U.done, c = d.c;
+    return '<div class="udone"><span class="udi">' + upi('check') + '</span><div><b>העדכון הסתיים</b><span>' + esc(d.file) + '</span></div></div>' +
+      '<div class="sumg"><div><b>' + nf(c.new) + '</b><span>נוספו</span></div><div class="g"><b>' + nf(c.upd) + '</b><span>עודכנו</span></div>' + (c.err ? '<div class="r"><b>' + nf(c.err) + '</b><span>שגיאות</span></div>' : '') + '</div>' +
+      '<div class="wnav"><button class="btn" data-act="upShow" data-v="' + d.id + '">צפייה באנשים מהקובץ</button>' + (c.err ? '<button class="btn sec" data-act="upErrorsDone">הורדת השגיאות</button>' : '') + '<button class="btn sec" data-act="upReset">העלאת קובץ נוסף</button></div>';
+  });
+  h += '</div>';
+
+  /* היסטוריה */
+  h += '<div class="card"><div class="ch">היסטוריית העלאות</div><div class="cb tight">' + (S.uploads.length ? '<div class="tw"><table class="tbl"><thead><tr><th>קובץ</th><th>מתי</th><th>נוספו</th><th>עודכנו</th><th>שגיאות</th><th></th></tr></thead><tbody>' +
+    S.uploads.slice(0, 20).map(u => '<tr><td><b>' + esc(u.file) + '</b>' + (u.ev ? ' <span class="pill">' + esc(u.ev) + '</span>' : '') + '</td><td class="mut">' + fmtWhen(u.t) + '</td><td class="num">' + nf(u.nw) + '</td><td class="num">' + nf(u.upd) + '</td><td class="num">' + nf(u.err) + '</td><td><button class="mini" data-act="upShow" data-v="' + u.id + '">האנשים</button></td></tr>').join('') +
     '</tbody></table></div>' : '<div class="empty">עוד לא הועלו קבצים</div>') + '</div></div>';
   $('#v-upload').innerHTML = h;
+  upWire();
+}
+function upManualInput(g) {
+  const v = esc(U.manual[g.id] || ''), a = ' data-uv="' + esc(g.id) + '"';
+  if (g.man === 'status') return '<select' + a + '><option value="">בחירה…</option>' + STATUSES.map(s => '<option' + (U.manual[g.id] === s ? ' selected' : '') + '>' + s + '</option>').join('') + '</select>';
+  if (g.man === 'lang') return '<select' + a + '><option value="">בחירה…</option>' + LANGS.map(s => '<option' + (U.manual[g.id] === s ? ' selected' : '') + '>' + s + '</option>').join('') + '</select>';
+  if (g.man === 'city') return '<input type="text"' + a + ' list="dl_up_city" value="' + v + '" placeholder="למשל: אשקלון"><datalist id="dl_up_city">' + KCITIES.map(c => '<option value="' + esc(c) + '">').join('') + '</datalist>';
+  if (g.man === 'owner') return '<input type="text"' + a + ' list="dl_up_own" value="' + v + '" placeholder="שם איש הקשר"><datalist id="dl_up_own">' + owners().map(c => '<option value="' + esc(c) + '">').join('') + '</datalist>';
+  if (g.man === 'tags') return '<input type="text"' + a + ' list="dl_up_tag" value="' + v + '" placeholder="למשל: רשימת אשקלון נובמבר"><datalist id="dl_up_tag">' + allTags().map(c => '<option value="' + esc(c) + '">').join('') + '</datalist>';
+  if (g.f) {
+    const f = g.f;
+    if (f.type === 'bool') return '<select' + a + '><option value="">בחירה…</option><option value="כן"' + (U.manual[g.id] === 'כן' ? ' selected' : '') + '>כן</option><option value="לא"' + (U.manual[g.id] === 'לא' ? ' selected' : '') + '>לא</option></select>';
+    if (f.type === 'select') return '<select' + a + '><option value="">בחירה…</option>' + (f.options || []).map(o => '<option' + (U.manual[g.id] === o ? ' selected' : '') + '>' + esc(o) + '</option>').join('') + '</select>';
+    if (f.type === 'date') return '<input type="date"' + a + ' value="' + v + '">';
+    if (f.type === 'number') return '<input type="number"' + a + ' value="' + v + '">';
+  }
+  return '<input type="text"' + a + ' value="' + v + '" placeholder="ערך לכל השורות">';
+}
+function upMapTable() {
+  const tl = targetsList();
+  return '<div class="tw umap"><table class="tbl"><thead><tr><th>עמודה בקובץ</th><th>דוגמה</th><th>שדה במערכת</th></tr></thead><tbody>' +
+    U.head.map((hd, j) => { const ex = U.body.slice(0, 40).map(r => r[j]).filter(v => String(v == null ? '' : v).trim() !== '').slice(0, 3).map(v => String(v)).join(' · ');
+      return '<tr><td><b>' + esc(hd) + '</b></td><td class="mut wrap" style="max-width:280px;font-size:13px">' + esc(ex) + '</td><td style="min-width:240px"><select data-uam="' + j + '">' +
+        tl.map(([k, l]) => '<option value="' + k + '"' + (U.auto[j] === k ? ' selected' : '') + '>' + esc(l) + '</option>').join('') + '</select></td></tr>'; }).join('') +
+    '</tbody></table></div>';
+}
+function upWire() {
   const dz = $('#upDrop');
   if (dz) {
     dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('over'); });
     dz.addEventListener('dragleave', () => dz.classList.remove('over'));
     dz.addEventListener('drop', e => { e.preventDefault(); dz.classList.remove('over'); const f = e.dataTransfer.files[0]; if (f) readUpload(f); });
   }
+  $$('#v-upload [data-uv]').forEach(el => {
+    const upd = () => { U.manual[el.dataset.uv] = el.value; wzApply(); const b = $('#v-upload .wst.on .wnav .btn'); if (b) b.disabled = !upManualOk(); const n = $('#v-upload .wst.on .note.y'); if (n && upManualOk()) n.hidden = true; };
+    el.addEventListener('input', upd); el.addEventListener('change', () => { upd(); renderUpload(); });
+  });
+  $$('#v-upload [data-uam]').forEach(el => el.addEventListener('change', () => {
+    U.auto[+el.dataset.uam] = el.value;
+    upGroups().forEach(g => { if (g.t.includes(el.value)) U.sel[g.id] = true; });
+    wzApply(); renderUpload();
+  }));
+  $$('#v-upload [data-uo]').forEach(el => el.addEventListener('change', () => { U.opts[el.dataset.uo] = el.checked; wzApply(); renderUpload(); }));
 }
 
 
@@ -5594,12 +5904,17 @@ Object.assign(ACT, {
   upDb: el => { U.db = el.dataset.v; renderUpload(); },
   newDb: async () => { const n = await promptM('מאגר חדש', 'שם המאגר', ''); if (!n) return; const d = { id: 'db' + uid(), name: n }; S.dbs.push(d); await saveKV('dbs'); U.db = d.id; activity('נוצר מאגר חדש: ' + n); refresh(); },
   pickFile: () => { const f = $('#fileIn'); f.value = ''; f.onchange = () => { if (f.files[0]) readUpload(f.files[0]); }; f.click(); },
-  upReset: () => { U.file = ''; U.head = []; U.body = []; U.pv = null; U.done = null; renderUpload(); },
-  upRun: async el => { el.disabled = true; el.textContent = 'מעדכן…'; await wait(20); await runUpload(); },
+  upReset: () => { U.file = ''; U.head = []; U.body = []; U.pv = null; U.done = null; U.extra = []; U.step = 1; renderUpload(); },
+  upRun: async el => { el.disabled = true; el.textContent = 'מוסיף למאגר…'; await wait(20); await runUpload(); },
   upErrors: () => downloadErrors(),
   upErrorsDone: () => downloadErrors(U.done),
   upShow: el => go('search', { filter: { upl: el.dataset.v } }),
-  upNoEvent: () => { U.eventId = null; renderUpload(); }
+  upNoEvent: () => { U.eventId = null; U.db = (S.dbs[0] || { id: 'main' }).id; renderUpload(); },
+  upGo: el => { U.step = +el.dataset.v; wzApply(); renderUpload(); const s = $('#v-upload .wst.on'); if (s) s.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); },
+  upPick: el => { const id = el.dataset.v; U.sel[id] = !U.sel[id]; if (!U.sel[id]) delete U.sel[id]; wzApply(); renderUpload(); },
+  upIdBy: el => { U.idBy = el.dataset.v; if (U.idBy === 'tz') delete U.sel.tz; wzApply(); renderUpload(); },
+  upMode: el => { U.opts.mode = el.dataset.v; wzApply(); renderUpload(); },
+  upAdv: () => { U.adv = !U.adv; renderUpload(); }
 });
 
 /* ---------- js/features/fields.js ---------- */
