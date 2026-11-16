@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
-<meta name="build" content="20261116-100000">
+<meta name="build" content="20261116-125438">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>דאטה ביתנו — מאגר התומכים</title>
 <style>
@@ -693,12 +693,43 @@ main:has(#v-map.on){max-width:none;padding-inline:20px}
 .tpl span{display:block;font-size:12.5px;color:var(--ink2);line-height:1.5;margin-top:2px}
 /* ---------- יתרת סמסים + בדיקה לטלפון ---------- */
 #smsMsg .ch{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.smbal{display:inline-flex;align-items:center;gap:10px;background:var(--bbg);border:1px solid var(--bbd);border-radius:999px;padding:5px 8px 5px 14px;
-  font-size:15px;font-weight:700;color:var(--navy)}
-.smbal b{font-size:20px;font-weight:900;font-variant-numeric:tabular-nums;color:var(--navy)}
-.smbal b.over{color:var(--rtx)}
-.smbal .link{font-size:12.5px}
-.smbal-warn{font-size:12.5px;font-weight:800;color:var(--rtx);background:var(--rbg);border:1px solid var(--rbd);border-radius:999px;padding:2px 10px}
+.smbal{display:inline-flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--line2);border-radius:14px;padding:6px 6px 6px 12px;
+  box-shadow:0 1px 2px rgba(11,46,91,.05);font-weight:600;transition:border-color .2s}
+.smbal.over{border-color:var(--rbd);background:var(--rbg)}
+.smbal.busy .smb-ic svg{animation:spin 1s linear infinite}
+.smb-ic{width:32px;height:32px;border-radius:10px;background:var(--bbg);color:var(--navy);display:grid;place-items:center;flex:none}
+.smb-ic svg,.smb-b svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.smb-tx{display:flex;flex-direction:column;line-height:1.15}
+.smb-l{font-size:11px;font-weight:700;color:var(--ink3)}
+.smb-tx b{font-size:16px;font-weight:900;color:var(--navy);font-variant-numeric:tabular-nums}
+.smbal.over .smb-tx b{color:var(--rtx)}
+.smb-m{display:flex;flex-direction:column;font-size:11.5px;color:var(--ink3);font-weight:600;padding-inline-start:10px;border-inline-start:1px solid var(--line3);line-height:1.35}
+.smb-e{color:var(--rtx);font-weight:800}
+.smb-b{width:30px;height:30px;border-radius:9px;border:0;background:transparent;color:var(--ink2);display:grid;place-items:center;transition:background .15s,color .15s}
+.smb-b:hover{background:var(--line3);color:var(--navy)}
+.smb-b.txt{width:auto;padding:0 10px;font:inherit;font-size:12.5px;font-weight:800;color:var(--navy-l)}
+@keyframes spin{to{transform:rotate(360deg)}}
+/* שורת ההסרה מדיוור */
+.smopt{margin-top:8px;border:1px dashed var(--bbd);background:#F7FAFE;border-radius:11px;padding:9px 12px}
+.smopt label{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:800;color:var(--navy);cursor:pointer}
+.smopt label input{width:16px;height:16px;margin:0}
+.smopt-t{margin-top:4px;font-size:13.5px;color:var(--ink2);padding-inline-start:24px}
+.smopt.off{border-color:var(--line);background:#FAFAFA}
+.smopt.off .smopt-t{text-decoration:line-through;color:var(--ink3)}
+.smopt-w{margin-top:6px;padding-inline-start:24px;font-size:12.5px;font-weight:700;color:var(--ytx)}
+/* מונה תווים ומקטעים */
+.smcnt{margin-top:10px}
+.smcnt-bar{height:5px;border-radius:99px;background:var(--line3);overflow:hidden}
+.smcnt-bar i{display:block;height:100%;background:var(--navy-l);border-radius:99px;transition:width .2s var(--ease)}
+.smcnt-bar.over i{background:var(--gold)}
+.smcnt-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:6px;font-size:13px;color:var(--ink2)}
+.smcnt-row b{color:var(--ink);font-weight:800}
+.smcnt-seg{padding:1px 10px;border-radius:999px;background:var(--bbg);color:var(--navy)}
+.smcnt-seg.over{background:var(--ybg);color:var(--ytx);border:1px solid var(--ybd)}
+.smcnt-seg.over b{color:var(--ytx)}
+.smcnt-w{margin-top:8px;padding:8px 12px;border-radius:10px;background:var(--ybg);border:1px solid var(--ybd);color:var(--ytx);font-size:13px;font-weight:700;animation:aUp .25s var(--ease) both}
+.smpf{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.smpf>div:first-child{grid-column:1/-1}
 .smtest{margin-top:16px;padding-top:14px;border-top:1px dashed var(--line2)}
 
 /* ---------- תצוגת טלפון — כמו אפליקציית ההודעות באנדרואיד ---------- */
@@ -6600,7 +6631,24 @@ Object.assign(ACT, {
    נמענים, תבניות, תזמון ומשלוחים.
    ============================================================ */
 /* ======================================================== סמסים */
-const M = { src: 'group', group: '', db: 'main', persons: [], manual: '', event: '', text: '', name: '', sender: 'HaMate', when: 'now', date: '', time: '', tplSel: '', testPhone: '' };
+const M = { src: 'group', group: '', db: 'main', persons: [], manual: '', event: '', text: '', name: '', sender: 'HaMate', when: 'now', date: '', time: '', tplSel: '', testPhone: '', optLine: true, _parts: 0 };
+/* מקטע אחד אצל הספק = עד 268 תווים. מעבר לזה — ההודעה נספרת כשתיים (חיוב כפול) */
+const SMS_SEG = 268;
+/* שורת ההסרה — נוספת כברירת מחדל לסוף כל הודעה (חובה לפי חוק התקשורת — "חוק הספאם") */
+const SMS_OPTOUT = 'להסרה מרשימת התפוצה, יש להשיב "הסר" למספר: 053-703-8787';
+function smsFinal(t, p, optLine) { const b = mergeText(t, p).replace(/\s+$/, ''); return !b ? '' : optLine === false ? b : b + '\n' + SMS_OPTOUT; }
+/* ספק הסמסים: הגדרות בשרת (sms_provider), היתרה נקראת מהספק דרך פונקציית השרת sms-balance */
+const SMSP = { cfg: null, loading: false, at: 0, err: '' };
+/* "מוסר/ת מדיוור" — פרט דינמי (כן/לא) שנמצא בכל כרטיס ובחיפוש המתקדם. מי שמסומן — לא מקבל סמסים */
+const OPTOUT_FIELD = 'f_optout';
+const smsOptOut = p => !!(p && p.dyn && p.dyn[OPTOUT_FIELD] === true);
+async function smsEnsureOptField() {
+  if (!Array.isArray(S.fields) || S.fields.some(f => f.id === OPTOUT_FIELD)) return;
+  S.fields.push({ id: OPTOUT_FIELD, name: 'מוסר/ת מדיוור', type: 'bool', inSearch: true, inCard: true });
+  try { await saveKV('fields'); } catch (e) { console.warn(e); }
+}
+setTimeout(function chk() { if (S.dbs.length && (!CLOUD || ME)) smsEnsureOptField(); else setTimeout(chk, 3000); }, 3000);
+const SMS_PROV = [['019', '019 SMS — חיבור אוטומטי'], ['manual', 'ספק אחר (b-elect וכו׳) — עדכון ידני']];
 /* יתרת הסמסים בחשבון — נשמרת משותף לכל המטה (kv: smsbal) ומתעדכנת ידנית או בכל משלוח */
 const smsBal = () => { const a = Array.isArray(S.smsbal) ? S.smsbal : []; return a[0] && typeof a[0].n === 'number' ? a[0] : null; };
 async function smsBalUse(n) { const b = smsBal(); if (!b || !n) return; S.smsbal = [{ n: Math.max(0, b.n - n), at: Date.now(), by: b.by || '' }]; await saveKV('smsbal'); }
@@ -6613,10 +6661,8 @@ function mergeText(t, p) {
   return String(t || '').replace(/\[([^\]]+)\]/g, (m, k) => k in V ? (V[k] || '') : m).replace(/ {2,}/g, ' ');
 }
 function smsParts(t) {
-  const len = Array.from(t).length;
-  const ucs = /[^\x00-\x7F£¥èéùìòÇØøÅåΔ_ΦΓΛΩΠΨΣΘΞÆæßÉ¤¡ÄÖÑÜ§¿äöñüà\n\r]/.test(t);
-  const one = ucs ? 70 : 160, many = ucs ? 67 : 153;
-  return { len, parts: len === 0 ? 0 : len <= one ? 1 : Math.ceil(len / many), ucs };
+  const len = Array.from(String(t || '')).length;
+  return { len, parts: len === 0 ? 0 : Math.ceil(len / SMS_SEG) };
 }
 function smsRecipients() {
   let people = [];
@@ -6626,13 +6672,13 @@ function smsRecipients() {
   else if (M.src === 'sel') people = Array.from(SR.sel).map(u => S.by.get(u)).filter(Boolean);
   else if (M.src === 'person') people = M.persons.map(u => S.by.get(u)).filter(Boolean);
   else if (M.src === 'event') { const e = S.events.find(x => x.id === M.event); people = e ? e.regs.map(r => S.by.get(r.uid)).filter(Boolean) : []; }
-  const list = [], seen = new Set(); let noPhone = 0, dup = 0, bad = 0;
+  const list = [], seen = new Set(); let noPhone = 0, dup = 0, bad = 0, optout = 0;
   if (M.src === 'manual') {
-    String(M.manual).split(/[\s,;]+/).filter(Boolean).forEach(tok => { const ph = nph(tok); if (!isMobile(ph)) { bad++; return; } if (seen.has(ph)) { dup++; return; } seen.add(ph); list.push({ phone: ph, p: S.byPhone.get(ph) || null }); });
+    String(M.manual).split(/[\s,;]+/).filter(Boolean).forEach(tok => { const ph = nph(tok); if (!isMobile(ph)) { bad++; return; } if (seen.has(ph)) { dup++; return; } seen.add(ph); const p = S.byPhone.get(ph) || null; if (p && smsOptOut(p)) { optout++; return; } list.push({ phone: ph, p }); });
   } else {
-    people.forEach(p => { const ph = isMobile(p.phone) ? p.phone : (p.phones || []).find(isMobile); if (!ph) { noPhone++; return; } if (seen.has(ph)) { dup++; return; } seen.add(ph); list.push({ phone: ph, p }); });
+    people.forEach(p => { if (smsOptOut(p)) { optout++; return; } const ph = isMobile(p.phone) ? p.phone : (p.phones || []).find(isMobile); if (!ph) { noPhone++; return; } if (seen.has(ph)) { dup++; return; } seen.add(ph); list.push({ phone: ph, p }); });
   }
-  return { list, noPhone, dup, bad, total: people.length };
+  return { list, noPhone, dup, bad, optout, total: people.length };
 }
 RENDER.sms = function (o) {
   if (o.src === 'sel' || o.src === 'last') { M.persons = (o.src === 'sel' ? Array.from(SR.sel) : SR.last.map(p => p.uid)); o = Object.assign({}, o, { src: 'person' }); }
@@ -6646,10 +6692,13 @@ RENDER.sms = function (o) {
     '<div class="note y sm">השליחה עוד לא מחוברת לספק — בינתיים כל משלוח יוצא כקובץ מוכן ל-b-elect.</div>' +
     '<div class="cols"><div class="c2">' +
       '<div class="card" id="smsRcp"><div class="ch">למי שולחים?</div><div class="cb" id="smsRcpBody"></div></div>' +
-      '<div class="card" id="smsMsg"><div class="ch"><span>תוכן ההודעה <span class="sub" id="smsCount"></span></span><span class="smbal" id="smsBal"></span></div><div class="cb">' +
+      '<div class="card" id="smsMsg"><div class="ch"><span>תוכן ההודעה</span><span class="smbal" id="smsBal"></span></div><div class="cb">' +
         '<div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr));margin-bottom:12px"><div><label class="fl" for="sm_name">שם המשלוח (לשימוש פנימי)</label><input id="sm_name" type="text" data-sm="name" value="' + esc(M.name) + '" placeholder="למשל: תזכורת חוג בית"></div>' +
         '<div><label class="fl" for="sm_sender">שם השולח</label><input id="sm_sender" type="text" data-sm="sender" maxlength="11" value="' + esc(M.sender) + '" style="direction:ltr;text-align:right"></div></div>' +
         '<label class="fl" for="smsText">ההודעה</label><textarea id="smsText" data-sm="text" rows="5" placeholder="כותבים כאן. אפשר להוסיף שדות אישיים מהכפתורים למטה.">' + esc(M.text) + '</textarea>' +
+        '<div class="smopt' + (M.optLine ? '' : ' off') + '"><label><input type="checkbox" id="smOptLine"' + (M.optLine ? ' checked' : '') + '><span>שורת הסרה מדיוור בסוף ההודעה</span></label><div class="smopt-t">' + esc(SMS_OPTOUT) + '</div>' +
+          (M.optLine ? '' : '<div class="smopt-w">בלי שורת הסרה — מומלץ להשאיר אותה בכל הודעת דיוור</div>') + '</div>' +
+        '<div class="smcnt" id="smsCount"></div>' +
         '<div class="row" style="margin-top:10px;gap:6px"><span class="sm mut" style="font-weight:700">הוספת שדה אישי:</span>' + TAGS.map(([k, l]) => '<button class="chip" data-act="smsTag" data-v="' + k + '">' + l + '</button>').join('') + '</div>' +
         '<div class="smtest"><label class="fl" for="sm_test">בדיקה לפני השליחה — ההודעה תישלח רק למספר הזה</label><div class="row" style="flex-wrap:nowrap">' +
           '<input id="sm_test" type="tel" data-sm="testPhone" value="' + esc(M.testPhone || (CLOUD && ME && ME.phone ? fmtPhone('0' + String(ME.phone).replace(/^972/, '')) : '')) + '" placeholder="050-0000000" style="direction:ltr;text-align:right;max-width:220px">' +
@@ -6667,6 +6716,8 @@ RENDER.sms = function (o) {
     '</div></div>' +
     '<div class="card"><div class="ch">משלוחים<span class="sub">מתוזמנים ואחרונים</span></div><div class="cb tight" id="smsJobs"></div></div>';
   renderSmsRcp(); renderSmsLive(); renderSmsJobs();
+  smsEnsureOptField();
+  if (CLOUD && ME) smsProvLoad().then(() => { if (smsAuto() && (!smsBal() || Date.now() - (smsBal().at || 0) > 5 * 60000)) smsBalRefresh(true); else if (S.view === 'sms') renderSmsLive(); });
 };
 function renderSmsRcp() {
   const R = smsRecipients();
@@ -6682,7 +6733,7 @@ function renderSmsRcp() {
   else body = '<label class="fl" for="sm_man">מספרי טלפון — אחד בכל שורה או מופרדים בפסיק</label><textarea id="sm_man" data-sm="manual" rows="4" style="direction:ltr;text-align:right" placeholder="050-1234567">' + esc(M.manual) + '</textarea>';
   $('#smsRcpBody').innerHTML = '<div class="rtabs" role="tablist" style="margin-bottom:14px">' + tabs.map(([k, l]) => '<button class="' + (M.src === k ? 'on' : '') + '" data-act="smsSrc" data-v="' + k + '">' + l + '</button>').join('') + '</div>' + body +
     '<div class="row" style="margin-top:14px;padding:11px 14px;border-radius:11px;background:var(--bbg);border:1px solid var(--bbd)"><span><b class="num" style="font-size:17px;color:var(--navy)">' + nf(R.list.length) + '</b> נמענים' +
-    (R.noPhone ? ' · <span class="mut">' + nf(R.noPhone) + ' בלי נייד</span>' : '') + (R.dup ? ' · <span class="mut">' + nf(R.dup) + ' כפולים הוסרו</span>' : '') + (R.bad ? ' · <span style="color:var(--rtx)">' + nf(R.bad) + ' מספרים לא תקינים</span>' : '') + '</span>' +
+    (R.noPhone ? ' · <span class="mut">' + nf(R.noPhone) + ' בלי נייד</span>' : '') + (R.dup ? ' · <span class="mut">' + nf(R.dup) + ' כפולים הוסרו</span>' : '') + (R.bad ? ' · <span style="color:var(--rtx)">' + nf(R.bad) + ' מספרים לא תקינים</span>' : '') + (R.optout ? ' · <span class="mut">' + nf(R.optout) + ' מוסרים מדיוור לא יקבלו</span>' : '') + '</span>' +
     (R.list.length ? '<button class="link sm" style="margin-inline-start:auto" data-act="smsList">צפייה ברשימה</button>' : '') + '</div>';
   const ps = $('#sm_ps');
   if (ps) ps.addEventListener('input', () => { const q = ps.value.trim(); const res = q.length < 2 ? [] : S.people.filter(p => matchQ(p, q)).slice(0, 6); $('#sm_psres').innerHTML = res.map(p => '<button class="siteit" style="border:1px solid var(--line3);border-radius:8px;margin-top:4px" data-act="smsAddPerson" data-v="' + p.uid + '"><span class="nm">' + esc(fullName(p)) + '</span><span class="ct mut sm">' + esc(fmtPhone(p.phone)) + ' · ' + esc(p.city || '') + '</span></button>').join(''); });
@@ -6697,14 +6748,17 @@ function updSendBtn(R) {
 function renderSmsLive() {
   const R = smsRecipients();
   const first = R.list[0];
-  const sample = mergeText(M.text, first ? first.p : null);
-  const sp = smsParts(sample);
-  $('#smsCount').textContent = sp.len + ' תווים · ' + (sp.parts || 0) + ' ' + (sp.parts === 1 ? 'הודעה' : 'הודעות') + ' לנמען' + (R.list.length && sp.parts ? ' · כ-' + nf(sp.parts * R.list.length) + ' הודעות בסך הכול' : '');
-  const need = sp.parts * R.list.length, bal = smsBal();
-  const bEl = $('#smsBal');
-  if (bEl) bEl.innerHTML = (bal ? 'נשארו <b class="num' + (need > bal.n ? ' over' : '') + '">' + nf(bal.n) + '</b> סמסים' : 'יתרת סמסים לא הוגדרה') +
-    ((can('sms') || isAdmin()) ? '<button class="link sm" data-act="smsBalEdit">' + (bal ? 'עדכון' : 'הגדרה') + '</button>' : '') +
-    (bal && need > bal.n ? '<span class="smbal-warn">המשלוח צריך כ-' + nf(need) + '</span>' : '');
+  const sample = smsFinal(M.text, first ? first.p : null, M.optLine);
+  const sp = smsParts(sample), inSeg = sp.len ? sp.len - (sp.parts - 1) * SMS_SEG : 0;
+  const cEl = $('#smsCount');
+  if (cEl) cEl.innerHTML = '<div class="smcnt-bar' + (sp.parts > 1 ? ' over' : '') + '"><i style="width:' + Math.min(100, Math.round(inSeg / SMS_SEG * 100)) + '%"></i></div>' +
+    '<div class="smcnt-row"><span><b class="num">' + nf(sp.len) + '</b> תווים' + (M.optLine && sp.len ? ' <span class="mut">(כולל שורת ההסרה)</span>' : '') + '</span><span class="smcnt-seg' + (sp.parts > 1 ? ' over' : '') + '"><b class="num">' + (sp.parts || 0) + '</b> ' + (sp.parts === 1 ? 'מקטע' : 'מקטעים') + '</span>' +
+    '<span class="mut">מקטע = עד ' + SMS_SEG + ' תווים</span>' + (R.list.length && sp.parts ? '<span class="mut" style="margin-inline-start:auto">כ-' + nf(sp.parts * R.list.length) + ' הודעות בסך הכול</span>' : '') + '</div>' +
+    (sp.parts > 1 ? '<div class="smcnt-w">ההודעה ארוכה מ-' + SMS_SEG + ' תווים, ולכן כל נמען יחויב ב-' + sp.parts + ' הודעות. אפשר לקצר את הטקסט.</div>' : '');
+  if (sp.parts > 1 && (M._parts || 0) <= 1 && M._parts !== undefined && document.activeElement && document.activeElement.id === 'smsText') toast('שימו לב: עברתם ' + SMS_SEG + ' תווים — ההודעה תיחשב כ-' + sp.parts + ' הודעות (חיוב כפול)');
+  M._parts = sp.parts;
+  const need = sp.parts * R.list.length;
+  renderSmsBal(need);
   $('#smsPrev').innerHTML = sample ? smsLinkify(sample) : 'כאן תופיע ההודעה';
   $('#smsPrev').classList.toggle('empty', !sample);
   const alpha = /[^\d\s+\-]/.test(M.sender || '');
@@ -6748,10 +6802,77 @@ function renderSmsJobs() {
     '</tbody></table></div>' : '<div class="empty">עוד לא נשלחו משלוחים</div>';
 }
 function exportJob(j) {
-  saveXlsx([['לשליחה', [['טלפון', 'שם', 'הודעה']].concat(j.to.map(t => { const p = t.uid ? S.by.get(t.uid) : null; return [t.phone, p ? fullName(p) : '', mergeText(j.text, p)]; }))]], 'סמס — ' + (j.name || 'משלוח') + '.xlsx');
+  saveXlsx([['לשליחה', [['טלפון', 'שם', 'הודעה']].concat(j.to.map(t => { const p = t.uid ? S.by.get(t.uid) : null; return [t.phone, p ? fullName(p) : '', smsFinal(j.text, p, j.opt === true)]; }))]], 'סמס — ' + (j.name || 'משלוח') + '.xlsx');
   if (j.status === 'ממתין לספק') { j.status = 'יוצא לקובץ'; saveKV('sms'); renderSmsJobs(); }
 }
 
+
+/* ------------------------------------------------ יתרה וספק */
+const SMI = {
+  bal: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v10H8l-4 4z"/><path d="M8 10h8M8 13h5"/></svg>',
+  ref: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14.3-4.6L4 8M4 4v4h4M4 13a8 8 0 0 0 14.3 4.6L20 16M20 20v-4h-4"/></svg>',
+  cog: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>'
+};
+const smsAuto = () => !!(SMSP.cfg && SMSP.cfg.provider && SMSP.cfg.provider !== 'manual' && SMSP.cfg.has_token);
+function smsAgo(t) { const m = Math.round((Date.now() - t) / 60000); return m < 1 ? 'עכשיו' : m < 60 ? 'לפני ' + m + ' דק׳' : m < 1440 ? 'לפני ' + Math.round(m / 60) + ' שע׳' : fmtWhen(t); }
+function renderSmsBal(need) {
+  const el = $('#smsBal'); if (!el) return;
+  const bal = smsBal(), auto = smsAuto(), prov = SMSP.cfg ? (SMS_PROV.find(x => x[0] === SMSP.cfg.provider) || [0, SMSP.cfg.provider])[1].split(' — ')[0] : '';
+  const over = bal && need > bal.n;
+  el.className = 'smbal' + (over ? ' over' : '') + (SMSP.loading ? ' busy' : '');
+  el.innerHTML = '<span class="smb-ic">' + SMI.bal + '</span><span class="smb-tx"><span class="smb-l">יתרת סמסים</span><b class="num">' + (bal ? nf(bal.n) : '—') + '</b></span>' +
+    '<span class="smb-m">' + (SMSP.err ? '<span class="smb-e">' + esc(SMSP.err) + '</span>' : auto ? 'מחובר ל-' + esc(prov) + (bal ? ' · ' + smsAgo(bal.at) : '') : bal ? 'עודכן ידנית · ' + smsAgo(bal.at) : 'לא הוגדרה') +
+      (over ? '<span class="smb-e">המשלוח צריך כ-' + nf(need) + '</span>' : '') + '</span>' +
+    (auto ? '<button class="smb-b" data-act="smsBalRefresh" title="קריאת היתרה מהספק">' + SMI.ref + '</button>' : (can('sms') || isAdmin()) ? '<button class="smb-b txt" data-act="smsBalEdit">' + (bal ? 'עדכון' : 'הגדרה') + '</button>' : '') +
+    (isAdmin() ? '<button class="smb-b" data-act="smsProvider" title="הגדרות ספק הסמסים">' + SMI.cog + '</button>' : '');
+}
+async function smsProvLoad(force) {
+  if (!CLOUD || !ME) return;
+  if (!force && SMSP.cfg) return;
+  const { data, error } = await sb.rpc('sms_provider_get');
+  if (error) { console.warn('sms_provider_get', error); SMSP.cfg = { provider: 'manual' }; return; }
+  SMSP.cfg = data || { provider: 'manual' };
+}
+async function smsBalRefresh(quiet) {
+  if (!CLOUD || !smsAuto() || SMSP.loading) return;
+  SMSP.loading = true; SMSP.err = ''; renderSmsBal(0);
+  try {
+    const { data, error } = await sb.functions.invoke('sms-balance', { body: {} });
+    if (error || !data || data.error) {
+      SMSP.err = data && data.error === 'no_token' ? 'חסר טוקן לספק' : data && data.error === 'unsupported' ? 'הספק לא נתמך עדיין' : 'הספק לא ענה';
+      if (!quiet) toast('לא הצלחתי לקרוא את היתרה מהספק' + (data && data.message ? ': ' + data.message : ''));
+      return;
+    }
+    S.smsbal = [{ n: Math.round(+data.balance), at: Date.now(), by: 'ספק', src: data.provider }];
+    SMSP.at = Date.now();
+    await saveKV('smsbal');
+    if (!quiet) toast('היתרה עודכנה מהספק');
+  } catch (e) { SMSP.err = 'הספק לא ענה'; console.warn(e); }
+  finally { SMSP.loading = false; if (S.view === 'sms') renderSmsLive(); }
+}
+async function smsProviderDlg() {
+  if (!CLOUD) { toast('חיבור לספק זמין רק במערכת המחוברת'); return; }
+  await smsProvLoad(true);
+  const c = SMSP.cfg || {};
+  const r = await modal('ספק הסמסים',
+    '<p class="mut sm" style="margin-top:0">היתרה נקראת ישירות מהספק. פרטי הגישה נשמרים בשרת בלבד — אף אחד לא יכול לקרוא אותם בחזרה, גם לא מהמערכת.</p>' +
+    '<div class="smpf"><div><label class="fl">הספק</label><select data-mv="provider">' + SMS_PROV.map(([k, l]) => '<option value="' + k + '"' + ((c.provider || 'manual') === k ? ' selected' : '') + '>' + l + '</option>').join('') + '</select></div>' +
+    '<div><label class="fl">שם משתמש אצל הספק</label><input type="text" data-mv="username" value="' + esc(c.username || '') + '" style="direction:ltr;text-align:right" autocomplete="off"></div>' +
+    '<div><label class="fl">טוקן API</label><input type="password" data-mv="token" placeholder="' + (c.has_token ? 'שמור — משאירים ריק כדי לא לשנות' : 'מדביקים כאן את הטוקן מהספק') + '" style="direction:ltr;text-align:right" autocomplete="new-password"></div>' +
+    '<div><label class="fl">שם שולח ברירת מחדל</label><input type="text" data-mv="sender" maxlength="11" value="' + esc(c.sender || M.sender || '') + '" style="direction:ltr;text-align:right"></div></div>' +
+    (c.updated_at ? '<p class="mut sm">עודכן ' + fmtWhen(Date.parse(c.updated_at)) + (c.updated_by ? ' ע״י ' + esc(c.updated_by) : '') + '</p>' : ''),
+    [{ lb: 'שמירה', v: true }, { lb: 'ביטול', cls: 'sec' }]);
+  if (!r) return;
+  const v = r.vals;
+  const { error } = await sb.rpc('sms_provider_set', { p_provider: v.provider, p_username: String(v.username || '').trim(), p_sender: String(v.sender || '').trim(), p_token: String(v.token || '').trim() || null });
+  if (error) { cloudErr(error, 'הגדרות הספק'); return; }
+  await smsProvLoad(true);
+  if (SMSP.cfg.sender && !M.text) M.sender = SMSP.cfg.sender;
+  activity('עודכנו הגדרות ספק הסמסים (' + v.provider + ')');
+  toast('הגדרות הספק נשמרו');
+  if (smsAuto()) await smsBalRefresh(false); else renderSmsLive();
+}
+document.addEventListener('change', e => { if (e.target && e.target.id === 'smOptLine') { M.optLine = e.target.checked; const b = e.target.closest('.smopt'); if (b) { b.classList.toggle('off', !M.optLine); let w = $('.smopt-w', b); if (!M.optLine && !w) { w = document.createElement('div'); w.className = 'smopt-w'; w.textContent = 'בלי שורת הסרה — מומלץ להשאיר אותה בכל הודעת דיוור'; b.appendChild(w); } else if (M.optLine && w) w.remove(); } renderSmsLive(); } });
 
 /* ---- הפעולות (כפתורי data-act) של המסך הזה ---- */
 Object.assign(ACT, {
@@ -6768,12 +6889,14 @@ Object.assign(ACT, {
     const n = parseInt(String(v).replace(/\D/g, ''), 10); if (!isFinite(n)) { toast('צריך מספר'); return; }
     S.smsbal = [{ n, at: Date.now(), by: CLOUD && ME ? (ME.full_name || ME.email || '') : '' }]; await saveKV('smsbal'); renderSmsLive(); toast('היתרה עודכנה');
   },
+  smsBalRefresh: () => smsBalRefresh(false),
+  smsProvider: () => smsProviderDlg(),
   smsTest: async () => {
     const ph = nph(M.testPhone || ($('#sm_test') || {}).value || '');
     if (!isMobile(ph)) { toast('צריך מספר נייד תקין לבדיקה'); $('#sm_test') && $('#sm_test').focus(); return; }
     if (!M.text.trim()) { toast('אין עדיין הודעה לבדוק'); return; }
     const R = smsRecipients(), p = R.list[0] ? R.list[0].p : null;
-    const j = { id: uid(), name: 'בדיקה — ' + (M.name || 'משלוח'), text: mergeText(M.text, p), sender: M.sender, created: Date.now(), sendAt: Date.now(), status: 'ממתין לספק', test: true, to: [{ phone: ph, uid: null }] };
+    const j = { id: uid(), name: 'בדיקה — ' + (M.name || 'משלוח'), text: smsFinal(M.text, p, M.optLine), opt: false, sender: M.sender, created: Date.now(), sendAt: Date.now(), status: 'ממתין לספק', test: true, to: [{ phone: ph, uid: null }] };
     S.sms.unshift(j); await smsBalUse(smsParts(j.text).parts); await saveKV('sms');
     renderSmsJobs(); renderSmsLive(); toast('נוצרה הודעת בדיקה ל-' + fmtPhone(ph) + (p ? ' (עם הפרטים של ' + fullName(p) + ')' : ''));
   },
@@ -6785,16 +6908,16 @@ Object.assign(ACT, {
     const later = M.when === 'later';
     const at = later ? new Date(M.date + 'T' + (M.time || '10:00')).getTime() : Date.now();
     if (later && !(at > Date.now())) { toast('מועד התזמון צריך להיות בעתיד'); return; }
-    const sp = smsParts(mergeText(M.text, R.list[0].p));
+    const sp = smsParts(smsFinal(M.text, R.list[0].p, M.optLine));
     if (!(await ask(later ? 'תזמון משלוח' : 'שליחת משלוח', (later ? 'לתזמן' : 'לשלוח') + ' את ההודעה ל-<b>' + nf(R.list.length) + '</b> נמענים' + (later ? ' ב-' + fmtWhen(at) : '') + '? זה בערך ' + nf(sp.parts * R.list.length) + ' הודעות.<br><span class="sm mut">כל עוד הספק לא מחובר, המשלוח יחכה כאן ותוכלו להוריד ממנו קובץ ל-b-elect.</span>', later ? 'תזמון' : 'שליחה'))) return;
-    const j = { id: uid(), name: M.name || 'משלוח ' + fmtWhen(Date.now()), text: M.text, sender: M.sender, created: Date.now(), sendAt: at, status: later ? 'מתוזמן' : 'ממתין לספק', to: R.list.map(x => ({ phone: x.phone, uid: x.p ? x.p.uid : null })) };
+    const j = { id: uid(), name: M.name || 'משלוח ' + fmtWhen(Date.now()), text: M.text, opt: M.optLine, sender: M.sender, created: Date.now(), sendAt: at, status: later ? 'מתוזמן' : 'ממתין לספק', to: R.list.map(x => ({ phone: x.phone, uid: x.p ? x.p.uid : null })) };
     S.sms.unshift(j); await smsBalUse(sp.parts * R.list.length);
     const ps = R.list.map(x => x.p).filter(Boolean); ps.forEach(p => plog(p, (later ? 'תוזמן סמס: "' : 'סמס: "') + j.name + '"'));
     await putPeople(ps); await saveKV('sms');
     activity((later ? 'תוזמן' : 'נוצר') + ' משלוח סמס "' + j.name + '" ל-' + nf(R.list.length) + ' נמענים');
     renderTabs(); renderSmsJobs(); renderSmsLive(); toast(later ? 'המשלוח תוזמן' : 'המשלוח נוצר — אפשר להוריד קובץ לשליחה');
   },
-  smsExport: () => { const R = smsRecipients(); if (!R.list.length || !M.text.trim()) { toast('צריך נמענים והודעה'); return; } exportJob({ name: M.name || 'משלוח', text: M.text, to: R.list.map(x => ({ phone: x.phone, uid: x.p ? x.p.uid : null })) }); },
+  smsExport: () => { const R = smsRecipients(); if (!R.list.length || !M.text.trim()) { toast('צריך נמענים והודעה'); return; } exportJob({ name: M.name || 'משלוח', text: M.text, opt: M.optLine, to: R.list.map(x => ({ phone: x.phone, uid: x.p ? x.p.uid : null })) }); },
   smsJobExport: el => { const j = S.sms.find(x => x.id === el.dataset.v); if (j) exportJob(j); },
   smsJobDone: async el => { const j = S.sms.find(x => x.id === el.dataset.v); if (!j) return; j.status = 'נשלח'; await saveKV('sms'); renderSmsJobs(); renderTabs(); },
   smsJobCancel: async el => { const j = S.sms.find(x => x.id === el.dataset.v); if (!j || !(await ask('ביטול משלוח', 'לבטל את „' + esc(j.name) + '”?', 'ביטול המשלוח', true))) return; j.status = 'בוטל'; await saveKV('sms'); renderSmsJobs(); renderTabs(); }
@@ -7768,7 +7891,7 @@ function onField(e) {
   } else if (d.sm) {
     M[d.sm] = val;
     if (d.sm === 'when') { RENDER.sms({}); return; }
-    if (['group', 'db', 'event', 'manual'].includes(d.sm)) { if (d.sm === 'manual') debounce('smm', () => { renderSmsRcp(); renderSmsLive(); $('#sm_man') && $('#sm_man').focus(); }, 500); else { renderSmsRcp(); } }
+    if (['group', 'db', 'event', 'manual'].includes(d.sm)) { if (d.sm === 'manual') debounce('smm', () => { const had = document.activeElement && document.activeElement.id === 'sm_man'; renderSmsRcp(); renderSmsLive(); const m = $('#sm_man'); if (had && m) { m.focus(); m.selectionStart = m.selectionEnd = m.value.length; } }, 500); else { renderSmsRcp(); } }
     renderSmsLive();
   } else if (d.ev || d.evf) {
     const ev = S.events.find(x => x.id === E.sel); if (!ev) return;
