@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
-<meta name="build" content="20261116-090802">
+<meta name="build" content="20261116-093107">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>דאטה ביתנו — מאגר התומכים</title>
 <style>
@@ -148,6 +148,7 @@ button.kpi{font:inherit;color:inherit;cursor:pointer}
 .pill.r{background:var(--rbg);border-color:var(--rbd);color:var(--rtx)}
 .pill.y{background:var(--ybg);border-color:var(--ybd);color:var(--ytx)}
 .pill.n{background:#F1F3F6;border-color:#DDE2E9;color:var(--ink2)}
+.pill.b{background:var(--bbg);border-color:var(--bbd);color:var(--navy)}
 .chip{font-size:12.5px;font-weight:700;border:1.5px solid var(--line);background:#fff;color:var(--ink2);border-radius:999px;padding:5px 13px;transition:all .15s}
 .chip:hover{border-color:var(--navy-l);color:var(--navy)}
 .chip.on{background:var(--navy);border-color:var(--navy);color:#fff}
@@ -501,7 +502,7 @@ button.crow:hover{background:#F5F8FC}
 .log .when{color:var(--ink3);font-size:12.5px;white-space:nowrap}
 
 /* ---------- סטטוס תמיכה — שורה מלאה מעל ת.ז ---------- */
-.stseg{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;padding:5px;background:#fff;border:1.5px solid var(--line);border-radius:var(--r-btn)}
+.stseg{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;padding:5px;background:#fff;border:1.5px solid var(--line);border-radius:var(--r-btn)}
 .stseg button{border:1.5px solid transparent;background:transparent;color:var(--ink2);border-radius:9px;min-height:38px;font-size:14px;font-weight:800;
   transition:background .16s var(--ease),color .16s var(--ease),border-color .16s var(--ease),transform .12s var(--ease)}
 .stseg button:hover{background:var(--line3);color:var(--ink)}
@@ -509,6 +510,7 @@ button.crow:hover{background:#F5F8FC}
 .stseg button.on.g{background:var(--gbg);border-color:var(--gbd);color:var(--gtx)}
 .stseg button.on.y{background:var(--ybg);border-color:var(--ybd);color:var(--ytx)}
 .stseg button.on.r{background:var(--rbg);border-color:var(--rbd);color:var(--rtx)}
+.stseg button.on.b{background:var(--bbg);border-color:var(--bbd);color:var(--navy)}
 .stseg button.on.n{background:var(--navy);border-color:var(--navy);color:#fff}
 
 /* ---------- קלפי ---------- */
@@ -785,6 +787,8 @@ button.crow:hover{background:#F5F8FC}
 .evregs .ch{justify-content:flex-start}
 .evregs .ch .sp{flex:1}
 .evregs .ch .btn svg{width:15px;height:15px}
+.evmt{margin:0;padding:11px 20px;font-size:13.5px;color:var(--ytx);background:var(--ybg);border-bottom:1px solid var(--ybd);line-height:1.55}
+.evmt.ok{color:var(--navy);background:var(--bbg);border-color:var(--bbd)}
 
 /* ---------- עריכה ---------- */
 .eded{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:18px;align-items:start}
@@ -4311,11 +4315,12 @@ function parseDate(v) {
 }
 
 /* ------------------------------------------------------------ קבועים */
-const STATUSES = ['תומך', 'מתלבט', 'לא תומך', 'לא ידוע'];
-const ST_CLS = { 'תומך': 'g', 'מתלבט': 'y', 'לא תומך': 'r', 'לא ידוע': 'n' };
+const STATUSES = ['תומך', 'מתלבט', 'תומך פוטנציאלי', 'לא תומך', 'לא ידוע'];   // תומך פוטנציאלי = נרשם לאירוע ולא היה במאגר — לחזור אליו
+const ST_CLS = { 'תומך': 'g', 'מתלבט': 'y', 'תומך פוטנציאלי': 'b', 'לא תומך': 'r', 'לא ידוע': 'n' };
 const stOf = p => p.status || 'לא ידוע';
 const stPill = s => '<span class="pill ' + (ST_CLS[s] || 'n') + '">' + esc(s) + '</span>';
 const STATUS_SYN = [
+  ['תומך פוטנציאלי', ['תומך פוטנציאלי', 'תומכת פוטנציאלית', 'פוטנציאלי', 'פוטנציאלית', 'פוטנציאל', 'potential']],
   ['לא תומך', ['לא תומך', 'לא תומכת', 'נגד', 'לא', 'no', 'against', 'מתנגד']],
   ['מתלבט', ['מתלבט', 'מתלבטת', 'אולי', 'לא החליט', 'לא החליטה', 'maybe', 'undecided', 'לא בטוח']],
   ['תומך', ['תומך', 'תומכת', 'כן', 'בעד', 'yes', 'supporter', 'תמיכה', '1', 'v']],
@@ -6475,7 +6480,7 @@ Object.assign(ACT, {
    דף ההרשמה הציבורי: maarehet_mate/e/ (נבנה מ-landing/landing.html). הפרטים הציבוריים נשמרים ב-events_pub,
    ההרשמות מגיעות ל-event_regs, והמערכת מושכת אותן לבד אל המאגר (evSync).
    ============================================================ */
-const E = { mode: 'list', sel: '', draft: null, isNew: false, simDone: false, pub: {}, lastSync: 0, syncing: false, cities: null, streets: {}, imgUrl: '' };
+const E = { mode: 'list', sel: '', draft: null, isNew: false, simDone: false, pub: {}, lastSync: 0, syncing: false, cities: null, streets: {}, imgUrl: '', rows: {}, rowsAt: 0 };
 const LP_BASE = 'https://davidaidulman.github.io/maarehet_mate/e/';
 const FLD_EV = [['first', 'שם פרטי'], ['last', 'שם משפחה'], ['phone', 'טלפון נייד'], ['tz', 'תעודת זהות']];
 const WDAY = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'];
@@ -6514,6 +6519,14 @@ const evPast = ev => !!ev.date && ev.date < isoDay(new Date());
 const evLink = ev => ev.code ? LP_BASE + ev.code + '/' : '';
 const evSel = () => S.events.find(e => e.id === E.sel);
 const evNew = ev => (ev.regs || []).filter(r => r.n).length;
+const evTag = ev => String(ev.tag || '').trim() || ev.name;
+/* ההרשמות: בענן — מהטבלה event_regs; במצב מקומי — ev.pend. נכנסות למאגר רק בהתאמה שבסוף האירוע */
+const evRows = ev => (CLOUD ? E.rows[ev.code] : ev.pend) || [];
+const evCount = ev => Math.max(evRows(ev).length, (ev.regs || []).length);
+const evOpenRows = ev => evRows(ev).filter(r => !r.synced);
+function evEnd(ev) { const d = evDay(ev); if (!d) return Infinity; const m = /^(\d{1,2}):(\d{2})/.exec(ev.time || '20:00'); d.setHours(+m[1] + 3, +m[2]); return d.getTime(); }   // שלוש שעות אחרי תחילת האירוע
+const evEnded = ev => Date.now() > evEnd(ev);
+const rowPerson = r => { const tz = r.tz ? nid(r.tz) : '', ph = r.phone ? nph(r.phone) : ''; return (tz && S.byTz.get(tz)) || (ph && S.byPhone.get(ph)) || null; };
 function evShareText(ev) { return 'הוזמנת ל' + (ev.name || 'אירוע') + '\n' + evWhen(ev) + (evPlace(ev) ? '\n' + evPlace(ev) : '') + '\n\nלהרשמה: ' + evLink(ev); }
 function evPubData(ev) {
   const l = evLoc(ev);
@@ -6549,7 +6562,7 @@ ROUTE.events = {
 };
 
 function evCard(e, i) {
-  const d = evDay(e), past = evPast(e), n = e.regs.length;
+  const d = evDay(e), past = evPast(e), n = evCount(e);
   return '<button class="evc' + (past ? ' past' : '') + '" data-act="evOpen" data-v="' + e.id + '" style="animation-delay:' + Math.min(i, 12) * 50 + 'ms">' +
     '<span class="evdt"><b class="num">' + (d ? d.getDate() : '—') + '</b><small>' + (d ? MON_S[d.getMonth()] : 'ללא תאריך') + '</small></span>' +
     '<span class="evbd"><b class="evn">' + esc(e.name || 'אירוע ללא שם') + '</b>' +
@@ -6564,17 +6577,19 @@ function renderEvList() {
   const sec = (t, list, empty) => '<div class="evsec"><h3>' + t + '<span class="num">' + nf(list.length) + '</span></h3>' +
     (list.length ? '<div class="evlist">' + list.map(evCard).join('') + '</div>' : '<div class="evnone">' + empty + '</div>') + '</div>';
   $('#v-events').innerHTML =
-    '<div class="evhd"><h2>אירועים ודפי נחיתה</h2><p>חוגי בית ואירועים — לכל אירוע קישור הרשמה לשליחה, ומי שנרשם נכנס למאגר לבד</p>' +
+    '<div class="evhd"><h2>אירועים ודפי נחיתה</h2><p>חוגי בית ואירועים — לכל אירוע קישור הרשמה לשליחה. בסיום האירוע הנרשמים מותאמים למאגר לבד</p>' +
       '<button class="btn evadd" data-act="newEvent">+ אירוע חדש</button></div>' +
     (S.events.length ? sec('אירועים קרובים', up, 'אין אירועים קרובים. יוצרים אחד ב„+ אירוע חדש”.') + (past.length ? sec('אירועים שעברו', past, '') : '') :
-      '<div class="card evempty"><div class="empty"><span class="evei">' + svg('cal') + '</span><b>עוד אין אירועים</b>יוצרים אירוע או חוג בית, שולחים את הקישור — והנרשמים נכנסים למאגר.</div></div>');
+      '<div class="card evempty"><div class="empty"><span class="evei">' + svg('cal') + '</span><b>עוד אין אירועים</b>יוצרים אירוע או חוג בית, שולחים את הקישור — ובסיום האירוע הנרשמים מותאמים למאגר.</div></div>');
 }
 
 function renderEvView() {
-  const ev = evSel(), n = ev.regs.length, past = evPast(ev), link = evLink(ev);
-  const last = ev.regs.reduce((a, r) => Math.max(a, r.t || 0), 0);
+  const ev = evSel(), n = evCount(ev), past = evPast(ev), link = evLink(ev), open = evOpenRows(ev).length;
+  const last = Math.max(ev.regs.reduce((a, r) => Math.max(a, r.t || 0), 0), evRows(ev).reduce((a, r) => Math.max(a, Date.parse(r.created_at) || 0), 0));
+  const mt = ev.matched ? 'הותאם למאגר ' + fmtWhen(ev.matched) + ' — ' + nf(ev.regs.length - evNew(ev)) + ' קיימים קיבלו תגית, ' + nf(evNew(ev)) + ' נוספו כתומכים פוטנציאליים' + (open ? ' · ' + nf(open) + ' הרשמות חדשות מאז' : '') :
+    open ? 'הנרשמים עוד לא במאגר. בסיום האירוע המערכת תתאים אותם לבד לפי טלפון / ת.ז: מי שקיים יקבל את התגית „' + evTag(ev) + '”, ומי שלא — ייכנס כתומך פוטנציאלי.' : '';
   const share = CLOUD && !ev.code ? '<div class="card evshare"><div class="ch">' + EVI.link + 'קישור ההרשמה</div><div class="cb"><div class="note b" style="margin:0 0 14px">לאירוע הזה עוד אין דף הרשמה. יוצרים אותו בלחיצה — ומקבלים קישור לשליחה.</div><button class="btn" data-act="evMakeLink">' + EVI.link + 'יצירת קישור הרשמה</button></div></div>' :
-    !CLOUD ? '<div class="card evshare"><div class="ch">דף ההרשמה<span class="sub">מצב מקומי</span></div><div class="cb"><div class="note y" style="margin:0 0 14px">קישור הרשמה לשליחה נוצר רק במערכת המחוברת (עם כניסה). כאן אפשר לנסות את הטופס — ההרשמה נכנסת באמת למאגר המקומי.</div><div id="evSim"></div></div></div>' :
+    !CLOUD ? '<div class="card evshare"><div class="ch">דף ההרשמה<span class="sub">מצב מקומי</span></div><div class="cb"><div class="note y" style="margin:0 0 14px">קישור הרשמה לשליחה נוצר רק במערכת המחוברת (עם כניסה). כאן אפשר לנסות את הטופס.</div><div id="evSim"></div></div></div>' :
     '<div class="card evshare"><div class="ch">' + EVI.link + 'קישור ההרשמה<span class="sub">שולחים לאנשים — הם נרשמים, ואתם רואים אותם כאן</span></div><div class="cb">' +
       '<div class="evlink"><input type="text" readonly value="' + esc(link) + '" id="evLinkIn" dir="ltr" aria-label="קישור ההרשמה"><button class="btn" data-act="evCopy">' + EVI.copy + 'העתקה</button></div>' +
       '<div class="evsh"><button class="evwa" data-act="evWa">' + EVI.wa + 'שליחה בווטסאפ</button><a class="btn sec" href="' + esc(link) + '" target="_blank" rel="noopener">' + EVI.open + 'פתיחת הדף</a></div>' +
@@ -6587,25 +6602,36 @@ function renderEvView() {
     '<div class="evhero"><div class="evhi"><span class="evey">' + (past ? 'אירוע שעבר' : 'אירוע קרוב') + '</span><h2>' + esc(ev.name || 'אירוע ללא שם') + '</h2>' +
       '<div class="evwh"><span>' + EVI.clock + esc(evWhen(ev)) + '</span>' + (evPlace(ev) ? '<span>' + EVI.pin + esc(evPlace(ev)) + '</span>' : '') + '</div>' +
       (ev.desc ? '<p>' + esc(ev.desc) + '</p>' : '') +
-      '<div class="evact"><button class="evhb" data-act="evEdit">' + EVI.edit + 'עריכה</button><button class="evhb" data-act="evSms"' + (n ? '' : ' disabled') + '>' + svg('msg') + 'סמס לנרשמים</button>' +
+      '<div class="evact"><button class="evhb" data-act="evEdit">' + EVI.edit + 'עריכה</button><button class="evhb" data-act="evSms"' + (ev.regs.length ? '' : ' disabled title="אחרי ההתאמה למאגר"') + '>' + svg('msg') + 'סמס לנרשמים</button>' +
         '<button class="evhb" data-act="evImport">' + svg('up') + 'ייבוא נרשמים מקובץ</button><span class="sp"></span><button class="evhb dl" data-act="evDelete">מחיקת האירוע</button></div></div>' +
       '<div class="evhn"><b class="num">' + nf(n) + '</b><span>' + (n === 1 ? 'נרשם/ה' : 'נרשמו') + '</span></div></div>' +
     '<div class="evrow">' + share +
-      '<div class="evstats"><div class="evs"><span>חדשים במאגר</span><b class="num">' + nf(evNew(ev)) + '</b></div>' +
+      '<div class="evstats"><div class="evs"><span>' + (ev.matched ? 'נוספו כתומכים פוטנציאליים' : 'כבר במאגר') + '</span><b class="num">' + nf(ev.matched ? evNew(ev) : evOpenRows(ev).filter(rowPerson).length) + '</b></div>' +
         '<div class="evs"><span>הרשמה אחרונה</span><b class="sm">' + (last ? fmtWhen(last) : '—') + '</b></div>' +
-        (ev.tag ? '<div class="evs"><span>תגית לנרשמים</span><b class="sm">' + esc(ev.tag) + '</b></div>' : '') + '</div></div>' +
+        '<div class="evs"><span>תגית לנרשמים</span><b class="sm">' + esc(evTag(ev)) + '</b></div></div></div>' +
     '<div class="card evregs"><div class="ch">הנרשמים<span class="sub">' + nf(n) + ' נרשמו</span><span class="sp"></span>' +
+      (open ? '<button class="btn sm" data-act="evMatchNow">התאמה למאגר עכשיו</button>' : '') +
       (CLOUD ? '<button class="btn sec sm" data-act="evSyncNow" title="בדיקה אם יש הרשמות חדשות">' + EVI.sync + 'רענון</button>' : '') +
-      (n ? '<button class="btn sec sm" data-act="evExport">ייצוא לאקסל</button><button class="btn sec sm" data-act="evSearch">פתיחה בחיפוש</button>' : '') + '</div>' +
+      (n ? '<button class="btn sec sm" data-act="evExport">ייצוא לאקסל</button>' : '') + (ev.regs.length ? '<button class="btn sec sm" data-act="evSearch">פתיחה בחיפוש</button>' : '') + '</div>' +
+    (mt ? '<div class="evmt' + (ev.matched ? ' ok' : '') + '">' + esc(mt) + '</div>' : '') +
     '<div class="cb tight" id="evRegs"></div></div>';
   renderEvRegs(ev);
   if (!CLOUD) renderEvSim(ev); else evPubCheck(ev);
 }
 function renderEvRegs(ev) {
-  const rows = ev.regs.slice().sort((a, b) => b.t - a.t).map(r => ({ r, p: S.by.get(r.uid) })).filter(x => x.p);
-  $('#evRegs').innerHTML = rows.length ? '<div class="tw"><table class="tbl"><thead><tr><th>שם</th><th>טלפון</th><th>ת.ז</th><th>עיר</th><th>סטטוס</th><th>נרשם/ה</th></tr></thead><tbody>' +
-    rows.slice(0, 500).map(({ r, p }) => '<tr><td><button class="link" data-act="openCard" data-v="' + p.uid + '">' + esc(fullName(p)) + '</button>' + (r.n ? ' <span class="pill b">חדש/ה</span>' : '') + '</td>' +
-      '<td class="num"><span class="sg">' + esc(fmtPhone(p.phone)) + '</span></td><td class="num">' + esc(p.tz || '') + '</td><td>' + esc(p.city || '') + '</td><td>' + stPill(stOf(p)) + '</td><td class="mut">' + fmtWhen(r.t) + '</td></tr>').join('') +
+  const box = $('#evRegs'); if (!box) return;
+  const rows = evRows(ev).slice().sort((a, b) => (Date.parse(b.created_at) || 0) - (Date.parse(a.created_at) || 0));
+  // הרשמות ישנות שנכנסו ישר למאגר (לפני השינוי) / ייבוא מקובץ — מוצגות מתוך ev.regs
+  const seen = new Set(rows.map(r => (rowPerson(r) || {}).uid).filter(Boolean));
+  const extra = (ev.regs || []).filter(r => !seen.has(r.uid)).map(r => S.by.get(r.uid)).filter(Boolean);
+  const st = (r, p) => { const reg = p && ev.regs.find(x => x.uid === p.uid);
+    if (r.synced || reg) return reg && reg.n ? '<span class="pill b">נוסף/ה כתומך פוטנציאלי</span>' : '<span class="pill g">קיבל/ה תגית</span>';
+    return p ? '<span class="pill n">כבר במאגר</span>' : '<span class="pill y">לא במאגר</span>'; };
+  const nm = (p, txt) => p ? '<button class="link" data-act="openCard" data-v="' + p.uid + '">' + esc(txt) + '</button>' : esc(txt);
+  box.innerHTML = rows.length || extra.length ? '<div class="tw"><table class="tbl"><thead><tr><th>שם</th><th>טלפון</th><th>ת.ז</th><th>נרשם/ה</th><th>מצב</th></tr></thead><tbody>' +
+    rows.slice(0, 1000).map(r => { const v = r.data || {}, p = rowPerson(r); return '<tr><td>' + nm(p, [v.first, v.last].filter(Boolean).join(' ') || '—') + '</td>' +
+      '<td class="num"><span class="sg">' + esc(r.phone ? fmtPhone(nph(r.phone)) : '') + '</span></td><td class="num">' + esc(r.tz || '') + '</td><td class="mut">' + (Date.parse(r.created_at) ? fmtWhen(Date.parse(r.created_at)) : '') + '</td><td>' + st(r, p) + '</td></tr>'; }).join('') +
+    extra.map(p => '<tr><td>' + nm(p, fullName(p)) + '</td><td class="num"><span class="sg">' + esc(fmtPhone(p.phone)) + '</span></td><td class="num">' + esc(p.tz || '') + '</td><td class="mut">—</td><td>' + stPill(stOf(p)) + '</td></tr>').join('') +
     '</tbody></table></div>' : '<div class="empty"><b>עוד אין נרשמים</b>' + (CLOUD ? 'שולחים את הקישור — וכל מי שנרשם יופיע כאן.' : 'אפשר לנסות את הטופס למעלה.') + '</div>';
 }
 async function evPubCheck(ev) {
@@ -6638,7 +6664,7 @@ function renderEvEdit() {
       '</div></div>' +
       '<div><label class="fl" for="ed_desc">תיאור <span class="mut">(לא חובה)</span></label><textarea id="ed_desc" data-ed="desc" rows="3" maxlength="600" placeholder="על מה האירוע, מי ידבר, כיבוד…">' + esc(d.desc) + '</textarea></div>' +
       '<div><span class="fl">שדות בטופס ההרשמה</span><div class="edchips">' + FLD_EV.map(([k, lb]) => '<label class="edchip' + (F[k] ? ' on' : '') + '"><input type="checkbox" data-edf="' + k + '"' + (F[k] ? ' checked' : '') + '>' + AI.check + lb + '</label>').join('') + '</div></div>' +
-      '<div class="edg2"><div><label class="fl" for="ed_tag">תגית לנרשמים</label><input id="ed_tag" type="text" data-ed="tag" value="' + esc(d.tag) + '" placeholder="למשל: חוג בית אשקלון"></div>' +
+      '<div class="edg2"><div><label class="fl" for="ed_tag">תגית לנרשמים</label><input id="ed_tag" type="text" data-ed="tag" value="' + esc(d.tag) + '" placeholder="אם ריק — שם האירוע"></div>' +
         '<label class="opt edconf"><input type="checkbox" data-ed="confirm"' + (d.confirm ? ' checked' : '') + '>לשלוח סמס אישור לכל נרשם</label></div>' +
     '</div></div>' +
     '<div class="edside"><div class="card"><div class="ch">' + EVI.img + 'התמונה בווטסאפ<span class="sub">' + (d.imgCustom ? 'תמונה שהעליתם' : 'נוצרת לבד מפרטי האירוע') + '</span></div><div class="cb">' +
@@ -6821,7 +6847,7 @@ async function evSave() {
   toast(wasNew ? (CLOUD ? 'האירוע נשמר — הקישור מוכן לשליחה' : 'האירוע נשמר') : 'השינויים נשמרו');
 }
 async function evDelete() {
-  const ev = evSel(); if (!ev || !(await ask('מחיקת אירוע', 'למחוק את „' + esc(ev.name) + '”? דף ההרשמה ייסגר. האנשים שנרשמו יישארו במאגר.', 'מחיקה', true))) return;
+  const ev = evSel(); if (!ev || !(await ask('מחיקת אירוע', 'למחוק את „' + esc(ev.name) + '”? דף ההרשמה ייסגר.' + (evOpenRows(ev).length ? ' ' + nf(evOpenRows(ev).length) + ' נרשמים שעוד לא הותאמו למאגר יימחקו.' : ' מי שכבר הותאם למאגר יישאר בו.'), 'מחיקה', true))) return;
   if (CLOUD && ev.code) {
     await evSync(true);
     const { error } = await sb.from('events_pub').delete().eq('code', ev.code);
@@ -6833,26 +6859,86 @@ async function evDelete() {
   toast('האירוע נמחק');
 }
 
-/* ------------------------------------------------- הרשמה → אדם במאגר */
-function regPerson(ev, v, t) {
-  const ph = v.phone ? nph(v.phone) : '', tz = v.tz ? nid(v.tz) : '';
+/* ------------------------------------------- ההרשמות והתאמה למאגר בסוף האירוע
+   עד סוף האירוע הנרשמים לא נכנסים למאגר (חסר עליהם מידע). בסיום — התאמה לפי ת.ז / טלפון:
+   • קיים במאגר → מקבל את תגית האירוע, ותו לא.
+   • לא קיים → נכנס כ"תומך פוטנציאלי" עם התגית (ואפשר לסנן אותם בחיפוש ולהתקשר אליהם). */
+async function evFetchRows(quiet) {
+  if (!CLOUD || !ME) return false;
+  const codes = S.events.filter(e => e.code).map(e => e.code);
+  E.rowsAt = Date.now();
+  if (!codes.length) return false;
+  const { data, error } = await sb.from('event_regs').select('id,code,data,phone,tz,created_at,synced').in('code', codes).order('id').limit(20000);
+  if (error) { if (!quiet) cloudErr(error, 'הרשמות'); return false; }
+  const m = {}; data.forEach(r => { (m[r.code] = m[r.code] || []).push(r); });
+  const sig = o => JSON.stringify(Object.keys(o).sort().map(k => [k, o[k].length, o[k].filter(r => !r.synced).length]));
+  const changed = sig(m) !== sig(E.rows);
+  E.rows = m;
+  return changed;
+}
+function matchRow(ev, r, tag) {
+  const ph = r.phone ? nph(r.phone) : '', tz = r.tz ? nid(r.tz) : '';
   if (!ph && !tz) return null;
-  let p = (tz && S.byTz.get(tz)) || (ph && S.byPhone.get(ph)) || null;
+  const v = r.data || {}, t = Date.parse(r.created_at) || Date.now();
+  let p = rowPerson(r);
   const isNew = !p;
-  if (isNew) { p = newPersonObj(); p.dbs = []; p.created = t || Date.now(); S.people.push(p); S.by.set(p.uid, p); }
-  ['first', 'last'].forEach(k => { if (v[k] && !p[k]) p[k] = String(v[k]).trim(); });
-  if (!p.city) p.city = isCityUser() ? ME.city : evCity(ev);
-  if (tz && !p.tz) { p.tz = tz; S.byTz.set(tz, p); }
-  if (ph && p.phone !== ph && !(p.phones || []).includes(ph)) { if (!p.phone) p.phone = ph; else p.phones.push(ph); }
-  if (ph) S.byPhone.set(ph, p);
-  const db = (S.dbs[0] && S.dbs[0].id) || 'main'; if (!p.dbs.includes(db)) p.dbs.push(db);
-  if (ev.tag && !p.tags.includes(ev.tag)) p.tags.push(ev.tag);
-  if (fieldById('f_src') && !p.dyn.f_src) p.dyn.f_src = 'דף נחיתה';
-  const ex = ev.regs.find(r => r.uid === p.uid);
-  if (ex) ex.t = t || Date.now(); else ev.regs.push({ uid: p.uid, t: t || Date.now(), count: 1, n: isNew ? 1 : 0 });
+  if (isNew) {
+    p = newPersonObj(); p.created = t;
+    p.first = String(v.first || '').trim(); p.last = String(v.last || '').trim();
+    if (ph) p.phone = ph; if (tz) p.tz = tz;
+    p.city = isCityUser() ? ME.city : evCity(ev);
+    p.status = 'תומך פוטנציאלי';
+    p.dbs = [(S.dbs[0] && S.dbs[0].id) || 'main'];
+    if (fieldById('f_src')) p.dyn.f_src = 'דף נחיתה';
+    S.people.push(p); S.by.set(p.uid, p); if (tz) S.byTz.set(tz, p); if (ph) S.byPhone.set(ph, p);
+    plog(p, 'נרשם/ה לאירוע "' + ev.name + '" — נוסף/ה למאגר כתומך פוטנציאלי');
+  } else plog(p, 'נרשם/ה לאירוע "' + ev.name + '" — נוספה התגית "' + tag + '"');
+  if (tag && !p.tags.includes(tag)) p.tags.push(tag);
   p.updated = Date.now();
-  plog(p, 'נרשם/ה לאירוע "' + ev.name + '" דרך דף ההרשמה' + (isNew ? ' — נוסף/ה למאגר' : ''));
+  const ex = ev.regs.find(x => x.uid === p.uid);
+  if (ex) ex.t = t; else ev.regs.push({ uid: p.uid, t, count: 1, n: isNew ? 1 : 0 });
   return { p, isNew };
+}
+async function evMatch(ev, quiet) {
+  let rows;
+  if (CLOUD) {
+    const { data, error } = await sb.from('event_regs').update({ synced: true }).eq('code', ev.code).eq('synced', false).select('id,code,data,phone,tz,created_at,synced');
+    if (error) { if (!quiet) cloudErr(error, 'התאמה למאגר'); return null; }
+    rows = data || [];
+  } else { rows = (ev.pend || []).filter(r => !r.synced); rows.forEach(r => { r.synced = true; }); }
+  if (!rows.length) return { n: 0, nNew: 0 };
+  const tag = evTag(ev), touched = new Map(); let nNew = 0;
+  rows.sort((a, b) => a.id > b.id ? 1 : -1).forEach(r => { const x = matchRow(ev, r, tag); if (x) { touched.set(x.p.uid, x.p); if (x.isNew) nNew++; } });
+  rebuild();
+  if (!(await putPeople(Array.from(touched.values())))) {
+    if (CLOUD) await sb.from('event_regs').update({ synced: false }).in('id', rows.map(r => r.id));
+    return null;
+  }
+  ev.matched = Date.now();
+  if (CLOUD) { const have = E.rows[ev.code] || []; rows.forEach(r => { const o = have.find(x => x.id === r.id); if (o) o.synced = true; else have.push(r); }); E.rows[ev.code] = have; }
+  await saveKV('events');
+  const nOld = touched.size - nNew;
+  activity('התאמה למאגר — אירוע "' + ev.name + '": ' + nOld + ' קיימים קיבלו תגית, ' + nNew + ' נוספו כתומכים פוטנציאליים');
+  toast('„' + ev.name + '” הותאם למאגר: ' + nOld + ' קיבלו תגית · ' + nNew + ' תומכים פוטנציאליים חדשים');
+  return { n: touched.size, nNew };
+}
+/* רץ ברקע: מושך הרשמות, ומתאים למאגר כל אירוע שהסתיים */
+async function evSync(quiet) {
+  if (E.syncing) return;
+  E.syncing = true; E.lastSync = Date.now();
+  try {
+    let changed = CLOUD ? await evFetchRows(quiet) : false;
+    for (const ev of S.events) {
+      if (!evEnded(ev) || !evOpenRows(ev).length) continue;
+      if (CLOUD && !ev.code) continue;
+      const r = await evMatch(ev, true); if (r && r.n) changed = true;
+    }
+    if (changed) {
+      if (S.view === 'events' && E.mode !== 'edit') RENDER.events({ keepMode: true });
+      else if (S.view === 'home') RENDER.home({ refresh: true });
+    } else if (!quiet) toast('אין הרשמות חדשות');
+  } catch (e) { console.warn('evSync', e); }
+  finally { E.syncing = false; }
 }
 async function simSubmit() {
   const ev = evSel(); if (!ev) return;
@@ -6861,44 +6947,17 @@ async function simSubmit() {
   if (ev.fields.first && !v.first) { toast('חסר שם פרטי'); return; }
   if (ev.fields.phone && !isMobile(ph)) { toast('צריך מספר נייד תקין'); $('#sim_phone') && $('#sim_phone').focus(); return; }
   if (ev.fields.tz && (!tz || !validId(tz))) { toast('תעודת הזהות לא תקינה'); return; }
-  const r = regPerson(ev, v, Date.now()); if (!r) { toast('צריך טלפון או ת.ז'); return; }
-  rebuild(); await putPeople([r.p]); await saveKV('events');
-  activity((r.isNew ? 'נרשם/ה חדש/ה' : 'נרשם/ה') + ' לאירוע "' + ev.name + '": ' + fullName(r.p));
-  E.simDone = true; renderTabs(); RENDER.events({ keepMode: true });
-  toast(r.isNew ? fullName(r.p) + ' נוסף/ה למאגר ונרשם/ה לאירוע' : fullName(r.p) + ' כבר במאגר — סומן/ה כנרשם/ה');
+  if (!ph && !tz) { toast('צריך טלפון או ת.ז'); return; }
+  ev.pend = ev.pend || [];
+  const ex = ev.pend.find(r => (ph && r.phone === ph) || (tz && r.tz === tz));
+  const row = { id: ex ? ex.id : uid(), code: ev.code || '', data: { first: v.first || '', last: v.last || '' }, phone: ph || null, tz: tz || null, created_at: new Date().toISOString(), synced: false };
+  if (ex) Object.assign(ex, row); else ev.pend.push(row);
+  await saveKV('events');
+  E.simDone = true; RENDER.events({ keepMode: true });
+  toast('נרשם/ה — יותאם/תותאם למאגר בסיום האירוע');
 }
-
-/* מושך הרשמות חדשות מהדף הציבורי. "תופס" אותן קודם (synced=true) כדי ששני משתמשים לא יכניסו פעמיים */
-async function evSync(quiet) {
-  if (!CLOUD || !ME || E.syncing) return 0;
-  const codes = S.events.filter(e => e.code).map(e => e.code);
-  E.lastSync = Date.now();
-  if (!codes.length) return 0;
-  E.syncing = true;
-  try {
-    const { data, error } = await sb.from('event_regs').update({ synced: true }).eq('synced', false).in('code', codes).select('id,code,data,phone,tz,created_at');
-    if (error) { if (!quiet) cloudErr(error, 'הרשמות'); return 0; }
-    if (!data || !data.length) { if (!quiet) toast('אין הרשמות חדשות'); return 0; }
-    const touched = new Map(); let nNew = 0; const byEv = new Map();
-    data.sort((a, b) => a.id - b.id).forEach(r => {
-      const ev = S.events.find(e => e.code === r.code); if (!ev) return;
-      const res = regPerson(ev, Object.assign({}, r.data, { phone: r.phone || '', tz: r.tz || '' }), Date.parse(r.created_at) || Date.now());
-      if (!res) return; touched.set(res.p.uid, res.p); if (res.isNew) nNew++; byEv.set(ev.name, (byEv.get(ev.name) || 0) + 1);
-    });
-    rebuild();
-    if (!(await putPeople(Array.from(touched.values())))) { await sb.from('event_regs').update({ synced: false }).in('id', data.map(r => r.id)); return 0; }
-    await saveKV('events');
-    byEv.forEach((n, name) => activity(n + ' ' + (n === 1 ? 'הרשמה חדשה' : 'הרשמות חדשות') + ' לאירוע "' + name + '" מדף ההרשמה'));
-    toast(data.length === 1 ? 'הרשמה חדשה נקלטה' + (nNew ? ' — נוסף/ה למאגר' : '') : data.length + ' הרשמות חדשות נקלטו' + (nNew ? ' · ' + nNew + ' חדשים במאגר' : ''));
-    renderTabs();
-    if (S.view === 'events' && E.mode !== 'edit') RENDER.events({ keepMode: true });
-    else if (S.view === 'home') RENDER.home({ refresh: true });
-    return data.length;
-  } catch (e) { console.warn('evSync', e); return 0; }
-  finally { E.syncing = false; }
-}
-setInterval(() => { if (CLOUD && ME && !document.hidden && S.events.some(e => e.code)) evSync(true); }, 45000);
-setTimeout(function first() { if (CLOUD && ME) evSync(true); else if (CLOUD) setTimeout(first, 3000); }, 4000);
+setInterval(() => { if (!document.hidden && (CLOUD ? ME : true) && S.events.length) evSync(true); }, 60000);
+setTimeout(function first() { if (!CLOUD || ME) evSync(true); else setTimeout(first, 3000); }, 4000);
 
 /* ---- הפעולות (כפתורי data-act) של המסך הזה ---- */
 Object.assign(ACT, {
@@ -6921,12 +6980,25 @@ Object.assign(ACT, {
   evCopy: async () => { const ev = evSel(); if (!ev) return; try { await navigator.clipboard.writeText(evLink(ev)); toast('הקישור הועתק'); } catch (e) { const i = $('#evLinkIn'); i.select(); document.execCommand('copy'); toast('הקישור הועתק'); } },
   evWa: () => { const ev = evSel(); if (ev) window.open('https://wa.me/?text=' + encodeURIComponent(evShareText(ev)), '_blank', 'noopener'); },
   evSyncNow: async el => { el.disabled = true; await evSync(false); el.disabled = false; },
+  evMatchNow: async el => {
+    const ev = evSel(); if (!ev) return;
+    if (!evEnded(ev) && !(await ask('התאמה למאגר לפני סוף האירוע', 'האירוע עוד לא הסתיים. להתאים עכשיו את ' + nf(evOpenRows(ev).length) + ' הנרשמים? מי שיירשם אחר כך יותאם בסיום האירוע.', 'התאמה עכשיו'))) return;
+    el.disabled = true; await evMatch(ev); RENDER.events({ keepMode: true });
+  },
   evSms: el => { const id = el.dataset.v || E.sel, e = S.events.find(x => x.id === id); go('sms', { src: 'event', event: id, name: e ? 'תזכורת — ' + e.name : '' }); },
   simSubmit: () => simSubmit(),
   simAgain: () => { E.simDone = false; renderEvSim(evSel()); },
   evImport: () => go('upload', { eventId: E.sel }),
-  evExport: () => { const ev = evSel(); const list = ev.regs.map(r => S.by.get(r.uid)).filter(Boolean); saveXlsx([['נרשמים', peopleAoa(list)]], 'נרשמים — ' + ev.name + '.xlsx'); },
-  evSearch: () => { const ev = evSel(); if (ev.tag) go('search', { filter: { tag: ev.tag } }); else toast('לאירוע אין תגית — אפשר להוסיף תגית בעריכה'); },
+  evExport: () => {
+    const ev = evSel(); if (!ev) return;
+    const aoa = [['שם פרטי', 'שם משפחה', 'טלפון', 'ת.ז', 'נרשם/ה', 'מצב']];
+    evRows(ev).forEach(r => { const v = r.data || {}, p = rowPerson(r), reg = p && ev.regs.find(x => x.uid === p.uid);
+      aoa.push([v.first || '', v.last || '', r.phone ? fmtPhone(nph(r.phone)) : '', r.tz || '', Date.parse(r.created_at) ? fmtWhen(Date.parse(r.created_at)) : '',
+        reg ? (reg.n ? 'נוסף/ה כתומך פוטנציאלי' : 'קיבל/ה תגית') : p ? 'כבר במאגר' : 'לא במאגר']); });
+    if (aoa.length === 1) ev.regs.map(r => S.by.get(r.uid)).filter(Boolean).forEach(p => aoa.push([p.first, p.last, fmtPhone(p.phone), p.tz, '', stOf(p)]));
+    saveXlsx([['נרשמים', aoa]], 'נרשמים — ' + ev.name + '.xlsx');
+  },
+  evSearch: () => { const ev = evSel(); go('search', { filter: { tag: evTag(ev) } }); },
   evDelete: () => evDelete()
 });
 
