@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
-<meta name="build" content="20261115-223414">
+<meta name="build" content="20261116-090802">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>דאטה ביתנו — מאגר התומכים</title>
 <style>
@@ -4684,8 +4684,53 @@ function go(v, opts) {
   $$('.screen').forEach(s => s.classList.toggle('on', s.id === 'v-' + v));
   RENDER[v](opts || {});
   if (!opts || !opts.keepScroll) window.scrollTo({ top: 0 });
+  navSync();
 }
 function refresh() { renderTabs(); RENDER[S.view]({ keepScroll: true, refresh: true }); }
+
+/* ======================================== כפתורי "חזרה" / "קדימה" של הדפדפן
+   כל מעבר מסך נרשם בכתובת:  #events  ·  #events/ev123  ·  #events/new  ·  #search~uid (כרטיס פתוח)
+   מסך שיש לו מצבים פנימיים רושם אותם ב-ROUTE (ראו events.js):
+     ROUTE.events = { get: () => 'תת-מסלול נוכחי', set: sub => מעבר אליו, opts: sub => אופציות ל-go() }
+   אחרי שינוי מצב פנימי קוראים navSync(). go() ופתיחה/סגירה של כרטיס כבר עושים את זה לבד. */
+const ROUTE = {};
+const NAV = { stack: [], i: -1, busy: false, skip: 0 };
+function navRoute() {
+  const r = ROUTE[S.view], sub = (r && r.get && r.get()) || '';
+  return '#' + S.view + (sub ? '/' + sub : '') + (C ? '~' + (C.isNew ? 'new' : C.p.uid) : '');
+}
+function navParse(h) {
+  const m = /^#([a-z]+)(?:\/([^~]*))?(?:~(.+))?$/.exec(decodeURIComponent(h || ''));
+  return m && VIEWS.some(v => v[0] === m[1]) ? { v: m[1], sub: m[2] || '', card: m[3] || '' } : null;
+}
+const navOpts = r => (ROUTE[r.v] && ROUTE[r.v].opts ? ROUTE[r.v].opts(r.sub) : {});
+function navSync() {
+  if (NAV.busy || !S.view) return;
+  const h = navRoute();
+  if (NAV.i >= 0 && NAV.stack[NAV.i] === h) return;
+  if (NAV.i > 0 && NAV.stack[NAV.i - 1] === h) { NAV.i--; NAV.skip++; history.back(); return; }   // חזרה למה שהיה לפני — בלי לנפח את ההיסטוריה
+  if (NAV.i < 0) { history.replaceState(null, '', h); NAV.stack = [h]; NAV.i = 0; return; }
+  history.pushState(null, '', h); NAV.stack = NAV.stack.slice(0, NAV.i + 1).concat(h); NAV.i++;
+}
+addEventListener('popstate', async () => {
+  const h = location.hash;
+  if (NAV.skip) { NAV.skip--; return; }
+  if (NAV.stack[NAV.i - 1] === h) NAV.i--; else if (NAV.stack[NAV.i + 1] === h) NAV.i++; else { NAV.stack = [h]; NAV.i = 0; }
+  const r = navParse(h); if (!r || !S.view) return;
+  NAV.busy = true;
+  try {
+    if (C && r.card !== (C.isNew ? 'new' : C.p.uid)) await closeCard();
+    if (r.v !== S.view) go(r.v, navOpts(r));
+    else { const R = ROUTE[r.v]; if (R && R.set && r.sub !== ((R.get && R.get()) || '')) R.set(r.sub); }
+    if (r.card && !C && r.card !== 'new' && S.by.get(r.card)) openCard(r.card);
+  } finally {
+    NAV.busy = false;
+    const now = navRoute();
+    if (now !== h) { history.replaceState(null, '', now); NAV.stack[NAV.i] = now; }
+  }
+});
+/* כרטיס אדם נפתח/נסגר → נרשם בהיסטוריה (כך "חזרה" סוגרת את הכרטיס) */
+(function () { const d = document.getElementById('drawer'); if (d) new MutationObserver(() => setTimeout(navSync, 0)).observe(d, { attributes: true, attributeFilter: ['class'] }); })();
 
 /* ======================================== בוחר תאריך ושעה — לכל המערכת
    כל <input type="date"> ו-<input type="time"> בכל מסך מקבל לבד לוח שנה / רשימת שעות בעיצוב שלנו.
@@ -5051,7 +5096,6 @@ function hmWire() {
   }));
   const ci = $('#hmCityIn');
   if (ci) {
-    setTimeout(() => ci.focus(), 30);
     const add = () => { const k = ckey(ci.value); if (!k) return; const D = HM._D; if (D && D.cities.some(o => o.k === k) && !HM.cities.includes(k)) { HM.cities.push(k); hmSave(); RENDER.home({ refresh: true, keepOpen: true }); } };
     ci.addEventListener('change', add);
     ci.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); add(); } });
@@ -6482,10 +6526,26 @@ RENDER.events = function (o) {
   o = o || {};
   if (o.sel) { E.sel = o.sel; E.mode = 'view'; E.simDone = false; }
   else if (!o.refresh && !o.keepMode) { if (E.mode === 'edit' && o.keepScroll) return; E.mode = 'list'; }
-  if (E.mode === 'edit') { if (o.refresh) return; renderEvEdit(); return; }
+  if (E.mode === 'edit') { if (o.refresh) return; if (!E.draft) E.mode = evSel() ? 'view' : 'list'; else { renderEvEdit(); navSync(); return; } }
   if (E.mode === 'view' && !evSel()) E.mode = 'list';
   if (E.mode === 'view') renderEvView(); else renderEvList();
+  navSync();
   if (CLOUD && ME && Date.now() - E.lastSync > 15000) evSync(true);
+};
+/* כפתור "חזרה" של הדפדפן: #events · #events/<id> · #events/<id>/edit · #events/new */
+function evRoute(sub) {
+  const [id, ed] = String(sub || '').split('/');
+  if (id === 'new') { if (!(E.mode === 'edit' && E.isNew && E.draft)) { E.draft = newEventObj(); E.isNew = true; E.imgUrl = ''; } E.mode = 'edit'; return; }
+  const ev = id && S.events.find(e => e.id === id);
+  if (!ev) { E.draft = null; E.mode = 'list'; return; }
+  E.sel = id;
+  if (ed === 'edit') { if (!(E.mode === 'edit' && !E.isNew && E.draft && E.draft.id === id)) ACT.evEdit(null, true); return; }
+  E.draft = null; E.mode = 'view'; E.simDone = false;
+}
+ROUTE.events = {
+  get: () => E.mode === 'view' ? E.sel : E.mode === 'edit' && E.draft ? (E.isNew ? 'new' : E.draft.id + '/edit') : '',
+  opts: sub => { evRoute(sub); return { keepMode: true }; },
+  set: sub => { evRoute(sub); RENDER.events({ keepMode: true }); window.scrollTo({ top: 0 }); }
 };
 
 function evCard(e, i) {
@@ -6847,11 +6907,11 @@ Object.assign(ACT, {
   selEvent: el => ACT.evOpen(el),
   openEvent: el => { closeCard(true); go('events', { sel: el.dataset.v }); },
   evBack: () => { E.mode = 'list'; RENDER.events({ keepMode: true }); },
-  evEdit: () => {
+  evEdit: (el, noRender) => {
     const ev = evSel(); if (!ev) return;
     E.draft = clone(Object.assign({}, ev, { regs: [] })); E.draft.loc = Object.assign({ city: evCity(ev), street: '', house: '', apt: '' }, ev.loc || {});
     E.draft.fields = { first: !!ev.fields.first, last: !!ev.fields.last, phone: !!ev.fields.phone, tz: !!ev.fields.tz };
-    E.isNew = false; E.mode = 'edit'; E.imgUrl = ''; RENDER.events({ keepMode: true }); window.scrollTo({ top: 0 });
+    E.isNew = false; E.mode = 'edit'; E.imgUrl = ''; if (noRender === true) return; RENDER.events({ keepMode: true }); window.scrollTo({ top: 0 });
   },
   evCancel: () => { E.draft = null; if (E.imgUrl) { URL.revokeObjectURL(E.imgUrl); E.imgUrl = ''; } E.mode = E.isNew || !evSel() ? 'list' : 'view'; RENDER.events({ keepMode: true }); window.scrollTo({ top: 0 }); },
   evSave: () => evSave(),
@@ -7375,8 +7435,8 @@ async function startApp() {
   if (CLOUD && isAdmin() && !VIEWS.some(v => v[0] === 'users')) VIEWS.push(['users', 'משתמשים', 'users']);
   renderWho();
   if (CLOUD) { const ft = $('main .foot'); if (ft) ft.textContent = 'הנתונים נשמרים במאגר המשותף. כל משתמש רואה רק את מה שמותר לו — מטה מרכזי את הכול, מטה עירוני את העיר שלו.'; }
-  const h = (location.hash || '').replace('#', '');
-  go(VIEWS.some(v => v[0] === h) ? h : 'home');
+  const r = navParse(location.hash);   // רענון/קישור ישיר — חוזרים לאותו מסך
+  go(r ? r.v : 'home', r ? navOpts(r) : {});
 }
 /* ברירת מחדל למאגר ענן חדש וריק: פרטים דינמיים, מאגרים ותבניות — בלי אנשים */
 function defaultsOnly() {
@@ -7393,7 +7453,7 @@ function defaultsOnly() {
   sb.auth.onAuthStateChange((ev) => { if (ev === 'SIGNED_OUT') location.reload(); });
   await authFlow();
 })();
-window.addEventListener('hashchange', () => { const h = location.hash.replace('#', ''); if (VIEWS.some(v => v[0] === h) && h !== S.view) go(h); });
+/* מעבר בין מסכים בכפתורי הדפדפן: core/30-ui.js (popstate) */
 
 })();
 </script>
