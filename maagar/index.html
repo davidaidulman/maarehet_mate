@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
-<meta name="build" content="20261116-093800">
+<meta name="build" content="20261116-100000">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>דאטה ביתנו — מאגר התומכים</title>
 <style>
@@ -556,6 +556,30 @@ button.crow:hover{background:#F5F8FC}
 .maplegend{display:flex;gap:12px;flex-wrap:wrap;font-size:12.5px;color:var(--ink2);padding:10px 16px;border-top:1px solid var(--line3)}
 .maplegend i{display:inline-block;width:11px;height:11px;border-radius:50%;margin-inline-end:5px;vertical-align:-1px;border:1px solid rgba(0,0,0,.15)}
 
+/* ---------- מסך המפה: המפה פתוחה לכל רוחב המסך (בלי קופסה) ---------- */
+main:has(#v-map.on){max-width:none;padding-inline:20px}
+#v-map > .shead,#mapList{max-width:1500px;margin-inline:auto}
+#mapPane{border-radius:var(--r-card);overflow:hidden;box-shadow:var(--sh-card)}
+#mapFrame{display:block;width:100%;height:max(620px,calc(100vh - 205px));border:0}
+#mapPane[hidden],#mapList[hidden],#mapFullBtn[hidden]{display:none}
+
+/* לשוניות: מפה / אשכולות / קלפיות */
+.mtabs{display:flex;gap:4px;padding:4px;background:var(--line2);border-radius:var(--r-btn)}
+.mtabs button{border:0;background:transparent;border-radius:9px;padding:7px 14px;font-size:13.5px;font-weight:700;color:var(--ink2);transition:background .16s var(--ease),color .16s var(--ease)}
+.mtabs button:hover{color:var(--navy)}
+.mtabs button.on{background:var(--card);color:var(--navy);font-weight:800;box-shadow:var(--sh-card)}
+
+/* רשימות */
+.mpf{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1.2fr) minmax(0,1.2fr) auto;gap:12px 14px;align-items:end}
+.mpchk{display:flex;flex-direction:column;gap:4px}
+.mpchk .opt{white-space:nowrap}
+#mapListRes .ch{display:flex;align-items:center;justify-content:space-between}
+.mpks{display:inline-block;max-width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;vertical-align:bottom;font-variant-numeric:tabular-nums}
+.mppct{white-space:nowrap}
+.mppct b{font-size:13px;color:var(--navy);margin-inline-start:6px}
+.mpbar{display:inline-block;width:60px;height:6px;border-radius:3px;background:var(--line2);vertical-align:middle;overflow:hidden}
+.mpbar i{display:block;height:100%;background:var(--navy-l);border-radius:3px;animation:barIn .6s var(--ease) both}
+
 /* ---------- css/features/upload.css ---------- */
 /* ============ דאטה ביתנו — העלאת אקסלים ============ */
 /* ---------- העלאת אקסלים ---------- */
@@ -878,6 +902,126 @@ button.crow:hover{background:#F5F8FC}
 
 /* ---------- css/features/pniyot.css ---------- */
 /* ============ דאטה ביתנו — פניות הציבור ============ */
+main.wrap:has(#v-pniyot.on){max-width:1440px}            /* המסך הזה רחב — טבלה אופקית */
+#v-pniyot svg{fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+#v-pniyot .evback svg{width:18px;height:18px}
+
+.pnhd{margin-bottom:18px}
+.pnhd h2{margin:0;font-size:26px;font-weight:900;color:var(--navy);letter-spacing:-.02em}
+.pnhd p{margin:4px 0 0;color:var(--ink2);font-size:14.5px}
+.pnacts{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+.pnacts .btn{display:inline-flex;align-items:center;gap:7px}
+.pnacts .btn svg{width:17px;height:17px}
+
+/* ---------- לשוניות סטטוס ---------- */
+.pntabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.pntab{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line2);background:#fff;border-radius:999px;padding:8px 14px 8px 10px;font:inherit;font-size:14px;font-weight:700;
+  color:var(--ink2);transition:all .16s var(--ease);box-shadow:0 1px 2px rgba(11,46,91,.04)}
+.pntab span{min-width:24px;padding:1px 7px;border-radius:999px;background:var(--line3);color:var(--ink2);font-size:12px;font-weight:800;text-align:center}
+.pntab:hover{border-color:var(--bbd);color:var(--navy)}
+.pntab.on{background:var(--navy);border-color:var(--navy);color:#fff}
+.pntab.on span{background:rgba(255,255,255,.18);color:#fff}
+.pntab.hot:not(.on) span{background:var(--gold);color:var(--navy)}
+
+/* ---------- סרגל סינון + טבלה ---------- */
+.pncard{border-radius:var(--r-card);box-shadow:var(--sh-card);overflow:hidden}
+.pnbar{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--line2);background:#FBFCFE}
+.pnq{flex:1;max-width:460px;display:flex;align-items:center;gap:8px;background:#fff;border:1.5px solid var(--line);border-radius:var(--r-input);padding:0 12px;transition:border-color .15s,box-shadow .15s}
+.pnq:focus-within{border-color:var(--navy-l);box-shadow:0 0 0 3px rgba(27,75,138,.13)}
+.pnq svg{width:18px;height:18px;color:var(--ink3);flex:none}
+.pnq input{border:0!important;box-shadow:none!important;padding:10px 0!important;background:none!important;min-width:0}
+.pnbar select{width:auto;min-width:160px}
+.pnsum{margin-inline-start:auto;color:var(--ink3);font-size:13px;font-weight:700}
+.pntbl{font-size:14.5px}
+.pntbl th{padding:12px 18px;font-size:12.5px}
+.pntbl td{padding:14px 18px}
+.pnrow{cursor:pointer}
+.pnrow:focus-visible td{background:#F1F6FD;outline:none}
+.pnrow.isnew td.pnnm{font-weight:800;color:var(--navy)}
+.pnrow.isnew td:first-child{box-shadow:inset -3px 0 0 var(--gold)}
+.pndt{color:var(--ink2);font-variant-numeric:tabular-nums}
+.pnsrc{display:inline-block;font-weight:700;color:var(--ink)}
+.pnsd{display:block;font-size:12px;color:var(--ink3);max-width:220px;overflow:hidden;text-overflow:ellipsis}
+.pnnm{font-weight:700}
+.pngo{text-align:end;width:1%}
+.pnbtn{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--line);background:#fff;border-radius:9px;padding:6px 10px 6px 12px;font:inherit;font-size:13px;font-weight:800;color:var(--navy);
+  transition:all .15s}
+.pnbtn svg{width:16px;height:16px}
+.pnrow:hover .pnbtn{background:var(--navy);border-color:var(--navy);color:#fff}
+.pnmore{padding:14px;text-align:center;border-top:1px solid var(--line3)}
+.pnspin{display:inline-block;width:30px;height:30px;border-radius:50%;border:3px solid var(--line3);border-top-color:var(--navy);animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* סטטוס פנייה */
+.pnst{display:inline-flex;align-items:center;gap:6px;padding:3px 11px;border-radius:999px;font-size:12.5px;font-weight:800;border:1px solid transparent;white-space:nowrap}
+.pnst::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.pnst.new{background:var(--ybg);border-color:var(--ybd);color:var(--ytx)}
+.pnst.work{background:var(--bbg);border-color:var(--bbd);color:var(--navy)}
+.pnst.wait{background:#F3EEFA;border-color:#DCCFEF;color:#5B3E8A}
+.pnst.done{background:var(--gbg);border-color:var(--gbd);color:var(--gtx)}
+.pnst.na{background:#F1F3F6;border-color:#DDE2E9;color:var(--ink3)}
+
+/* ---------- פנייה אחת ---------- */
+.pnhero{position:relative;overflow:hidden;background:var(--hero);color:#fff;border-radius:var(--r-card);padding:24px 28px;box-shadow:var(--hero-sh);margin-bottom:16px;animation:aUp .5s var(--ease) both}
+.pnhero::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.12) 50%,transparent 60%);transform:translateX(-100%);animation:shine 7s ease-in-out 1.2s infinite;pointer-events:none}
+.pnhi{position:relative;z-index:1}
+.pnbadges{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.pnbg{padding:4px 12px;border-radius:999px;font-size:12.5px;font-weight:800;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.2)}
+.pnbg.in{background:#E6F4EC;color:var(--gtx);border-color:transparent}
+.pnbg.out{background:#FFF3D6;color:#7A5300;border-color:transparent}
+.pnhero h2{margin:12px 0 8px;font-size:30px;font-weight:900;letter-spacing:-.01em}
+.pnmeta{display:flex;flex-wrap:wrap;gap:6px 22px;color:#DCE7F4;font-size:15px}
+.pnmeta a,.pnmeta span{display:inline-flex;align-items:center;gap:7px;color:inherit;text-decoration:none}
+.pnmeta a:hover{color:#fff;text-decoration:underline}
+.pnmeta svg{width:17px;height:17px;color:#F3D58B}
+.pncols{display:grid;grid-template-columns:minmax(0,1fr) 420px;gap:16px;align-items:start}
+.pnmain,.pnside{display:flex;flex-direction:column;gap:16px}
+.pncols .card{border-radius:var(--r-card);box-shadow:var(--sh-card)}
+.pncols .ch{justify-content:flex-start}
+.pncols .ch .sub{margin-inline-start:auto}
+.pncols .ch svg{width:17px;height:17px;margin-inline-end:6px}
+.pnmsg{font-size:16px;line-height:1.75;white-space:pre-wrap;color:var(--ink);background:#FAFBFD;border:1px solid var(--line3);border-radius:12px;padding:14px 16px}
+.pndl{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;margin:14px 0 0;font-size:14px}
+.pndl dt{color:var(--ink3);font-weight:700}
+.pndl dd{margin:0;color:var(--ink);word-break:break-word}
+.pntreat{display:flex;flex-direction:column;gap:16px}
+.pnseg{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;padding:5px;background:#fff;border:1.5px solid var(--line);border-radius:var(--r-btn)}
+.pnseg button{border:1.5px solid transparent;background:transparent;color:var(--ink2);border-radius:9px;min-height:38px;font:inherit;font-size:13.5px;font-weight:800;transition:all .15s}
+.pnseg button:hover{background:var(--line3);color:var(--ink)}
+.pnseg button.on.new{background:var(--ybg);border-color:var(--ybd);color:var(--ytx)}
+.pnseg button.on.work{background:var(--bbg);border-color:var(--bbd);color:var(--navy)}
+.pnseg button.on.wait{background:#F3EEFA;border-color:#DCCFEF;color:#5B3E8A}
+.pnseg button.on.done{background:var(--gbg);border-color:var(--gbd);color:var(--gtx)}
+.pnseg button.on.na{background:var(--navy);border-color:var(--navy);color:#fff}
+.pnown{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:end}
+.pnown .fl{grid-column:1/-1;margin-bottom:-2px}
+.pnnote{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:stretch}
+.pnnote textarea{min-height:46px}
+.pnlog{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px;border-top:1px solid var(--line3);padding-top:10px}
+.pnlog li{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;padding:8px 10px;border-radius:10px}
+.pnlog li:hover{background:#FAFBFD}
+.pnlog b{font-size:13.5px;color:var(--navy)}
+.pnlog .sm{text-align:end}
+.pnlog p{grid-column:1/-1;margin:0;font-size:14px;color:var(--ink);white-space:pre-wrap}
+.pnpf{display:flex;flex-direction:column;gap:14px}
+.pfg2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pnwas{font-size:12px;color:var(--ytx);margin-top:4px;font-weight:600}
+.pnpbtn{display:flex;gap:8px;padding-top:4px}
+.pnpbtn .btn{flex:1;min-height:44px}
+.pnoth{list-style:none;margin:0;padding:0}
+.pnoth li+li{border-top:1px solid var(--line3)}
+.pnoth button{display:grid;grid-template-columns:auto 1fr auto;gap:4px 10px;align-items:center;width:100%;text-align:start;border:0;background:none;font:inherit;padding:12px 18px;color:var(--ink);transition:background .15s}
+.pnoth button:hover{background:#FAFBFD}
+.pnoth .num{font-size:13px;color:var(--ink2)}
+.pnoth small{grid-column:1/-1;color:var(--ink3);font-size:12.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* חלונות */
+.pnfm{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.pnfm .full{grid-column:1/-1}
+.pnhow{display:flex;flex-direction:column;gap:14px}
+.pnhow b{color:var(--navy)}
+.pnhow p{margin:2px 0 0;color:var(--ink2);font-size:14px;line-height:1.6}
+.pnhow pre{margin:8px 0 0;background:#0B2E5B;color:#DCE7F4;border-radius:10px;padding:12px;font-size:11.5px;line-height:1.5;overflow:auto;white-space:pre-wrap;word-break:break-all;text-align:left}
 
 /* ---------- css/features/auth.css ---------- */
 /* ============ דאטה ביתנו — מסך הכניסה ============ */
@@ -4397,9 +4541,8 @@ const ICON = {
   users: '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.6-3.6 3.2-5.5 6.5-5.5s5.9 1.9 6.5 5.5M16 4.5a3.5 3.5 0 0 1 0 7M18 14.6c2 .6 3.2 2.4 3.5 5.4"/>'
 };
 const svg = k => '<svg viewBox="0 0 24 24" aria-hidden="true">' + ICON[k] + '</svg>';
-const VIEWS = [['home', 'דף ראשי', 'home'], ['search', 'חיפוש מתקדם', 'search'], ['map', 'מפת קלפיות', 'map'], ['upload', 'העלאת אקסלים', 'up'],
-  ['fields', 'פרטים דינמיים', 'sliders'], ['sms', 'שליחת סמסים', 'msg'], ['events', 'אירועים', 'cal'],
-  ['pniyot', 'פניות הציבור', 'inbox']];
+const VIEWS = [['home', 'דף ראשי', 'home'], ['search', 'חיפוש מתקדם', 'search'], ['pniyot', 'פניות הציבור', 'inbox'], ['sms', 'שליחת סמסים', 'msg'],
+  ['upload', 'העלאת קבצי אקסל', 'up'], ['fields', 'פרטים דינמיים', 'sliders'], ['events', 'אירועים וחוגי בית', 'cal'], ['map', 'מפת הקלפיות', 'map']];
 
 /* ------------------------------------------------------- מוקדי ההצבעה */
 /* KALPI: [יישוב, שם המוקד, כתובת, קלפיות, lat, lng, מיקום מדויק, בזב26, מצביעים26, ישראל ביתנו26, בזב25, מצביעים25, ישראל ביתנו25, מוקד חזק] */
@@ -5806,25 +5949,99 @@ function siteStats() {
 }
 const BINS = [['#A9C2E2', 'פחות מ-20%'], ['#6F98CF', '20%–35%'], ['#2F64AE', '35%–50%'], ['#0B2E5B', '50% ומעלה']];
 const binOf = (sup, n) => { const r = n ? sup / n : 0; return r < .2 ? 0 : r < .35 ? 1 : r < .5 ? 2 : 3; };
+const MPL = { tab: 'map', q: '', city: '', strong: false, has: false, sort: 'city', page: 0 };
 RENDER.map = function (o) {
   MP.stats = siteStats();
-  const linked = S.people.filter(p => p._site).length, withK = S.people.filter(p => p.kalpi).length;
-  const sitesN = MP.stats.size;
-  let kal = 0, kalSup = 0; MP.stats.forEach(s => { kal += Object.keys(s.ks).length; Object.values(s.ks).forEach(k => { if (k.sup) kalSup++; }); });
+  if (o.site != null) MPL.tab = 'map';
   if (!$('#mapFrame')) {
     $('#v-map').innerHTML =
-      '<div class="shead"><div><h2>מפת הקלפיות</h2><p>מוקדי ההצבעה החזקים</p></div>' +
-      '<button class="btn sec sm" data-act="mapNewTab">פתיחה בחלון מלא</button></div>' +
-      '<div class="kpis" id="mapKpis"></div>' +
-      '<div class="card" style="padding:0"><iframe id="mapFrame" title="מפת הקלפיות" style="display:block;width:100%;height:max(560px,calc(100vh - 150px));border:0;border-radius:14px"></iframe></div>';
+      '<div class="shead"><div><h2>מפת הקלפיות</h2><p>מוקדי ההצבעה, האשכולות והקלפיות</p></div>' +
+      '<div class="row" style="gap:10px"><div class="mtabs" id="mapTabs"></div><button class="btn sec sm" data-act="mapNewTab" id="mapFullBtn">פתיחה בחלון מלא</button></div></div>' +
+      '<div id="mapPane"><iframe id="mapFrame" title="מפת הקלפיות"></iframe></div>' +
+      '<div id="mapList" hidden></div>';
     $('#mapFrame').src = mapUrl();
   }
-  $('#mapKpis').innerHTML =
-    '<div class="kpi"><div class="lb">משויכים למוקד הצבעה</div><div class="vl">' + nf(linked) + '</div><div class="ft">' + pct(linked, S.people.length) + '% מהמאגר</div></div>' +
-    '<button class="kpi" data-act="mapNoKalpi"><div class="lb">בלי קלפי מזוהה</div><div class="vl">' + nf(S.people.length - linked) + '</div><div class="ft">לחיצה לרשימה להשלמה</div></button>' +
-'';
+  mapTabsRender();
   if (o.site != null) mapFly(SITES[+o.site]);
 };
+function mapTabsRender() {
+  $('#mapTabs').innerHTML = [['map', 'מפה'], ['sites', 'אשכולות (' + nf(SITES.length) + ')'], ['kalpis', 'קלפיות (' + nf(SITES.reduce((a, s) => a + s.ks.length, 0)) + ')']]
+    .map(([k, l]) => '<button class="' + (MPL.tab === k ? 'on' : '') + '" data-act="mapTab" data-v="' + k + '">' + l + '</button>').join('');
+  const isMap = MPL.tab === 'map';
+  $('#mapPane').hidden = !isMap; $('#mapList').hidden = isMap; $('#mapFullBtn').hidden = !isMap;
+  if (!isMap) mapListRender();
+}
+/* ---- רשימות: אשכולות (מוקדי הצבעה) וקלפיות — חיפוש, סינון וייצוא ---- */
+const mpPct = (a, b) => b ? Math.round(a / b * 1000) / 10 : null;
+function mapRows() {
+  const q = norm(MPL.q), qk = kkey(MPL.q), ck = MPL.city ? ckey(MPL.city) : '';
+  const st = MP.stats || new Map();
+  let rows = [];
+  SITES.forEach(s => {
+    if (ck && s.ck !== ck) return;
+    if (MPL.strong && !s.strong) return;
+    const o = st.get(s.i) || { n: 0, sup: 0, ks: {} };
+    if (MPL.tab === 'sites') {
+      if (MPL.has && !o.n) return;
+      if (q && !(norm(s.c + ' ' + (s.n || '') + ' ' + (s.s || '')).includes(q) || (qk && s.ks.includes(qk)))) return;
+      rows.push({ s, n: o.n, sup: o.sup, p: mpPct(s.l26, s.v26) });
+    } else {
+      String(s.ksRaw || '').split(',').map(x => x.trim()).filter(Boolean).forEach(k => {
+        const kk = o.ks[kkey(k)] || { n: 0, sup: 0 };
+        if (MPL.has && !kk.n) return;
+        if (q && !(norm(s.c + ' ' + (s.n || '') + ' ' + (s.s || '')).includes(q) || (qk && kkey(k) === qk))) return;
+        rows.push({ s, k, n: kk.n, sup: kk.sup, p: mpPct(s.l26, s.v26) });
+      });
+    }
+  });
+  const byCity = (a, b) => a.s.c.localeCompare(b.s.c, 'he') || (a.k ? (parseFloat(a.k) || 0) - (parseFloat(b.k) || 0) : (a.s.n || '').localeCompare(b.s.n || '', 'he'));
+  const S2 = { city: byCity, pct: (a, b) => (b.p || 0) - (a.p || 0) || byCity(a, b), people: (a, b) => b.n - a.n || byCity(a, b), sup: (a, b) => b.sup - a.sup || byCity(a, b) };
+  return rows.sort(S2[MPL.sort] || byCity);
+}
+function mapListRender() {
+  const sites = MPL.tab === 'sites';
+  $('#mapList').innerHTML =
+    '<div class="card"><div class="cb"><div class="mpf">' +
+      '<div><label class="fl" for="mp_q">חיפוש</label><input id="mp_q" type="search" data-mp="q" value="' + esc(MPL.q) + '" placeholder="' + (sites ? 'יישוב, שם המוקד, כתובת או מספר קלפי' : 'יישוב, מספר קלפי, מוקד או כתובת') + '"></div>' +
+      '<div><label class="fl" for="mp_city">יישוב</label><input id="mp_city" type="text" data-mp="city" list="dl_mp_city" value="' + esc(MPL.city) + '" placeholder="כל היישובים" autocomplete="off"></div>' +
+      '<div><label class="fl" for="mp_sort">מיון</label><select id="mp_sort" data-mp="sort">' + [['city', 'לפי יישוב'], ['pct', 'ישראל ביתנו — הכי חזק'], ['people', 'הכי הרבה אנשים במאגר'], ['sup', 'הכי הרבה תומכים']].map(([k, l]) => '<option value="' + k + '"' + (MPL.sort === k ? ' selected' : '') + '>' + l + '</option>').join('') + '</select></div>' +
+      '<div class="mpchk"><label class="opt"><input type="checkbox" data-mp="strong"' + (MPL.strong ? ' checked' : '') + '>רק מוקדים חזקים</label><label class="opt"><input type="checkbox" data-mp="has"' + (MPL.has ? ' checked' : '') + '>רק עם אנשים מהמאגר</label></div>' +
+    '</div></div></div>' +
+    '<div class="card" id="mapListRes"></div>' +
+    '<datalist id="dl_mp_city">' + KCITIES.map(c => '<option value="' + esc(c) + '">').join('') + '</datalist>';
+  mapListBody();
+}
+function mapListBody() {
+  const sites = MPL.tab === 'sites', rows = mapRows(), per = 50, pages = Math.max(1, Math.ceil(rows.length / per));
+  if (MPL.page >= pages) MPL.page = pages - 1;
+  const pg = rows.slice(MPL.page * per, MPL.page * per + per);
+  const pctTd = r => r.p == null ? '<span class="mut">—</span>' : '<span class="mpbar"><i style="width:' + Math.min(100, r.p * 4) + '%"></i></span><b class="num">' + r.p + '%</b>';
+  const head = sites ? '<th>יישוב</th><th>מוקד</th><th>כתובת</th><th>קלפיות</th><th class="num">בזב</th><th class="num">הצביעו</th><th>ישראל ביתנו</th><th class="num">במאגר</th><th class="num">תומכים</th><th></th>'
+    : '<th>יישוב</th><th>קלפי</th><th>מוקד</th><th>כתובת</th><th>ישראל ביתנו במוקד</th><th class="num">במאגר</th><th class="num">תומכים</th><th></th>';
+  const row = r => sites
+    ? '<tr><td>' + esc(r.s.c) + '</td><td><b>' + esc(r.s.n || '—') + '</b>' + (r.s.strong ? ' <span class="pill b">חזק</span>' : '') + '</td><td class="mut">' + esc(r.s.s || '') + '</td><td><span class="mpks" title="' + esc(r.s.ksRaw) + '">' + esc(r.s.ksRaw) + '</span></td>' +
+      '<td class="num">' + nf(r.s.b26 || 0) + '</td><td class="num">' + nf(r.s.v26 || 0) + '</td><td class="mppct">' + pctTd(r) + '</td><td class="num">' + nf(r.n) + '</td><td class="num">' + nf(r.sup) + '</td>' +
+      '<td><div class="row" style="flex-wrap:nowrap;gap:6px"><button class="mini" data-act="mapGo" data-v="' + r.s.i + '">במפה</button>' + (r.n ? '<button class="mini" data-act="mapPeople" data-site="' + r.s.i + '">אנשים</button>' : '') + '</div></td></tr>'
+    : '<tr><td>' + esc(r.s.c) + '</td><td><b class="num">' + esc(r.k) + '</b></td><td>' + esc(r.s.n || '—') + '</td><td class="mut">' + esc(r.s.s || '') + '</td><td class="mppct">' + pctTd(r) + '</td><td class="num">' + nf(r.n) + '</td><td class="num">' + nf(r.sup) + '</td>' +
+      '<td><div class="row" style="flex-wrap:nowrap;gap:6px"><button class="mini" data-act="mapGo" data-v="' + r.s.i + '">במפה</button>' + (r.n ? '<button class="mini" data-act="mapKalpi" data-site="' + r.s.i + '" data-k="' + esc(r.k) + '">אנשים</button>' : '') + '</div></td></tr>';
+  $('#mapListRes').innerHTML =
+    '<div class="ch" style="background:#fff"><span style="font-size:16px;color:var(--ink)">נמצאו <span class="num">' + nf(rows.length) + '</span> ' + (sites ? 'אשכולות' : 'קלפיות') + '</span>' +
+      '<button class="btn sec sm" data-act="mapExport"' + (rows.length ? '' : ' disabled') + '>ייצוא לאקסל</button></div>' +
+    (rows.length ? '<div class="tw"><table class="tbl"><thead><tr>' + head + '</tr></thead><tbody>' + pg.map(row).join('') + '</tbody></table></div>' +
+      '<div class="pager"><span>מציג ' + nf(MPL.page * per + 1) + '–' + nf(MPL.page * per + pg.length) + ' מתוך ' + nf(rows.length) + '</span><div class="row">' +
+        '<button class="btn sec sm" data-act="mapPage" data-v="-1"' + (MPL.page ? '' : ' disabled') + '>הקודם</button><span class="num">עמוד ' + (MPL.page + 1) + ' מתוך ' + nf(pages) + '</span>' +
+        '<button class="btn sec sm" data-act="mapPage" data-v="1"' + (MPL.page < pages - 1 ? '' : ' disabled') + '>הבא</button></div></div>'
+      : '<div class="empty"><b>אין תוצאות</b>נסו לשנות את החיפוש או הסינון.</div>');
+}
+document.addEventListener('input', e => {
+  const k = e.target.dataset && e.target.dataset.mp; if (!k || e.target.type === 'checkbox' || e.target.tagName === 'SELECT') return;
+  MPL[k] = e.target.value; MPL.page = 0; debounce('mpl', mapListBody, 200);
+});
+document.addEventListener('change', e => {
+  const k = e.target.dataset && e.target.dataset.mp; if (!k) return;
+  MPL[k] = e.target.type === 'checkbox' ? e.target.checked : e.target.value; MPL.page = 0; mapListBody();
+});
+
 let MAPURL = '';
 function mapUrl() {
   if (!MAPURL) {
@@ -5846,6 +6063,18 @@ function mapFly(s, n) {
 
 /* ---- הפעולות (כפתורי data-act) של המסך הזה ---- */
 Object.assign(ACT, {
+  mapTab: el => { MPL.tab = el.dataset.v; MPL.page = 0; mapTabsRender(); },
+  mapPage: el => { MPL.page += +el.dataset.v; mapListBody(); $('#mapListRes').scrollIntoView({ block: 'start' }); },
+  mapGo: el => { MPL.tab = 'map'; mapTabsRender(); window.scrollTo(0, 0); mapFly(SITES[+el.dataset.v]); },
+  mapExport: () => {
+    const sites = MPL.tab === 'sites', rows = mapRows(); if (!rows.length) return;
+    const aoa = sites
+      ? [['יישוב', 'שם המוקד', 'כתובת', 'מספר קלפיות', 'קלפיות', 'מוקד חזק', 'בזב כנסת 26', 'הצביעו כנסת 26', 'ישראל ביתנו כנסת 26 (קולות)', 'ישראל ביתנו כנסת 26 (%)', 'בזב כנסת 25', 'הצביעו כנסת 25', 'ישראל ביתנו כנסת 25 (קולות)', 'ישראל ביתנו כנסת 25 (%)', 'אנשים במאגר', 'תומכים']]
+        .concat(rows.map(r => [r.s.c, r.s.n || '', r.s.s || '', r.s.ks.length, r.s.ksRaw || '', r.s.strong ? 'כן' : '', r.s.b26 || 0, r.s.v26 || 0, r.s.l26 || 0, r.p == null ? '' : r.p, r.s.b || 0, r.s.v || 0, r.s.l || 0, mpPct(r.s.l, r.s.v) == null ? '' : mpPct(r.s.l, r.s.v), r.n, r.sup]))
+      : [['יישוב', 'מספר קלפי', 'שם המוקד', 'כתובת', 'מוקד חזק', 'ישראל ביתנו במוקד כנסת 26 (%)', 'אנשים במאגר', 'תומכים']]
+        .concat(rows.map(r => [r.s.c, r.k, r.s.n || '', r.s.s || '', r.s.strong ? 'כן' : '', r.p == null ? '' : r.p, r.n, r.sup]));
+    saveXlsx([[sites ? 'אשכולות' : 'קלפיות', aoa]], (sites ? 'אשכולות קלפי' : 'קלפיות') + (MPL.city ? ' — ' + MPL.city : '') + ' — ' + nf(rows.length) + '.xlsx');
+  },
   mapFocus: el => { const i = +el.dataset.v; closeCard(true); go('map', { site: i }); },
   mapNewTab: () => window.open(mapUrl(), '_blank'),
   mapPeople: el => go('search', { filter: { site: el.dataset.site } }),
@@ -7106,16 +7335,372 @@ Object.assign(ACT, {
 /* ---------- js/features/pniyot.js ---------- */
 /* ============================================================
    דאטה ביתנו — פניות הציבור
-   (מסך חדש — עדיין ריק)
+   כל הפניות מכל המקורות (דפי נחיתה, האתר, פייסבוק, מיילים, טלפון...) במקום אחד.
+   • list — טבלה רחבה: תאריך ושעה | מקור | שם | טלפון | סטטוס | אחראי | פרטים
+   • view — פנייה אחת: התוכן, הטיפול (סטטוס, אחראי, יומן), ופרטי הפונה — הוספה/עדכון במאגר.
+   בענן: טבלת inquiries (schema_pniyot.sql). מבחוץ נכנסים דרך הפונקציה submit_inquiry בלבד.
+   במצב מקומי: localStorage 'maagar-pniyot' (עם פניות דמו).
    ============================================================ */
-RENDER.pniyot = function () {
-  $('#v-pniyot').innerHTML =
-    '<div class="shead"><div><h2>פניות הציבור</h2><p>ניהול הפניות שמגיעות מהציבור</p></div></div>' +
-    '<div class="card"><div class="empty"><b>בקרוב</b>המסך בבנייה.</div></div>';
+const P = { mode: 'list', sel: 0, list: [], loaded: false, loading: false, at: 0, staff: null, show: 150, form: null, seen: null,
+  f: { st: 'open', src: '', own: '', q: '' } };
+const PN_ST = [['חדשה', 'new'], ['בטיפול', 'work'], ['ממתינה לחזרה', 'wait'], ['טופלה', 'done'], ['לא רלוונטית', 'na']];
+const PN_OPEN = ['חדשה', 'בטיפול', 'ממתינה לחזרה'];
+const PN_SRC = ['דף נחיתה', 'אתר המפלגה', 'פייסבוק', 'אינסטגרם', 'מייל', 'טלפון', 'ווטסאפ', 'הגיע/ה למטה', 'אחר'];
+const PN_TAG = 'פניות הציבור';
+const PNI = {
+  arr: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg>',
+  back: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>',
+  plus: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>',
+  up: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5M4 20h16"/></svg>',
+  plug: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 7V3M15 7V3M7 7h10v4a5 5 0 0 1-10 0zM12 16v5"/></svg>',
+  phone: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>',
+  mail: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>',
+  user: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></svg>',
+  srch: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>'
 };
+const pnStCls = s => (PN_ST.find(x => x[0] === s) || ['', 'na'])[1];
+const pnStPill = s => '<span class="pnst ' + pnStCls(s) + '">' + esc(s || 'חדשה') + '</span>';
+function pnDT(t) { const d = new Date(t); return isNaN(d) ? '' : pad2(d.getDate()) + '.' + pad2(d.getMonth() + 1) + '.' + d.getFullYear() + ' · ' + pad2(d.getHours()) + ':' + pad2(d.getMinutes()); }
+const pnSel = () => P.list.find(x => String(x.id) === String(P.sel));
+const pnPhone = x => (x.phone ? nph(x.phone) : '');
+const pnMe = () => (CLOUD && ME ? (ME.full_name || ME.email || 'אני') : 'אני');
+function pnPerson(x) {
+  if (x.person_uid && S.by.get(x.person_uid)) return S.by.get(x.person_uid);
+  const ph = pnPhone(x), tz = x.data && x.data.tz ? nid(x.data.tz) : '';
+  return (tz && S.byTz.get(tz)) || (ph && S.byPhone.get(ph)) || null;
+}
+/* כל הפניות של אותו פונה (לפי טלפון / מייל), מהישנה לחדשה */
+function pnSame(x) {
+  const ph = pnPhone(x), em = (x.email || '').toLowerCase();
+  return P.list.filter(o => (ph && pnPhone(o) === ph) || (em && (o.email || '').toLowerCase() === em)).sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+}
+
+/* ------------------------------------------------------------- נתונים */
+const PN_LS = 'maagar-pniyot';
+function pnLocalSave() { try { localStorage.setItem(PN_LS, JSON.stringify(P.list)); } catch (e) {} }
+function pnDemo() {
+  const msgs = [['רוצה להתנדב בקמפיין', 'דף נחיתה', 'קמפיין מתנדבים'], ['שאלה לגבי מקום הקלפי שלי', 'מייל', ''], ['מבקש לקבל שלט למרפסת', 'פייסבוק', 'מודעת שלטים'],
+    ['אשמח לארח חוג בית', 'אתר המפלגה', 'טופס צור קשר'], ['יש לי הצעה לגבי תחבורה ציבורית בעיר', 'ווטסאפ', ''], ['רוצה להצטרף כחבר מפלגה', 'פייסבוק', 'דף המפלגה'],
+    ['מתי האירוע הבא באזור?', 'אינסטגרם', ''], ['התקשר למטה, ביקש שיחזרו אליו', 'טלפון', ''], ['תלונה על פנייה כפולה בסמס', 'מייל', ''], ['רוצה לעזור ביום הבחירות', 'דף נחיתה', 'קמפיין מתנדבים'],
+    ['שאלה על המצע בנושא דיור', 'אתר המפלגה', 'טופס צור קשר'], ['מעוניינת להתנדב בהסעות', 'פייסבוק', 'מודעת מתנדבים']];
+  const ppl = S.people.filter(p => p.phone).slice(0, 40), names = ['רונית אזולאי', 'אלכס פטרוב', 'מיכל ברק', 'יוסי שטרן', 'נטליה קוגן', 'עומר דהן'];
+  const st = ['חדשה', 'חדשה', 'חדשה', 'בטיפול', 'ממתינה לחזרה', 'טופלה', 'חדשה', 'בטיפול', 'לא רלוונטית', 'חדשה', 'טופלה', 'חדשה'];
+  return msgs.map(([m, src, det], i) => {
+    const p = i % 2 === 0 && ppl[i] ? ppl[i] : null;
+    return { id: i + 1, created_at: new Date(Date.now() - (i * 7 + 1) * 3600e3).toISOString(), source: src, source_detail: det,
+      full_name: p ? fullName(p) : names[i % names.length], phone: p ? p.phone : '05' + (2 + i % 7) + String(1234567 + i * 1111).slice(0, 7),
+      email: i % 3 === 1 ? 'demo' + i + '@mail.com' : null, city: p ? p.city : ['אשקלון', 'אשדוד', 'באר שבע'][i % 3], message: m, data: {},
+      status: st[i], owner_id: null, owner_name: st[i] === 'חדשה' ? '' : 'אני', scope: 'central', person_uid: null, log: [], updated_at: null };
+  }).concat([{ id: 13, created_at: new Date(Date.now() - 300 * 3600e3).toISOString(), source: 'טלפון', source_detail: '', full_name: names[0], phone: '0521234567', email: null, city: 'אשקלון',
+    message: 'פנייה קודמת — ביקשה מידע על אירועים', data: {}, status: 'טופלה', owner_id: null, owner_name: 'אני', scope: 'central', person_uid: null, log: [], updated_at: null }]);
+}
+async function pnLoad(force) {
+  if (P.loading || (!force && P.loaded && Date.now() - P.at < 30000)) return false;
+  P.loading = true;
+  try {
+    let list;
+    if (CLOUD) {
+      if (!ME) return false;
+      list = [];
+      for (let from = 0; from < 20000; from += 1000) {
+        const { data, error } = await sb.from('inquiries').select('*').order('created_at', { ascending: false }).range(from, from + 999);
+        if (error) { cloudErr(error, 'פניות הציבור'); return false; }
+        list = list.concat(data); if (data.length < 1000) break;
+      }
+    } else {
+      try { list = JSON.parse(localStorage.getItem(PN_LS) || 'null'); } catch (e) { list = null; }
+      if (!list) { list = pnDemo(); P.list = list; pnLocalSave(); }
+    }
+    const before = new Set(P.list.map(x => x.id)), fresh = P.loaded ? list.filter(x => !before.has(x.id)) : [];
+    P.list = list; P.loaded = true; P.at = Date.now();
+    if (fresh.length && S.view !== 'pniyot') toast(fresh.length === 1 ? 'פנייה חדשה מהציבור: ' + (fresh[0].full_name || fresh[0].phone || '') : fresh.length + ' פניות חדשות מהציבור');
+    return true;
+  } finally { P.loading = false; }
+}
+async function pnPatch(x, patch, logText) {
+  const t = new Date().toISOString();
+  const log = logText ? (x.log || []).concat([{ t, by: pnMe(), text: logText }]) : x.log;
+  const full = Object.assign({}, patch, { updated_at: t, updated_by: pnMe() }, logText ? { log } : {});
+  if (CLOUD) {
+    const { error } = await sb.from('inquiries').update(full).eq('id', x.id);
+    if (error) { cloudErr(error, 'עדכון פנייה'); return false; }
+  }
+  Object.assign(x, full);
+  if (!CLOUD) pnLocalSave();
+  return true;
+}
+async function pnInsert(rows) {
+  rows = rows.map(r => Object.assign({ source: 'אחר', source_detail: '', full_name: '', phone: null, email: null, city: '', message: '', data: {}, status: 'חדשה', owner_name: '', scope: 'central', log: [] }, r));
+  if (CLOUD) {
+    const out = [];
+    for (let i = 0; i < rows.length; i += 500) {
+      const { data, error } = await sb.from('inquiries').insert(rows.slice(i, i + 500)).select('*');
+      if (error) { cloudErr(error, 'הוספת פנייה'); return out; }
+      out.push(...data);
+    }
+    P.list = out.concat(P.list).sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    return out;
+  }
+  let id = P.list.reduce((m, x) => Math.max(m, +x.id || 0), 0);
+  const out = rows.map(r => Object.assign({ id: ++id, created_at: r.created_at || new Date().toISOString() }, r));
+  P.list = out.concat(P.list).sort((a, b) => new Date(b.created_at) - new Date(a.created_at)); pnLocalSave();
+  return out;
+}
+async function pnStaff() {
+  if (P.staff) return P.staff;
+  if (!CLOUD) return (P.staff = [{ id: 'me', name: 'אני', hq: 'central' }, { id: 'd1', name: 'מירב (מטה מרכזי)', hq: 'central' }, { id: 'd2', name: 'אבי (מטה אשקלון)', hq: 'city', city: 'אשקלון' }]);
+  const { data, error } = await sb.rpc('staff_list');
+  if (error) { console.warn(error); return (P.staff = []); }
+  return (P.staff = data || []);
+}
+
+/* -------------------------------------------------------------- המסך */
+RENDER.pniyot = function (o) {
+  o = o || {};
+  if (o.sel != null) { P.sel = o.sel; P.mode = 'view'; P.form = null; }
+  else if (!o.refresh && !o.keepMode) P.mode = 'list';
+  if (!P.loaded) {
+    $('#v-pniyot').innerHTML = '<div class="pnhd"><h2>פניות הציבור</h2><p>טוען את הפניות…</p></div><div class="card"><div class="empty"><span class="pnspin"></span></div></div>';
+    pnLoad(true).then(ok => { if (ok && S.view === 'pniyot') RENDER.pniyot({ keepMode: true }); });
+    return;
+  }
+  if (P.mode === 'view' && !pnSel()) P.mode = 'list';
+  if (P.mode === 'view') pnRenderView(); else pnRenderList();
+  navSync();
+  if (Date.now() - P.at > 30000) pnLoad().then(ok => { if (ok && S.view === 'pniyot' && !$('#v-pniyot :focus')) RENDER.pniyot({ keepMode: true, refresh: true }); });
+};
+ROUTE.pniyot = {
+  get: () => (P.mode === 'view' ? String(P.sel) : ''),
+  opts: sub => (sub ? { sel: sub } : {}),
+  set: sub => { if (sub) { P.sel = sub; P.mode = 'view'; P.form = null; } else P.mode = 'list'; RENDER.pniyot({ keepMode: true }); window.scrollTo({ top: 0 }); }
+};
+
+function pnFiltered() {
+  const f = P.f, q = norm(f.q), qd = String(f.q || '').replace(/\D/g, '');
+  return P.list.filter(x => {
+    const st = x.status || 'חדשה';
+    if (f.st === 'open' ? !PN_OPEN.includes(st) : f.st !== 'all' && st !== f.st) return false;
+    if (f.src && x.source !== f.src) return false;
+    if (f.own === '-' ? !!x.owner_name : f.own === 'me' ? x.owner_name !== pnMe() : f.own && x.owner_name !== f.own) return false;
+    if (q && !(norm(x.full_name).includes(q) || norm(x.email || '').includes(q) || norm(x.message).includes(q) || (qd.length >= 3 && String(x.phone || '').includes(qd)))) return false;
+    return true;
+  });
+}
+function pnRenderList() {
+  const cnt = s => P.list.filter(x => (x.status || 'חדשה') === s).length;
+  const open = P.list.filter(x => PN_OPEN.includes(x.status || 'חדשה')).length;
+  const tabs = [['open', 'פתוחות', open]].concat(PN_ST.map(([s]) => [s, s === 'חדשה' ? 'חדשות' : s === 'טופלה' ? 'טופלו' : s === 'לא רלוונטית' ? 'לא רלוונטיות' : s === 'ממתינה לחזרה' ? 'ממתינות לחזרה' : s, cnt(s)])).concat([['all', 'הכל', P.list.length]]);
+  const srcs = Array.from(new Set(PN_SRC.concat(P.list.map(x => x.source)).filter(Boolean)));
+  const owners = Array.from(new Set(P.list.map(x => x.owner_name).filter(Boolean))).sort((a, b) => a.localeCompare(b, 'he'));
+  const rows = pnFiltered();
+  $('#v-pniyot').innerHTML =
+    '<div class="pnhd"><h2>פניות הציבור</h2><p>כל הפניות שמגיעות למטה — מדפי נחיתה, מהאתר, מפייסבוק, ממיילים ומהטלפון — במקום אחד</p>' +
+      '<div class="pnacts"><button class="btn" data-act="pnNew">' + PNI.plus + 'פנייה חדשה</button>' +
+      (can('import') ? '<button class="btn sec" data-act="pnImport">' + PNI.up + 'ייבוא מקובץ</button>' : '') +
+      '<button class="btn sec" data-act="pnSources">' + PNI.plug + 'איך פניות נכנסות לכאן</button></div></div>' +
+    '<div class="pntabs" role="tablist">' + tabs.map(([k, lb, n]) => '<button class="pntab' + (P.f.st === k ? ' on' : '') + (k === 'חדשה' && n ? ' hot' : '') + '" data-act="pnTab" data-v="' + esc(k) + '" role="tab" aria-selected="' + (P.f.st === k) + '">' + lb + '<span class="num">' + nf(n) + '</span></button>').join('') + '</div>' +
+    '<div class="card pncard"><div class="pnbar">' +
+      '<label class="pnq">' + PNI.srch + '<input type="search" id="pnQ" placeholder="חיפוש לפי שם, טלפון, מייל או תוכן" value="' + esc(P.f.q) + '" aria-label="חיפוש פניות"></label>' +
+      '<select id="pnSrc" aria-label="מקור הפנייה"><option value="">כל המקורות</option>' + srcs.map(s => '<option' + (P.f.src === s ? ' selected' : '') + '>' + esc(s) + '</option>').join('') + '</select>' +
+      '<select id="pnOwn" aria-label="אחראי טיפול"><option value="">כל האחראים</option><option value="me"' + (P.f.own === 'me' ? ' selected' : '') + '>הפניות שלי</option><option value="-"' + (P.f.own === '-' ? ' selected' : '') + '>ללא אחראי</option>' +
+        owners.map(s => '<option' + (P.f.own === s ? ' selected' : '') + '>' + esc(s) + '</option>').join('') + '</select>' +
+      '<span class="pnsum">' + nf(rows.length) + ' פניות</span>' +
+      (CLOUD ? '<button class="btn sec sm" data-act="pnReload" title="בדיקה אם הגיעו פניות חדשות">רענון</button>' : '') + '</div>' +
+    (rows.length ? '<div class="tw"><table class="tbl pntbl"><thead><tr><th>תאריך ושעה</th><th>מקור הפנייה</th><th>שם מלא</th><th>טלפון נייד</th><th>סטטוס פנייה</th><th>אחראי טיפול</th><th></th></tr></thead><tbody>' +
+      rows.slice(0, P.show).map(x => '<tr class="pnrow' + ((x.status || 'חדשה') === 'חדשה' ? ' isnew' : '') + '" data-act="pnOpen" data-v="' + x.id + '" tabindex="0">' +
+        '<td class="num pndt">' + pnDT(x.created_at) + '</td>' +
+        '<td><span class="pnsrc">' + esc(x.source || 'אחר') + '</span>' + (x.source_detail ? '<small class="pnsd">' + esc(x.source_detail) + '</small>' : '') + '</td>' +
+        '<td class="pnnm">' + esc(x.full_name || '—') + '</td>' +
+        '<td class="num"><span class="sg">' + esc(x.phone ? fmtPhone(pnPhone(x)) : (x.email || '—')) + '</span></td>' +
+        '<td>' + pnStPill(x.status) + '</td>' +
+        '<td>' + (x.owner_name ? esc(x.owner_name) : '<span class="mut">לא שובץ</span>') + '</td>' +
+        '<td class="pngo"><button class="pnbtn" data-act="pnOpen" data-v="' + x.id + '">פרטים' + PNI.arr + '</button></td></tr>').join('') +
+      '</tbody></table></div>' + (rows.length > P.show ? '<div class="pnmore"><button class="btn sec" data-act="pnMore">הצגת עוד ' + nf(Math.min(150, rows.length - P.show)) + '</button></div>' : '') :
+      '<div class="empty"><b>' + (P.list.length ? 'אין פניות שמתאימות לסינון' : 'עוד לא הגיעו פניות') + '</b>' + (P.list.length ? 'אפשר לשנות את הסינון למעלה.' : 'פניות חדשות יופיעו כאן לבד. אפשר גם להוסיף פנייה ידנית או לייבא מקובץ.') + '</div>') +
+    '</div>';
+  const qi = $('#pnQ');
+  qi.addEventListener('input', () => { P.f.q = qi.value; debounce('pnq', () => { const pos = qi.selectionStart; pnRenderList(); const n = $('#pnQ'); n.focus(); n.setSelectionRange(pos, pos); }, 220); });
+  $('#pnSrc').addEventListener('change', e => { P.f.src = e.target.value; P.show = 150; pnRenderList(); });
+  $('#pnOwn').addEventListener('change', e => { P.f.own = e.target.value; P.show = 150; pnRenderList(); });
+}
+
+/* --------------------------------------------------------- פנייה אחת */
+function pnFormFrom(x, p) {
+  const nm = String(x.full_name || '').trim().split(/\s+/);
+  return { first: p ? p.first : nm[0] || '', last: p ? p.last : nm.slice(1).join(' '), phone: pnPhone(x) || (p ? p.phone : ''), tz: (x.data && x.data.tz) || (p ? p.tz : ''),
+    city: (p && p.city) || x.city || '', status: p ? stOf(p) : 'לא ידוע' };
+}
+function pnRenderView() {
+  const x = pnSel(), p = pnPerson(x), same = pnSame(x), idx = same.findIndex(o => o.id === x.id) + 1;
+  if (!P.form || P.form._id !== x.id) { P.form = pnFormFrom(x, p); P.form._id = x.id; }
+  const F = P.form, extra = Object.entries(x.data || {}).filter(([k, v]) => v !== '' && v != null && k !== 'tz');
+  const was = (k, v) => p && String(v || '') && String(p[k] || '') !== String(v || '') ? '<div class="pnwas">במאגר: ' + esc(k === 'phone' ? fmtPhone(p[k]) : p[k] || '—') + '</div>' : '';
+  const fin = (k, lb, attrs) => '<div><label class="fl" for="pf_' + k + '">' + lb + '</label><input id="pf_' + k + '" type="text" data-pf="' + k + '" value="' + esc(k === 'phone' && F[k] ? fmtPhone(F[k]) : F[k] || '') + '"' + (attrs || '') + '>' + was(k, k === 'phone' ? nph(F[k]) : F[k]) + '</div>';
+  const others = same.filter(o => o.id !== x.id);
+  $('#v-pniyot').innerHTML =
+    '<button class="evback" data-act="pnBack">' + PNI.back + 'כל הפניות</button>' +
+    '<div class="pnhero"><div class="pnhi">' +
+      '<div class="pnbadges"><span class="pnbg ' + (p ? 'in' : 'out') + '">' + (p ? 'קיים/ת במאגר' : 'לא קיים/ת במאגר') + '</span>' +
+        '<span class="pnbg cnt">' + (same.length <= 1 ? 'פנייה ראשונה' : 'פנייה מס׳ ' + idx + ' מתוך ' + same.length) + '</span>' + pnStPill(x.status) + '</div>' +
+      '<h2>' + esc(x.full_name || 'פונה ללא שם') + '</h2>' +
+      '<div class="pnmeta">' + (x.phone ? '<a href="tel:' + esc(pnPhone(x)) + '">' + PNI.phone + '<span class="sg">' + esc(fmtPhone(pnPhone(x))) + '</span></a>' : '') +
+        (x.email ? '<a href="mailto:' + esc(x.email) + '">' + PNI.mail + esc(x.email) + '</a>' : '') +
+        '<span>' + esc(x.source || 'אחר') + (x.source_detail ? ' · ' + esc(x.source_detail) : '') + '</span><span class="num">' + pnDT(x.created_at) + '</span></div></div></div>' +
+    '<div class="pncols"><div class="pnmain">' +
+      '<div class="card"><div class="ch">תוכן הפנייה</div><div class="cb">' + (x.message ? '<div class="pnmsg">' + esc(x.message) + '</div>' : '<div class="mut">אין תוכן לפנייה.</div>') +
+        (x.city || extra.length ? '<dl class="pndl">' + (x.city ? '<dt>עיר</dt><dd>' + esc(x.city) + '</dd>' : '') + extra.map(([k, v]) => '<dt>' + esc(k) + '</dt><dd>' + esc(typeof v === 'object' ? JSON.stringify(v) : v) + '</dd>').join('') + '</dl>' : '') + '</div></div>' +
+      '<div class="card"><div class="ch">הטיפול בפנייה</div><div class="cb pntreat">' +
+        '<div><span class="fl">סטטוס פנייה</span><div class="pnseg">' + PN_ST.map(([s, c]) => '<button class="' + c + ((x.status || 'חדשה') === s ? ' on' : '') + '" data-act="pnStatus" data-v="' + esc(s) + '">' + s + '</button>').join('') + '</div></div>' +
+        '<div class="pnown"><label class="fl" for="pnOwnSel">אחראי טיפול</label><select id="pnOwnSel"><option value="">טוען…</option></select>' +
+          '<button class="btn sec sm" data-act="pnTakeMe">אני מטפל/ת</button></div>' +
+        '<div><label class="fl" for="pnNote">הערת טיפול</label><div class="pnnote"><textarea id="pnNote" rows="2" placeholder="למשל: דיברתי איתו, ביקש לחזור אליו ביום ראשון"></textarea><button class="btn" data-act="pnAddNote">הוספה</button></div></div>' +
+        ((x.log || []).length ? '<ul class="pnlog">' + x.log.slice().reverse().map(l => '<li><b>' + esc(l.by || '') + '</b><span class="mut sm">' + pnDT(l.t) + '</span><p>' + esc(l.text) + '</p></li>').join('') + '</ul>' : '<div class="mut sm">עוד אין הערות טיפול.</div>') +
+      '</div></div></div>' +
+    '<div class="pnside"><div class="card pnperson"><div class="ch">' + PNI.user + 'פרטי הפונה<span class="sub">' + (p ? 'מעדכנים — ולוחצים לעדכון במאגר' : 'משלימים — ומוסיפים למאגר') + '</span></div><div class="cb pnpf">' +
+        '<div class="pfg2">' + fin('first', 'שם פרטי') + fin('last', 'שם משפחה') + '</div>' +
+        fin('phone', 'טלפון נייד', ' inputmode="tel" style="direction:ltr;text-align:right"') +
+        '<div class="pfg2">' + fin('tz', 'ת.ז', ' inputmode="numeric"') +
+          '<div><label class="fl" for="pf_city">עיר</label><input id="pf_city" type="text" data-pf="city" list="pnCityDl" value="' + esc(F.city) + '"><datalist id="pnCityDl">' + KCITIES.map(c => '<option value="' + esc(c) + '">').join('') + '</datalist>' + was('city', F.city) + '</div></div>' +
+        '<div><span class="fl">סטטוס תמיכה</span><select data-pf="status">' + STATUSES.map(s => '<option' + (F.status === s ? ' selected' : '') + '>' + s + '</option>').join('') + '</select>' + (p && F.status !== stOf(p) ? '<div class="pnwas">במאגר: ' + esc(stOf(p)) + '</div>' : '') + '</div>' +
+        '<div class="pnpbtn">' + (p ? '<button class="btn" data-act="pnToDb">עדכון הפרטים במאגר</button><button class="btn sec" data-act="openCard" data-v="' + p.uid + '">פתיחת הכרטיס</button>'
+          : '<button class="btn" data-act="pnToDb">הוספה למאגר</button>') + '</div>' +
+        (x.person_uid && p ? '<div class="sm mut">הפנייה מקושרת לכרטיס במאגר.</div>' : '') +
+      '</div></div>' +
+      (others.length ? '<div class="card"><div class="ch">פניות נוספות של הפונה<span class="sub">' + nf(others.length) + '</span></div><div class="cb tight"><ul class="pnoth">' +
+        others.slice().reverse().map(o => '<li><button data-act="pnOpen" data-v="' + o.id + '"><span class="num">' + pnDT(o.created_at) + '</span><span>' + esc(o.source) + '</span>' + pnStPill(o.status) + '<small>' + esc(String(o.message || '').slice(0, 70)) + '</small></button></li>').join('') + '</ul></div></div>' : '') +
+    '</div></div>';
+  pnFillOwners(x);
+  $$('#v-pniyot [data-pf]').forEach(el => el.addEventListener(el.tagName === 'SELECT' ? 'change' : 'input', () => { P.form[el.dataset.pf] = el.value.trim(); }));
+}
+async function pnFillOwners(x) {
+  const st = await pnStaff(), sel = $('#pnOwnSel'); if (!sel || pnSel() !== x) return;
+  const has = st.some(s => s.name === x.owner_name);
+  const grp = (t, list) => list.length ? '<optgroup label="' + t + '">' + list.map(s => '<option value="' + esc(s.id) + '"' + (s.name === x.owner_name ? ' selected' : '') + '>' + esc(s.name) + (s.hq === 'city' && s.city ? ' · ' + esc(s.city) : '') + '</option>').join('') + '</optgroup>' : '';
+  sel.innerHTML = '<option value="">ללא אחראי</option>' + (x.owner_name && !has ? '<option value="?" selected>' + esc(x.owner_name) + '</option>' : '') +
+    grp('מטה מרכזי', st.filter(s => s.hq !== 'city')) + grp('מטות עירוניים', st.filter(s => s.hq === 'city'));
+  sel.onchange = async () => {
+    const s = st.find(o => String(o.id) === sel.value), name = s ? s.name : '';
+    const patch = { owner_id: s && CLOUD ? s.id : null, owner_name: name };
+    if (s && s.hq === 'city' && s.city) patch.scope = ckey(s.city);           // כך המטה העירוני יראה את הפנייה
+    if ((x.status || 'חדשה') === 'חדשה' && name) patch.status = 'בטיפול';
+    if (await pnPatch(x, patch, name ? 'שובץ/ה לטיפול: ' + name + (patch.scope && patch.scope !== 'central' ? ' (הפנייה הועברה למטה ' + s.city + ')' : '') : 'הוסר האחראי')) { toast(name ? 'הפנייה שובצה ל' + name : 'הוסר האחראי'); pnRenderView(); }
+  };
+}
+/* מוסיף / מעדכן את הפונה במאגר */
+async function pnToDb() {
+  const x = pnSel(); if (!x) return;
+  const F = P.form, ph = F.phone ? nph(F.phone) : '', tz = F.tz ? nid(F.tz) : '';
+  if (!F.first && !F.last) { toast('חסר שם'); $('#pf_first') && $('#pf_first').focus(); return; }
+  if (ph && !isMobile(ph)) { toast('מספר הנייד לא תקין'); $('#pf_phone') && $('#pf_phone').focus(); return; }
+  if (tz && !validId(tz)) { toast('תעודת הזהות לא תקינה'); $('#pf_tz') && $('#pf_tz').focus(); return; }
+  if (!ph && !tz) { toast('צריך טלפון או ת.ז כדי להוסיף למאגר'); return; }
+  let p = pnPerson(x) || (tz && S.byTz.get(tz)) || (ph && S.byPhone.get(ph)) || null;
+  const isNew = !p, changed = [];
+  if (isNew) {
+    p = newPersonObj();
+    if (fieldById('f_src')) p.dyn.f_src = PN_TAG + ' — ' + (x.source || 'אחר');
+    S.people.push(p);
+  }
+  const set = (k, v, lb) => { if (v && String(p[k] || '') !== String(v)) { if (!isNew) changed.push(lb + ': ' + (p[k] || '—') + ' ← ' + v); p[k] = v; } };
+  set('first', F.first, 'שם פרטי'); set('last', F.last, 'שם משפחה'); set('tz', tz, 'ת.ז'); set('city', F.city, 'עיר');
+  if (ph && p.phone !== ph && !(p.phones || []).includes(ph)) { if (!p.phone) p.phone = ph; else { p.phones = p.phones || []; p.phones.push(ph); } if (!isNew) changed.push('טלפון נוסף: ' + fmtPhone(ph)); }
+  if (F.status && F.status !== stOf(p)) { if (!isNew) changed.push('סטטוס: ' + stOf(p) + ' ← ' + F.status); p.status = F.status; }
+  if (!p.tags.includes(PN_TAG)) p.tags.push(PN_TAG);
+  if (!isNew && !changed.length && x.person_uid === p.uid) { toast('אין שינויים לעדכן'); return; }
+  p.updated = Date.now();
+  plog(p, isNew ? 'נוסף/ה למאגר מתוך פניית ציבור (' + (x.source || 'אחר') + ')' : 'עודכן/ה מתוך פניית ציבור' + (changed.length ? ': ' + changed.join(' · ') : ''));
+  rebuild();
+  if (!(await putPeople([p]))) return;
+  await pnPatch(x, { person_uid: p.uid }, isNew ? 'הפונה נוסף/ה למאגר' : 'פרטי הפונה עודכנו במאגר' + (changed.length ? ' (' + changed.join(' · ') + ')' : ''));
+  activity((isNew ? 'נוסף/ה למאגר מפניית ציבור: ' : 'עודכן/ה מפניית ציבור: ') + fullName(p));
+  toast(isNew ? fullName(p) + ' נוסף/ה למאגר' : 'הפרטים עודכנו במאגר');
+  P.form = null; renderTabs(); pnRenderView();
+}
+
+/* ---------------------------------------------------- פנייה חדשה / ייבוא */
+async function pnNew() {
+  const r = await modal('פנייה חדשה',
+    '<div class="pnfm"><div><label class="fl">מקור הפנייה</label><select data-mv="source">' + PN_SRC.map(s => '<option' + (s === 'טלפון' ? ' selected' : '') + '>' + s + '</option>').join('') + '</select></div>' +
+    '<div><label class="fl">שם מלא</label><input type="text" data-mv="full_name" maxlength="80"></div>' +
+    '<div><label class="fl">טלפון נייד</label><input type="tel" data-mv="phone" style="direction:ltr;text-align:right"></div>' +
+    '<div><label class="fl">מייל <span class="mut">(לא חובה)</span></label><input type="email" data-mv="email" style="direction:ltr;text-align:right"></div>' +
+    '<div><label class="fl">עיר <span class="mut">(לא חובה)</span></label><input type="text" data-mv="city"></div>' +
+    '<div class="full"><label class="fl">תוכן הפנייה</label><textarea data-mv="message" rows="4"></textarea></div></div>',
+    [{ lb: 'הוספת הפנייה', v: true }, { lb: 'ביטול', cls: 'sec' }]);
+  if (!r) return;
+  const v = r.vals, ph = v.phone ? nph(v.phone) : '';
+  if (!ph && !v.email) { toast('צריך טלפון או מייל'); return; }
+  if (ph && !isMobile(ph) && !/^0\d{8}$/.test(ph)) { toast('מספר הטלפון לא תקין'); return; }
+  const [x] = await pnInsert([{ source: v.source, full_name: String(v.full_name || '').trim(), phone: ph || null, email: String(v.email || '').trim().toLowerCase() || null,
+    city: String(v.city || '').trim(), message: String(v.message || '').trim(), log: [{ t: new Date().toISOString(), by: pnMe(), text: 'הפנייה נוספה ידנית' }] }]);
+  if (!x) return;
+  toast('הפנייה נוספה'); P.sel = x.id; P.mode = 'view'; P.form = null; RENDER.pniyot({ keepMode: true }); window.scrollTo({ top: 0 });
+}
+const PN_COLS = { full_name: ['שם מלא', 'שם', 'full name', 'full_name', 'name', 'שם הפונה'], first: ['שם פרטי', 'first name', 'first_name'], last: ['שם משפחה', 'last name', 'last_name'],
+  phone: ['טלפון', 'נייד', 'טלפון נייד', 'מספר טלפון', 'phone', 'phone number', 'phone_number', 'mobile'], email: ['מייל', 'אימייל', 'דוא"ל', 'דואל', 'email', 'e-mail'],
+  city: ['עיר', 'יישוב', 'ישוב', 'city'], message: ['הודעה', 'תוכן', 'תוכן הפנייה', 'פנייה', 'message', 'comments', 'הערות'], date: ['תאריך', 'תאריך ושעה', 'created_time', 'created', 'date', 'זמן'],
+  source_detail: ['קמפיין', 'מודעה', 'campaign_name', 'ad_name', 'form_name', 'טופס'] };
+function pnImport() {
+  const fi = document.createElement('input'); fi.type = 'file'; fi.accept = '.xlsx,.xls,.csv';
+  fi.onchange = async () => {
+    const f = fi.files[0]; if (!f) return;
+    let aoa;
+    try { const wb = XLSX.read(await f.arrayBuffer(), { type: 'array', cellDates: true }); aoa = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1, raw: false, defval: '' }); }
+    catch (e) { toast('לא הצלחתי לקרוא את הקובץ'); return; }
+    const head = (aoa[0] || []).map(h => norm(h)), map = {};
+    Object.entries(PN_COLS).forEach(([k, keys]) => { const i = head.findIndex(h => keys.some(s => h === norm(s))); if (i >= 0) map[k] = i; });
+    if (map.phone == null && map.email == null) { toast('לא מצאתי בקובץ עמודת טלפון או מייל'); return; }
+    const rows = aoa.slice(1).filter(r => r.some(c => String(c).trim())).map(r => {
+      const g = k => map[k] != null ? String(r[map[k]] || '').trim() : '';
+      const d = g('date') ? new Date(g('date')) : null, ph = g('phone') ? nph(g('phone')) : '';
+      return { full_name: g('full_name') || [g('first'), g('last')].filter(Boolean).join(' '), phone: ph || null, email: g('email').toLowerCase() || null, city: g('city'), message: g('message'),
+        source_detail: g('source_detail'), created_at: d && !isNaN(d) ? d.toISOString() : undefined };
+    }).filter(x => x.phone || x.email);
+    const r = await modal('ייבוא פניות מקובץ',
+      '<p style="margin-top:0">נמצאו <b>' + nf(rows.length) + '</b> פניות בקובץ „' + esc(f.name) + '”. זוהו העמודות: ' + Object.keys(map).map(k => '<span class="pill n">' + esc((PN_COLS[k] || [k])[0]) + '</span>').join(' ') + '</p>' +
+      '<label class="fl">מקור הפניות</label><select data-mv="source">' + PN_SRC.map(s => '<option' + (s === 'פייסבוק' ? ' selected' : '') + '>' + s + '</option>').join('') + '</select>',
+      [{ lb: 'ייבוא ' + nf(rows.length) + ' פניות', v: true }, { lb: 'ביטול', cls: 'sec' }]);
+    if (!r || !rows.length) return;
+    const t = new Date().toISOString();
+    const out = await pnInsert(rows.map(x => { const o = Object.assign({}, x, { source: r.vals.source, log: [{ t, by: pnMe(), text: 'יובא מהקובץ ' + f.name }] }); if (!o.created_at) delete o.created_at; return o; }));
+    activity('יובאו ' + out.length + ' פניות ציבור מהקובץ ' + f.name);
+    toast('יובאו ' + nf(out.length) + ' פניות'); P.f.st = 'open'; RENDER.pniyot({ keepMode: true });
+  };
+  fi.click();
+}
+function pnSources() {
+  const ep = CLOUD ? SB_URL + '/rest/v1/rpc/submit_inquiry' : '(זמין במערכת המחוברת)';
+  const code = 'fetch("' + ep + '", {\n  method: "POST",\n  headers: { "apikey": "' + (CLOUD ? SB_KEY : '…') + '", "Content-Type": "application/json" },\n  body: JSON.stringify({ p_source: "דף נחיתה", p_data: {\n    name: "שם מלא", phone: "0501234567", email: "", city: "", message: "תוכן הפנייה", detail: "שם הדף או הקמפיין"\n  } })\n});';
+  modal('איך פניות נכנסות לכאן',
+    '<div class="pnhow"><div><b>ידנית</b><p>פנייה בטלפון, בווטסאפ או מישהו שהגיע למטה — „פנייה חדשה”.</p></div>' +
+    '<div><b>מקובץ</b><p>לידים מפייסבוק (מרכז הלידים ← הורדה) או כל רשימה באקסל — „ייבוא מקובץ”. העמודות מזוהות לבד.</p></div>' +
+    '<div><b>אוטומטית מדפי נחיתה, מהאתר, מפייסבוק ומהמייל</b><p>כל טופס או שירות (כמו Make / Zapier) שולח את הפנייה לכתובת הקבועה הזאת, והיא מופיעה כאן תוך דקה. הכתובת יכולה רק להוסיף פנייה — אי אפשר לקרוא דרכה כלום.</p>' +
+      '<pre dir="ltr">' + esc(code) + '</pre></div></div>',
+    [{ lb: 'סגירה', cls: 'sec' }]);
+}
+
+/* פניות חדשות נבדקות ברקע */
+setInterval(() => { if (!document.hidden && P.loaded && (!CLOUD || ME)) pnLoad(true).then(ok => { if (ok && S.view === 'pniyot' && P.mode === 'list' && !$('#v-pniyot :focus')) pnRenderList(); }); }, 60000);
 
 /* ---- הפעולות (כפתורי data-act) של המסך הזה — קידומת pn ---- */
 Object.assign(ACT, {
+  pnTab: el => { P.f.st = el.dataset.v; P.show = 150; pnRenderList(); },
+  pnOpen: el => { P.sel = el.dataset.v; P.mode = 'view'; P.form = null; RENDER.pniyot({ keepMode: true }); window.scrollTo({ top: 0 }); },
+  pnBack: () => { P.mode = 'list'; RENDER.pniyot({ keepMode: true }); },
+  pnMore: () => { P.show += 150; pnRenderList(); },
+  pnReload: async el => { el.disabled = true; await pnLoad(true); RENDER.pniyot({ keepMode: true }); toast('הרשימה עודכנה'); },
+  pnNew: () => pnNew(),
+  pnImport: () => pnImport(),
+  pnSources: () => pnSources(),
+  pnStatus: async el => { const x = pnSel(), s = el.dataset.v; if (!x || (x.status || 'חדשה') === s) return; if (await pnPatch(x, { status: s }, 'סטטוס: ' + (x.status || 'חדשה') + ' ← ' + s)) pnRenderView(); },
+  pnTakeMe: async () => {
+    const x = pnSel(); if (!x) return;
+    const patch = { owner_id: CLOUD && ME ? ME.id : null, owner_name: pnMe() };
+    if ((x.status || 'חדשה') === 'חדשה') patch.status = 'בטיפול';
+    if (await pnPatch(x, patch, 'שובץ/ה לטיפול: ' + pnMe())) { toast('הפנייה אצלך'); pnRenderView(); }
+  },
+  pnAddNote: async () => { const x = pnSel(), t = $('#pnNote'); if (!x || !t.value.trim()) { t && t.focus(); return; } if (await pnPatch(x, {}, t.value.trim())) pnRenderView(); },
+  pnToDb: () => pnToDb()
 });
 
 /* ---------- js/core/40-header.js ---------- */
