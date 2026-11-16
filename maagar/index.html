@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
-<meta name="build" content="20261116-093107">
+<meta name="build" content="20261116-093800">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>דאטה ביתנו — מאגר התומכים</title>
 <style>
@@ -667,11 +667,53 @@ button.crow:hover{background:#F5F8FC}
 .tpl:hover{border-color:var(--navy-l)}
 .tpl b{display:block;font-size:14px;color:var(--ink)}
 .tpl span{display:block;font-size:12.5px;color:var(--ink2);line-height:1.5;margin-top:2px}
-.phone{width:270px;max-width:100%;margin:0 auto;border-radius:30px;border:9px solid #14202E;background:#EEF1F6;padding:18px 14px 26px;display:flex;flex-direction:column;gap:8px}
-.phone .snd{text-align:center;font-size:12.5px;color:var(--ink2);font-weight:700}
-.bub{align-self:flex-start;background:#fff;border-radius:16px 16px 16px 4px;padding:10px 12px;font-size:13.5px;line-height:1.55;
-  box-shadow:0 1px 2px rgba(0,0,0,.06);white-space:pre-wrap;word-break:break-word}
-.bub.empty{color:var(--ink3)}
+/* ---------- יתרת סמסים + בדיקה לטלפון ---------- */
+#smsMsg .ch{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.smbal{display:inline-flex;align-items:center;gap:10px;background:var(--bbg);border:1px solid var(--bbd);border-radius:999px;padding:5px 8px 5px 14px;
+  font-size:15px;font-weight:700;color:var(--navy)}
+.smbal b{font-size:20px;font-weight:900;font-variant-numeric:tabular-nums;color:var(--navy)}
+.smbal b.over{color:var(--rtx)}
+.smbal .link{font-size:12.5px}
+.smbal-warn{font-size:12.5px;font-weight:800;color:var(--rtx);background:var(--rbg);border:1px solid var(--rbd);border-radius:999px;padding:2px 10px}
+.smtest{margin-top:16px;padding-top:14px;border-top:1px dashed var(--line2)}
+
+/* ---------- תצוגת טלפון — כמו אפליקציית ההודעות באנדרואיד ---------- */
+.aph{width:300px;max-width:100%;margin:0 auto;padding:10px;border-radius:46px;background:var(--ink);
+  box-shadow:0 0 0 2px var(--navy-d),0 24px 50px -24px rgba(7,31,62,.7)}
+.aph-scr{height:610px;border-radius:36px;overflow:hidden;background:var(--card);display:flex;flex-direction:column;color:var(--ink);
+  font-family:'Heebo',system-ui,sans-serif}
+.aph svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.aph svg .f,.aph svg.f{fill:currentColor;stroke:none}
+.aph-sb{position:relative;display:flex;align-items:center;justify-content:space-between;padding:12px 22px 4px;font-size:13px;font-weight:600}
+.aph-cam{position:absolute;inset-inline-start:50%;top:10px;width:11px;height:11px;border-radius:50%;background:var(--ink);transform:translateX(50%)}
+.aph-ic{display:inline-flex;align-items:center;gap:4px;direction:ltr}
+.aph-ic svg{width:14px;height:14px}
+.aph-ic span{font-size:12px}
+.aph-ab{display:flex;align-items:center;gap:12px;padding:10px 14px 12px;border-bottom:1px solid var(--line3)}
+.aph-b svg{width:22px;height:22px}
+.aph-av{width:38px;height:38px;border-radius:50%;background:var(--line2);color:var(--ink3);display:grid;place-items:center;flex:none}
+.aph-av svg{width:22px;height:22px}
+.aph-nm{flex:1;min-width:0;font-size:18px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;direction:ltr;text-align:end}
+.aph-d svg{width:20px;height:20px}
+.aph-msgs{flex:1;overflow-y:auto;padding:14px 12px 10px;display:flex;flex-direction:column;gap:6px;scrollbar-width:thin}
+.aph-day{align-self:center;font-size:12px;font-weight:600;color:var(--ink3);margin:4px 0 6px}
+.aph-bub{align-self:flex-start;max-width:84%;background:var(--bbg);border-radius:22px;padding:11px 15px;font-size:15px;line-height:1.5;
+  white-space:pre-wrap;word-break:break-word;color:var(--ink);unicode-bidi:plaintext;text-align:start}
+.aph-bub u{text-underline-offset:2px}
+.aph-bub.empty{color:var(--ink3)}
+.aph-time{align-self:flex-start;font-size:11.5px;color:var(--ink3);padding-inline-start:10px}
+.aph-foot{margin:6px 10px 8px;padding:13px 16px;border-radius:22px;background:var(--line3);font-size:13px;line-height:1.5;color:var(--ink)}
+.aph-foot u{color:var(--navy-l)}
+.aph-comp{display:flex;align-items:center;gap:8px;margin:6px 10px 8px}
+.aph-comp[hidden],.aph-foot[hidden]{display:none}
+.aph-plus svg{width:24px;height:24px;color:var(--ink2)}
+.aph-in{flex:1;background:var(--line3);border-radius:999px;padding:10px 16px;font-size:14px;color:var(--ink3)}
+.aph-nav{direction:ltr;display:flex;justify-content:space-around;align-items:center;padding:10px 40px 14px;background:var(--line3)}
+.aph-nav span{display:block;color:var(--ink2)}
+.aph-nav .n1{width:14px;height:14px;border-inline:2px solid var(--ink2);position:relative}
+.aph-nav .n1::after{content:'';position:absolute;inset:0 5px;border-inline-start:2px solid var(--ink2)}
+.aph-nav .n2{width:16px;height:16px;border:2px solid var(--ink2);border-radius:5px}
+.aph-nav .n3{width:10px;height:10px;border-right:2px solid var(--ink2);border-bottom:2px solid var(--ink2);transform:rotate(-45deg)}
 
 /* ---------- css/features/events.css ---------- */
 /* ============ דאטה ביתנו — אירועים ודפי נחיתה ============ */
@@ -4402,7 +4444,7 @@ const strip = p => { const o = {}; for (const k in p) if (k[0] !== '_') o[k] = p
 /* שני מצבים: CLOUD — מאגר משותף ב-Supabase עם התחברות והרשאות; אחרת — מקומי בדפדפן (IndexedDB) */
 const CLOUD = typeof SB_URL === 'string' && /^https:\/\//.test(SB_URL) && typeof SB_KEY === 'string' && SB_KEY.length > 20;
 let sb = null, ME = null, SCOPE = 'local';
-const GLOBAL_KEYS = ['fields', 'dbs', 'templates'];
+const GLOBAL_KEYS = ['fields', 'dbs', 'templates', 'smsbal'];
 const kvScope = k => GLOBAL_KEYS.includes(k) ? 'g' : SCOPE;
 const isCityUser = () => CLOUD && ME && ME.hq === 'city';
 function cloudErr(error, what) {
@@ -4429,7 +4471,7 @@ async function delPeople(uids) {
   }
   return true;
 }
-const KV_KEYS = ['fields', 'dbs', 'groups', 'templates', 'events', 'sms', 'activity', 'uploads', 'settings'];
+const KV_KEYS = ['fields', 'dbs', 'groups', 'templates', 'events', 'sms', 'activity', 'uploads', 'smsbal', 'settings'];
 async function saveKV(k) {
   if (k === 'settings') { try { localStorage.setItem('maagar-settings', JSON.stringify(S.settings || {})); } catch (e) {} if (!CLOUD) return txp('kv', 'readwrite', s => { s.put({ k, v: S[k] }); }); return; }
   if (!CLOUD) return txp('kv', 'readwrite', s => { s.put({ k, v: S[k] }); });
@@ -6329,7 +6371,11 @@ Object.assign(ACT, {
    נמענים, תבניות, תזמון ומשלוחים.
    ============================================================ */
 /* ======================================================== סמסים */
-const M = { src: 'group', group: '', db: 'main', persons: [], manual: '', event: '', text: '', name: '', sender: 'HaMate', when: 'now', date: '', time: '', tplSel: '' };
+const M = { src: 'group', group: '', db: 'main', persons: [], manual: '', event: '', text: '', name: '', sender: 'HaMate', when: 'now', date: '', time: '', tplSel: '', testPhone: '' };
+/* יתרת הסמסים בחשבון — נשמרת משותף לכל המטה (kv: smsbal) ומתעדכנת ידנית או בכל משלוח */
+const smsBal = () => { const a = Array.isArray(S.smsbal) ? S.smsbal : []; return a[0] && typeof a[0].n === 'number' ? a[0] : null; };
+async function smsBalUse(n) { const b = smsBal(); if (!b || !n) return; S.smsbal = [{ n: Math.max(0, b.n - n), at: Date.now(), by: b.by || '' }]; await saveKV('smsbal'); }
+const SMS_SRCS = [['group', 'קבוצה'], ['manual', 'מספרים'], ['person', 'אדם'], ['event', 'אירועים']];
 const TAGS = [['שם_פרטי', 'שם פרטי'], ['שם_משפחה', 'שם משפחה'], ['שם_מלא', 'שם מלא'], ['עיר', 'עיר'], ['קלפי', 'מספר קלפי'], ['מוקד_הצבעה', 'מוקד הצבעה'], ['כתובת_מוקד', 'כתובת המוקד'], ['איש_קשר_אחראי', 'איש קשר אחראי']];
 function mergeText(t, p) {
   const s = p ? p._site : null;
@@ -6360,6 +6406,8 @@ function smsRecipients() {
   return { list, noPhone, dup, bad, total: people.length };
 }
 RENDER.sms = function (o) {
+  if (o.src === 'sel' || o.src === 'last') { M.persons = (o.src === 'sel' ? Array.from(SR.sel) : SR.last.map(p => p.uid)); o = Object.assign({}, o, { src: 'person' }); }
+  if (!SMS_SRCS.some(x => x[0] === M.src)) M.src = 'group';
   if (o.src) { M.src = o.src; if (o.persons) M.persons = o.persons; if (o.group) M.group = o.group; if (o.event) M.event = o.event; if (o.text) M.text = o.text; if (o.name) M.name = o.name; }
   if (!M.group && S.groups[0]) M.group = S.groups[0].id;
   if (!M.event && S.events[0]) M.event = S.events[0].id;
@@ -6369,11 +6417,14 @@ RENDER.sms = function (o) {
     '<div class="note y sm">השליחה עוד לא מחוברת לספק — בינתיים כל משלוח יוצא כקובץ מוכן ל-b-elect.</div>' +
     '<div class="cols"><div class="c2">' +
       '<div class="card" id="smsRcp"><div class="ch">למי שולחים?</div><div class="cb" id="smsRcpBody"></div></div>' +
-      '<div class="card" id="smsMsg"><div class="ch">תוכן ההודעה<span class="sub" id="smsCount"></span></div><div class="cb">' +
+      '<div class="card" id="smsMsg"><div class="ch"><span>תוכן ההודעה <span class="sub" id="smsCount"></span></span><span class="smbal" id="smsBal"></span></div><div class="cb">' +
         '<div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr));margin-bottom:12px"><div><label class="fl" for="sm_name">שם המשלוח (לשימוש פנימי)</label><input id="sm_name" type="text" data-sm="name" value="' + esc(M.name) + '" placeholder="למשל: תזכורת חוג בית"></div>' +
         '<div><label class="fl" for="sm_sender">שם השולח</label><input id="sm_sender" type="text" data-sm="sender" maxlength="11" value="' + esc(M.sender) + '" style="direction:ltr;text-align:right"></div></div>' +
         '<label class="fl" for="smsText">ההודעה</label><textarea id="smsText" data-sm="text" rows="5" placeholder="כותבים כאן. אפשר להוסיף שדות אישיים מהכפתורים למטה.">' + esc(M.text) + '</textarea>' +
         '<div class="row" style="margin-top:10px;gap:6px"><span class="sm mut" style="font-weight:700">הוספת שדה אישי:</span>' + TAGS.map(([k, l]) => '<button class="chip" data-act="smsTag" data-v="' + k + '">' + l + '</button>').join('') + '</div>' +
+        '<div class="smtest"><label class="fl" for="sm_test">בדיקה לפני השליחה — ההודעה תישלח רק למספר הזה</label><div class="row" style="flex-wrap:nowrap">' +
+          '<input id="sm_test" type="tel" data-sm="testPhone" value="' + esc(M.testPhone || (CLOUD && ME && ME.phone ? fmtPhone('0' + String(ME.phone).replace(/^972/, '')) : '')) + '" placeholder="050-0000000" style="direction:ltr;text-align:right;max-width:220px">' +
+          '<button class="btn sec" data-act="smsTest">שליחת בדיקה לטלפון</button></div></div>' +
       '</div></div>' +
       '<div class="card"><div class="ch">מתי לשלוח?</div><div class="cb"><div class="row">' +
         '<label class="opt"><input type="radio" name="smwhen" data-sm="when" value="now"' + (M.when === 'now' ? ' checked' : '') + '>עכשיו</label><label class="opt"><input type="radio" name="smwhen" data-sm="when" value="later"' + (M.when === 'later' ? ' checked' : '') + '>בתזמון</label>' +
@@ -6383,21 +6434,22 @@ RENDER.sms = function (o) {
       '<div class="card" id="smsTpl"><div class="ch">תבניות<span class="sub">לחיצה טוענת את ההודעה</span></div><div class="cb">' +
         (S.templates.map(t => '<div style="position:relative"><button class="tpl" data-act="smsLoadTpl" data-v="' + t.id + '"><b>' + esc(t.name) + '</b><span>' + esc(t.text) + '</span></button><button class="mini r" style="position:absolute;top:8px;inset-inline-end:8px" data-act="smsDelTpl" data-v="' + t.id + '" aria-label="מחיקת התבנית">×</button></div>').join('') || '<div class="mut sm">אין עדיין תבניות</div>') +
       '</div></div>' +
-      '<div class="card"><div class="ch">תצוגה בטלפון<span class="sub" id="smsPrevWho"></span></div><div class="cb"><div class="phone"><span class="snd" id="smsPrevSnd"></span><div class="bub" id="smsPrev"></div></div></div></div>' +
+      '<div class="card"><div class="ch">תצוגה בטלפון<span class="sub" id="smsPrevWho"></span></div><div class="cb">' + smsPhoneHtml() + '</div></div>' +
     '</div></div>' +
     '<div class="card"><div class="ch">משלוחים<span class="sub">מתוזמנים ואחרונים</span></div><div class="cb tight" id="smsJobs"></div></div>';
   renderSmsRcp(); renderSmsLive(); renderSmsJobs();
 };
 function renderSmsRcp() {
   const R = smsRecipients();
-  const tabs = [['group', 'קבוצה'], ['db', 'מאגר'], ['last', 'תוצאות חיפוש'], ['sel', 'נבחרים (' + SR.sel.size + ')'], ['event', 'אירוע'], ['person', 'אדם'], ['manual', 'מספרים']];
+  const tabs = SMS_SRCS;
   let body = '';
   if (M.src === 'group') body = S.groups.length ? '<label class="fl" for="sm_g">קבוצה</label><select id="sm_g" data-sm="group">' + S.groups.map(g => '<option value="' + g.id + '"' + (M.group === g.id ? ' selected' : '') + '>' + esc(g.name) + '</option>').join('') + '</select>' : '<div class="mut">אין עדיין קבוצות שמורות. במסך החיפוש: מסננים ולוחצים „שמירה כקבוצה”.</div>';
   else if (M.src === 'db') body = '<label class="fl" for="sm_db">מאגר</label><select id="sm_db" data-sm="db">' + S.dbs.map(d => '<option value="' + d.id + '"' + (M.db === d.id ? ' selected' : '') + '>' + esc(d.name) + '</option>').join('') + '</select>';
   else if (M.src === 'last') body = '<div class="sm">' + (SR.last.length ? 'כל ' + nf(SR.last.length) + ' התוצאות של החיפוש האחרון. <button class="link" data-act="go" data-v="search">חזרה לחיפוש</button>' : 'עוד לא בוצע חיפוש. <button class="link" data-act="go" data-v="search">למסך החיפוש</button>') + '</div>';
   else if (M.src === 'sel') body = '<div class="sm">' + (SR.sel.size ? nf(SR.sel.size) + ' אנשים שסימנתם בחיפוש.' : 'לא סומנו אנשים. במסך החיפוש מסמנים V ליד השמות.') + '</div>';
   else if (M.src === 'event') body = S.events.length ? '<label class="fl" for="sm_ev">אירוע</label><select id="sm_ev" data-sm="event">' + S.events.map(e => '<option value="' + e.id + '"' + (M.event === e.id ? ' selected' : '') + '>' + esc(e.name) + ' (' + e.regs.length + ')</option>').join('') + '</select>' : '<div class="mut">אין אירועים</div>';
-  else if (M.src === 'person') body = '<label class="fl" for="sm_ps">חיפוש אדם</label><input id="sm_ps" type="search" placeholder="שם, ת.ז או טלפון" autocomplete="off"><div id="sm_psres"></div><div class="chips" style="margin-top:10px">' + M.persons.map(u => S.by.get(u)).filter(Boolean).map(p => '<span class="tag">' + esc(fullName(p)) + '<button data-act="smsDelPerson" data-v="' + p.uid + '" aria-label="הסרה">×</button></span>').join('') + '</div>';
+  else if (M.src === 'person') body = '<label class="fl" for="sm_ps">חיפוש אדם</label><input id="sm_ps" type="search" placeholder="שם, ת.ז או טלפון" autocomplete="off"><div id="sm_psres"></div>' + (() => { const ps = M.persons.map(u => S.by.get(u)).filter(Boolean); return ps.length ? '<div class="chips" style="margin-top:10px">' + ps.slice(0, 24).map(p => '<span class="tag">' + esc(fullName(p)) + '<button data-act="smsDelPerson" data-v="' + p.uid + '" aria-label="הסרה">×</button></span>').join('') +
+    (ps.length > 24 ? '<span class="mut sm" style="align-self:center">ועוד ' + nf(ps.length - 24) + '</span>' : '') + (ps.length > 1 ? '<button class="link sm" data-act="smsClrPersons">ניקוי כולם</button>' : '') + '</div>' : ''; })();
   else body = '<label class="fl" for="sm_man">מספרי טלפון — אחד בכל שורה או מופרדים בפסיק</label><textarea id="sm_man" data-sm="manual" rows="4" style="direction:ltr;text-align:right" placeholder="050-1234567">' + esc(M.manual) + '</textarea>';
   $('#smsRcpBody').innerHTML = '<div class="rtabs" role="tablist" style="margin-bottom:14px">' + tabs.map(([k, l]) => '<button class="' + (M.src === k ? 'on' : '') + '" data-act="smsSrc" data-v="' + k + '">' + l + '</button>').join('') + '</div>' + body +
     '<div class="row" style="margin-top:14px;padding:11px 14px;border-radius:11px;background:var(--bbg);border:1px solid var(--bbd)"><span><b class="num" style="font-size:17px;color:var(--navy)">' + nf(R.list.length) + '</b> נמענים' +
@@ -6419,12 +6471,44 @@ function renderSmsLive() {
   const sample = mergeText(M.text, first ? first.p : null);
   const sp = smsParts(sample);
   $('#smsCount').textContent = sp.len + ' תווים · ' + (sp.parts || 0) + ' ' + (sp.parts === 1 ? 'הודעה' : 'הודעות') + ' לנמען' + (R.list.length && sp.parts ? ' · כ-' + nf(sp.parts * R.list.length) + ' הודעות בסך הכול' : '');
-  $('#smsPrev').textContent = sample || 'כאן תופיע ההודעה';
+  const need = sp.parts * R.list.length, bal = smsBal();
+  const bEl = $('#smsBal');
+  if (bEl) bEl.innerHTML = (bal ? 'נשארו <b class="num' + (need > bal.n ? ' over' : '') + '">' + nf(bal.n) + '</b> סמסים' : 'יתרת סמסים לא הוגדרה') +
+    ((can('sms') || isAdmin()) ? '<button class="link sm" data-act="smsBalEdit">' + (bal ? 'עדכון' : 'הגדרה') + '</button>' : '') +
+    (bal && need > bal.n ? '<span class="smbal-warn">המשלוח צריך כ-' + nf(need) + '</span>' : '');
+  $('#smsPrev').innerHTML = sample ? smsLinkify(sample) : 'כאן תופיע ההודעה';
   $('#smsPrev').classList.toggle('empty', !sample);
-  $('#smsPrevSnd').textContent = M.sender || '';
+  const alpha = /[^\d\s+\-]/.test(M.sender || '');
+  $('#smsPrevSnd').textContent = M.sender ? (alpha ? M.sender : fmtPhone(nph(M.sender) || M.sender)) : 'השולח';
+  $('#smsPrevFoot').hidden = !alpha; $('#smsPrevComp').hidden = alpha;
+  const t = new Date(), hm = pad2(t.getHours()) + ':' + pad2(t.getMinutes());
+  $('#smsPrevClock').textContent = hm; $('#smsPrevTime').textContent = hm;
+  const sc = $('#smsPrevMsgs'); if (sc) sc.scrollTop = sc.scrollHeight;
   $('#smsPrevWho').textContent = first && first.p ? 'כפי שתגיע ל' + fullName(first.p) : '';
   updSendBtn(R);
 }
+/* ---- תצוגת טלפון אמיתית: כמו אפליקציית ההודעות באנדרואיד (Google Messages) ---- */
+const APH_I = {
+  back: '<svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
+  user: '<svg viewBox="0 0 24 24" class="f"><circle cx="12" cy="8.5" r="4"/><path d="M4 20c.8-4 4-6 8-6s7.2 2 8 6z"/></svg>',
+  dots: '<svg viewBox="0 0 24 24" class="f"><circle cx="12" cy="5" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="12" cy="19" r="1.8"/></svg>',
+  sig: '<svg viewBox="0 0 24 24" class="f"><path d="M3 20h3v-4H3zM8 20h3v-8H8zM13 20h3V8h-3zM18 20h3V4h-3z"/></svg>',
+  wifi: '<svg viewBox="0 0 24 24" class="f"><path d="M12 20 1.5 8.5a15 15 0 0 1 21 0z"/></svg>',
+  bat: '<svg viewBox="0 0 24 24"><rect x="3" y="7" width="16" height="10" rx="2"/><path d="M21 10.5v3"/><rect class="f" x="5" y="9" width="9" height="6" rx=".6"/></svg>',
+  add: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>'
+};
+function smsPhoneHtml() {
+  return '<div class="aph"><div class="aph-scr">' +
+    '<div class="aph-sb"><span id="smsPrevClock">00:00</span><span class="aph-cam"></span><span class="aph-ic">' + APH_I.sig + APH_I.wifi + '<span>86%</span>' + APH_I.bat + '</span></div>' +
+    '<div class="aph-ab"><span class="aph-b">' + APH_I.back + '</span><span class="aph-av">' + APH_I.user + '</span><span class="aph-nm" id="smsPrevSnd"></span><span class="aph-d">' + APH_I.dots + '</span></div>' +
+    '<div class="aph-msgs" id="smsPrevMsgs"><div class="aph-day">היום</div><div class="aph-bub" id="smsPrev" dir="auto"></div><div class="aph-time"><span id="smsPrevTime"></span> · SMS</div></div>' +
+    '<div class="aph-foot" id="smsPrevFoot">אי אפשר לענות למספר הזה, אלא רק לפנות ישירות למי ששלח את ההודעה. <u>למידע נוסף</u></div>' +
+    '<div class="aph-comp" id="smsPrevComp" hidden><span class="aph-plus">' + APH_I.add + '</span><span class="aph-in">הודעת טקסט</span></div>' +
+    '<div class="aph-nav"><span class="n1"></span><span class="n2"></span><span class="n3"></span></div>' +
+  '</div></div>';
+}
+const smsLinkify = t => esc(t).replace(/(https?:\/\/[^\s<]+|www\.[^\s<]+|[a-z0-9-]+\.(?:co\.il|org\.il|gov\.il|com|org|net|li|ly|me|io)(?:\/[^\s<]*)?)/gi, '<u>$1</u>');
+
 function renderSmsJobs() {
   const now = Date.now();
   S.sms.forEach(j => { if (j.status === 'מתוזמן' && j.sendAt <= now) j.status = 'ממתין לספק'; });
@@ -6447,6 +6531,23 @@ Object.assign(ACT, {
   smsLoadTpl: el => { const t = S.templates.find(x => x.id === el.dataset.v); if (!t) return; M.text = t.text; if (!M.name) M.name = t.name; $('#smsText').value = M.text; $('#sm_name').value = M.name; renderSmsLive(); },
   smsDelTpl: async el => { const t = S.templates.find(x => x.id === el.dataset.v); if (!t || !(await ask('מחיקת תבנית', 'למחוק את התבנית „' + esc(t.name) + '”?', 'מחיקה', true))) return; S.templates = S.templates.filter(x => x !== t); await saveKV('templates'); RENDER.sms({}); },
   smsSaveTpl: async () => { if (!M.text.trim()) { toast('אין עדיין הודעה לשמור'); return; } const n = await promptM('שמירה כתבנית', 'שם התבנית', M.name || ''); if (!n) return; S.templates.unshift({ id: uid(), name: n, text: M.text }); await saveKV('templates'); RENDER.sms({}); toast('התבנית נשמרה'); },
+  smsClrPersons: () => { M.persons = []; renderSmsRcp(); renderSmsLive(); },
+  smsBalEdit: async () => {
+    const b = smsBal();
+    const v = await promptM('יתרת סמסים', 'כמה סמסים נשארו בחשבון? (המספר יורד לבד בכל משלוח)', b ? String(b.n) : '');
+    if (v == null || v === '') return;
+    const n = parseInt(String(v).replace(/\D/g, ''), 10); if (!isFinite(n)) { toast('צריך מספר'); return; }
+    S.smsbal = [{ n, at: Date.now(), by: CLOUD && ME ? (ME.full_name || ME.email || '') : '' }]; await saveKV('smsbal'); renderSmsLive(); toast('היתרה עודכנה');
+  },
+  smsTest: async () => {
+    const ph = nph(M.testPhone || ($('#sm_test') || {}).value || '');
+    if (!isMobile(ph)) { toast('צריך מספר נייד תקין לבדיקה'); $('#sm_test') && $('#sm_test').focus(); return; }
+    if (!M.text.trim()) { toast('אין עדיין הודעה לבדוק'); return; }
+    const R = smsRecipients(), p = R.list[0] ? R.list[0].p : null;
+    const j = { id: uid(), name: 'בדיקה — ' + (M.name || 'משלוח'), text: mergeText(M.text, p), sender: M.sender, created: Date.now(), sendAt: Date.now(), status: 'ממתין לספק', test: true, to: [{ phone: ph, uid: null }] };
+    S.sms.unshift(j); await smsBalUse(smsParts(j.text).parts); await saveKV('sms');
+    renderSmsJobs(); renderSmsLive(); toast('נוצרה הודעת בדיקה ל-' + fmtPhone(ph) + (p ? ' (עם הפרטים של ' + fullName(p) + ')' : ''));
+  },
   smsAddPerson: el => { if (!M.persons.includes(el.dataset.v)) M.persons.push(el.dataset.v); renderSmsRcp(); renderSmsLive(); },
   smsDelPerson: el => { M.persons = M.persons.filter(u => u !== el.dataset.v); renderSmsRcp(); renderSmsLive(); },
   smsList: () => { const R = smsRecipients(); modal('הנמענים (' + nf(R.list.length) + ')', '<div style="max-height:50vh;overflow:auto"><table class="tbl"><tbody>' + R.list.slice(0, 300).map(x => '<tr><td>' + esc(x.p ? fullName(x.p) : '—') + '</td><td class="num"><span class="sg">' + fmtPhone(x.phone) + '</span></td><td class="mut">' + esc(x.p ? x.p.city || '' : '') + '</td></tr>').join('') + '</tbody></table>' + (R.list.length > 300 ? '<div class="mut sm" style="padding:8px">ועוד ' + nf(R.list.length - 300) + '…</div>' : '') + '</div>', [{ lb: 'סגירה', v: true }]); },
@@ -6458,11 +6559,11 @@ Object.assign(ACT, {
     const sp = smsParts(mergeText(M.text, R.list[0].p));
     if (!(await ask(later ? 'תזמון משלוח' : 'שליחת משלוח', (later ? 'לתזמן' : 'לשלוח') + ' את ההודעה ל-<b>' + nf(R.list.length) + '</b> נמענים' + (later ? ' ב-' + fmtWhen(at) : '') + '? זה בערך ' + nf(sp.parts * R.list.length) + ' הודעות.<br><span class="sm mut">כל עוד הספק לא מחובר, המשלוח יחכה כאן ותוכלו להוריד ממנו קובץ ל-b-elect.</span>', later ? 'תזמון' : 'שליחה'))) return;
     const j = { id: uid(), name: M.name || 'משלוח ' + fmtWhen(Date.now()), text: M.text, sender: M.sender, created: Date.now(), sendAt: at, status: later ? 'מתוזמן' : 'ממתין לספק', to: R.list.map(x => ({ phone: x.phone, uid: x.p ? x.p.uid : null })) };
-    S.sms.unshift(j);
+    S.sms.unshift(j); await smsBalUse(sp.parts * R.list.length);
     const ps = R.list.map(x => x.p).filter(Boolean); ps.forEach(p => plog(p, (later ? 'תוזמן סמס: "' : 'סמס: "') + j.name + '"'));
     await putPeople(ps); await saveKV('sms');
     activity((later ? 'תוזמן' : 'נוצר') + ' משלוח סמס "' + j.name + '" ל-' + nf(R.list.length) + ' נמענים');
-    renderTabs(); renderSmsJobs(); toast(later ? 'המשלוח תוזמן' : 'המשלוח נוצר — אפשר להוריד קובץ לשליחה');
+    renderTabs(); renderSmsJobs(); renderSmsLive(); toast(later ? 'המשלוח תוזמן' : 'המשלוח נוצר — אפשר להוריד קובץ לשליחה');
   },
   smsExport: () => { const R = smsRecipients(); if (!R.list.length || !M.text.trim()) { toast('צריך נמענים והודעה'); return; } exportJob({ name: M.name || 'משלוח', text: M.text, to: R.list.map(x => ({ phone: x.phone, uid: x.p ? x.p.uid : null })) }); },
   smsJobExport: el => { const j = S.sms.find(x => x.id === el.dataset.v); if (j) exportJob(j); },
