@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
-<meta name="build" content="20261117-162730">
+<meta name="build" content="20261117-164057">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>דאטה ביתנו — מאגר התומכים</title>
 <style>
@@ -4684,16 +4684,45 @@ function cloudErr(error, what) {
   const m = String((error && error.message) || error || '');
   toast(/row-level security|permission/i.test(m) ? 'אין הרשאה לשמור את זה (' + what + ')' : 'השמירה נכשלה (' + what + '): ' + m.slice(0, 80));
 }
-async function putPeople(list) {
+/* מספר גרסה של הנתונים — עולה בכל שינוי באנשים (מסכים כבדים שומרים חישובים לפיו) */
+let DV = 0;
+/* חלון התקדמות לפעולות ארוכות (טעינת מאגר גדול, שמירת קובץ גדול) */
+function loadBar(done, total, label) {
+  let el = document.getElementById('loadBar');
+  if (done == null) { if (el) el.remove(); return; }
+  if (!el) {
+    el = document.createElement('div'); el.id = 'loadBar'; el.setAttribute('role', 'status');
+    el.style.cssText = 'position:fixed;inset:0;z-index:9999;display:grid;place-items:center;background:rgba(11,46,91,.18);backdrop-filter:blur(2px)';
+    el.innerHTML = '<div style="background:#fff;border-radius:18px;padding:22px 26px;min-width:340px;box-shadow:0 24px 60px -20px rgba(11,46,91,.45);text-align:center;font-family:inherit">' +
+      '<b style="display:block;font-size:17px;color:var(--navy,#0B2E5B);margin-bottom:4px"></b><span style="font-size:13px;color:var(--ink2,#475569)"></span>' +
+      '<i style="display:block;height:8px;border-radius:99px;background:#E6ECF5;margin-top:14px;overflow:hidden"><em style="display:block;height:100%;width:3%;border-radius:99px;background:linear-gradient(90deg,#0B2E5B,#2A64B0);transition:width .25s"></em></i></div>';
+    document.body.appendChild(el);
+  }
+  el.querySelector('b').textContent = label || 'טוען את הנתונים…';
+  el.querySelector('span').textContent = total ? nf(Math.min(done, total)) + ' מתוך ' + nf(total) : '';
+  el.querySelector('em').style.width = (total ? Math.max(3, Math.min(100, done / total * 100)) : 3) + '%';
+}
+/* שמירת אנשים: מנות של 500, עד 4 במקביל, וכל מנה עד 3 ניסיונות. מחזיר false אם משהו לא נשמר */
+async function putPeople(list, onProg) {
+  DV++;
   if (!list.length) return true;
   if (!CLOUD) return txp('people', 'readwrite', s => { list.forEach(p => s.put(strip(p))); });
   /* אותו אדם פעמיים באותה שליחה מפיל את כל המנה בשרת (ON CONFLICT … a second time) — משאירים רק את המופע האחרון */
   const byUid = new Map(); list.forEach(p => { if (p && p.uid) { byUid.delete(p.uid); byUid.set(p.uid, p); } }); list = Array.from(byUid.values());
-  for (let i = 0; i < list.length; i += 500) {
-    const rows = list.slice(i, i + 500).map(p => ({ uid: p.uid, data: strip(p) }));
-    const { error } = await sb.from('people').upsert(rows);
-    if (error) { cloudErr(error, 'אנשים'); setTimeout(reloadData, 600); return false; }
-  }
+  const B = 500, n = Math.ceil(list.length / B);
+  let next = 0, done = 0, bad = null;
+  const worker = async () => {
+    while (!bad) {
+      const i = next++; if (i >= n) return;
+      const rows = list.slice(i * B, i * B + B).map(p => ({ uid: p.uid, data: strip(p) }));
+      let err = null;
+      for (let a = 0; a < 3; a++) { ({ error: err } = await sb.from('people').upsert(rows)); if (!err) break; await wait(1200 * (a + 1)); }
+      if (err) { bad = err; return; }
+      done += rows.length; if (onProg) onProg(done, list.length);
+    }
+  };
+  await Promise.all(Array.from({ length: Math.min(4, n) }, worker));
+  if (bad) { cloudErr(bad, 'אנשים'); setTimeout(reloadData, 600); return false; }
   return true;
 }
 async function delPeople(uids) {
@@ -4744,21 +4773,67 @@ async function saveKV(k) {
   const { error } = await sb.from('kv').upsert({ k: key, scope: sc, v: S[k] });
   if (error) cloudErr(error, k); else kvSetBase(k);
 }
-async function loadCloud() {
-  const people = [];
-  for (let from = 0; ; from += 1000) {
-    const { data, error } = await sb.from('people').select('data').range(from, from + 999);
-    if (error) { cloudErr(error, 'טעינת המאגר'); break; }
-    data.forEach(r => people.push(r.data));
-    if (data.length < 1000) break;
-  }
+/* טעינת המאגר: כמה בקשות במקביל (במאגר של 100 אלף איש — מאה בקשות), עם חלון התקדמות */
+let LOAD_AT = 0;
+async function loadKV() {
   const { data: kv, error } = await sb.from('kv').select('k,v');
-  if (error) cloudErr(error, 'טעינת הגדרות');
+  if (error) { cloudErr(error, 'טעינת הגדרות'); return 0; }
   KV_KEYS.forEach(k => { if (k !== 'settings') S[k] = []; });
   (kv || []).forEach(o => { const i = o.k.indexOf('|'); const sc = o.k.slice(0, i), name = o.k.slice(i + 1); if (KV_KEYS.includes(name) && (sc === 'g' || sc === SCOPE)) S[name] = o.v; });
   KV_KEYS.forEach(kvSetBase);
-  S.people = people;
-  return { people: people.length, kv: (kv || []).length };
+  return (kv || []).length;
+}
+const pplPage = (from, PAGE) => sb.from('people').select('data').order('uid').range(from, from + PAGE - 1);
+async function loadCloud() {
+  const t0 = Date.now() - 120000;   /* מרווח לשעון: מה שהשתנה מאז — נמשך שוב ב-syncCloud */
+  const PAGE = 1000, PAR = 6;
+  const { count } = await sb.from('people').select('uid', { count: 'exact', head: true });
+  const total = count || 0, pages = Math.max(1, Math.ceil(total / PAGE));
+  const show = total > 5000;
+  if (show) loadBar(0, total);
+  const chunks = []; let next = 0, done = 0, bad = null;
+  const worker = async () => {
+    while (!bad) {
+      const i = next++; if (i >= pages) return;
+      let r = null;
+      for (let a = 0; a < 3; a++) { r = await pplPage(i * PAGE, PAGE); if (!r.error) break; await wait(800 * (a + 1)); }
+      if (r.error) { bad = r.error; return; }
+      chunks[i] = r.data; done += r.data.length; if (show) loadBar(done, total);
+    }
+  };
+  await Promise.all(Array.from({ length: Math.min(PAR, pages) }, worker));
+  /* אם נוספו אנשים תוך כדי הטעינה */
+  for (let i = pages; !bad && chunks[i - 1] && chunks[i - 1].length === PAGE; i++) { const r = await pplPage(i * PAGE, PAGE); if (r.error) { bad = r.error; break; } chunks[i] = r.data; }
+  if (show) loadBar();
+  if (bad) {
+    cloudErr(bad, 'טעינת המאגר');
+    if (S.people.length) return { people: S.people.length, kv: 0, failed: true };   /* לא מחליפים נתונים מלאים בחלקיים */
+  }
+  const people = []; chunks.forEach(c => { if (c) c.forEach(r => people.push(r.data)); });
+  const nkv = await loadKV();
+  S.people = people; DV++;
+  if (!bad) LOAD_AT = t0;
+  return { people: people.length, kv: nkv, failed: !!bad };
+}
+/* רענון מהיר: מושך רק אנשים שהשתנו מאז הטעינה האחרונה (במקום את כל המאגר) */
+async function syncCloud() {
+  if (!CLOUD) return true;
+  if (!LOAD_AT) { const r = await loadCloud(); return !r.failed; }
+  const since = new Date(LOAD_AT).toISOString(), t0 = Date.now() - 120000;
+  const got = [];
+  for (let from = 0; ; from += 1000) {
+    const { data, error } = await sb.from('people').select('data').gte('updated_at', since).order('uid').range(from, from + 999);
+    if (error) { cloudErr(error, 'רענון המאגר'); return false; }
+    data.forEach(r => got.push(r.data)); if (data.length < 1000) break;
+  }
+  if (got.length) {
+    const idx = new Map(); S.people.forEach((p, i) => idx.set(p.uid, i));
+    got.forEach(p => { const i = idx.get(p.uid); if (i == null) S.people.push(p); else S.people[i] = p; });
+    DV++;
+  }
+  await loadKV();
+  LOAD_AT = t0;
+  return true;
 }
 async function reloadData() {
   if (!CLOUD || !ME) return;
@@ -4805,13 +4880,15 @@ function indexPerson(p) {
   p._site = siteOf(p);
 }
 function rebuild() {
+  DV++;
   S.by.clear(); S.byTz.clear(); S.byPhone.clear();
   S.people.forEach(indexPerson);
 }
 /* איש קשר אחראי: לאדם יכולים להיות כמה — נשמרים מופרדים בפסיק */
 const ownersOf = p => String((p && p.owner) || '').split(/\s*[,;]\s*/).filter(Boolean);
 const owners = () => Array.from(new Set(S.people.flatMap(ownersOf))).sort((a, b) => a.localeCompare(b, 'he'));
-const allTags = () => Array.from(new Set([].concat(...S.people.map(p => p.tags || [])))).sort((a, b) => a.localeCompare(b, 'he'));
+/* בלי ...spread על כל האנשים — במאגר של 100 אלף זה מפיל את הדפדפן (Maximum call stack size exceeded) */
+const allTags = () => { const t = new Set(); for (const p of S.people) for (const x of (p.tags || [])) t.add(x); return Array.from(t).sort((a, b) => a.localeCompare(b, 'he')); };
 function cityCounts() {
   const m = new Map();
   S.people.forEach(p => { if (!p.city) return; const k = ckey(p.city); const o = m.get(k) || { c: p.city, n: 0, sup: 0, und: 0 }; o.n++; if (p.status === 'תומך') o.sup++; if (p.status === 'מתלבט') o.und++; m.set(k, o); });
@@ -5594,7 +5671,14 @@ function srchDynFields() {
 }
 /* פרטים שיש להם סינון משלהם בטופס (או שלא מציגים בחיפוש) — לא חוזרים ברשימת הפרטים הדינמיים */
 const SRCH_OWN = { zip: ['מיקוד'], gender: ['מין', 'מגדר'], email: ['דואר אלקטרוני', 'אימייל', 'מייל', 'email', 'דוא״ל'], notes: ['הערות', 'הערה'] };
-const ownField = k => { const ks = SRCH_OWN[k].map(fkey); return S.fields.find(x => ks.includes(fkey(x.name))); };
+/* איזה פרט דינמי הוא „מין” / „מייל”… — נשמר בזיכרון כדי לא לחשב מחדש לכל אחד מ-100 אלף האנשים */
+let OWNF = { t: 0, ref: null, n: -1, m: {} };
+const ownField = k => {
+  const now = Date.now();
+  if (OWNF.ref !== S.fields || OWNF.n !== S.fields.length || now - OWNF.t > 1500) OWNF = { t: now, ref: S.fields, n: S.fields.length, m: {} };
+  if (!(k in OWNF.m)) { const ks = SRCH_OWN[k].map(fkey); OWNF.m[k] = S.fields.find(x => ks.includes(fkey(x.name))) || null; }
+  return OWNF.m[k] || undefined;
+};
 const ownVal = (p, k) => { if (p[k]) return p[k]; const f = ownField(k); const v = f ? (p.dyn || {})[f.id] : ''; return v == null ? '' : Array.isArray(v) ? v.join(', ') : String(v); };
 const zipOf = p => digits(ownVal(p, 'zip'));
 const phKey = d => d.startsWith('972') ? '0' + d.slice(3) : d;
@@ -5662,9 +5746,23 @@ function filterPeople(f) {
     return true;
   });
 }
-const SORTS = { name: (a, b) => fullName(a).localeCompare(fullName(b), 'he'), city: (a, b) => (a.city || '').localeCompare(b.city || '', 'he') || fullName(a).localeCompare(fullName(b), 'he'),
+const HE_COLL = new Intl.Collator('he');
+const SORTS = { name: (a, b) => HE_COLL.compare(fullName(a), fullName(b)), city: (a, b) => HE_COLL.compare(a.city || '', b.city || '') || HE_COLL.compare(fullName(a), fullName(b)),
   status: (a, b) => STATUSES.indexOf(stOf(a)) - STATUSES.indexOf(stOf(b)), recent: (a, b) => (b.updated || b.created || 0) - (a.updated || a.created || 0) };
 
+/* מיון מהיר: מחשבים את השם פעם אחת לכל אדם (ולא בכל השוואה) */
+function sortPeople(arr, how) {
+  if (how !== 'name' && how !== 'city') return arr.sort(SORTS[how] || SORTS.name);
+  const d = arr.map(p => ({ p, n: fullName(p), c: how === 'city' ? (p.city || '') : '' }));
+  d.sort(how === 'city' ? (x, y) => HE_COLL.compare(x.c, y.c) || HE_COLL.compare(x.n, y.n) : (x, y) => HE_COLL.compare(x.n, y.n));
+  return d.map(x => x.p);
+}
+/* תוצאות החיפוש נשמרות עד שמשתנה הסינון, המיון או הנתונים (DV) — מעבר עמוד / סימון לא מחשבים מחדש */
+function srchResults() {
+  const key = DV + '|' + SR.sort + '|' + JSON.stringify(SR.f);
+  if (SR._ck !== key || !SR._res) { SR._res = sortPeople(filterPeople(SR.f), SR.sort); SR._ck = key; }
+  return SR._res;
+}
 RENDER.search = function (o) {
   if (o.filter) { SR.f = Object.assign(defFilter(), o.filter); SR.page = 0; SR.sel.clear(); }
   if (!o.refresh || !$('#srchPanel')) renderSearchPanel();
@@ -5704,7 +5802,8 @@ function renderSearchPanel() {
   SRCH_DYN_ROWS.forEach(c => { dynHtml += row(fixed.slice(n, n + c).map((it, j) => dynCtl(it, n + j))); n += c; });
   for (let i = 0; i < rest.length; i += 4) dynHtml += row(rest.slice(i, i + 4).map((it, j) => dynCtl(it, 100 + i + j)));
   const gf = ownField('gender');
-  const genders = Array.from(new Set(['זכר', 'נקבה'].concat(gf && gf.options ? gf.options : [], S.people.map(p => ownVal(p, 'gender')).filter(Boolean))));
+  if (!SR._g || SR._g.dv !== DV) { const gs = new Set(); for (const p of S.people) { const v = ownVal(p, 'gender'); if (v) gs.add(v); } SR._g = { dv: DV, list: Array.from(gs) }; }
+  const genders = Array.from(new Set(['זכר', 'נקבה'].concat(gf && gf.options ? gf.options : [], SR._g.list)));
   dynHtml += row([sel('gender', 'מין', genders),
     txt('email', 'דואר אלקטרוני', '', ' inputmode="email"'),
     '<div><label class="fl" for="sf_age">גיל</label><input id="sf_age" type="number" min="0" max="120" data-sf="age" value="' + val('age') + '" placeholder="גיל מדויק"></div>',
@@ -5747,7 +5846,7 @@ document.addEventListener('change', e => {
   renderSearchPanel(); renderResults();
 });
 function renderResults() {
-  const res = filterPeople(SR.f).sort(SORTS[SR.sort] || SORTS.name);
+  const res = srchResults();
   SR.last = res;
   for (const u of Array.from(SR.sel)) if (!S.by.has(u)) SR.sel.delete(u);
   const per = 25, pages = Math.max(1, Math.ceil(res.length / per));
@@ -6510,11 +6609,20 @@ async function upSaveUndo(id, data) {
   if (!CLOUD) { await txp('kv', 'readwrite', s => { s.put({ k: 'undo:' + id, v: data }); }); return true; }
   const parts = []; const all = data.before;
   for (let i = 0; i < Math.max(1, all.length); i += 300) parts.push(all.slice(i, i + 300));
-  for (let j = 0; j < parts.length; j++) {
-    const { error } = await sb.from('upload_undo').insert({ upload_id: id, part: j, scope: SCOPE, data: j === 0 ? { t: data.t, created: data.created, before: parts[j] } : { before: parts[j] } });
-    if (error) { console.error('upload_undo', error); return false; }
-  }
-  return true;
+  let next = 0, bad = false;   /* עד 4 במקביל — בקובץ גדול יש מאות חלקים */
+  const worker = async () => {
+    while (!bad) {
+      const j = next++; if (j >= parts.length) return;
+      const row = { upload_id: id, part: j, scope: SCOPE, data: j === 0 ? { t: data.t, created: data.created, before: parts[j] } : { before: parts[j] } };
+      let err = null;
+      for (let a = 0; a < 3; a++) { ({ error: err } = await sb.from('upload_undo').insert(row)); if (!err) break; await wait(1000 * (a + 1)); }
+      if (err) { console.error('upload_undo', err); bad = true; return; }
+      if (parts.length > 20) loadBar(Math.min(next, parts.length), parts.length, 'שומר גיבוי לביטול ההעלאה…');
+    }
+  };
+  await Promise.all(Array.from({ length: Math.min(4, parts.length) }, worker));
+  loadBar();
+  return !bad;
 }
 async function upLoadUndo(id) {
   if (!CLOUD) { const v = await txp('kv', 'readonly', s => s.get('undo:' + id)); return v ? v.v : null; }
@@ -6526,7 +6634,13 @@ async function upLoadUndo(id) {
 }
 async function runUpload() {
   if (!U.pv) return;
-  if (CLOUD) { await loadCloud(); normPeople(); rebuild(); buildPreview(); }   /* עובדים על הנתונים העדכניים — לא על מה שנטען בבוקר */
+  if (CLOUD) {
+    const keepF = S.fields.slice();   /* פרטים דינמיים שהקובץ יצר עכשיו (מין, מייל…) — הרענון מהשרת לא מכיר אותם עדיין, ובלי זה הערכים שלהם הולכים לאיבוד */
+    loadBar(0, 0, 'בודק עדכונים במאגר…'); const ok = await syncCloud(); loadBar();
+    if (!ok) { toast('לא הצלחתי לבדוק את המאגר — ההעלאה לא בוצעה. נסו שוב.'); return; }
+    keepF.forEach(f => { if (!S.fields.some(x => x.id === f.id)) S.fields.push(f); });
+    normPeople(); rebuild(); buildPreview();
+  }   /* עובדים על הנתונים העדכניים — מושכים רק מה שהשתנה */
   if (!(await upStatusGuard())) { renderUpload(); return; }
   const now = Date.now(), upId = uid();
   /* גיבוי לפני השינוי */
@@ -6572,15 +6686,18 @@ async function runUpload() {
   if (!okUndo && !(await ask('אין גיבוי לביטול', 'לא הצלחתי לשמור גיבוי של הנתונים לפני ההעלאה, ולכן לא יהיה אפשר לבטל אותה. להמשיך בכל זאת?', 'להמשיך בלי אפשרות ביטול'))) {
     await loadCloud(); normPeople(); rebuild(); renderUpload(); toast('ההעלאה לא בוצעה'); return;
   }
-  await putPeople(changed);
+  const okPut = await putPeople(changed, (d, t) => loadBar(d, t, 'שומר את הקובץ במאגר…'));
+  loadBar();
   const c = U.pv.c;
   const kept = U.pv.rows.filter(x => x.keptOpp).length;
-  S.uploads.unshift({ id: upId, file: fname, db: U.db, t: now, nw: c.new, upd: c.upd, err: c.err, ev: ev ? ev.name : '', undo: okUndo, by: myName(), kept });
+  S.uploads.unshift({ id: upId, file: fname, db: U.db, t: now, nw: c.new, upd: c.upd, err: c.err, ev: ev ? ev.name : '', undo: okUndo, by: myName(), kept, partial: !okPut || undefined });
   await saveKV('uploads'); await saveKV('fields'); if (ev) await saveKV('events');
   activity('הועלה הקובץ "' + fname + '" ל' + dbName(U.db) + ' — ' + c.new + ' נוספו, ' + c.upd + ' עודכנו' + (c.err ? ', ' + c.err + ' שגיאות' : ''));
-  U.done = { id: upId, c: Object.assign({}, c), file: fname, errRows: U.pv.rows.filter(x => x.act === 'err'), head: U.head, body: U.body };
-  U.pv = null; U.body = []; U.head = []; U.file = ''; U.eventId = null; U.extra = []; U.step = 1;   /* חוזרים ישר לכפתור ההעלאה; הסיכום מוצג למעלה */
+  const errs = U.pv.rows.filter(x => x.act === 'err');   /* שומרים רק את שורות השגיאה — לא את כל הקובץ (בקובץ גדול זה מפיל את הדפדפן) */
+  U.done = { id: upId, c: Object.assign({}, c), file: fname, partial: !okPut, errRows: errs.map((x, i) => ({ ri: i, errs: x.errs, warns: x.warns || [] })), head: U.head, body: errs.map(x => U.body[x.ri]) };
+  U.pv = null; U.body = []; U.head = []; U.file = ''; U.eventId = null; U.extra = []; U.step = 1; U.wb = null; U.rows = null; U.sheets = [];   /* חוזרים ישר לכפתור ההעלאה; הסיכום מוצג למעלה */
   renderTabs(); renderUpload();
+  if (!okPut) { await modal('ההעלאה לא הושלמה', '<p>החיבור למאגר נפל באמצע השמירה, ולכן <b>חלק מהאנשים בקובץ לא נשמרו</b>.</p><p>מה עושים: מעלים שוב את אותו קובץ. מי שכבר נשמר יזוהה לפי ת.ז / טלפון ויתעדכן — לא ייכפל.</p>', [{ lb: 'הבנתי', v: true }]); return; }
   toast('העדכון הסתיים');
 }
 function downloadErrors(src) {
@@ -6650,7 +6767,7 @@ const upi = k => '<svg viewBox="0 0 24 24" aria-hidden="true">' + UPI[k] + '</sv
 function upDoneBar(d) {
   const c = d.c;
   return '<div class="updone"><span class="udi">' + upi('check') + '</span>' +
-    '<div class="updt"><b>הקובץ הועלה</b><span>' + esc(d.file) + '</span></div>' +
+    '<div class="updt"><b>' + (d.partial ? 'ההעלאה לא הושלמה — כדאי להעלות שוב' : 'הקובץ הועלה') + '</b><span>' + esc(d.file) + '</span></div>' +
     '<div class="upds"><span><b>' + nf(c.new) + '</b> נוספו</span><span class="g"><b>' + nf(c.upd) + '</b> עודכנו</span>' + (c.err ? '<span class="r"><b>' + nf(c.err) + '</b> שגיאות</span>' : '') + '</div>' +
     '<div class="updb"><button class="btn sec" data-act="upShow" data-v="' + d.id + '">צפייה באנשים</button>' + (c.err ? '<button class="btn sec" data-act="upErrorsDone">הורדת השגיאות</button>' : '') + '</div>' +
     '<button class="x" data-act="upDoneX" aria-label="סגירה" title="סגירה">×</button></div>';
