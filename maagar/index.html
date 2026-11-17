@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
-<meta name="build" content="20261117-154325">
+<meta name="build" content="20261117-155800">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>דאטה ביתנו — מאגר התומכים</title>
 <style>
@@ -4908,7 +4908,7 @@ function seedDemo() {
   ];
   ask.forEach(p => { p.dbs.push('events'); p.tags.push('חוג בית אשקלון'); plog(p, 'נרשם/ה לאירוע "חוג בית — אשקלון" דרך דף הנחיתה'); });
   bs.forEach(p => { p.dbs.push('events'); p.tags.push('כנס פעילים ב״ש'); plog(p, 'נרשם/ה לאירוע "כנס פעילים — באר שבע" דרך דף הנחיתה'); });
-  S.sms = [{ id: uid(), name: 'תודה על ההרשמה — חוג בית', text: '[שם_פרטי], תודה שנרשמת לחוג הבית! נתראה ב-' + fmtDate(isoDay(d1)) + ' ב-20:00.', sender: 'HaMate',
+  S.sms = [{ id: uid(), name: 'תודה על ההרשמה — חוג בית', text: '[שם_פרטי], תודה שנרשמת לחוג הבית! נתראה ב-' + fmtDate(isoDay(d1)) + ' ב-20:00.', sender: 'BEYTENU',
     created: now - 864e5, sendAt: now - 864e5, status: 'יוצא לקובץ', to: ask.map(p => ({ phone: p.phone, uid: p.uid })) }];
   S.groups = [{ id: uid(), name: 'תומכים — אשקלון', filter: Object.assign(defFilter(), { city: 'אשקלון', status: 'תומך' }) },
     { id: uid(), name: 'מתלבטים דוברי רוסית', filter: Object.assign(defFilter(), { lang: 'רוסית', status: 'מתלבט' }) }];
@@ -6938,9 +6938,11 @@ Object.assign(ACT, {
    נמענים, תבניות, תזמון ומשלוחים.
    ============================================================ */
 /* ======================================================== סמסים */
-const M = { src: 'group', group: '', db: 'main', persons: [], manual: '', event: '', text: '', name: '', sender: 'HaMate', when: 'now', date: '', time: '', tplSel: '', testPhone: '', optLine: true, _parts: 0 };
+/* שם השולח המאושר בפולסים — ברירת המחדל בכל משלוח ובקוד הכניסה */
+const SMS_SENDER = 'BEYTENU';
+const M = { src: 'group', group: '', db: 'main', persons: [], manual: '', event: '', text: '', name: '', sender: SMS_SENDER, when: 'now', date: '', time: '', tplSel: '', testPhone: '', optLine: true, _parts: 0 };
 /* טיוטה — נשמרת בדפדפן (לכל משתמש ומטה), כך שיציאה בטעות או קריסה לא מוחקות את העבודה. מתאפסת רק אחרי שליחה */
-const SMS_DRAFT_KEYS = ['src', 'group', 'db', 'persons', 'manual', 'event', 'text', 'name', 'sender', 'when', 'date', 'time', 'optLine'];
+const SMS_DRAFT_KEYS = ['src', 'group', 'db', 'persons', 'manual', 'event', 'text', 'name', 'when', 'date', 'time', 'optLine'];
 const SMS_BLANK = JSON.parse(JSON.stringify(M));
 let smsDraftOn = false;
 const smsDraftKey = () => 'maagar-smsdraft|' + (CLOUD && ME ? ME.id : 'local') + '|' + SCOPE;
@@ -6953,10 +6955,9 @@ function smsDraftSave() {
   debounce('smsDraft', () => { try { const o = {}; SMS_DRAFT_KEYS.forEach(k => { o[k] = M[k]; }); localStorage.setItem(smsDraftKey(), JSON.stringify(o)); } catch (e) {} }, 400);
 }
 const smsHasDraft = () => !!(M.text.trim() || M.name.trim() || M.manual.trim() || (M.src === 'person' && M.persons.length));
-/* איפוס המסך למשלוח חדש (שם השולח נשאר) */
+/* איפוס המסך למשלוח חדש (שם השולח חוזר לברירת המחדל) */
 function smsReset() {
-  const snd = M.sender;
-  Object.assign(M, JSON.parse(JSON.stringify(SMS_BLANK)), { sender: snd });
+  Object.assign(M, JSON.parse(JSON.stringify(SMS_BLANK)), { sender: (SMSP.cfg && SMSP.cfg.sender) || SMS_SENDER });
   clearTimeout(debT.smsDraft);
   try { localStorage.removeItem(smsDraftKey()); } catch (e) {}
   if ($('#v-sms.on')) RENDER.sms({});
