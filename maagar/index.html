@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
-<meta name="build" content="20261117-153128">
+<meta name="build" content="20261117-154325">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>דאטה ביתנו — מאגר התומכים</title>
 <style>
@@ -688,6 +688,23 @@ main:has(#v-map.on){max-width:none;padding-inline:20px}
 .upgl .tbl th{position:sticky;top:0;background:var(--card);z-index:1}
 .mbox:has(.upgl){width:min(780px,100%)}
 #v-upload tr.off td{opacity:.6}
+
+/* סיכום ההעלאה האחרונה (מעל האשף) */
+.updone{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:16px;padding:14px 18px 14px 44px;border-radius:16px;background:var(--gbg);border:1px solid var(--gbd);position:relative;animation:aUp .45s var(--ease) both}
+.updone .udi{width:40px;height:40px;flex:none}
+.updone .udi svg{width:20px;height:20px}
+.updt{min-width:0}
+.updt b{display:block;font-size:15.5px;color:var(--navy)}
+.updt span{font-size:12.5px;color:var(--ink2);overflow-wrap:anywhere}
+.upds{display:flex;gap:8px;flex-wrap:wrap}
+.upds span{background:#fff;border:1px solid var(--line2);border-radius:999px;padding:4px 12px;font-size:12.5px;color:var(--ink2);font-weight:600}
+.upds b{color:var(--navy);font-weight:900;font-variant-numeric:tabular-nums}
+.upds .g b{color:var(--gtx)}
+.upds .r{background:var(--rbg);border-color:var(--rbd)}
+.upds .r b{color:var(--rtx)}
+.updb{display:flex;gap:8px;margin-inline-start:auto}
+.updone .x{position:absolute;top:8px;left:10px;width:28px;height:28px;border:0;background:none;border-radius:8px;font-size:20px;line-height:1;color:var(--ink2);cursor:pointer}
+.updone .x:hover{background:rgba(0,0,0,.06)}
 
 /* ---------- css/features/sms.css ---------- */
 /* ============ דאטה ביתנו — שליחת סמסים ============ */
@@ -6560,7 +6577,7 @@ async function runUpload() {
   await saveKV('uploads'); await saveKV('fields'); if (ev) await saveKV('events');
   activity('הועלה הקובץ "' + fname + '" ל' + dbName(U.db) + ' — ' + c.new + ' נוספו, ' + c.upd + ' עודכנו' + (c.err ? ', ' + c.err + ' שגיאות' : ''));
   U.done = { id: upId, c: Object.assign({}, c), file: fname, errRows: U.pv.rows.filter(x => x.act === 'err'), head: U.head, body: U.body };
-  U.pv = null; U.body = []; U.head = []; U.file = ''; U.eventId = null; U.extra = []; U.step = 6;
+  U.pv = null; U.body = []; U.head = []; U.file = ''; U.eventId = null; U.extra = []; U.step = 1;   /* חוזרים ישר לכפתור ההעלאה; הסיכום מוצג למעלה */
   renderTabs(); renderUpload();
   toast('העדכון הסתיים');
 }
@@ -6627,9 +6644,18 @@ const UPI = {
   check: '<path d="M5 12.5l4.5 4.5L19 7.5"/>'
 };
 const upi = k => '<svg viewBox="0 0 24 24" aria-hidden="true">' + UPI[k] + '</svg>';
+/* סיכום ההעלאה האחרונה — מעל האשף, שכבר חזר לשלב הראשון */
+function upDoneBar(d) {
+  const c = d.c;
+  return '<div class="updone"><span class="udi">' + upi('check') + '</span>' +
+    '<div class="updt"><b>הקובץ הועלה</b><span>' + esc(d.file) + '</span></div>' +
+    '<div class="upds"><span><b>' + nf(c.new) + '</b> נוספו</span><span class="g"><b>' + nf(c.upd) + '</b> עודכנו</span>' + (c.err ? '<span class="r"><b>' + nf(c.err) + '</b> שגיאות</span>' : '') + '</div>' +
+    '<div class="updb"><button class="btn sec" data-act="upShow" data-v="' + d.id + '">צפייה באנשים</button>' + (c.err ? '<button class="btn sec" data-act="upErrorsDone">הורדת השגיאות</button>' : '') + '</div>' +
+    '<button class="x" data-act="upDoneX" aria-label="סגירה" title="סגירה">×</button></div>';
+}
 function renderUpload() {
   const ev = U.eventId ? S.events.find(e => e.id === U.eventId) : null;
-  const st = U.done && U.step === 6 ? 6 : !U.file ? 1 : U.step;
+  const st = !U.file ? 1 : U.step;
   const hasManual = upNeedManual().length > 0;
   const G = upGroups();
   const selG = G.filter(g => U.sel[g.id]);
@@ -6643,10 +6669,11 @@ function renderUpload() {
   };
   let h = '<div class="shead"><div><h2>העלאת אקסלים</h2><p>מעלים קובץ, בוחרים מה לעדכן — והמערכת עושה את השאר</p></div></div>' +
     (ev ? '<div class="note b">ייבוא נרשמים לאירוע <b>' + esc(ev.name) + '</b> — כל מי שבקובץ יסומן כנרשם' + (ev.tag ? ' ויקבל את התגית „' + esc(ev.tag) + '”' : '') + '. <button class="link" data-act="upNoEvent">ביטול</button></div>' : '') +
+    (U.done && !U.file ? upDoneBar(U.done) : '') +
     '<div class="wz">';
 
   /* 1. קובץ */
-  const fn = U.file || (st === 6 && U.done ? U.done.file : '');
+  const fn = U.file;
   h += step(1, 'העלאת קובץ', fn ? '<span class="pill">' + esc((fn.split('.').pop() || '').toUpperCase()) + '</span> ' + esc(fn) + (U.file ? ' · ' + nf(U.body.length) + ' שורות' : '') : '', () =>
     '<div class="drop big" id="upDrop">' +
       '<span class="dic">' + upi(U.busy ? 'file' : 'up') + '</span>' +
@@ -6724,13 +6751,6 @@ function renderUpload() {
       '<button class="btn sec" data-act="upGo" data-v="' + (hasManual ? 4 : 3) + '">חזרה</button></div>';
   });
 
-  /* 6. סיום */
-  h += step(6, 'סיום', '', () => {
-    const d = U.done, c = d.c;
-    return '<div class="udone"><span class="udi">' + upi('check') + '</span><div><b>העדכון הסתיים</b><span>' + esc(d.file) + '</span></div></div>' +
-      '<div class="sumg"><div><b>' + nf(c.new) + '</b><span>נוספו</span></div><div class="g"><b>' + nf(c.upd) + '</b><span>עודכנו</span></div>' + (c.err ? '<div class="r"><b>' + nf(c.err) + '</b><span>שגיאות</span></div>' : '') + '</div>' +
-      '<div class="wnav"><button class="btn" data-act="upShow" data-v="' + d.id + '">צפייה באנשים מהקובץ</button>' + (c.err ? '<button class="btn sec" data-act="upErrorsDone">הורדת השגיאות</button>' : '') + '<button class="btn sec" data-act="upReset">העלאת קובץ נוסף</button></div>';
-  });
   h += '</div>';
 
   /* היסטוריה */
@@ -6794,6 +6814,7 @@ Object.assign(ACT, {
   upRun: async el => { el.disabled = true; el.textContent = 'מוסיף למאגר…'; await wait(20); await runUpload(); },
   upErrors: () => downloadErrors(),
   upErrorsDone: () => downloadErrors(U.done),
+  upDoneX: () => { U.done = null; renderUpload(); },
   upShow: el => go('search', { filter: { upl: el.dataset.v } }),
   upUndo: async el => {
     if (!isAdmin()) { toast('רק מנהלי מערכת יכולים לבטל העלאה'); return; }
@@ -6918,6 +6939,28 @@ Object.assign(ACT, {
    ============================================================ */
 /* ======================================================== סמסים */
 const M = { src: 'group', group: '', db: 'main', persons: [], manual: '', event: '', text: '', name: '', sender: 'HaMate', when: 'now', date: '', time: '', tplSel: '', testPhone: '', optLine: true, _parts: 0 };
+/* טיוטה — נשמרת בדפדפן (לכל משתמש ומטה), כך שיציאה בטעות או קריסה לא מוחקות את העבודה. מתאפסת רק אחרי שליחה */
+const SMS_DRAFT_KEYS = ['src', 'group', 'db', 'persons', 'manual', 'event', 'text', 'name', 'sender', 'when', 'date', 'time', 'optLine'];
+const SMS_BLANK = JSON.parse(JSON.stringify(M));
+let smsDraftOn = false;
+const smsDraftKey = () => 'maagar-smsdraft|' + (CLOUD && ME ? ME.id : 'local') + '|' + SCOPE;
+function smsDraftLoad() {
+  if (smsDraftOn) return; smsDraftOn = true;
+  try { const d = JSON.parse(localStorage.getItem(smsDraftKey()) || 'null'); if (d && typeof d === 'object') SMS_DRAFT_KEYS.forEach(k => { if (d[k] !== undefined) M[k] = d[k]; }); } catch (e) {}
+}
+function smsDraftSave() {
+  if (!smsDraftOn) return;
+  debounce('smsDraft', () => { try { const o = {}; SMS_DRAFT_KEYS.forEach(k => { o[k] = M[k]; }); localStorage.setItem(smsDraftKey(), JSON.stringify(o)); } catch (e) {} }, 400);
+}
+const smsHasDraft = () => !!(M.text.trim() || M.name.trim() || M.manual.trim() || (M.src === 'person' && M.persons.length));
+/* איפוס המסך למשלוח חדש (שם השולח נשאר) */
+function smsReset() {
+  const snd = M.sender;
+  Object.assign(M, JSON.parse(JSON.stringify(SMS_BLANK)), { sender: snd });
+  clearTimeout(debT.smsDraft);
+  try { localStorage.removeItem(smsDraftKey()); } catch (e) {}
+  if ($('#v-sms.on')) RENDER.sms({});
+}
 /* מקטע אחד אצל הספק = עד 268 תווים. מעבר לזה — ההודעה נספרת כשתיים (חיוב כפול) */
 const SMS_SEG = 268;
 /* שורת ההסרה — נוספת כברירת מחדל לסוף כל הודעה (חובה לפי חוק התקשורת — "חוק הספאם") */
@@ -6993,6 +7036,7 @@ function smsRecipients() {
   return { list, noPhone, dup, bad, optout, total: people.length };
 }
 RENDER.sms = function (o) {
+  smsDraftLoad();
   if (o.src === 'sel' || o.src === 'last') { M.persons = (o.src === 'sel' ? Array.from(SR.sel) : SR.last.map(p => p.uid)); o = Object.assign({}, o, { src: 'person' }); }
   if (!SMS_SRCS.some(x => x[0] === M.src)) M.src = 'group';
   if (o.src) { M.src = o.src; if (o.persons) M.persons = o.persons; if (o.group) M.group = o.group; if (o.event) M.event = o.event; if (o.text) M.text = o.text; if (o.name) M.name = o.name; }
@@ -7000,7 +7044,7 @@ RENDER.sms = function (o) {
   if (!M.event && S.events[0]) M.event = S.events[0].id;
   if (!M.date) { const d = new Date(Date.now() + 864e5); M.date = isoDay(d); M.time = '10:00'; }
   $('#v-sms').innerHTML =
-    '<div class="shead"><div><h2>שליחת סמסים</h2><p>הודעה אישית לכל נמען, עכשיו או בתזמון</p></div></div>' +
+    '<div class="shead"><div><h2>שליחת סמסים</h2><p>הודעה אישית לכל נמען, עכשיו או בתזמון</p></div>' + (smsHasDraft() ? '<button class="btn sec" data-act="smsClear" title="מחיקת ההודעה והנמענים והתחלה מחדש">ניקוי והתחלה מחדש</button>' : '') + '</div>' +
     '<div class="note y sm" id="smsNoProv"' + (smsLive() ? ' hidden' : '') + '>השליחה עוד לא מחוברת לספק — בינתיים כל משלוח יוצא כקובץ מוכן ל-b-elect.</div>' +
     '<div class="cols"><div class="c2">' +
       '<div class="card" id="smsRcp"><div class="ch">למי שולחים?</div><div class="cb" id="smsRcpBody"></div></div>' +
@@ -7058,6 +7102,7 @@ function updSendBtn(R) {
   b.disabled = !R.list.length || !M.text.trim();
 }
 function renderSmsLive() {
+  smsDraftSave();
   const R = smsRecipients();
   const first = R.list[0];
   const sample = smsFinal(M.text, first ? first.p : null, M.optLine);
@@ -7241,9 +7286,12 @@ Object.assign(ACT, {
     activity((later ? 'תוזמן' : 'נוצר') + ' משלוח סמס "' + j.name + '" ל-' + nf(R.list.length) + ' נמענים');
     renderTabs(); renderSmsJobs(); renderSmsLive();
     toast(j.via ? (j.status === 'נכשל' ? 'השליחה נכשלה: ' + (j.err || '') : later ? 'המשלוח תוזמן אצל פולסים' : 'המשלוח יצא — ' + nf(j.sent || 0) + ' הודעות') : later ? 'המשלוח תוזמן' : 'המשלוח נוצר — אפשר להוריד קובץ לשליחה');
+
+    if (j.status !== 'נכשל') smsReset();   /* נשלח — מתחילים משלוח חדש. נכשל — ההודעה נשארת כדי לתקן ולנסות שוב */
   },
   smsExport: () => { const R = smsRecipients(); if (!R.list.length || !M.text.trim()) { toast('צריך נמענים והודעה'); return; } exportJob({ name: M.name || 'משלוח', text: M.text, opt: M.optLine, to: R.list.map(x => ({ phone: x.phone, uid: x.p ? x.p.uid : null })) }); },
   smsJobExport: el => { const j = S.sms.find(x => x.id === el.dataset.v); if (j) exportJob(j); },
+  smsClear: async () => { if (await ask('ניקוי המסך', 'למחוק את ההודעה ואת הנמענים ולהתחיל משלוח חדש?', 'ניקוי')) smsReset(); },
   smsJobDone: async el => { const j = S.sms.find(x => x.id === el.dataset.v); if (!j) return; j.status = 'נשלח'; await saveKV('sms'); renderSmsJobs(); renderTabs(); },
   smsJobRetry: async el => {
     const j = S.sms.find(x => x.id === el.dataset.v); if (!j || !smsLive()) return;
