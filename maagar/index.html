@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
-<meta name="build" content="20261116-125438">
+<meta name="build" content="20261117-144044">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>דאטה ביתנו — מאגר התומכים</title>
 <style>
@@ -681,6 +681,14 @@ main:has(#v-map.on){max-width:none;padding-inline:20px}
 .udone b{display:block;font-size:18px;color:var(--navy)}
 .udone span{font-size:13px;color:var(--ink2)}
 
+/* ---------- אישור שינוי סטטוס ללא תומכים + ביטול העלאה ---------- */
+.upgs{display:flex;flex-wrap:wrap;gap:8px}
+.upgs span{background:var(--bbg);border:1px solid var(--bbd);border-radius:999px;padding:4px 12px;font-size:13.5px;font-weight:700;color:var(--navy)}
+.upgl{max-height:46vh;overflow:auto;border:1px solid var(--line2);border-radius:var(--r-input)}
+.upgl .tbl th{position:sticky;top:0;background:var(--card);z-index:1}
+.mbox:has(.upgl){width:min(780px,100%)}
+#v-upload tr.off td{opacity:.6}
+
 /* ---------- css/features/sms.css ---------- */
 /* ============ דאטה ביתנו — שליחת סמסים ============ */
 /* ---------- סמסים ---------- */
@@ -1054,6 +1062,35 @@ main.wrap:has(#v-pniyot.on){max-width:1440px}            /* המסך הזה רח
 .pnhow p{margin:2px 0 0;color:var(--ink2);font-size:14px;line-height:1.6}
 .pnhow pre{margin:8px 0 0;background:#0B2E5B;color:#DCE7F4;border-radius:10px;padding:12px;font-size:11.5px;line-height:1.5;overflow:auto;white-space:pre-wrap;word-break:break-all;text-align:left}
 
+/* ---------- css/features/reports.css ---------- */
+/* ============ דאטה ביתנו — דוחות ============ */
+.rpf{display:grid;grid-template-columns:auto minmax(0,1fr) minmax(0,1fr);gap:12px 16px;align-items:end}
+.rpf:has(.rpdates){grid-template-columns:auto auto minmax(0,1fr) minmax(0,1fr)}
+.rpdates{display:flex;gap:10px}
+.rpdates input{width:auto}
+.rpseg{display:flex;gap:4px;padding:4px;background:var(--line2);border-radius:var(--r-btn)}
+.rpseg button{border:0;background:transparent;border-radius:9px;padding:7px 13px;font-size:13.5px;font-weight:700;color:var(--ink2);white-space:nowrap;transition:background .16s var(--ease),color .16s var(--ease)}
+.rpseg button:hover{color:var(--navy)}
+.rpseg button.on{background:var(--card);color:var(--navy);font-weight:800;box-shadow:var(--sh-card)}
+.rpk{margin-top:18px}
+.kpi.rpon:not(.hero){border-color:var(--gold);box-shadow:0 0 0 2px var(--gold),var(--sh-card)}
+.kpi.hero.rpon{box-shadow:0 0 0 3px var(--gold),0 20px 38px -20px rgba(21,80,160,.95)}
+.rptop{display:flex;flex-wrap:wrap;gap:8px}
+.rptop button{display:inline-flex;align-items:center;gap:7px;border:1.5px solid var(--line2);background:var(--card);border-radius:999px;padding:6px 8px 6px 14px;
+  transition:border-color .16s var(--ease),transform .16s var(--ease),box-shadow .16s var(--ease);animation:aUp .45s var(--ease) both}
+.rptop button:hover{border-color:var(--navy-l);transform:translateY(-2px);box-shadow:var(--sh-card)}
+.rptop button.on{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold)}
+.rptop .ar{color:var(--ink3);font-weight:800}
+.rptop b{font-size:16px;color:var(--navy);margin-inline-start:4px}
+.rpm th,.rpm td{text-align:center}
+.rpm thead th:first-child,.rpm tbody th{text-align:start;white-space:nowrap}
+.rpc{min-width:44px;border:0;border-radius:9px;padding:6px 10px;font-weight:800;font-size:14px;font-variant-numeric:tabular-nums;color:var(--navy);
+  background:rgba(27,75,138,var(--a));transition:transform .14s var(--ease),box-shadow .14s var(--ease)}
+.rpc:hover{transform:translateY(-1px);box-shadow:var(--sh-card)}
+.rpc.on{box-shadow:0 0 0 2px var(--gold)}
+#rpList .ch{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.rpc.dk{color:#fff}
+
 /* ---------- css/features/auth.css ---------- */
 /* ============ דאטה ביתנו — מסך הכניסה ============ */
 /* ---------- התחברות ---------- */
@@ -1236,6 +1273,7 @@ body.ro .drawer .db::before{content:"צפייה בלבד — אין לך הרש�
   <section class="screen" id="v-sms"></section>
   <section class="screen" id="v-events"></section>
   <section class="screen" id="v-pniyot"></section>
+  <section class="screen" id="v-reports"></section>
   <section class="screen" id="v-users"></section>
   <div class="foot">הנתונים נשמרים בדפדפן של המחשב הזה בלבד ולא נשלחים לשום שרת.</div>
 </main>
@@ -4568,12 +4606,14 @@ const ICON = {
   sliders: '<path d="M4 6h9M19 6h1M4 12h3M13 12h7M4 18h11"/><circle cx="16" cy="6" r="2.2"/><circle cx="10" cy="12" r="2.2"/><circle cx="18" cy="18" r="2.2"/>',
   msg: '<path d="M4 5h16v11H9l-5 4z"/>',
   cal: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+  chart: '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
   inbox: '<path d="M3 13l2.6-8h12.8L21 13v6H3z"/><path d="M3 13h5l1.5 2.5h5L16 13h5"/>',
   users: '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.6-3.6 3.2-5.5 6.5-5.5s5.9 1.9 6.5 5.5M16 4.5a3.5 3.5 0 0 1 0 7M18 14.6c2 .6 3.2 2.4 3.5 5.4"/>'
 };
 const svg = k => '<svg viewBox="0 0 24 24" aria-hidden="true">' + ICON[k] + '</svg>';
 const VIEWS = [['home', 'דף ראשי', 'home'], ['search', 'חיפוש מתקדם', 'search'], ['pniyot', 'פניות הציבור', 'inbox'], ['sms', 'שליחת סמסים', 'msg'],
-  ['upload', 'העלאת קבצי אקסל', 'up'], ['fields', 'פרטים דינמיים', 'sliders'], ['events', 'אירועים וחוגי בית', 'cal'], ['map', 'מפת הקלפיות', 'map']];
+  ['upload', 'העלאת קבצי אקסל', 'up'], ['fields', 'פרטים דינמיים', 'sliders'], ['events', 'אירועים וחוגי בית', 'cal'], ['map', 'מפת הקלפיות', 'map'],
+  ['reports', 'דוחות', 'chart']];
 
 /* ------------------------------------------------------- מוקדי ההצבעה */
 /* KALPI: [יישוב, שם המוקד, כתובת, קלפיות, lat, lng, מיקום מדויק, בזב26, מצביעים26, ישראל ביתנו26, בזב25, מצביעים25, ישראל ביתנו25, מוקד חזק] */
@@ -4646,12 +4686,43 @@ async function delPeople(uids) {
   return true;
 }
 const KV_KEYS = ['fields', 'dbs', 'groups', 'templates', 'events', 'sms', 'activity', 'uploads', 'smsbal', 'settings'];
+/* ---- שמירת רשימות משותפות (אירועים, קבוצות, תבניות, משלוחים…) בלי לדרוס עבודה של אחרים ----
+   כל משתמש מחזיק עותק מרגע הכניסה. לפני שמירה מושכים מהשרת את הרשימה העדכנית ומוסיפים לה רק את מה ששונה כאן
+   (נוסף / השתנה / נמחק לפי id) — כך פריט שמישהו אחר הוסיף בינתיים לא נמחק. KV_BASE = מה שנטען/נשמר לאחרונה. */
+const KV_BASE = {};
+const kvItemKey = x => x && typeof x === 'object' ? (x.id != null ? 'i:' + x.id : 't:' + (x.t || '') + '|' + (x.text || JSON.stringify(x))) : 'v:' + JSON.stringify(x);
+const kvSetBase = k => { try { KV_BASE[k] = JSON.stringify(S[k] == null ? null : S[k]); } catch (e) { delete KV_BASE[k]; } };
+function kvMerge(k, server) {
+  const local = S[k];
+  if (!Array.isArray(local) || !Array.isArray(server) || !(k in KV_BASE)) return local;
+  const base = JSON.parse(KV_BASE[k] || '[]'); if (!Array.isArray(base)) return local;
+  const B = new Map(base.map(x => [kvItemKey(x), JSON.stringify(x)])), L = new Map(local.map(x => [kvItemKey(x), x])), Sv = new Map(server.map(x => [kvItemKey(x), x]));
+  const changedHere = (key, x) => !B.has(key) || B.get(key) !== JSON.stringify(x);
+  const out = [];
+  server.forEach(x => { const key = kvItemKey(x); if (!L.has(key)) { if (!B.has(key)) out.push(x); return; } });     /* נוסף ע״י אחרים — נשאר */
+  local.forEach(x => {
+    const key = kvItemKey(x);
+    if (Sv.has(key)) {
+      if (changedHere(key, x)) out.push(x);                                                                       /* שיניתי כאן — הגרסה שלי */
+      else { const sv = Sv.get(key); if (x && typeof x === 'object' && sv && typeof sv === 'object') { Object.keys(x).forEach(q => delete x[q]); Object.assign(x, sv); out.push(x); } else out.push(sv); }
+    } else if (!B.has(key) || changedHere(key, x)) out.push(x);                                                    /* חדש שלי, או נמחק אצל אחרים אבל שיניתי אותו */
+  });
+  if (out.length && out.every(x => x && typeof x.t === 'number')) out.sort((a, b) => b.t - a.t);
+  else if (out.length && out.every(x => x && typeof x.created === 'number')) out.sort((a, b) => b.created - a.created);
+  local.length = 0; out.forEach(x => local.push(x));
+  return local;
+}
 async function saveKV(k) {
   if (k === 'settings') { try { localStorage.setItem('maagar-settings', JSON.stringify(S.settings || {})); } catch (e) {} if (!CLOUD) return txp('kv', 'readwrite', s => { s.put({ k, v: S[k] }); }); return; }
   if (!CLOUD) return txp('kv', 'readwrite', s => { s.put({ k, v: S[k] }); });
-  const sc = kvScope(k);
-  const { error } = await sb.from('kv').upsert({ k: sc + '|' + k, scope: sc, v: S[k] });
-  if (error) cloudErr(error, k);
+  const sc = kvScope(k), key = sc + '|' + k;
+  if (Array.isArray(S[k]) && k in KV_BASE && k !== 'smsbal') {
+    const { data, error: e1 } = await sb.from('kv').select('v').eq('k', key).maybeSingle();
+    if (e1) { cloudErr(e1, k); return; }
+    if (data && Array.isArray(data.v)) kvMerge(k, data.v);
+  }
+  const { error } = await sb.from('kv').upsert({ k: key, scope: sc, v: S[k] });
+  if (error) cloudErr(error, k); else kvSetBase(k);
 }
 async function loadCloud() {
   const people = [];
@@ -4665,6 +4736,7 @@ async function loadCloud() {
   if (error) cloudErr(error, 'טעינת הגדרות');
   KV_KEYS.forEach(k => { if (k !== 'settings') S[k] = []; });
   (kv || []).forEach(o => { const i = o.k.indexOf('|'); const sc = o.k.slice(0, i), name = o.k.slice(i + 1); if (KV_KEYS.includes(name) && (sc === 'g' || sc === SCOPE)) S[name] = o.v; });
+  KV_KEYS.forEach(kvSetBase);
   S.people = people;
   return { people: people.length, kv: (kv || []).length };
 }
@@ -4697,7 +4769,14 @@ function ageOf(p) {
 const allPhones = p => [p.phone].concat(p.phones || []).filter(Boolean);
 const fieldById = id => S.fields.find(f => f.id === id);
 const dbName = id => (S.dbs.find(d => d.id === id) || {}).name || id;
-function plog(p, text) { (p.log = p.log || []).unshift({ t: Date.now(), text }); if (p.log.length > 120) p.log.length = 120; }
+const myName = () => CLOUD && ME ? (ME.full_name || ME.email || ('0' + String(ME.phone || '').replace(/^972/, ''))) : '';
+function plog(p, text) { const e = { t: Date.now(), text }; const by = myName(); if (by) e.by = by; (p.log = p.log || []).unshift(e); if (p.log.length > 120) p.log.length = 120; }
+/* היסטוריית סטטוס מסודרת (לדוח ההמרות): from → to, מתי, ע״י מי, ומאיפה (ידני / אקסל / אירוע / פעולה קבוצתית / ביטול העלאה) */
+function stLog(p, from, to, src) {
+  from = from || ''; if (from === to) return;
+  const e = { t: Date.now(), f: from, to, src: src || '' }; const by = myName(); if (by) e.by = by;
+  (p.sh = p.sh || []).unshift(e); if (p.sh.length > 60) p.sh.length = 60;
+}
 function activity(text) { S.activity.unshift({ t: Date.now(), text }); if (S.activity.length > 200) S.activity.length = 200; saveKV('activity'); }
 function indexPerson(p) {
   S.by.set(p.uid, p);
@@ -5708,7 +5787,7 @@ Object.assign(ACT, {
     if (a === 'db') { db = S.dbs.find(d => d.name === v); if (!db) { db = { id: 'db' + uid(), name: v }; S.dbs.push(db); await saveKV('dbs'); } }
     const list = Array.from(SR.sel).map(u => S.by.get(u)).filter(Boolean);
     list.forEach(p => {
-      if (a === 'status') { if (p.status !== v) { plog(p, 'סטטוס שונה בפעולה קבוצתית: ' + stOf(p) + ' ← ' + v); p.status = v; } }
+      if (a === 'status') { if (p.status !== v) { plog(p, 'סטטוס שונה בפעולה קבוצתית: ' + stOf(p) + ' ← ' + v); stLog(p, stOf(p), v, 'פעולה קבוצתית'); p.status = v; } }
       if (a === 'tag') { if (!p.tags.includes(v)) { p.tags.push(v); plog(p, 'נוספה תגית: ' + v); } }
       if (a === 'db') { if (!p.dbs.includes(db.id)) { p.dbs.push(db.id); plog(p, 'נוסף/ה למאגר: ' + v); } }
       if (a === 'owner') { if (p.owner !== v) { plog(p, 'שויך/ה לאיש קשר אחראי: ' + v); p.owner = v; } }
@@ -5850,6 +5929,7 @@ function cardKalpiBox(p, site) {
     const q = norm(inp.value), list = all();
     items = (showAll || !q ? list : list.filter(v => norm(v).includes(q)).sort((a, b) => (norm(a).startsWith(q) ? 0 : 1) - (norm(b).startsWith(q) ? 0 : 1))).slice(0, 120);
     hi = showAll && q ? items.findIndex(v => norm(v) === q) : -1;
+    if (!showAll && items.length === 1 && norm(items[0]) === q) { close(); return; }   /* הקלידו בדיוק ערך מהרשימה — אין צורך להשאיר אותה פתוחה */
     draw();
   }
   function pick(i) {
@@ -5901,11 +5981,30 @@ async function cardSave() {
   C.err = {};
   const old = S.by.get(p.uid);
   const now = Date.now();
+  if (old && CLOUD) {
+    /* מישהו אחר עדכן את הכרטיס בזמן שהיה פתוח? משלבים: הגרסה העדכנית מהשרת + רק השדות ששיניתי כאן */
+    const { data: row, error: re } = await sb.from('people').select('data').eq('uid', p.uid).maybeSingle();
+    if (re) { cloudErr(re, 'בדיקת הכרטיס'); return; }
+    if (!row) {
+      if (!(await ask('האדם נמחק בינתיים', fullName(p) + ' נמחק/ה מהמאגר ע״י משתמש אחר בזמן שהכרטיס היה פתוח. להחזיר אותו/ה למאגר עם הפרטים שלך?', 'להחזיר ולשמור'))) return;
+    } else if ((row.data.updated || 0) !== (old.updated || 0)) {
+      const sv = row.data, mine = {};
+      Object.keys(p).forEach(k => { if (k[0] === '_' || k === 'log' || k === 'sh' || k === 'dyn' || k === 'updated') return; if (JSON.stringify(p[k] == null ? '' : p[k]) !== JSON.stringify(old[k] == null ? '' : old[k])) mine[k] = p[k]; });
+      const dyn = Object.assign({}, sv.dyn || {});
+      new Set(Object.keys(p.dyn || {}).concat(Object.keys(old.dyn || {}))).forEach(k => { if (JSON.stringify((p.dyn || {})[k]) !== JSON.stringify((old.dyn || {})[k])) { if ((p.dyn || {})[k] == null) delete dyn[k]; else dyn[k] = p.dyn[k]; } });
+      const who = ((sv.log || [])[0] || {}).by;
+      Object.keys(p).forEach(k => { if (k[0] !== '_') delete p[k]; });
+      Object.assign(p, clone(sv), mine, { dyn });
+      Object.keys(old).forEach(k => { if (k[0] !== '_') delete old[k]; });
+      Object.assign(old, clone(sv));
+      toast('הכרטיס עודכן בינתיים' + (who ? ' ע״י ' + who : ' ע״י משתמש אחר') + ' — השינויים שלך שולבו בגרסה העדכנית');
+    }
+  }
   if (old) {
     const ch = Object.keys(LBL).filter(k => JSON.stringify(old[k] || '') !== JSON.stringify(p[k] || ''));
     const dch = S.fields.filter(f => JSON.stringify((old.dyn || {})[f.id] == null ? '' : old.dyn[f.id]) !== JSON.stringify(p.dyn[f.id] == null ? '' : p.dyn[f.id])).map(f => f.name);
     const all = ch.map(k => LBL[k]).concat(dch);
-    if (old.status !== p.status) plog(p, 'סטטוס שונה: ' + (old.status || 'לא ידוע') + ' ← ' + p.status);
+    if (old.status !== p.status) { plog(p, 'סטטוס שונה: ' + (old.status || 'לא ידוע') + ' ← ' + p.status); stLog(p, old.status || 'לא ידוע', p.status, 'ידני'); }
     if (all.filter(x => x !== 'סטטוס').length) plog(p, 'עודכן ידנית: ' + all.filter(x => x !== 'סטטוס').join(', '));
     p.updated = now;
     Object.keys(old).forEach(k => { if (k[0] !== '_') delete old[k]; });
@@ -5913,7 +6012,7 @@ async function cardSave() {
   } else {
     p.created = now; p.updated = now;
     if (S.fields.some(f => f.id === 'f_src') && !p.dyn.f_src) p.dyn.f_src = 'הוספה ידנית';
-    plog(p, 'נוסף ידנית למאגר');
+    plog(p, 'נוסף ידנית למאגר'); stLog(p, '', stOf(p), 'הוספה ידנית');
     S.people.push(p);
     activity('נוסף איש קשר חדש: ' + fullName(p));
   }
@@ -6276,9 +6375,52 @@ function buildPreview() {
   rows.forEach(x => { c[x.act]++; if (x.warns.length) c.warn++; });
   U.pv = { rows, c };
 }
+/* ---- אישור לפני שמשנים סטטוס של מי שמסומן „לא תומך” (רק בהעלאת אקסל) ----
+   מחזיר false אם ביטלו את ההעלאה. מי שלא אושר — נשאר עם הסטטוס הקיים. */
+async function upStatusGuard() {
+  const rows = U.pv.rows.filter(x => x.act === 'upd' && x.rec.status && x.ex && stOf(x.ex) === 'לא תומך' && x.rec.status !== 'לא תומך');
+  if (!rows.length) return true;
+  const by = {}; rows.forEach(x => { by[x.rec.status] = (by[x.rec.status] || 0) + 1; });
+  const html = '<div class="note y" style="margin:0 0 12px">האנשים האלה מסומנים במערכת כ<b>לא תומכים</b>, והקובץ משנה להם את הסטטוס. מה שלא מסומן כאן — יישאר „לא תומך”. שאר הפרטים מהקובץ ייכנסו כרגיל.</div>' +
+    '<div class="upgs">' + Object.entries(by).map(([st, n]) => '<span><b class="num">' + nf(n) + '</b> · לא תומך ← ' + esc(st) + '</span>').join('') + '</div>' +
+    '<div class="row" style="gap:12px;margin:10px 0 6px"><button class="link sm" type="button" data-upg="all">סימון הכול</button><button class="link sm" type="button" data-upg="none">ניקוי הסימון</button></div>' +
+    '<div class="upgl"><table class="tbl"><thead><tr><th></th><th>שם</th><th>טלפון</th><th>עיר</th><th>עכשיו</th><th>בקובץ</th></tr></thead><tbody>' +
+    rows.map((x, i) => '<tr><td><input type="checkbox" data-mv="g' + i + '" checked aria-label="אישור השינוי"></td><td><b>' + esc(fullName(x.ex)) + '</b></td><td class="num"><span class="sg">' + esc(fmtPhone(x.ex.phone)) + '</span></td><td>' + esc(x.ex.city || '') + '</td><td>' + stPill('לא תומך') + '</td><td>' + stPill(x.rec.status) + '</td></tr>').join('') +
+    '</tbody></table></div>';
+  const r = await modal('שים לב: ' + nf(rows.length) + ' לא תומכים ישנו סטטוס', html,
+    [{ lb: 'אישור השינויים המסומנים', v: 'ok', def: true }, { lb: 'להשאיר לכולם „לא תומך”', v: 'keep', cls: 'sec' }, { lb: 'ביטול ההעלאה', cls: 'sec' }],
+    b => { b.addEventListener('click', e => { const t = e.target.closest('[data-upg]'); if (!t) return; $$('input[data-mv^="g"]', b).forEach(c => { c.checked = t.dataset.upg === 'all'; }); }); });
+  if (!r) return false;
+  rows.forEach((x, i) => { if (r.v === 'keep' || !r.vals['g' + i]) { delete x.rec.status; x.keptOpp = true; } });
+  return true;
+}
+/* ---- גיבוי לביטול העלאה: איך נראו האנשים לפני, ומי נוסף ---- */
+async function upSaveUndo(id, data) {
+  if (!CLOUD) { await txp('kv', 'readwrite', s => { s.put({ k: 'undo:' + id, v: data }); }); return true; }
+  const parts = []; const all = data.before;
+  for (let i = 0; i < Math.max(1, all.length); i += 300) parts.push(all.slice(i, i + 300));
+  for (let j = 0; j < parts.length; j++) {
+    const { error } = await sb.from('upload_undo').insert({ upload_id: id, part: j, scope: SCOPE, data: j === 0 ? { t: data.t, created: data.created, before: parts[j] } : { before: parts[j] } });
+    if (error) { console.error('upload_undo', error); return false; }
+  }
+  return true;
+}
+async function upLoadUndo(id) {
+  if (!CLOUD) { const v = await txp('kv', 'readonly', s => s.get('undo:' + id)); return v ? v.v : null; }
+  const { data, error } = await sb.from('upload_undo').select('part,data').eq('upload_id', id).order('part');
+  if (error || !data || !data.length) return null;
+  const out = { t: data[0].data.t, created: data[0].data.created || [], before: [] };
+  data.forEach(r => { out.before = out.before.concat(r.data.before || []); });
+  return out;
+}
 async function runUpload() {
   if (!U.pv) return;
+  if (CLOUD) { await loadCloud(); normPeople(); rebuild(); buildPreview(); }   /* עובדים על הנתונים העדכניים — לא על מה שנטען בבוקר */
+  if (!(await upStatusGuard())) { renderUpload(); return; }
   const now = Date.now(), upId = uid();
+  /* גיבוי לפני השינוי */
+  const undo = { t: now, created: [], before: U.pv.rows.filter(x => x.act === 'upd').map(x => findExisting(x.rec) || x.ex).filter(Boolean).map(p => clone(strip(p))) };
+  const seenB = new Set(); undo.before = undo.before.filter(p => !seenB.has(p.uid) && seenB.add(p.uid));
   const newMap = {};
   U.map.forEach((t, j) => { if (t === 'new') { const id = 'f_' + uid(); S.fields.push({ id, name: U.head[j], type: 'text', inSearch: true, inCard: true }); newMap['new:' + j] = id; } });
   const changed = [];
@@ -6290,7 +6432,8 @@ async function runUpload() {
     Object.keys(rec.dyn).forEach(k => { if (newMap[k]) { rec.dyn[newMap[k]] = rec.dyn[k]; delete rec.dyn[k]; } });
     let p = x.act === 'upd' ? findExisting(rec) || x.ex : null;
     const isNew = !p;
-    if (isNew) { p = newPersonObj(); p.dbs = []; p.created = now; p.log = []; S.people.push(p); }
+    if (isNew) { p = newPersonObj(); p.dbs = []; p.created = now; p.log = []; S.people.push(p); undo.created.push(p.uid); }
+    const st0 = isNew ? '' : stOf(p);
     const ch = [];
     ['tz', 'first', 'last', 'city', 'street', 'house', 'lang', 'birth', 'owner', 'kalpi', 'kcity', 'status'].forEach(k => {
       const v = rec[k]; if (v == null || v === '') return;
@@ -6307,14 +6450,20 @@ async function runUpload() {
     if (!p.dbs.includes(U.db)) p.dbs.push(U.db);
     (rec.tags || []).concat(U.opts.tag ? [U.opts.tag] : []).forEach(t => { if (!p.tags.includes(t)) p.tags.push(t); });
     if (ev) { if (!ev.regs.some(r => r.uid === p.uid)) ev.regs.push({ uid: p.uid, t: now, count: 1 }); if (ev.tag && !p.tags.includes(ev.tag)) p.tags.push(ev.tag); }
+    if (p.status && p.status !== st0) stLog(p, st0, p.status, 'אקסל: ' + fname);
     p.lastUpload = upId; p.updated = now;
     plog(p, isNew ? 'נוסף מקובץ "' + fname + '" (' + dbName(U.db) + ')' : 'עודכן מקובץ "' + fname + '"' + (ch.length ? ': ' + Array.from(new Set(ch)).join(', ') : ' — בלי שינוי בשדות'));
     changed.push(p);
   });
   rebuild();
+  const okUndo = await upSaveUndo(upId, undo);
+  if (!okUndo && !(await ask('אין גיבוי לביטול', 'לא הצלחתי לשמור גיבוי של הנתונים לפני ההעלאה, ולכן לא יהיה אפשר לבטל אותה. להמשיך בכל זאת?', 'להמשיך בלי אפשרות ביטול'))) {
+    await loadCloud(); normPeople(); rebuild(); renderUpload(); toast('ההעלאה לא בוצעה'); return;
+  }
   await putPeople(changed);
   const c = U.pv.c;
-  S.uploads.unshift({ id: upId, file: fname, db: U.db, t: now, nw: c.new, upd: c.upd, err: c.err, ev: ev ? ev.name : '' });
+  const kept = U.pv.rows.filter(x => x.keptOpp).length;
+  S.uploads.unshift({ id: upId, file: fname, db: U.db, t: now, nw: c.new, upd: c.upd, err: c.err, ev: ev ? ev.name : '', undo: okUndo, by: myName(), kept });
   await saveKV('uploads'); await saveKV('fields'); if (ev) await saveKV('events');
   activity('הועלה הקובץ "' + fname + '" ל' + dbName(U.db) + ' — ' + c.new + ' נוספו, ' + c.upd + ' עודכנו' + (c.err ? ', ' + c.err + ' שגיאות' : ''));
   U.done = { id: upId, c: Object.assign({}, c), file: fname, errRows: U.pv.rows.filter(x => x.act === 'err'), head: U.head, body: U.body };
@@ -6491,7 +6640,8 @@ function renderUpload() {
 
   /* היסטוריה */
   h += '<div class="card"><div class="ch">היסטוריית העלאות</div><div class="cb tight">' + (S.uploads.length ? '<div class="tw"><table class="tbl"><thead><tr><th>קובץ</th><th>מתי</th><th>נוספו</th><th>עודכנו</th><th>שגיאות</th><th></th></tr></thead><tbody>' +
-    S.uploads.slice(0, 20).map(u => '<tr><td><b>' + esc(u.file) + '</b>' + (u.ev ? ' <span class="pill">' + esc(u.ev) + '</span>' : '') + '</td><td class="mut">' + fmtWhen(u.t) + '</td><td class="num">' + nf(u.nw) + '</td><td class="num">' + nf(u.upd) + '</td><td class="num">' + nf(u.err) + '</td><td><button class="mini" data-act="upShow" data-v="' + u.id + '">האנשים</button></td></tr>').join('') +
+    S.uploads.slice(0, 20).map(u => '<tr' + (u.undone ? ' class="off"' : '') + '><td><b>' + esc(u.file) + '</b>' + (u.ev ? ' <span class="pill">' + esc(u.ev) + '</span>' : '') + (u.undone ? ' <span class="pill r">בוטלה</span>' : '') + (u.by ? '<div class="mut sm">' + esc(u.by) + '</div>' : '') + '</td><td class="mut">' + fmtWhen(u.t) + (u.undone ? '<div class="sm">בוטלה ' + fmtWhen(u.undone) + (u.undoneBy ? ' · ' + esc(u.undoneBy) : '') + '</div>' : '') + '</td><td class="num">' + nf(u.nw) + '</td><td class="num">' + nf(u.upd) + '</td><td class="num">' + nf(u.err) + '</td>' +
+      '<td><div class="row" style="flex-wrap:nowrap;gap:6px">' + (u.undone ? '' : '<button class="mini" data-act="upShow" data-v="' + u.id + '">האנשים</button>') + (u.undo && !u.undone && isAdmin() ? '<button class="mini r" data-act="upUndo" data-v="' + u.id + '">ביטול ההעלאה</button>' : '') + '</div></td></tr>').join('') +
     '</tbody></table></div>' : '<div class="empty">עוד לא הועלו קבצים</div>') + '</div></div>';
   $('#v-upload').innerHTML = h;
   upWire();
@@ -6550,6 +6700,47 @@ Object.assign(ACT, {
   upErrors: () => downloadErrors(),
   upErrorsDone: () => downloadErrors(U.done),
   upShow: el => go('search', { filter: { upl: el.dataset.v } }),
+  upUndo: async el => {
+    if (!isAdmin()) { toast('רק מנהלי מערכת יכולים לבטל העלאה'); return; }
+    const u = S.uploads.find(x => x.id === el.dataset.v); if (!u || u.undone) return;
+    if (!(await ask('ביטול ההעלאה', 'לבטל את ההעלאה של „' + esc(u.file) + '” מ-' + fmtWhen(u.t) + '?<br>• ' + nf(u.upd) + ' אנשים שעודכנו יחזרו למה שהיה לפני ההעלאה<br>• ' + nf(u.nw) + ' אנשים שנוספו מהקובץ יימחקו מהמאגר', 'ביטול ההעלאה', true))) return;
+    toast('טוען את הגיבוי…');
+    const snap = await upLoadUndo(u.id);
+    if (!snap) { toast('לא נמצא גיבוי להעלאה הזו — אי אפשר לבטל אותה'); return; }
+    if (CLOUD) { await loadCloud(); normPeople(); rebuild(); }
+    const edited = p => p && (p.updated || 0) > u.t + 3000;
+    const nEd = snap.before.filter(b => edited(S.by.get(b.uid))).length + snap.created.filter(id => edited(S.by.get(id))).length;
+    let skipEdited = false;
+    if (nEd) {
+      const r = await modal('נערכו אחרי ההעלאה', '<p style="margin:0">' + nf(nEd) + ' מהאנשים בקובץ נערכו שוב <b>אחרי</b> ההעלאה (ידנית, בקובץ אחר או מאירוע).</p><p class="mut sm">אם מחזירים גם אותם — העריכות שנעשו אחרי ההעלאה יימחקו.</p>',
+        [{ lb: 'לדלג עליהם (מומלץ)', v: 'skip', def: true }, { lb: 'להחזיר גם אותם', v: 'all', cls: 'sec' }, { lb: 'ביטול', cls: 'sec' }]);
+      if (!r) return; skipEdited = r.v === 'skip';
+    }
+    const restore = [], del = []; let skipped = 0;
+    snap.before.forEach(b => {
+      const cur = S.by.get(b.uid);
+      if (skipEdited && edited(cur)) { skipped++; return; }
+      const o = clone(b);
+      o.sh = cur ? clone(cur.sh || []) : (o.sh || []);
+      if (cur && stOf(cur) !== stOf(o)) stLog(o, stOf(cur), stOf(o), 'ביטול העלאה: ' + u.file);
+      o.updated = Date.now(); o.lastUpload = '';
+      plog(o, 'ההעלאה של „' + u.file + '” בוטלה — הפרטים הוחזרו למה שהיה לפני');
+      if (cur) { Object.keys(cur).forEach(k => { if (k[0] !== '_') delete cur[k]; }); Object.assign(cur, o); restore.push(cur); } else { S.people.push(o); restore.push(o); }
+    });
+    snap.created.forEach(id => { const cur = S.by.get(id); if (!cur) return; if (skipEdited && edited(cur)) { skipped++; return; } del.push(id); });
+    const delSet = new Set(del);
+    S.people = S.people.filter(p => !delSet.has(p.uid));
+    S.events.forEach(e => { e.regs = (e.regs || []).filter(r => !delSet.has(r.uid)); });
+    rebuild();
+    if ((await putPeople(restore)) === false) return;
+    if ((await delPeople(del)) === false) return;
+    if (del.length) await saveKV('events');
+    u.undone = Date.now(); u.undoneBy = myName();
+    await saveKV('uploads');
+    activity('בוטלה ההעלאה של „' + u.file + '” — ' + restore.length + ' הוחזרו, ' + del.length + ' נמחקו' + (skipped ? ', ' + skipped + ' דולגו (נערכו אחרי)' : ''));
+    renderTabs(); renderUpload(); refresh();
+    toast('ההעלאה בוטלה: ' + nf(restore.length) + ' הוחזרו · ' + nf(del.length) + ' נמחקו' + (skipped ? ' · ' + nf(skipped) + ' דולגו' : ''));
+  },
   upNoEvent: () => { U.eventId = null; U.db = (S.dbs[0] || { id: 'main' }).id; renderUpload(); },
   upGo: el => { U.step = +el.dataset.v; wzApply(); renderUpload(); const s = $('#v-upload .wst.on'); if (s) s.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); },
   upPick: el => { const id = el.dataset.v; U.sel[id] = !U.sel[id]; if (!U.sel[id]) delete U.sel[id]; wzApply(); renderUpload(); },
@@ -7345,6 +7536,7 @@ function matchRow(ev, r, tag) {
     if (fieldById('f_src')) p.dyn.f_src = 'דף נחיתה';
     S.people.push(p); S.by.set(p.uid, p); if (tz) S.byTz.set(tz, p); if (ph) S.byPhone.set(ph, p);
     plog(p, 'נרשם/ה לאירוע "' + ev.name + '" — נוסף/ה למאגר כתומך פוטנציאלי');
+    stLog(p, '', 'תומך פוטנציאלי', 'אירוע: ' + ev.name);
   } else plog(p, 'נרשם/ה לאירוע "' + ev.name + '" — נוספה התגית "' + tag + '"');
   if (tag && !p.tags.includes(tag)) p.tags.push(tag);
   p.updated = Date.now();
@@ -7826,6 +8018,119 @@ Object.assign(ACT, {
   pnToDb: () => pnToDb()
 });
 
+/* ---------- js/features/reports.js ---------- */
+/* ============================================================
+   דאטה ביתנו — דוחות
+   דוח המרות: מי עבר מאיזה סטטוס לאיזה, מתי, ע״י מי ומאיפה.
+   הנתונים: p.sh (היסטוריית סטטוס מסודרת — נרשמת מ-17.11.2026) + שינויים ישנים שנשלפים מההיסטוריה של הכרטיס (p.log).
+   ============================================================ */
+const RP = { days: 30, from: '', to: '', city: '', src: '', sel: '', page: 0 };
+const RP_SRCS = [['', 'כל המקורות'], ['ידני', 'עדכון ידני'], ['אקסל', 'העלאת אקסל'], ['אירוע', 'הרשמה לאירוע'], ['פעולה קבוצתית', 'פעולה קבוצתית מהחיפוש'], ['ביטול העלאה', 'ביטול העלאה']];
+const RP_LOGRX = /^סטטוס שונה( בפעולה קבוצתית)?: (.+?) ← (.+)$/;
+
+/* כל שינויי הסטטוס של כל האנשים שאני רואה */
+function rpChanges() {
+  const out = [];
+  S.people.forEach(p => {
+    const sh = p.sh || [];
+    sh.forEach(e => out.push({ p, t: e.t, f: e.f || '', to: e.to, by: e.by || '', src: e.src || '' }));
+    const near = (t, to) => sh.some(e => e.to === to && Math.abs(e.t - t) < 10000);
+    (p.log || []).forEach(l => {
+      const m = RP_LOGRX.exec(l.text || ''); if (!m || near(l.t, m[3])) return;
+      out.push({ p, t: l.t, f: m[2], to: m[3], by: l.by || '', src: m[1] ? 'פעולה קבוצתית' : 'ידני' });
+    });
+  });
+  return out;
+}
+function rpRange() {
+  if (RP.days === 'custom') {
+    const a = RP.from ? new Date(RP.from + 'T00:00').getTime() : 0, b = RP.to ? new Date(RP.to + 'T23:59:59').getTime() : Infinity;
+    return [a, b];
+  }
+  return RP.days ? [Date.now() - RP.days * 864e5, Infinity] : [0, Infinity];
+}
+function rpFiltered() {
+  const [a, b] = rpRange(), ck = RP.city ? ckey(RP.city) : '';
+  return rpChanges().filter(x => x.t >= a && x.t <= b && (!ck || ckey(x.p.city) === ck) && (!RP.src || x.src.startsWith(RP.src)));
+}
+const rpSelFn = {
+  all: x => !!x.f,
+  sup: x => !!x.f && x.to === 'תומך',
+  lost: x => x.f === 'תומך',
+  new: x => !x.f
+};
+function rpMatch(x) {
+  if (!RP.sel) return !!x.f;
+  if (rpSelFn[RP.sel]) return rpSelFn[RP.sel](x);
+  const [f, to] = RP.sel.split('|'); return x.f === f && x.to === to;
+}
+
+RENDER.reports = function () {
+  const cities = Array.from(new Set(S.people.map(p => p.city).filter(Boolean))).sort((a, b) => a.localeCompare(b, 'he'));
+  $('#v-reports').innerHTML =
+    '<div class="shead"><div><h2>דוחות</h2><p>מי עבר מאיזה סטטוס לאיזה — מתי, ע״י מי ומאיפה</p></div></div>' +
+    '<div class="card"><div class="cb"><div class="rpf">' +
+      '<div><span class="fl">תקופה</span><div class="rpseg">' + [[7, '7 ימים'], [30, '30 יום'], [90, '3 חודשים'], [0, 'הכול'], ['custom', 'תאריכים']].map(([k, l]) => '<button class="' + (String(RP.days) === String(k) ? 'on' : '') + '" data-act="rpDays" data-v="' + k + '">' + l + '</button>').join('') + '</div></div>' +
+      (RP.days === 'custom' ? '<div class="rpdates"><div><label class="fl" for="rp_from">מתאריך</label><input id="rp_from" type="date" data-rp="from" value="' + esc(RP.from) + '"></div><div><label class="fl" for="rp_to">עד תאריך</label><input id="rp_to" type="date" data-rp="to" value="' + esc(RP.to) + '"></div></div>' : '') +
+      '<div><label class="fl" for="rp_city">עיר</label><input id="rp_city" type="text" data-rp="city" list="dl_rp_city" value="' + esc(RP.city) + '" placeholder="כל הערים" autocomplete="off"></div>' +
+      '<div><label class="fl" for="rp_src">מקור השינוי</label><select id="rp_src" data-rp="src">' + RP_SRCS.map(([k, l]) => '<option value="' + k + '"' + (RP.src === k ? ' selected' : '') + '>' + l + '</option>').join('') + '</select></div>' +
+    '</div></div></div>' +
+    '<div id="rpBody"></div>' +
+    '<datalist id="dl_rp_city">' + cities.map(c => '<option value="' + esc(c) + '">').join('') + '</datalist>';
+  rpBody();
+};
+function rpBody() {
+  const all = rpFiltered(), conv = all.filter(x => x.f);
+  const n = k => all.filter(rpSelFn[k]).length;
+  const kpi = (k, lb, ft, hero) => '<button class="kpi' + (hero ? ' hero' : '') + (RP.sel === k ? ' rpon' : '') + '" data-act="rpSel" data-v="' + k + '"><div class="lb">' + lb + '</div><div class="vl">' + nf(n(k)) + '</div><div class="ft">' + ft + '</div></button>';
+  /* מטריצה: מ- (שורות) ← ל- (עמודות) */
+  const M = {}; conv.forEach(x => { const k = x.f + '|' + x.to; M[k] = (M[k] || 0) + 1; });
+  const stl = STATUSES.concat(Array.from(new Set(conv.flatMap(x => [x.f, x.to]))).filter(s => !STATUSES.includes(s)));
+  const rowsF = stl.filter(f => stl.some(t => M[f + '|' + t])), colsT = stl.filter(t => stl.some(f => M[f + '|' + t]));
+  const max = Math.max(1, ...Object.values(M));
+  const top = Object.entries(M).sort((a, b) => b[1] - a[1]).slice(0, 6);
+  const list = all.filter(rpMatch).sort((a, b) => b.t - a.t);
+  const per = 50, pages = Math.max(1, Math.ceil(list.length / per)); if (RP.page >= pages) RP.page = pages - 1;
+  const pg = list.slice(RP.page * per, RP.page * per + per);
+  const selLbl = !RP.sel || RP.sel === 'all' ? 'כל שינויי הסטטוס' : RP.sel === 'sup' ? 'הפכו לתומכים' : RP.sel === 'lost' ? 'הפסיקו להיות תומכים' : RP.sel === 'new' ? 'נוספו למאגר' : RP.sel.split('|').join(' ← ');
+  $('#rpBody').innerHTML =
+    '<div class="kpis rpk">' +
+      kpi('sup', 'הפכו לתומכים', 'מכל סטטוס אחר', true) + kpi('all', 'שינויי סטטוס', 'בתקופה שנבחרה') + kpi('lost', 'הפסיקו להיות תומכים', 'היו תומכים ועברו לסטטוס אחר') + kpi('new', 'נוספו למאגר', 'אנשים חדשים והסטטוס שקיבלו') +
+    '</div>' +
+    (conv.length ? '<div class="card"><div class="ch">המרות בולטות<span class="sub">לחיצה מציגה את האנשים</span></div><div class="cb"><div class="rptop">' +
+        top.map(([k, v]) => { const [f, t] = k.split('|'); return '<button class="' + (RP.sel === k ? 'on' : '') + '" data-act="rpSel" data-v="' + esc(k) + '">' + stPill(f) + '<span class="ar">←</span>' + stPill(t) + '<b class="num">' + nf(v) + '</b></button>'; }).join('') +
+      '</div></div></div>' +
+      '<div class="card"><div class="ch">מאיזה סטטוס לאיזה<span class="sub">שורה = הסטטוס הקודם · עמודה = הסטטוס החדש</span></div><div class="tw"><table class="tbl rpm"><thead><tr><th>היה ← עבר ל</th>' + colsT.map(t => '<th>' + stPill(t) + '</th>').join('') + '<th class="num">סה״כ</th></tr></thead><tbody>' +
+        rowsF.map(f => '<tr><th>' + stPill(f) + '</th>' + colsT.map(t => { const v = M[f + '|' + t] || 0, k = f + '|' + t; return '<td>' + (v ? '<button class="rpc' + (RP.sel === k ? ' on' : '') + (v / max > 0.55 ? ' dk' : '') + '" style="--a:' + (0.12 + 0.7 * v / max).toFixed(2) + '" data-act="rpSel" data-v="' + esc(k) + '">' + nf(v) + '</button>' : '<span class="mut">·</span>') + '</td>'; }).join('') +
+          '<td class="num"><b>' + nf(colsT.reduce((s, t) => s + (M[f + '|' + t] || 0), 0)) + '</b></td></tr>').join('') +
+      '</tbody></table></div></div>'
+      : '<div class="card"><div class="empty"><b>אין שינויי סטטוס בתקופה הזו</b>כל שינוי סטטוס מעכשיו — ידני, מאקסל או מאירוע — יופיע כאן.</div></div>') +
+    '<div class="card" id="rpList"><div class="ch"><span>' + esc(selLbl) + ' <span class="sub">' + nf(list.length) + '</span></span>' +
+      '<div class="row" style="gap:8px">' + (RP.sel && RP.sel !== 'all' ? '<button class="link sm" data-act="rpSel" data-v="">הצגת הכול</button>' : '') + '<button class="btn sec sm" data-act="rpExport"' + (list.length ? '' : ' disabled') + '>ייצוא לאקסל</button></div></div>' +
+      (list.length ? '<div class="tw"><table class="tbl"><thead><tr><th>שם</th><th>עיר</th><th>היה</th><th>עבר ל</th><th>מתי</th><th>ע״י</th><th>מקור</th></tr></thead><tbody>' +
+        pg.map(x => '<tr><td><button class="link" data-act="openCard" data-v="' + x.p.uid + '">' + esc(fullName(x.p)) + '</button></td><td>' + esc(x.p.city || '') + '</td><td>' + (x.f ? stPill(x.f) : '<span class="mut">חדש</span>') + '</td><td>' + stPill(x.to) + '</td>' +
+          '<td class="mut">' + fmtWhen(x.t) + '</td><td>' + esc(x.by || '—') + '</td><td class="mut sm">' + esc(x.src || '') + '</td></tr>').join('') +
+        '</tbody></table></div>' +
+        (pages > 1 ? '<div class="pager"><span>מציג ' + nf(RP.page * per + 1) + '–' + nf(RP.page * per + pg.length) + ' מתוך ' + nf(list.length) + '</span><div class="row"><button class="btn sec sm" data-act="rpPage" data-v="-1"' + (RP.page ? '' : ' disabled') + '>הקודם</button><span class="num">עמוד ' + (RP.page + 1) + ' מתוך ' + pages + '</span><button class="btn sec sm" data-act="rpPage" data-v="1"' + (RP.page < pages - 1 ? '' : ' disabled') + '>הבא</button></div></div>' : '')
+        : '<div class="empty">אין אנשים להצגה</div>') +
+    '</div>';
+}
+document.addEventListener('input', e => { const k = e.target.dataset && e.target.dataset.rp; if (!k || e.target.tagName === 'SELECT') return; RP[k] = e.target.value; RP.page = 0; debounce('rp', rpBody, 200); });
+document.addEventListener('change', e => { const k = e.target.dataset && e.target.dataset.rp; if (!k) return; RP[k] = e.target.value; RP.page = 0; rpBody(); });
+
+/* ---- הפעולות (כפתורי data-act) של המסך הזה — קידומת rp ---- */
+Object.assign(ACT, {
+  rpDays: el => { const v = el.dataset.v; RP.days = v === 'custom' ? 'custom' : +v; RP.page = 0; RENDER.reports(); },
+  rpSel: el => { RP.sel = RP.sel === el.dataset.v ? '' : el.dataset.v; RP.page = 0; rpBody(); const l = $('#rpList'); if (l && RP.sel) l.scrollIntoView({ block: 'start', behavior: 'smooth' }); },
+  rpPage: el => { RP.page += +el.dataset.v; rpBody(); $('#rpList').scrollIntoView({ block: 'start' }); },
+  rpExport: () => {
+    if (!can('export')) { toast(NOPERM.export); return; }
+    const list = rpFiltered().filter(rpMatch).sort((a, b) => b.t - a.t); if (!list.length) return;
+    const aoa = [['שם פרטי', 'שם משפחה', 'טלפון', 'עיר', 'היה', 'עבר ל', 'מתי', 'ע״י', 'מקור', 'הסטטוס היום']].concat(list.map(x => [x.p.first || '', x.p.last || '', fmtPhone(x.p.phone), x.p.city || '', x.f || 'חדש', x.to, fmtWhen(x.t), x.by || '', x.src || '', stOf(x.p)]));
+    saveXlsx([['שינויי סטטוס', aoa]], 'דוח המרות — ' + fmtDate(isoDay(new Date())) + '.xlsx');
+  }
+});
+
 /* ---------- js/core/40-header.js ---------- */
 /* ============================================================
    דאטה ביתנו — ראש הדף
@@ -7929,8 +8234,20 @@ const BRAND = 'דאטה ביתנו';
 const HQ_LABEL = { central: 'מטה מרכזי', city: 'מטה עירוני' };
 const PERMS = [['edit', 'עריכת אנשים', 'הוספה, עדכון ומחיקה של אנשים, סטטוסים, תגיות ופרטים דינמיים'], ['import', 'העלאת אקסלים', 'טעינת קבצים חדשים למאגר'],
   ['export', 'ייצוא לאקסל', 'הורדת רשימות אנשים מהמערכת'], ['sms', 'שליחת סמסים', 'משלוחים לקבוצות ולאנשים']];
-const isAdmin = () => !CLOUD || !!(ME && ME.role === 'admin');
-const can = k => !CLOUD || !!(ME && (ME.role === 'admin' || (ME.perms || {})[k]));
+/* דרגות: בעלים > מנהל/ת ראשי/ת > מנהל/ת מערכת > משתמש/ת (נאכף גם בשרת — schema.sql) */
+const ROLES = { owner: 'בעלים', senior: 'מנהל/ת ראשי/ת', admin: 'מנהל/ת מערכת', user: 'משתמש/ת' };
+const roleRank = r => ({ owner: 4, senior: 3, admin: 2 })[r] || 1;
+const isAdmin = () => !CLOUD || !!(ME && roleRank(ME.role) >= 2);
+const can = k => !CLOUD || !!(ME && (roleRank(ME.role) >= 2 || (ME.perms || {})[k]));
+/* את מי אני יכול/ה לערוך, לחסום ולמחוק */
+function canManage(u) {
+  if (!CLOUD) return true;
+  if (!ME || !u || u.id === ME.id) return false;
+  if (ME.role === 'owner') return true;
+  if (ME.role === 'senior') return u.role !== 'owner';
+  if (ME.role === 'admin') return u.role === 'user' && !u.manager_id;
+  return u.manager_id === ME.id;
+}
 const ACT_PERM = { newPerson: 'edit', cardSave: 'edit', cardDelete: 'edit', cardStatus: 'edit', cardAddTag: 'edit', cardDelTag: 'edit', cardAddPhone: 'edit',
   cardDelPhone: 'edit', cardAddField: 'edit', cardMulti: 'edit', bulk: 'edit', fldAdd: 'edit', fldEdit: 'edit', fldDel: 'edit', newDb: 'edit', dbRename: 'edit',
   dbDel: 'edit', clearDemo: 'edit', seedCloud: 'edit', evDelete: 'edit', newEvent: 'edit', evEdit: 'edit', evSave: 'edit', evMakeLink: 'edit',
@@ -8122,7 +8439,7 @@ function renderWho() {
   const hi = $('#hello');
   const nm = CLOUD && ME ? (ME.full_name || ME.email || fmtPhone('0' + String(ME.phone || '').replace(/^972/, ''))) : '';
   if (hi) hi.innerHTML = '<b>' + esc(greeting()) + (nm ? ', ' + esc(nm) : '') + '</b>' +
-    (CLOUD && ME ? '<span>' + (ME.hq === 'central' ? 'מטה מרכזי' : 'מטה עירוני · ' + esc(ME.city || '')) + (ME.role === 'admin' ? ' · מנהל/ת מערכת' : '') + '</span>' : '');
+    (CLOUD && ME ? '<span>' + (ME.hq === 'central' ? 'מטה מרכזי' : 'מטה עירוני · ' + esc(ME.city || '')) + (roleRank(ME.role) >= 2 ? ' · ' + ROLES[ME.role] : '') + '</span>' : '');
   const w = $('#whoChip'); if (!w) return;
   if (!CLOUD || !ME) { w.hidden = true; return; }
   w.hidden = false;
@@ -8182,13 +8499,13 @@ const umHead = () => '<div class="shead"><div><h2>משתמשים</h2><p>רק מ�
 function renderUsers() {
   const act = UM.list.filter(u => u.status === 'active'), blk = UM.list.filter(u => u.status !== 'active');
   const scopeTxt = u => u.hq === 'central' ? '<span class="pill b">מטה מרכזי</span>' : '<span class="pill">' + esc(u.city || '—') + '</span>';
-  const permTxt = u => u.role === 'admin' ? '<span class="pill y">מנהל/ת מערכת · הכול</span>' :
+  const permTxt = u => roleRank(u.role) >= 2 ? '<span class="pill ' + (u.role === 'owner' ? 'b' : 'y') + '">' + ROLES[u.role] + ' · הכול</span>' :
     (PERMS.filter(([k]) => (u.perms || {})[k]).map(([k]) => '<span class="pill g">' + pname[k] + '</span>').join(' ') || '<span class="pill n">צפייה בלבד</span>');
   const login = u => [u.email ? '<span class="lg"><span class="lgi g">G</span><span class="sg">' + esc(u.email) + '</span></span>' : '', u.phone ? '<span class="lg"><span class="lgi">SMS</span><span class="sg">' + esc(fmtLoginPhone(u.phone)) + '</span></span>' : ''].filter(Boolean).join('');
   const row = u => '<tr' + (u.status !== 'active' ? ' class="off"' : '') + '><td><b>' + esc(u.full_name || '—') + '</b>' + (u.note ? '<div class="mut sm">' + esc(u.note) + '</div>' : '') + '</td><td><div class="lgs">' + login(u) + '</div></td><td>' + scopeTxt(u) + '</td><td>' + permTxt(u) + '</td>' +
     '<td class="mut sm">' + (u.last_login ? fmtWhen(new Date(u.last_login).getTime()) : 'עוד לא נכנס/ה') + '</td>' +
-    '<td><div class="row" style="flex-wrap:nowrap;gap:6px"><button class="mini" data-act="umEdit" data-v="' + u.id + '">עריכה</button>' +
-      (u.id === ME.id ? '<span class="mut sm">זה את/ה</span>' : (u.status === 'active' ? '<button class="mini r" data-act="umBlock" data-v="' + u.id + '">חסימה</button>' : '<button class="mini" data-act="umUnblock" data-v="' + u.id + '">החזרת גישה</button><button class="mini r" data-act="umDel" data-v="' + u.id + '">מחיקה</button>')) +
+    '<td><div class="row" style="flex-wrap:nowrap;gap:6px">' + (u.id === ME.id || canManage(u) ? '<button class="mini" data-act="umEdit" data-v="' + u.id + '">עריכה</button>' : '') +
+      (u.id === ME.id ? '<span class="mut sm">זה את/ה</span>' : !canManage(u) ? '<span class="mut sm" title="אפשר לנהל רק משתמשים בדרגה נמוכה משלך">—</span>' : (u.status === 'active' ? '<button class="mini" data-act="umBlock" data-v="' + u.id + '">חסימה</button>' : '<button class="mini" data-act="umUnblock" data-v="' + u.id + '">החזרת גישה</button>') + '<button class="mini r" data-act="umDel" data-v="' + u.id + '">מחיקה</button>') +
     '</div></td></tr>';
   const table = list => '<div class="tw"><table class="tbl utbl"><thead><tr><th>שם</th><th>כניסה עם</th><th>גישה</th><th>הרשאות</th><th>כניסה אחרונה</th><th></th></tr></thead><tbody>' + list.map(row).join('') + '</tbody></table></div>';
   $('#v-users').innerHTML = umHead() +
@@ -8197,7 +8514,10 @@ function renderUsers() {
     '<datalist id="dl_kc_um">' + KCITIES.map(c => '<option value="' + esc(c) + '">').join('') + '</datalist>';
 }
 function userFormHtml(v, isNew) {
-  const ck = k => (v.role === 'admin' || (v.perms || {})[k]) ? ' checked' : '';
+  const big = roleRank(v.role) >= 2, self = !isNew && v.id === ME.id;
+  const ck = k => (big || (v.perms || {})[k]) ? ' checked' : '';
+  const roleOpts = Object.keys(ROLES).filter(r => r === v.role || (r !== 'owner' && roleRank(r) < roleRank(ME.role)));
+  const roleDs = { owner: 'הכול, כולל ניהול כל המשתמשים', senior: 'מנהל/ת את כל המשתמשים, חוץ מהבעלים', admin: 'פותח/ת משתמשים רגילים ומקבל/ת את כל ההרשאות (מטה מרכזי בלבד)', user: '' };
   return '<div class="ufrm">' +
     '<div class="full"><label class="fl" for="uf_name">שם מלא</label><input id="uf_name" type="text" data-mv="full_name" value="' + esc(v.full_name || '') + '"></div>' +
     '<div class="full sub2">איך הוא/היא יתחבר/תתחבר? (אפשר את שניהם)</div>' +
@@ -8205,8 +8525,8 @@ function userFormHtml(v, isNew) {
     '<div><label class="fl" for="uf_phone">נייד (לקוד ב-SMS)</label><input id="uf_phone" type="tel" data-mv="phone" dir="ltr" placeholder="050-0000000" value="' + esc(v.phone ? fmtLoginPhone(v.phone) : '') + '"></div>' +
     '<div><label class="fl" for="uf_hq">שיוך</label><select id="uf_hq" data-mv="hq"><option value="central"' + (v.hq === 'central' ? ' selected' : '') + '>מטה מרכזי — כל הארץ</option><option value="city"' + (v.hq === 'city' ? ' selected' : '') + '>מטה עירוני — עיר אחת</option></select></div>' +
     '<div id="uf_cityw"' + (v.hq === 'city' ? '' : ' hidden') + '><label class="fl" for="uf_city">עיר</label><input id="uf_city" type="text" data-mv="city" list="dl_kc_uf" value="' + esc(v.city || '') + '" placeholder="למשל: אשקלון"></div>' +
-    '<div class="full"><label class="fl" for="uf_role">תפקיד</label><select id="uf_role" data-mv="role"><option value="user"' + (v.role !== 'admin' ? ' selected' : '') + '>משתמש/ת</option><option value="admin"' + (v.role === 'admin' ? ' selected' : '') + '>מנהל/ת מערכת — פותח/ת משתמשים ומקבל/ת את כל ההרשאות (מטה מרכזי בלבד)</option></select></div>' +
-    '<div class="full"><span class="fl">הרשאות</span><div class="ufperms" id="uf_perms">' + PERMS.map(([k, lb, ds]) => '<label class="ufp"><input type="checkbox" data-mv="p_' + k + '"' + ck(k) + (v.role === 'admin' ? ' disabled' : '') + '><span><b>' + lb + '</b><small>' + ds + '</small></span></label>').join('') +
+    '<div class="full"><label class="fl" for="uf_role">תפקיד</label><select id="uf_role" data-mv="role"' + (self ? ' disabled title="אי אפשר לשנות לעצמך את התפקיד"' : '') + '>' + roleOpts.map(r => '<option value="' + r + '"' + (v.role === r ? ' selected' : '') + '>' + ROLES[r] + (roleDs[r] ? ' — ' + roleDs[r] : '') + '</option>').join('') + '</select></div>' +
+    '<div class="full"><span class="fl">הרשאות</span><div class="ufperms" id="uf_perms">' + PERMS.map(([k, lb, ds]) => '<label class="ufp"><input type="checkbox" data-mv="p_' + k + '"' + ck(k) + (big ? ' disabled' : '') + '><span><b>' + lb + '</b><small>' + ds + '</small></span></label>').join('') +
       '</div><div class="mut sm" style="margin-top:6px">בלי אף הרשאה — צפייה וחיפוש בלבד.</div></div>' +
     '<div><label class="fl" for="uf_nda">תאריך חתימה על הסכם סודיות</label><input id="uf_nda" type="date" data-mv="nda_date" value="' + esc(v.nda_date || '') + '"></div>' +
     '<div><label class="fl" for="uf_note">הערה (לא חובה)</label><input id="uf_note" type="text" data-mv="note" value="' + esc(v.note || '') + '" placeholder="למשל: רכז/ת שטח"></div>' +
@@ -8217,11 +8537,11 @@ function userFormHtml(v, isNew) {
 function userFormOpen(b) {
   const hq = $('#uf_hq', b), role = $('#uf_role', b);
   const sync = () => {
-    if (role.value === 'admin') hq.value = 'central';
+    if (roleRank(role.value) >= 2) hq.value = 'central';
     $('#uf_cityw', b).hidden = hq.value !== 'city';
-    $$('#uf_perms input', b).forEach(c => { c.disabled = role.value === 'admin'; if (role.value === 'admin') c.checked = true; });
+    $$('#uf_perms input', b).forEach(c => { c.disabled = roleRank(role.value) >= 2; if (roleRank(role.value) >= 2) c.checked = true; });
   };
-  hq.addEventListener('change', () => { if (hq.value === 'city' && role.value === 'admin') role.value = 'user'; sync(); });
+  hq.addEventListener('change', () => { if (hq.value === 'city' && roleRank(role.value) >= 2) role.value = 'user'; sync(); });
   role.addEventListener('change', sync);
 }
 async function userForm(u) {
@@ -8232,9 +8552,10 @@ async function userForm(u) {
       [{ lb: isNew ? 'הוספת המשתמש' : 'שמירה', v: true, def: true }, { lb: 'ביטול', cls: 'sec' }], userFormOpen);
     if (!r) return;
     const x = r.vals;
-    v = Object.assign(v, { full_name: x.full_name.trim(), email: x.email.trim().toLowerCase(), phone: x.phone.trim(), hq: x.role === 'admin' ? 'central' : x.hq,
-      city: x.city, role: x.role, nda_date: x.nda_date, note: x.note.trim(), perms: {} });
-    PERMS.forEach(([k]) => { v.perms[k] = x.role === 'admin' ? true : !!x['p_' + k]; });
+    const xr = x.role || v.role;
+    v = Object.assign(v, { full_name: x.full_name.trim(), email: x.email.trim().toLowerCase(), phone: x.phone.trim(), hq: roleRank(xr) >= 2 ? 'central' : x.hq,
+      city: x.city, role: xr, nda_date: x.nda_date, note: x.note.trim(), perms: {} });
+    PERMS.forEach(([k]) => { v.perms[k] = roleRank(xr) >= 2 ? true : !!x['p_' + k]; });
     let err = '';
     const ph = v.phone ? nph(v.phone) : '';
     if (!v.full_name) err = 'חסר שם מלא';
@@ -8257,7 +8578,7 @@ function memberErr(error) {
   const m = String(error.message || '');
   if (/members_email_key|email.*unique|duplicate.*email/i.test(m)) return 'המייל הזה כבר רשום למשתמש אחר';
   if (/members_phone_key|phone.*unique|duplicate.*phone/i.test(m)) return 'הנייד הזה כבר רשום למשתמש אחר';
-  if (/admin_central/.test(m)) return 'מנהל/ת מערכת חייב/ת להיות במטה המרכזי';
+  if (/admin_central/.test(m)) return 'מנהלים חייבים להיות במטה המרכזי';
   if (/row-level|permission/i.test(m)) return 'אין לך הרשאה לנהל משתמשים';
   if (/[א-ת]/.test(m)) return m;
   return 'לא נשמר: ' + m.slice(0, 100);
@@ -8277,7 +8598,8 @@ Object.assign(ACT, {
   umUnblock: el => umSet(el.dataset.v, { status: 'active' }, 'הגישה הוחזרה'),
   umDel: async el => {
     const u = UM.list.find(x => x.id === el.dataset.v); if (!u) return;
-    if (!(await ask('מחיקת משתמש', 'למחוק לגמרי את ' + esc(u.full_name || u.email || '') + ' מרשימת המשתמשים?', 'מחיקה', true))) return;
+    if (!canManage(u)) { toast('אפשר למחוק רק משתמשים בדרגה נמוכה משלך'); return; }
+    if (!(await ask('מחיקת משתמש', 'למחוק לגמרי את ' + esc(u.full_name || u.email || '') + ' מרשימת המשתמשים? הגישה שלו/ה תיסגר מיד. (אם רק רוצים לעצור זמנית — עדיף „חסימה”.)', 'מחיקה', true))) return;
     const { error } = await sb.from('members').delete().eq('id', u.id);
     if (error) return toast(memberErr(error));
     toast('המשתמש נמחק'); RENDER.users();
