@@ -42,8 +42,11 @@ form{padding:26px 26px 30px;display:flex;flex-direction:column;gap:16px}
 .ft{font-size:17px;font-weight:900;color:var(--navy);margin:0 0 -4px}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 label{display:flex;flex-direction:column;gap:6px;font-size:13.5px;font-weight:700;color:var(--ink2)}
-input{border:1.5px solid var(--line);border-radius:12px;padding:13px 14px;font:inherit;font-size:17px;color:var(--ink);background:#fff;width:100%;transition:border-color .16s,box-shadow .16s;-webkit-appearance:none}
-input:focus{outline:none;border-color:var(--navy-l);box-shadow:0 0 0 4px rgba(27,75,138,.13)}
+input,select{border:1.5px solid var(--line);border-radius:12px;padding:13px 14px;font:inherit;font-size:17px;color:var(--ink);background:#fff;width:100%;transition:border-color .16s,box-shadow .16s;-webkit-appearance:none}
+select{-webkit-appearance:auto;appearance:auto}
+.chk{flex-direction:row;align-items:center;gap:10px;font-size:15.5px;color:var(--ink);cursor:pointer}
+.chk input{width:22px;height:22px;flex:none;padding:0;-webkit-appearance:auto;appearance:auto;accent-color:var(--navy)}
+input:focus,select:focus{outline:none;border-color:var(--navy-l);box-shadow:0 0 0 4px rgba(27,75,138,.13)}
 input.bad{border-color:#C0392B;box-shadow:0 0 0 4px rgba(192,57,43,.1)}
 .ltr{direction:ltr;text-align:right}
 .go{margin-top:6px;background:var(--navy);color:#fff;border:0;border-radius:14px;padding:16px;font:inherit;font-size:18px;font-weight:800;cursor:pointer;
@@ -121,13 +124,18 @@ input.bad{border-color:#C0392B;box-shadow:0 0 0 4px rgba(192,57,43,.1)}
       ((F.first || F.last) ? '<div class="two">' + (F.first ? fld('first', 'שם פרטי', 'type="text" autocomplete="given-name" maxlength="40"') : '') + (F.last ? fld('last', 'שם משפחה', 'type="text" autocomplete="family-name" maxlength="40"') : '') + '</div>' : '') +
       (F.phone ? fld('phone', 'טלפון נייד', 'type="tel" inputmode="tel" autocomplete="tel" class="ltr" maxlength="16"') : '') +
       (F.tz ? fld('tz', 'תעודת זהות', 'type="text" inputmode="numeric" class="ltr" maxlength="10"') : '') +
+      (e.extra || []).filter(function (x) { return x && /^x[a-z0-9]{2,12}$/.test(x.k || ''); }).map(function (x) {   /* שדות נוספים שהוגדרו לאירוע — לא חובה */
+        if (x.type === 'bool') return '<label class="chk"><input type="checkbox" name="' + x.k + '" value="כן">' + esc(x.label) + '</label>';
+        if ((x.type === 'select' || x.type === 'multi') && x.options && x.options.length) return '<label>' + esc(x.label) + '<select name="' + x.k + '"><option value="">בחירה…</option>' + x.options.map(function (o) { return '<option>' + esc(o) + '</option>'; }).join('') + '</select></label>';
+        return '<label>' + esc(x.label) + '<input name="' + x.k + '" type="' + (x.type === 'number' ? 'number' : x.type === 'date' ? 'date' : 'text') + '" maxlength="200"></label>';
+      }).join('') +
       '<div id="er"></div><button class="go" type="submit">אני מגיע/ה</button></form>' + foot();
     var f = document.getElementById('f'), er = document.getElementById('er');
     f.addEventListener('input', function (ev) { ev.target.classList.remove('bad'); er.innerHTML = ''; });
     f.addEventListener('submit', function (ev) {
       ev.preventDefault();
       var v = {}, bad = null;
-      Array.prototype.forEach.call(f.elements, function (el) { if (el.name) v[el.name] = el.value.trim(); });
+      Array.prototype.forEach.call(f.elements, function (el) { if (el.name) v[el.name] = el.type === 'checkbox' ? (el.checked ? el.value : '') : el.value.trim(); });
       var fail = function (n, t) { if (!bad) { bad = n; var el = f.elements[n]; if (el) { el.classList.add('bad'); el.focus(); } er.innerHTML = '<div class="err">' + esc(t) + '</div>'; } };
       if (F.first && !v.first) fail('first', 'חסר שם פרטי');
       if (F.last && !v.last) fail('last', 'חסר שם משפחה');
@@ -147,7 +155,7 @@ input.bad{border-color:#C0392B;box-shadow:0 0 0 4px rgba(192,57,43,.1)}
         var gcal = 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=' + encodeURIComponent(e.name) + (dates ? '&dates=' + dates + '&ctz=Asia/Jerusalem' : '') +
           (e.place ? '&location=' + encodeURIComponent(e.place) : '') + '&details=' + encodeURIComponent(e.desc || '');
         app.innerHTML = head.replace('<header class="h">', '<header class="h" style="padding-bottom:22px">') +
-          '<div class="ok"><div class="okc">' + I.ok + '</div><b>תודה' + (v.first ? ', ' + esc(v.first) : '') + '! נרשמת</b><p>נתראה ב' + esc(when(e)) + '</p>' +
+          '<div class="ok"><div class="okc">' + I.ok + '</div><b>תודה' + (v.first ? ', ' + esc(v.first) : '') + '! נרשמת</b><p>נתראה ב' + esc(when(e)) + (e.confirm && v.phone ? '<br><small>שלחנו לך סמס עם הפרטים.</small>' : '') + '</p>' +
           '<div class="acts"><a class="ab" href="' + esc(gcal) + '" target="_blank" rel="noopener">' + I.cal + 'הוספה ליומן</a>' +
           (e.place ? '<a class="ab" href="https://waze.com/ul?q=' + encodeURIComponent(e.place) + '&navigate=yes" target="_blank" rel="noopener">' + I.nav + 'ניווט ב-Waze</a>' : '') + '</div></div>' + foot();
         window.scrollTo(0, 0);

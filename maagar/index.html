@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
-<meta name="build" content="20261117-183619">
+<meta name="build" content="20261117-190539">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>דאטה ביתנו — מאגר התומכים</title>
 <style>
@@ -470,6 +470,22 @@ button.crow:hover{background:#F5F8FC}
 #srchPanel .ssec::after{content:'';flex:1;height:1px;background:var(--line2)}
 #srchPanel .sdyn-miss{opacity:.55}
 #srchPanel select:disabled{cursor:not-allowed}
+
+/* ---------- תוצאות — טבלה רחבה בסגנון פניות הציבור ---------- */
+main.wrap:has(#v-search.on){max-width:1440px}
+#srchRes{border-radius:var(--r-card);box-shadow:var(--sh-card);overflow:hidden}
+.srtbl{font-size:14.5px}
+.srtbl th{padding:12px 18px;font-size:12.5px}
+.srtbl td{padding:14px 18px}
+.srtbl .srck{width:1%;padding-inline-end:4px}
+.srrow{cursor:pointer}
+.srrow:focus-visible td{background:#F1F6FD;outline:none}
+.srnm{font-weight:700;color:var(--ink)}
+.srgo{text-align:end;width:1%;white-space:nowrap}
+.srbtn{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--line);background:#fff;border-radius:9px;padding:6px 10px 6px 12px;font:inherit;font-size:13px;font-weight:800;color:var(--navy);
+  transition:all .15s;white-space:nowrap;cursor:pointer}
+.srbtn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.srrow:hover .srbtn{background:var(--navy);border-color:var(--navy);color:#fff}
 
 /* ---------- css/features/card.css ---------- */
 /* ============ דאטה ביתנו — כרטיס אדם ============ */
@@ -956,6 +972,24 @@ main:has(#v-map.on){max-width:none;padding-inline:20px}
 .lp .btn:disabled{opacity:1;cursor:default}
 .lp .done{padding:30px 22px;text-align:center}
 .lp .done b{display:block;font-size:20px;color:var(--navy);margin-bottom:4px}
+
+/* ---- עריכה: עמודה ימנית = פרטים + התמונה בווטסאפ; שמאלית = איך ייראה הדף ---- */
+.edcol{display:flex;flex-direction:column;gap:18px;min-width:0}
+.edimgc{border-radius:var(--r-card);box-shadow:var(--sh-card)}
+.edimgc .ch svg{width:17px;height:17px;margin-inline-end:6px;vertical-align:-3px}
+.edimgc .ch{justify-content:flex-start}
+.edimgc .ch .sub{margin-inline-start:auto}
+.edimgb{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.edimgb .edimg{width:340px;max-width:100%;flex:none}
+.edimga{display:flex;flex-direction:column;align-items:flex-start;gap:8px}
+.edside .edpvt{margin-top:0}
+/* שדות נוספים בטופס */
+.edchip.edx{padding-inline-end:6px}
+.edxdel{border:0;background:rgba(255,255,255,.16);color:#fff;width:22px;height:22px;border-radius:50%;font:inherit;font-size:15px;line-height:1;cursor:pointer;display:grid;place-items:center;padding:0}
+.edxdel:hover{background:rgba(255,255,255,.3)}
+.edchip.edxadd{border-style:dashed;background:#fff;color:var(--navy);cursor:pointer;font:inherit;font-size:14px;font-weight:800}
+.edchip.edxadd:hover{background:var(--bbg)}
+.edxn{display:flex;flex-direction:column;gap:4px;margin-top:10px;padding:10px 12px;border-radius:10px;background:var(--bbg);color:var(--ink2);font-size:13px;line-height:1.5}
 
 /* ---------- css/features/pniyot.css ---------- */
 /* ============ דאטה ביתנו — פניות הציבור ============ */
@@ -6126,13 +6160,16 @@ function renderResults() {
         (nSel ? '<button class="btn sec sm" data-act="bulk">עדכון לנבחרים</button>' : '') +
         (nSel ? '<button class="btn sm" data-act="smsRes">סמס ל-' + nf(nSel) + ' נבחרים</button>' : '') +   /* אין „סמס לכולם” — שלא ישלחו בטעות לכל המאגר */
       '</div></div>' +
-    (res.length ? '<div class="tw"><table class="tbl"><thead><tr><th><input type="checkbox" data-act="selPage"' + (allOn ? ' checked' : '') + ' aria-label="בחירת כל הדף"></th>' +
-      '<th>שם</th><th>טלפון</th><th>עיר</th><th>קלפי</th><th>סטטוס</th></tr></thead><tbody>' +
-      rows.map(p => { const s = p._site; const a = ageOf(p); return '<tr class="' + (SR.sel.has(p.uid) ? 'sel' : '') + '"><td><input type="checkbox" data-act="selOne" data-v="' + p.uid + '"' + (SR.sel.has(p.uid) ? ' checked' : '') + ' aria-label="בחירה"></td>' +
-        '<td><button class="link" data-act="openCard" data-v="' + p.uid + '">' + esc(fullName(p)) + '</button></td>' +
-        '<td class="num"><span class="sg">' + esc(fmtPhone(p.phone)) + '</span></td><td>' + esc(p.city || '') + '</td>' +
-        '<td>' + (p.kalpi ? (s ? '<button class="link" style="font-weight:600" data-act="mapFocus" data-v="' + s.i + '" title="' + esc(s.n + ' · ' + s.s) + '">' + esc(p.kalpi) + '</button>' : '<span class="mut" title="הקלפי לא נמצאה ברשימת המוקדים">' + esc(p.kalpi) + ' ?</span>') : '<span class="mut">—</span>') + '</td>' +
-        '<td>' + stPill(stOf(p)) + '</td></tr>'; }).join('') +
+    (res.length ? '<div class="tw"><table class="tbl srtbl"><thead><tr><th class="srck"><input type="checkbox" data-act="selPage"' + (allOn ? ' checked' : '') + ' aria-label="בחירת כל הדף"></th>' +
+      '<th>שם פרטי</th><th>שם משפחה</th><th>טלפון</th><th>עיר/יישוב</th><th>סטטוס תמיכה</th><th></th></tr></thead><tbody>' +
+      rows.map(p => '<tr class="srrow' + (SR.sel.has(p.uid) ? ' sel' : '') + '" data-act="openCard" data-v="' + p.uid + '" tabindex="0">' +
+        '<td class="srck"><input type="checkbox" data-act="selOne" data-v="' + p.uid + '"' + (SR.sel.has(p.uid) ? ' checked' : '') + ' aria-label="בחירה"></td>' +
+        '<td class="srnm">' + (esc(p.first || '') || '<span class="mut">—</span>') + '</td>' +
+        '<td class="srnm">' + (esc(p.last || '') || '<span class="mut">—</span>') + '</td>' +
+        '<td class="num"><span class="sg">' + (p.phone ? esc(fmtPhone(p.phone)) : '<span class="mut">—</span>') + '</span></td>' +
+        '<td>' + (esc(p.city || '') || '<span class="mut">—</span>') + '</td>' +
+        '<td>' + stPill(stOf(p)) + '</td>' +
+        '<td class="srgo"><button class="srbtn" data-act="openCard" data-v="' + p.uid + '">פרטים נוספים<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg></button></td></tr>').join('') +
       '</tbody></table></div>' +
       '<div class="pager"><span>מציג ' + nf(SR.page * per + 1) + '–' + nf(SR.page * per + rows.length) + ' מתוך ' + nf(res.length) + '</span><div class="row">' +
         '<button class="btn sec sm" data-act="page" data-v="-1"' + (SR.page ? '' : ' disabled') + '>הקודם</button><span class="num">עמוד ' + (SR.page + 1) + ' מתוך ' + pages + '</span>' +
@@ -7847,7 +7884,22 @@ function evShareText(ev) { return 'הוזמנת ל' + (ev.name || 'אירוע') 
 function evPubData(ev) {
   const l = evLoc(ev);
   return { name: ev.name, date: ev.date, time: ev.time, place: evPlace(ev), city: l.city, street: l.street, house: l.house, apt: l.apt, desc: ev.desc,
-    fields: { first: !!ev.fields.first, last: !!ev.fields.last, phone: !!ev.fields.phone, tz: !!ev.fields.tz }, img: ev.img || '', imgCustom: !!ev.imgCustom };
+    fields: { first: !!ev.fields.first, last: !!ev.fields.last, phone: !!ev.fields.phone, tz: !!ev.fields.tz }, img: ev.img || '', imgCustom: !!ev.imgCustom,
+    extra: evExtra(ev).map(x => ({ k: x.k, label: x.label, type: x.type || 'text', options: x.options || [] })), confirm: !!ev.confirm };
+}
+/* ---- שדות נוספים בטופס ההרשמה ----
+   כל שדה: { k:'x…', label, fid, type, options }. fid = הפרט הדינמי שהתשובה נכנסת אליו בכרטיס בהתאמה למאגר.
+   שדה בשם של פרט קיים — מתחבר אליו לבד. שדה חדש — בשמירה שואלים אם להוסיף אותו כפרט דינמי. */
+const evExtra = ev => Array.isArray(ev && ev.extra) ? ev.extra : [];
+const evFieldByName = name => S.fields.find(f => fkey(f.name) === fkey(name));
+function evExtraSync(x) { const f = x.fid && fieldById(x.fid); if (f) { x.type = ['bool', 'select', 'multi', 'number', 'date'].includes(f.type) ? f.type : 'text'; x.options = f.options || []; } else { x.fid = ''; x.type = 'text'; x.options = []; } return x; }
+function evExtraVal(x, raw) {   /* תשובה מהטופס → ערך לפרט הדינמי */
+  const s = String(raw == null ? '' : raw).trim(); if (!s) return null;
+  const f = x.fid && fieldById(x.fid); if (!f) return null;
+  if (f.type === 'bool') return /^(כן|true|1|v|yes)$/i.test(s) ? true : /^(לא|false|0|no)$/i.test(s) ? false : null;
+  if (f.type === 'number') { const n = Number(s.replace(/[^\d.-]/g, '')); return isFinite(n) ? n : null; }
+  if (f.type === 'multi') return s.split(/\s*[,;]\s*/).filter(Boolean);
+  return s;
 }
 
 /* ------------------------------------------------------------- המסך עצמו */
@@ -7944,10 +7996,11 @@ function renderEvRegs(ev) {
     if (r.synced || reg) return reg && reg.n ? '<span class="pill b">נוסף/ה כתומך פוטנציאלי</span>' : '<span class="pill g">קיבל/ה תגית</span>';
     return p ? '<span class="pill n">כבר במאגר</span>' : '<span class="pill y">לא במאגר</span>'; };
   const nm = (p, txt) => p ? '<button class="link" data-act="openCard" data-v="' + p.uid + '">' + esc(txt) + '</button>' : esc(txt);
-  box.innerHTML = rows.length || extra.length ? '<div class="tw"><table class="tbl"><thead><tr><th>שם</th><th>טלפון</th><th>ת.ז</th><th>נרשם/ה</th><th>מצב</th></tr></thead><tbody>' +
+  const xs = evExtra(ev);
+  box.innerHTML = rows.length || extra.length ? '<div class="tw"><table class="tbl"><thead><tr><th>שם</th><th>טלפון</th><th>ת.ז</th>' + xs.map(x => '<th>' + esc(x.label) + '</th>').join('') + '<th>נרשם/ה</th><th>מצב</th></tr></thead><tbody>' +
     rows.slice(0, 1000).map(r => { const v = r.data || {}, p = rowPerson(r); return '<tr><td>' + nm(p, [v.first, v.last].filter(Boolean).join(' ') || '—') + '</td>' +
-      '<td class="num"><span class="sg">' + esc(r.phone ? fmtPhone(nph(r.phone)) : '') + '</span></td><td class="num">' + esc(r.tz || '') + '</td><td class="mut">' + (Date.parse(r.created_at) ? fmtWhen(Date.parse(r.created_at)) : '') + '</td><td>' + st(r, p) + '</td></tr>'; }).join('') +
-    extra.map(p => '<tr><td>' + nm(p, fullName(p)) + '</td><td class="num"><span class="sg">' + esc(fmtPhone(p.phone)) + '</span></td><td class="num">' + esc(p.tz || '') + '</td><td class="mut">—</td><td>' + stPill(stOf(p)) + '</td></tr>').join('') +
+      '<td class="num"><span class="sg">' + esc(r.phone ? fmtPhone(nph(r.phone)) : '') + '</span></td><td class="num">' + esc(r.tz || '') + '</td>' + xs.map(x => '<td>' + esc(v[x.k] || '') + '</td>').join('') + '<td class="mut">' + (Date.parse(r.created_at) ? fmtWhen(Date.parse(r.created_at)) : '') + '</td><td>' + st(r, p) + '</td></tr>'; }).join('') +
+    extra.map(p => '<tr><td>' + nm(p, fullName(p)) + '</td><td class="num"><span class="sg">' + esc(fmtPhone(p.phone)) + '</span></td><td class="num">' + esc(p.tz || '') + '</td>' + xs.map(() => '<td></td>').join('') + '<td class="mut">—</td><td>' + stPill(stOf(p)) + '</td></tr>').join('') +
     '</tbody></table></div>' : '<div class="empty"><b>עוד אין נרשמים</b>' + (CLOUD ? 'שולחים את הקישור — וכל מי שנרשם יופיע כאן.' : 'אפשר לנסות את הטופס למעלה.') + '</div>';
 }
 async function evPubCheck(ev) {
@@ -7964,7 +8017,7 @@ function renderEvEdit() {
   $('#v-events').innerHTML =
     '<button class="evback" data-act="evCancel">' + EVI.back + (E.isNew ? 'ביטול' : 'חזרה בלי לשמור') + '</button>' +
     '<div class="evhd"><h2>' + (E.isNew ? 'אירוע חדש' : 'עריכת האירוע') + '</h2><p>' + (E.isNew ? 'ממלאים את הפרטים ושומרים — ומקבלים קישור הרשמה מוכן לשליחה' : 'השינויים יופיעו בדף ההרשמה מיד אחרי השמירה') + '</p></div>' +
-    '<div class="eded"><div class="card edmain"><div class="cb edf">' +
+    '<div class="eded"><div class="edcol"><div class="card edmain"><div class="cb edf">' +
       '<div><label class="fl" for="ed_name">שם האירוע</label><input id="ed_name" type="text" data-ed="name" value="' + esc(d.name) + '" placeholder="למשל: חוג בית אצל משפחת כהן" maxlength="80"></div>' +
       '<div class="edg2"><div><label class="fl" for="ed_date">תאריך</label><input id="ed_date" type="date" data-ed="date" value="' + esc(d.date) + '" required></div>' +
         '<div><label class="fl" for="ed_time">שעה</label><input id="ed_time" type="time" data-ed="time" value="' + esc(d.time) + '" step="900"></div></div>' +
@@ -7975,21 +8028,35 @@ function renderEvEdit() {
         '<div><label class="fl sub" for="ed_apt">דירה</label><input id="ed_apt" type="text" data-edl="apt" value="' + esc(l.apt) + '" inputmode="numeric" maxlength="8"></div>' +
       '</div></div>' +
       '<div><label class="fl" for="ed_desc">תיאור <span class="mut">(לא חובה)</span></label><textarea id="ed_desc" data-ed="desc" rows="3" maxlength="600" placeholder="על מה האירוע, מי ידבר, כיבוד…">' + esc(d.desc) + '</textarea></div>' +
-      '<div><span class="fl">שדות בטופס ההרשמה</span><div class="edchips">' + FLD_EV.map(([k, lb]) => '<label class="edchip' + (F[k] ? ' on' : '') + '"><input type="checkbox" data-edf="' + k + '"' + (F[k] ? ' checked' : '') + '>' + AI.check + lb + '</label>').join('') + '</div></div>' +
+      '<div><span class="fl">שדות בטופס ההרשמה</span><div class="edchips" id="edChips">' + edChipsHtml() + '</div><div id="edXNote">' + edXNoteHtml() + '</div></div>' +
       '<div class="edg2"><div><label class="fl" for="ed_tag">תגית לנרשמים</label><input id="ed_tag" type="text" data-ed="tag" value="' + esc(d.tag) + '" placeholder="אם ריק — שם האירוע"></div>' +
         '<label class="opt edconf"><input type="checkbox" data-ed="confirm"' + (d.confirm ? ' checked' : '') + '>לשלוח סמס אישור לכל נרשם</label></div>' +
     '</div></div>' +
-    '<div class="edside"><div class="card"><div class="ch">' + EVI.img + 'התמונה בווטסאפ<span class="sub">' + (d.imgCustom ? 'תמונה שהעליתם' : 'נוצרת לבד מפרטי האירוע') + '</span></div><div class="cb">' +
+      '<div class="card edimgc"><div class="ch">' + EVI.img + 'התמונה בווטסאפ<span class="sub">' + (d.imgCustom ? 'תמונה שהעליתם' : 'נוצרת לבד מפרטי האירוע') + '</span></div><div class="cb edimgb">' +
         '<div class="edimg"><img id="edImg" alt="תמונת השיתוף"></div>' +
-        '<div class="row" style="gap:8px;margin-top:10px"><button class="btn sec sm" data-act="evImgPick">העלאת תמונה משלכם</button>' + (d.imgCustom ? '<button class="btn sec sm" data-act="evImgAuto">חזרה לתמונה האוטומטית</button>' : '') +
-        '<input type="file" id="edImgIn" accept="image/*" hidden></div></div></div>' +
-      '<div class="sm mut edpvt">כך ייראה דף ההרשמה</div><div id="edPrev"></div></div></div>' +
+        '<div class="edimga"><button class="btn sec sm" data-act="evImgPick">העלאת תמונה משלכם</button>' + (d.imgCustom ? '<button class="btn sec sm" data-act="evImgAuto">חזרה לתמונה האוטומטית</button>' : '') +
+        '<input type="file" id="edImgIn" accept="image/*" hidden></div></div></div></div>' +
+    '<div class="edside"><div class="sm mut edpvt">כך ייראה דף ההרשמה</div><div id="edPrev"></div></div></div>' +
     '<div class="edbar"><button class="btn" data-act="evSave" id="edSave">' + (E.isNew ? 'שמירה ויצירת קישור' : 'שמירת השינויים') + '</button><button class="btn sec" data-act="evCancel">ביטול</button><span class="sm mut" id="edMsg"></span></div>';
   renderEdPreview(); evImgPreview();
   if (!E.cities) evLoadCities().then(() => { const dl = $('#evCityDl'); if (dl && E.cities) dl.innerHTML = E.cities.map(c => '<option value="' + esc(c[1]) + '">').join(''); });
   if (l.city) evFillStreets(l.city);
   const fi = $('#edImgIn'); if (fi) fi.addEventListener('change', () => { if (fi.files[0]) evImgFile(fi.files[0]); fi.value = ''; });
 }
+function edChipsHtml() {
+  const d = E.draft, F = d.fields;
+  return FLD_EV.map(([k, lb]) => '<label class="edchip' + (F[k] ? ' on' : '') + '"><input type="checkbox" data-edf="' + k + '"' + (F[k] ? ' checked' : '') + '>' + AI.check + lb + '</label>').join('') +
+    evExtra(d).map(x => '<span class="edchip on edx" title="' + esc(x.fid && fieldById(x.fid) ? 'התשובה תיכנס לפרט „' + fieldById(x.fid).name + '” בכרטיס' : 'שדה חדש') + '">' + AI.check + esc(x.label) +
+      '<button type="button" class="edxdel" data-act="edXDel" data-v="' + x.k + '" aria-label="הסרת השדה ' + esc(x.label) + '">×</button></span>').join('') +
+    (evExtra(d).length < 6 ? '<button type="button" class="edchip edxadd" data-act="edXAdd">+ שדה נוסף</button>' : '');
+}
+function edXNoteHtml() {
+  const xs = evExtra(E.draft); if (!xs.length) return '';
+  const link = xs.filter(x => x.fid && fieldById(x.fid)), fresh = xs.filter(x => !(x.fid && fieldById(x.fid)));
+  return '<div class="edxn">' + (link.length ? '<span>' + link.map(x => '„' + esc(x.label) + '”').join(', ') + ' — ' + (link.length > 1 ? 'פרטים קיימים: התשובות ייכנסו לכרטיס' : 'פרט קיים: התשובה תיכנס לכרטיס') + ' של כל נרשם בהתאמה למאגר.</span>' : '') +
+    (fresh.length ? '<span>' + fresh.map(x => '„' + esc(x.label) + '”').join(', ') + ' — ' + (fresh.length > 1 ? 'עוד לא קיימים' : 'עוד לא קיים') + ' בפרטים הדינמיים. בשמירה תישאלו אם להוסיף.</span>' : '') + '</div>';
+}
+function edXRefresh() { const c = $('#edChips'); if (c) c.innerHTML = edChipsHtml(); const n = $('#edXNote'); if (n) n.innerHTML = edXNoteHtml(); renderEdPreview(); }
 function lpHtml(d, interactive) {
   const F = d.fields, dis = interactive ? '' : ' disabled tabindex="-1"';
   const inp = (k, lb, t) => '<div><label class="fl" for="sim_' + k + '">' + lb + '</label><input id="sim_' + k + '" type="' + (t || 'text') + '" data-sim="' + k + '"' + dis + (k === 'phone' || k === 'tz' ? ' inputmode="numeric" style="direction:ltr;text-align:right"' : '') + '></div>';
@@ -7999,6 +8066,10 @@ function lpHtml(d, interactive) {
     (interactive && E.simDone ? '<div class="done"><b>תודה, נרשמת!</b><div class="mut">ההרשמה נכנסה למאגר.</div><button class="btn sec" style="margin-top:14px" data-act="simAgain">הרשמה נוספת</button></div>' :
     '<form onsubmit="return false"><div class="grid" style="grid-template-columns:1fr 1fr">' + (F.first ? inp('first', 'שם פרטי') : '') + (F.last ? inp('last', 'שם משפחה') : '') + '</div>' +
       (F.phone ? inp('phone', 'טלפון נייד', 'tel') : '') + (F.tz ? inp('tz', 'תעודת זהות') : '') +
+      evExtra(d).map(x => { x = interactive ? x : evExtraSync(Object.assign({}, x)); const id = 'sim_' + x.k;
+        if (x.type === 'bool') return '<label class="opt" style="font-weight:700"><input type="checkbox" data-sim="' + x.k + '" data-simb="1"' + dis + '>' + esc(x.label) + '</label>';
+        if ((x.type === 'select' || x.type === 'multi') && x.options.length) return '<div><label class="fl" for="' + id + '">' + esc(x.label) + '</label><select id="' + id + '" data-sim="' + x.k + '"' + dis + '><option value="">בחירה…</option>' + x.options.map(o => '<option>' + esc(o) + '</option>').join('') + '</select></div>';
+        return '<div><label class="fl" for="' + id + '">' + esc(x.label) + '</label><input id="' + id + '" type="' + (x.type === 'number' ? 'number' : x.type === 'date' ? 'date' : 'text') + '" data-sim="' + x.k + '"' + dis + '></div>'; }).join('') +
       '<button class="btn" style="min-height:48px;font-size:16px"' + (interactive ? ' data-act="simSubmit"' : ' disabled tabindex="-1"') + '>אני מגיע/ה</button></form>') + '</div>';
 }
 function renderEdPreview() { const b = $('#edPrev'); if (b && E.draft) b.innerHTML = lpHtml(E.draft, false); }
@@ -8140,6 +8211,22 @@ async function evSave() {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(d.date || '')) return bad('#ed_date', 'חסר תאריך');
   if (!d.loc.city) return bad('#ed_city', 'חסרה עיר');
   if (!d.fields.phone && !d.fields.tz) return toast('צריך לפחות טלפון או ת.ז בטופס');
+  d.extra = evExtra(d).filter(x => String(x.label || '').trim());
+  d.extra.forEach(x => { if (!(x.fid && fieldById(x.fid))) { const f = evFieldByName(x.label); x.fid = f ? f.id : ''; } });
+  const fresh = d.extra.filter(x => !x.fid);
+  if (fresh.length) {
+    const names = fresh.map(x => '<b>„' + esc(x.label) + '”</b>').join(', ');
+    const r = await modal('שדות חדשים בטופס', (fresh.length > 1 ? 'השדות ' + names + ' לא קיימים' : 'השדה ' + names + ' לא קיים') + ' בפרטים הדינמיים.<br><br>' +
+      'להוסיף ' + (fresh.length > 1 ? 'אותם כפרטים דינמיים' : 'אותו כפרט דינמי') + '? כך התשובות ייכנסו לכרטיס של כל נרשם אחרי ההתאמה למאגר, ויהיה אפשר לחפש לפיהן.' +
+      '<div class="sm mut" style="margin-top:8px">בלי זה התשובות יישמרו רק בהיסטוריה של כל אדם.</div>',
+      [{ lb: 'כן, להוסיף כפרט דינמי', v: 'add', def: true }, { lb: 'לא, בלי פרט דינמי', cls: 'sec', v: 'no' }, { lb: 'ביטול', cls: 'sec' }]);
+    if (!r || !r.v) return;
+    if (r.v === 'add') {
+      fresh.forEach(x => { const f = { id: 'f_' + uid(), name: x.label.trim(), type: 'text', inCard: true, inSearch: true }; S.fields.push(f); x.fid = f.id; });
+      await saveKV('fields'); activity('נוספו פרטים דינמיים מטופס אירוע: ' + fresh.map(x => x.label).join(', '));
+    }
+  }
+  d.extra.forEach(evExtraSync);
   const btn = $('#edSave'); if (btn) { btn.disabled = true; btn.textContent = 'שומר…'; }
   const done = () => { if (btn) { btn.disabled = false; btn.textContent = E.isNew ? 'שמירה ויצירת קישור' : 'שמירת השינויים'; } };
   d.place = evPlace(d);
@@ -8207,6 +8294,12 @@ function matchRow(ev, r, tag) {
     stLog(p, '', 'תומך פוטנציאלי', 'אירוע: ' + ev.name);
   } else plog(p, 'נרשם/ה לאירוע "' + ev.name + '" — נוספה התגית "' + tag + '"');
   if (tag && !p.tags.includes(tag)) p.tags.push(tag);
+  evExtra(ev).forEach(x => {   /* שדות נוספים מהטופס → לכרטיס */
+    const raw = v[x.k]; if (raw == null || String(raw).trim() === '') return;
+    const val = evExtraVal(x, raw);
+    if (val != null) { p.dyn = p.dyn || {}; p.dyn[x.fid] = val; }
+    else plog(p, 'מטופס האירוע "' + ev.name + '" — ' + x.label + ': ' + String(raw).trim());
+  });
   p.updated = Date.now();
   const ex = ev.regs.find(x => x.uid === p.uid);
   if (ex) ex.t = t; else ev.regs.push({ uid: p.uid, t, count: 1, n: isNew ? 1 : 0 });
@@ -8255,7 +8348,7 @@ async function evSync(quiet) {
 }
 async function simSubmit() {
   const ev = evSel(); if (!ev) return;
-  const v = {}; $$('[data-sim]').forEach(el => { v[el.dataset.sim] = el.value.trim(); });
+  const v = {}; $$('[data-sim]').forEach(el => { v[el.dataset.sim] = el.dataset.simb ? (el.checked ? 'כן' : '') : el.value.trim(); });
   const ph = v.phone ? nph(v.phone) : '', tz = v.tz ? nid(v.tz) : '';
   if (ev.fields.first && !v.first) { toast('חסר שם פרטי'); return; }
   if (ev.fields.phone && !isMobile(ph)) { toast('צריך מספר נייד תקין'); $('#sim_phone') && $('#sim_phone').focus(); return; }
@@ -8263,7 +8356,7 @@ async function simSubmit() {
   if (!ph && !tz) { toast('צריך טלפון או ת.ז'); return; }
   ev.pend = ev.pend || [];
   const ex = ev.pend.find(r => (ph && r.phone === ph) || (tz && r.tz === tz));
-  const row = { id: ex ? ex.id : uid(), code: ev.code || '', data: { first: v.first || '', last: v.last || '' }, phone: ph || null, tz: tz || null, created_at: new Date().toISOString(), synced: false };
+  const row = { id: ex ? ex.id : uid(), code: ev.code || '', data: Object.assign({ first: v.first || '', last: v.last || '' }, ...evExtra(ev).map(x => v[x.k] ? { [x.k]: v[x.k] } : {})), phone: ph || null, tz: tz || null, created_at: new Date().toISOString(), synced: false };
   if (ex) Object.assign(ex, row); else ev.pend.push(row);
   await saveKV('events');
   E.simDone = true; RENDER.events({ keepMode: true });
@@ -8300,14 +8393,28 @@ Object.assign(ACT, {
   },
   evSms: el => { const id = el.dataset.v || E.sel, e = S.events.find(x => x.id === id); go('sms', { src: 'event', event: id, name: e ? 'תזכורת — ' + e.name : '' }); },
   simSubmit: () => simSubmit(),
+  edXAdd: async () => {
+    if (!E.draft) return;
+    const r = await modal('שדה נוסף בטופס ההרשמה', '<label class="fl" for="edx_in">שם השדה (כמו שיופיע בטופס)</label><input type="text" id="edx_in" data-mv="x" list="edxDl" maxlength="40" placeholder="למשל: כתובת מייל, מגיעים עם רכב?">' +
+      '<datalist id="edxDl">' + S.fields.map(f => '<option value="' + esc(f.name) + '">').join('') + '</datalist>' +
+      '<div class="sm mut" style="margin-top:8px">אם בוחרים שם של פרט דינמי קיים — התשובה תיכנס אליו בכרטיס של הנרשם.</div>', [{ lb: 'הוספה', v: true, def: true }, { lb: 'ביטול', cls: 'sec' }]);
+    const name = r && r.v && String(r.vals.x || '').trim(); if (!name) return;
+    if (FLD_EV.some(([, lb]) => fkey(lb) === fkey(name)) || evExtra(E.draft).some(x => fkey(x.label) === fkey(name))) { toast('השדה הזה כבר בטופס'); return; }
+    const f = evFieldByName(name);
+    E.draft.extra = evExtra(E.draft).concat([{ k: 'x' + Math.random().toString(36).slice(2, 8), label: f ? f.name : name, fid: f ? f.id : '' }]);
+    edXRefresh();
+    toast(f ? 'נוסף — התשובה תיכנס לפרט „' + f.name + '”' : 'נוסף — בשמירה תישאלו אם להוסיף אותו כפרט דינמי');
+  },
+  edXDel: el => { if (!E.draft) return; E.draft.extra = evExtra(E.draft).filter(x => x.k !== el.dataset.v); edXRefresh(); },
   simAgain: () => { E.simDone = false; renderEvSim(evSel()); },
   evImport: () => go('upload', { eventId: E.sel }),
   evExport: () => {
     const ev = evSel(); if (!ev) return;
-    const aoa = [['שם פרטי', 'שם משפחה', 'טלפון', 'ת.ז', 'נרשם/ה', 'מצב']];
+    const xs = evExtra(ev);
+    const aoa = [['שם פרטי', 'שם משפחה', 'טלפון', 'ת.ז'].concat(xs.map(x => x.label), ['נרשם/ה', 'מצב'])];
     evRows(ev).forEach(r => { const v = r.data || {}, p = rowPerson(r), reg = p && ev.regs.find(x => x.uid === p.uid);
-      aoa.push([v.first || '', v.last || '', r.phone ? fmtPhone(nph(r.phone)) : '', r.tz || '', Date.parse(r.created_at) ? fmtWhen(Date.parse(r.created_at)) : '',
-        reg ? (reg.n ? 'נוסף/ה כתומך פוטנציאלי' : 'קיבל/ה תגית') : p ? 'כבר במאגר' : 'לא במאגר']); });
+      aoa.push([v.first || '', v.last || '', r.phone ? fmtPhone(nph(r.phone)) : '', r.tz || ''].concat(xs.map(x => v[x.k] || ''), [Date.parse(r.created_at) ? fmtWhen(Date.parse(r.created_at)) : '',
+        reg ? (reg.n ? 'נוסף/ה כתומך פוטנציאלי' : 'קיבל/ה תגית') : p ? 'כבר במאגר' : 'לא במאגר'])); });
     if (aoa.length === 1) ev.regs.map(r => S.by.get(r.uid)).filter(Boolean).forEach(p => aoa.push([p.first, p.last, fmtPhone(p.phone), p.tz, '', stOf(p)]));
     saveXlsx([['נרשמים', aoa]], 'נרשמים — ' + ev.name + '.xlsx');
   },
