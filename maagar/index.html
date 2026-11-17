@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
-<meta name="build" content="20261117-155800">
+<meta name="build" content="20261117-162730">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>דאטה ביתנו — מאגר התומכים</title>
 <style>
@@ -4687,6 +4687,8 @@ function cloudErr(error, what) {
 async function putPeople(list) {
   if (!list.length) return true;
   if (!CLOUD) return txp('people', 'readwrite', s => { list.forEach(p => s.put(strip(p))); });
+  /* אותו אדם פעמיים באותה שליחה מפיל את כל המנה בשרת (ON CONFLICT … a second time) — משאירים רק את המופע האחרון */
+  const byUid = new Map(); list.forEach(p => { if (p && p.uid) { byUid.delete(p.uid); byUid.set(p.uid, p); } }); list = Array.from(byUid.values());
   for (let i = 0; i < list.length; i += 500) {
     const rows = list.slice(i, i + 500).map(p => ({ uid: p.uid, data: strip(p) }));
     const { error } = await sb.from('people').upsert(rows);
@@ -6532,7 +6534,7 @@ async function runUpload() {
   const seenB = new Set(); undo.before = undo.before.filter(p => !seenB.has(p.uid) && seenB.add(p.uid));
   const newMap = {};
   U.map.forEach((t, j) => { if (t === 'new') { const id = 'f_' + uid(); S.fields.push({ id, name: U.head[j], type: 'text', inSearch: true, inCard: true }); newMap['new:' + j] = id; } });
-  const changed = [];
+  const changed = [], changedSet = new Set();
   const fname = U.file;
   const ev = U.eventId ? S.events.find(e => e.id === U.eventId) : null;
   U.pv.rows.forEach(x => {
@@ -6563,7 +6565,7 @@ async function runUpload() {
     if (p.status && p.status !== st0) stLog(p, st0, p.status, 'אקסל: ' + fname);
     p.lastUpload = upId; p.updated = now;
     plog(p, isNew ? 'נוסף מקובץ "' + fname + '" (' + dbName(U.db) + ')' : 'עודכן מקובץ "' + fname + '"' + (ch.length ? ': ' + Array.from(new Set(ch)).join(', ') : ' — בלי שינוי בשדות'));
-    changed.push(p);
+    if (!changedSet.has(p)) { changedSet.add(p); changed.push(p); }   /* כמה שורות בקובץ יכולות להתאים לאותו אדם */
   });
   rebuild();
   const okUndo = await upSaveUndo(upId, undo);
@@ -7312,11 +7314,12 @@ Object.assign(ACT, {
    • list — רק האירועים: קרובים ושעברו. "+ אירוע חדש" מתחת לכותרת.
    • view — אירוע אחד: קישור ההרשמה לשליחה (עם תמונה לווטסאפ), מספרים, והטבלה של הנרשמים.
    • edit — יצירה/עריכה. עובדים על טיוטה, ושום דבר לא נשמר עד "שמירה".
-   דף ההרשמה הציבורי: maarehet_mate/e/ (נבנה מ-landing/landing.html). הפרטים הציבוריים נשמרים ב-events_pub,
+   דף ההרשמה הציבורי: beytenu.org.il/ev/?c=<קוד> — עמוד וורדפרס באתר המפלגה (id 10017, noindex) שמכיל עותק של landing/landing.html.
+   שינוי ב-landing.html לא עובר לאתר לבד — צריך לעדכן גם את העמוד באתר. (הישן: maarehet_mate/e/) הפרטים הציבוריים נשמרים ב-events_pub,
    ההרשמות מגיעות ל-event_regs, והמערכת מושכת אותן לבד אל המאגר (evSync).
    ============================================================ */
 const E = { mode: 'list', sel: '', draft: null, isNew: false, simDone: false, pub: {}, lastSync: 0, syncing: false, cities: null, streets: {}, imgUrl: '', rows: {}, rowsAt: 0 };
-const LP_BASE = 'https://davidaidulman.github.io/maarehet_mate/e/';
+const LP_BASE = 'https://beytenu.org.il/ev/?c=';   // עמוד „הרשמה לאירוע” באתר המפלגה (noindex, לא בתפריט). הישן: davidaidulman.github.io/maarehet_mate/e/
 const FLD_EV = [['first', 'שם פרטי'], ['last', 'שם משפחה'], ['phone', 'טלפון נייד'], ['tz', 'תעודת זהות']];
 const WDAY = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'];
 const MON_S = ['ינו׳', 'פבר׳', 'מרץ', 'אפר׳', 'מאי', 'יוני', 'יולי', 'אוג׳', 'ספט׳', 'אוק׳', 'נוב׳', 'דצמ׳'];
@@ -7351,7 +7354,7 @@ const evCity = ev => evLoc(ev).city || String(ev.place || '').split(/[·,]/)[0].
 function evDay(ev) { const p = /^(\d{4})-(\d{2})-(\d{2})$/.exec(ev.date || ''); return p ? new Date(+p[1], +p[2] - 1, +p[3]) : null; }
 function evWhen(ev, withTime) { const d = evDay(ev); return (d ? 'יום ' + WDAY[d.getDay()] + ', ' + fmtDate(ev.date) : '') + (withTime !== false && ev.time ? ' · ' + ev.time : ''); }
 const evPast = ev => !!ev.date && ev.date < isoDay(new Date());
-const evLink = ev => ev.code ? LP_BASE + ev.code + '/' : '';
+const evLink = ev => ev.code ? LP_BASE + ev.code : '';
 const evSel = () => S.events.find(e => e.id === E.sel);
 const evNew = ev => (ev.regs || []).filter(r => r.n).length;
 const evTag = ev => String(ev.tag || '').trim() || ev.name;
@@ -7429,7 +7432,7 @@ function renderEvView() {
       '<div class="evlink"><input type="text" readonly value="' + esc(link) + '" id="evLinkIn" dir="ltr" aria-label="קישור ההרשמה"><button class="btn" data-act="evCopy">' + EVI.copy + 'העתקה</button></div>' +
       '<div class="evsh"><button class="evwa" data-act="evWa">' + EVI.wa + 'שליחה בווטסאפ</button><a class="btn sec" href="' + esc(link) + '" target="_blank" rel="noopener">' + EVI.open + 'פתיחת הדף</a></div>' +
       '<div class="evpv"><div class="evpvt">כך זה נראה בווטסאפ</div><div class="evbub"><div class="evog">' + (ev.img ? '<img src="' + esc(ev.img) + '" alt="">' : '<span class="evogph">' + EVI.img + '</span>') +
-        '<div class="evogt"><b>' + esc(ev.name) + '</b><span>' + esc(evWhen(ev) + (evPlace(ev) ? ' · ' + evPlace(ev) : '')) + '</span><small dir="ltr">davidaidulman.github.io</small></div></div>' +
+        '<div class="evogt"><b>' + esc(ev.name) + '</b><span>' + esc(evWhen(ev) + (evPlace(ev) ? ' · ' + evPlace(ev) : '')) + '</span><small dir="ltr">beytenu.org.il</small></div></div>' +
         '<div class="evbtx" dir="ltr">' + esc(link) + '</div></div><div id="evPubSt" class="evst"></div></div>' +
     '</div></div>';
   $('#v-events').innerHTML =
@@ -7472,12 +7475,8 @@ function renderEvRegs(ev) {
 async function evPubCheck(ev) {
   const el = $('#evPubSt'); if (!el || !ev.code) return;
   const st = s => { const x = $('#evPubSt'); if (x) x.innerHTML = s; };
-  if (E.pub[ev.code] !== 'yes') {
-    st('<span class="evdot"></span>בודק אם הקישור כבר עלה לאוויר…');
-    try { const r = await fetch(evLink(ev), { method: 'HEAD', cache: 'no-store' }); E.pub[ev.code] = r.ok ? 'yes' : 'no'; } catch (e) { E.pub[ev.code] = 'no'; }
-  }
-  st(E.pub[ev.code] === 'yes' ? '<span class="evdot g"></span>הקישור באוויר — בווטסאפ תופיע התמונה עם שם האירוע.' :
-    '<span class="evdot y"></span>הקישור כבר עובד ואפשר לשלוח. כדי שבווטסאפ תופיע גם התמונה — לוחצים פעם אחת על <b>פרסום</b> בתיקייה, ואז שולחים.');
+  // הקישור באתר המפלגה עובד מרגע השמירה — אין צורך בפרסום מהתיקייה
+  st('<span class="evdot g"></span>הקישור באוויר ואפשר לשלוח. בווטסאפ תופיע כרגע כותרת כללית של אתר המפלגה.');
 }
 
 /* ------------------------------------------------------------------ עריכה */
