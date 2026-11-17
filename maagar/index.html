@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
-<meta name="build" content="20261117-144044">
+<meta name="build" content="20261117-145728">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>דאטה ביתנו — מאגר התומכים</title>
 <style>
@@ -777,6 +777,7 @@ main:has(#v-map.on){max-width:none;padding-inline:20px}
 .aph-nav .n1::after{content:'';position:absolute;inset:0 5px;border-inline-start:2px solid var(--ink2)}
 .aph-nav .n2{width:16px;height:16px;border:2px solid var(--ink2);border-radius:5px}
 .aph-nav .n3{width:10px;height:10px;border-right:2px solid var(--ink2);border-bottom:2px solid var(--ink2);transform:rotate(-45deg)}
+#smsNoProv[hidden]{display:none}
 
 /* ---------- css/features/events.css ---------- */
 /* ============ דאטה ביתנו — אירועים ודפי נחיתה ============ */
@@ -6839,7 +6840,27 @@ async function smsEnsureOptField() {
   try { await saveKV('fields'); } catch (e) { console.warn(e); }
 }
 setTimeout(function chk() { if (S.dbs.length && (!CLOUD || ME)) smsEnsureOptField(); else setTimeout(chk, 3000); }, 3000);
-const SMS_PROV = [['019', '019 SMS — חיבור אוטומטי'], ['manual', 'ספק אחר (b-elect וכו׳) — עדכון ידני']];
+const SMS_PROV = [['pulseem', 'פולסים (Pulseem) — שליחה ויתרה אוטומטיות'], ['019', '019 SMS — יתרה אוטומטית'], ['manual', 'ספק אחר (b-elect וכו׳) — עדכון ידני']];
+/* האם המשלוחים יוצאים ישירות מהמערכת דרך הספק (כרגע: פולסים) */
+const smsLive = () => !!(SMSP.cfg && SMSP.cfg.provider === 'pulseem' && SMSP.cfg.has_token);
+const smsSendTime = t => { const d = new Date(t); return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate()) + ' ' + pad2(d.getHours()) + ':' + pad2(d.getMinutes()) + ':00'; };
+/* שליחה בפועל דרך פונקציית השרת sms-send. מעדכן את סטטוס המשלוח ושומר */
+async function smsDeliver(j, later) {
+  const items = j.to.map(t => { const p = t.uid ? S.by.get(t.uid) : null; return { phone: t.phone, text: j.test ? j.text : smsFinal(j.text, p, j.opt !== false), ref: t.uid || t.phone }; });
+  j.via = 'pulseem';
+  try {
+    const { data, error } = await sb.functions.invoke('sms-send', { body: { sendId: j.id, sender: j.sender, sendTime: later ? smsSendTime(j.sendAt) : '', items } });
+    if (error || !data || data.error) {
+      const m = data && data.error;
+      j.status = 'נכשל'; j.err = m === 'no_token' ? 'חסר מפתח API לספק' : m === 'no_sender' ? 'חסר שם שולח' : m === 'not_allowed' ? 'אין הרשאת סמסים' : m === 'unsupported' ? 'הספק לא מחובר לשליחה' : 'הספק לא ענה';
+    } else if (data.failed && !data.sent) { j.status = 'נכשל'; j.err = 'הספק דחה את השליחה'; j.resp = data.results; }
+    else { j.status = later ? 'מתוזמן אצל הספק' : 'נשלח'; j.sent = data.sent; j.failed = data.failed || 0; j.bad = data.bad || 0; j.resp = data.results; }
+  } catch (e) { console.warn(e); j.status = 'נכשל'; j.err = 'הספק לא ענה'; }
+  j.at = Date.now();
+  await saveKV('sms');
+  if (j.status !== 'נכשל') smsBalRefresh(true);
+  return j.status !== 'נכשל';
+}
 /* יתרת הסמסים בחשבון — נשמרת משותף לכל המטה (kv: smsbal) ומתעדכנת ידנית או בכל משלוח */
 const smsBal = () => { const a = Array.isArray(S.smsbal) ? S.smsbal : []; return a[0] && typeof a[0].n === 'number' ? a[0] : null; };
 async function smsBalUse(n) { const b = smsBal(); if (!b || !n) return; S.smsbal = [{ n: Math.max(0, b.n - n), at: Date.now(), by: b.by || '' }]; await saveKV('smsbal'); }
@@ -6880,7 +6901,7 @@ RENDER.sms = function (o) {
   if (!M.date) { const d = new Date(Date.now() + 864e5); M.date = isoDay(d); M.time = '10:00'; }
   $('#v-sms').innerHTML =
     '<div class="shead"><div><h2>שליחת סמסים</h2><p>הודעה אישית לכל נמען, עכשיו או בתזמון</p></div></div>' +
-    '<div class="note y sm">השליחה עוד לא מחוברת לספק — בינתיים כל משלוח יוצא כקובץ מוכן ל-b-elect.</div>' +
+    '<div class="note y sm" id="smsNoProv"' + (smsLive() ? ' hidden' : '') + '>השליחה עוד לא מחוברת לספק — בינתיים כל משלוח יוצא כקובץ מוכן ל-b-elect.</div>' +
     '<div class="cols"><div class="c2">' +
       '<div class="card" id="smsRcp"><div class="ch">למי שולחים?</div><div class="cb" id="smsRcpBody"></div></div>' +
       '<div class="card" id="smsMsg"><div class="ch"><span>תוכן ההודעה</span><span class="smbal" id="smsBal"></span></div><div class="cb">' +
@@ -6985,11 +7006,12 @@ const smsLinkify = t => esc(t).replace(/(https?:\/\/[^\s<]+|www\.[^\s<]+|[a-z0-9
 
 function renderSmsJobs() {
   const now = Date.now();
-  S.sms.forEach(j => { if (j.status === 'מתוזמן' && j.sendAt <= now) j.status = 'ממתין לספק'; });
+  S.sms.forEach(j => { if (j.status === 'מתוזמן' && j.sendAt <= now) j.status = 'ממתין לספק'; if (j.status === 'מתוזמן אצל הספק' && j.sendAt <= now) j.status = 'נשלח'; });
+  const pc = st => st === 'נשלח' ? 'g' : st === 'נכשל' ? 'r' : st === 'בוטל' ? 'n' : st === 'מתוזמן אצל הספק' ? 'b' : st === 'יוצא לקובץ' ? 'g' : 'y';
   $('#smsJobs').innerHTML = S.sms.length ? '<div class="tw"><table class="tbl"><thead><tr><th>משלוח</th><th>נמענים</th><th>מועד</th><th>סטטוס</th><th></th></tr></thead><tbody>' +
     S.sms.slice(0, 30).map(j => '<tr><td><b>' + esc(j.name || 'משלוח') + '</b><div class="mut sm" style="white-space:normal;max-width:420px">' + esc(j.text.slice(0, 90)) + (j.text.length > 90 ? '…' : '') + '</div></td><td class="num">' + nf(j.to.length) + '</td><td class="mut">' + fmtWhen(j.sendAt) + '</td>' +
-      '<td><span class="pill ' + (j.status === 'מתוזמן' ? 'y' : j.status === 'בוטל' ? 'n' : j.status === 'ממתין לספק' ? 'y' : 'g') + '">' + esc(j.status) + '</span></td>' +
-      '<td><div class="row" style="flex-wrap:nowrap;gap:6px"><button class="mini" data-act="smsJobExport" data-v="' + j.id + '">קובץ לשליחה</button>' + (j.status === 'מתוזמן' || j.status === 'ממתין לספק' ? '<button class="mini" data-act="smsJobDone" data-v="' + j.id + '">סימון כנשלח</button><button class="mini r" data-act="smsJobCancel" data-v="' + j.id + '">ביטול</button>' : '') + '</div></td></tr>').join('') +
+      '<td><span class="pill ' + pc(j.status) + '"' + (j.err ? ' title="' + esc(j.err) + '"' : '') + '>' + esc(j.status) + '</span>' + (j.err ? '<div class="sm" style="color:var(--rtx)">' + esc(j.err) + '</div>' : j.via && j.sent != null ? '<div class="mut sm">' + nf(j.sent) + ' יצאו' + (j.failed ? ' · ' + nf(j.failed) + ' נכשלו' : '') + (j.bad ? ' · ' + nf(j.bad) + ' מספרים לא תקינים' : '') + '</div>' : '') + '</td>' +
+      '<td><div class="row" style="flex-wrap:nowrap;gap:6px">' + (j.status === 'נכשל' && smsLive() ? '<button class="mini" data-act="smsJobRetry" data-v="' + j.id + '">ניסיון חוזר</button>' : '') + (j.via ? '' : '<button class="mini" data-act="smsJobExport" data-v="' + j.id + '">קובץ לשליחה</button>') + (!j.via && (j.status === 'מתוזמן' || j.status === 'ממתין לספק') ? '<button class="mini" data-act="smsJobDone" data-v="' + j.id + '">סימון כנשלח</button><button class="mini r" data-act="smsJobCancel" data-v="' + j.id + '">ביטול</button>' : '') + '</div></td></tr>').join('') +
     '</tbody></table></div>' : '<div class="empty">עוד לא נשלחו משלוחים</div>';
 }
 function exportJob(j) {
@@ -7007,6 +7029,7 @@ const SMI = {
 const smsAuto = () => !!(SMSP.cfg && SMSP.cfg.provider && SMSP.cfg.provider !== 'manual' && SMSP.cfg.has_token);
 function smsAgo(t) { const m = Math.round((Date.now() - t) / 60000); return m < 1 ? 'עכשיו' : m < 60 ? 'לפני ' + m + ' דק׳' : m < 1440 ? 'לפני ' + Math.round(m / 60) + ' שע׳' : fmtWhen(t); }
 function renderSmsBal(need) {
+  const nb = $('#smsNoProv'); if (nb) nb.hidden = smsLive();
   const el = $('#smsBal'); if (!el) return;
   const bal = smsBal(), auto = smsAuto(), prov = SMSP.cfg ? (SMS_PROV.find(x => x[0] === SMSP.cfg.provider) || [0, SMSP.cfg.provider])[1].split(' — ')[0] : '';
   const over = bal && need > bal.n;
@@ -7049,7 +7072,7 @@ async function smsProviderDlg() {
     '<p class="mut sm" style="margin-top:0">היתרה נקראת ישירות מהספק. פרטי הגישה נשמרים בשרת בלבד — אף אחד לא יכול לקרוא אותם בחזרה, גם לא מהמערכת.</p>' +
     '<div class="smpf"><div><label class="fl">הספק</label><select data-mv="provider">' + SMS_PROV.map(([k, l]) => '<option value="' + k + '"' + ((c.provider || 'manual') === k ? ' selected' : '') + '>' + l + '</option>').join('') + '</select></div>' +
     '<div><label class="fl">שם משתמש אצל הספק</label><input type="text" data-mv="username" value="' + esc(c.username || '') + '" style="direction:ltr;text-align:right" autocomplete="off"></div>' +
-    '<div><label class="fl">טוקן API</label><input type="password" data-mv="token" placeholder="' + (c.has_token ? 'שמור — משאירים ריק כדי לא לשנות' : 'מדביקים כאן את הטוקן מהספק') + '" style="direction:ltr;text-align:right" autocomplete="new-password"></div>' +
+    '<div><label class="fl">מפתח / טוקן API</label><input type="password" data-mv="token" placeholder="' + (c.has_token ? 'שמור — משאירים ריק כדי לא לשנות' : 'מדביקים כאן את הטוקן מהספק') + '" style="direction:ltr;text-align:right" autocomplete="new-password"></div>' +
     '<div><label class="fl">שם שולח ברירת מחדל</label><input type="text" data-mv="sender" maxlength="11" value="' + esc(c.sender || M.sender || '') + '" style="direction:ltr;text-align:right"></div></div>' +
     (c.updated_at ? '<p class="mut sm">עודכן ' + fmtWhen(Date.parse(c.updated_at)) + (c.updated_by ? ' ע״י ' + esc(c.updated_by) : '') + '</p>' : ''),
     [{ lb: 'שמירה', v: true }, { lb: 'ביטול', cls: 'sec' }]);
@@ -7088,7 +7111,15 @@ Object.assign(ACT, {
     if (!M.text.trim()) { toast('אין עדיין הודעה לבדוק'); return; }
     const R = smsRecipients(), p = R.list[0] ? R.list[0].p : null;
     const j = { id: uid(), name: 'בדיקה — ' + (M.name || 'משלוח'), text: smsFinal(M.text, p, M.optLine), opt: false, sender: M.sender, created: Date.now(), sendAt: Date.now(), status: 'ממתין לספק', test: true, to: [{ phone: ph, uid: null }] };
-    S.sms.unshift(j); await smsBalUse(smsParts(j.text).parts); await saveKV('sms');
+    S.sms.unshift(j);
+    if (smsLive()) {
+      j.status = 'שולח…'; renderSmsJobs(); toast('שולח הודעת בדיקה…');
+      const ok = await smsDeliver(j, false);
+      renderSmsJobs(); renderSmsLive();
+      toast(ok ? 'הודעת הבדיקה נשלחה ל-' + fmtPhone(ph) + ' — בדקו את הטלפון' : 'השליחה נכשלה: ' + (j.err || ''));
+      return;
+    }
+    await smsBalUse(smsParts(j.text).parts); await saveKV('sms');
     renderSmsJobs(); renderSmsLive(); toast('נוצרה הודעת בדיקה ל-' + fmtPhone(ph) + (p ? ' (עם הפרטים של ' + fullName(p) + ')' : ''));
   },
   smsAddPerson: el => { if (!M.persons.includes(el.dataset.v)) M.persons.push(el.dataset.v); renderSmsRcp(); renderSmsLive(); },
@@ -7100,17 +7131,28 @@ Object.assign(ACT, {
     const at = later ? new Date(M.date + 'T' + (M.time || '10:00')).getTime() : Date.now();
     if (later && !(at > Date.now())) { toast('מועד התזמון צריך להיות בעתיד'); return; }
     const sp = smsParts(smsFinal(M.text, R.list[0].p, M.optLine));
-    if (!(await ask(later ? 'תזמון משלוח' : 'שליחת משלוח', (later ? 'לתזמן' : 'לשלוח') + ' את ההודעה ל-<b>' + nf(R.list.length) + '</b> נמענים' + (later ? ' ב-' + fmtWhen(at) : '') + '? זה בערך ' + nf(sp.parts * R.list.length) + ' הודעות.<br><span class="sm mut">כל עוד הספק לא מחובר, המשלוח יחכה כאן ותוכלו להוריד ממנו קובץ ל-b-elect.</span>', later ? 'תזמון' : 'שליחה'))) return;
+    if (!(await ask(later ? 'תזמון משלוח' : 'שליחת משלוח', (later ? 'לתזמן' : 'לשלוח') + ' את ההודעה ל-<b>' + nf(R.list.length) + '</b> נמענים' + (later ? ' ב-' + fmtWhen(at) : '') + '? זה בערך ' + nf(sp.parts * R.list.length) + ' הודעות.<br><span class="sm mut">' + (smsLive() ? 'ההודעות יוצאות דרך פולסים' + (later ? ', שישלחו אותן במועד שנקבע.' : ' מיד — אי אפשר לעצור אחרי האישור.') : 'כל עוד הספק לא מחובר, המשלוח יחכה כאן ותוכלו להוריד ממנו קובץ ל-b-elect.') + '</span>', later ? 'תזמון' : 'שליחה'))) return;
     const j = { id: uid(), name: M.name || 'משלוח ' + fmtWhen(Date.now()), text: M.text, opt: M.optLine, sender: M.sender, created: Date.now(), sendAt: at, status: later ? 'מתוזמן' : 'ממתין לספק', to: R.list.map(x => ({ phone: x.phone, uid: x.p ? x.p.uid : null })) };
-    S.sms.unshift(j); await smsBalUse(sp.parts * R.list.length);
+    S.sms.unshift(j);
+    if (smsLive()) { j.status = 'שולח…'; renderSmsJobs(); toast('שולח דרך פולסים…'); await smsDeliver(j, later); }
+    else await smsBalUse(sp.parts * R.list.length);
     const ps = R.list.map(x => x.p).filter(Boolean); ps.forEach(p => plog(p, (later ? 'תוזמן סמס: "' : 'סמס: "') + j.name + '"'));
     await putPeople(ps); await saveKV('sms');
     activity((later ? 'תוזמן' : 'נוצר') + ' משלוח סמס "' + j.name + '" ל-' + nf(R.list.length) + ' נמענים');
-    renderTabs(); renderSmsJobs(); renderSmsLive(); toast(later ? 'המשלוח תוזמן' : 'המשלוח נוצר — אפשר להוריד קובץ לשליחה');
+    renderTabs(); renderSmsJobs(); renderSmsLive();
+    toast(j.via ? (j.status === 'נכשל' ? 'השליחה נכשלה: ' + (j.err || '') : later ? 'המשלוח תוזמן אצל פולסים' : 'המשלוח יצא — ' + nf(j.sent || 0) + ' הודעות') : later ? 'המשלוח תוזמן' : 'המשלוח נוצר — אפשר להוריד קובץ לשליחה');
   },
   smsExport: () => { const R = smsRecipients(); if (!R.list.length || !M.text.trim()) { toast('צריך נמענים והודעה'); return; } exportJob({ name: M.name || 'משלוח', text: M.text, opt: M.optLine, to: R.list.map(x => ({ phone: x.phone, uid: x.p ? x.p.uid : null })) }); },
   smsJobExport: el => { const j = S.sms.find(x => x.id === el.dataset.v); if (j) exportJob(j); },
   smsJobDone: async el => { const j = S.sms.find(x => x.id === el.dataset.v); if (!j) return; j.status = 'נשלח'; await saveKV('sms'); renderSmsJobs(); renderTabs(); },
+  smsJobRetry: async el => {
+    const j = S.sms.find(x => x.id === el.dataset.v); if (!j || !smsLive()) return;
+    if (!(await ask('ניסיון חוזר', 'לשלוח שוב את „' + esc(j.name) + '” ל-' + nf(j.to.length) + ' נמענים?', 'שליחה'))) return;
+    j.id = j.id.split('~')[0] + '~' + Date.now().toString(36);   /* מזהה חדש אצל הספק */
+    j.status = 'שולח…'; j.err = ''; renderSmsJobs();
+    const later = j.sendAt > Date.now() + 60000;
+    const ok = await smsDeliver(j, later); renderSmsJobs(); toast(ok ? 'נשלח' : 'השליחה נכשלה: ' + (j.err || ''));
+  },
   smsJobCancel: async el => { const j = S.sms.find(x => x.id === el.dataset.v); if (!j || !(await ask('ביטול משלוח', 'לבטל את „' + esc(j.name) + '”?', 'ביטול המשלוח', true))) return; j.status = 'בוטל'; await saveKV('sms'); renderSmsJobs(); renderTabs(); }
 });
 
