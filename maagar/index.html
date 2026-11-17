@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
-<meta name="build" content="20261117-165118">
+<meta name="build" content="20261117-165508">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>דאטה ביתנו — מאגר התומכים</title>
 <style>
@@ -4552,7 +4552,9 @@ const okPhone = p => !!p && /^0(5\d|[2-489]|7\d)\d{7}$/.test(p);
 const isMobile = p => /^05\d{8}$/.test(p || '');
 const fmtPhone = p => !p ? '' : p.length === 10 ? p.slice(0, 3) + '-' + p.slice(3) : p.length === 9 ? p.slice(0, 2) + '-' + p.slice(2) : p;
 /* שם יישוב מנוטרל: "קריית גת" ו"קרית גת" ו"תל אביב -יפו" נופלים יחד */
-const ckey = c => String(c || '').replace(/["'`״׳׳״\-–—()\s.,]/g, '').replace(/[יו]/g, '');
+const ckey0 = c => String(c || '').replace(/["'`״׳׳״\-–—()\s.,]/g, '').replace(/[יו]/g, '');
+const CKEY = new Map();   /* זיכרון: אותן ערים חוזרות מאות אלפי פעמים */
+const ckey = c => { if (c == null || c === '') return ''; let k = CKEY.get(c); if (k === undefined) { if (CKEY.size > 20000) CKEY.clear(); k = ckey0(c); CKEY.set(c, k); } return k; };
 /* מספר קלפי מנוטרל: 342.20 = 342.2, 720.0 = 720, "009" = 9 */
 function kkey(v) {
   let s = String(v == null ? '' : v).trim().replace(/[^\d.]/g, '');
@@ -4723,6 +4725,7 @@ async function putPeople(list, onProg) {
   };
   await Promise.all(Array.from({ length: Math.min(4, n) }, worker));
   if (bad) { cloudErr(bad, 'אנשים'); setTimeout(reloadData, 600); return false; }
+  pcachePut(list);
   return true;
 }
 async function delPeople(uids) {
@@ -4732,6 +4735,7 @@ async function delPeople(uids) {
     const { error } = await sb.from('people').delete().in('uid', uids.slice(i, i + 300));
     if (error) { cloudErr(error, 'מחיקה'); setTimeout(reloadData, 600); return false; }
   }
+  DV++; pcacheDel(uids);
   return true;
 }
 const KV_KEYS = ['fields', 'dbs', 'groups', 'templates', 'events', 'sms', 'activity', 'uploads', 'smsbal', 'settings'];
@@ -4789,7 +4793,7 @@ async function loadCloud() {
   const PAGE = 1000, PAR = 6;
   const { count } = await sb.from('people').select('uid', { count: 'exact', head: true });
   const total = count || 0, pages = Math.max(1, Math.ceil(total / PAGE));
-  const show = total > 5000;
+  const show = false;   /* בלי חלון — הטעינה רצה ברקע והמסכים כבר פתוחים */
   if (show) loadBar(0, total);
   const chunks = []; let next = 0, done = 0, bad = null;
   const worker = async () => {
@@ -4815,10 +4819,13 @@ async function loadCloud() {
   if (!bad) LOAD_AT = t0;
   return { people: people.length, kv: nkv, failed: !!bad };
 }
-/* רענון מהיר: מושך רק אנשים שהשתנו מאז הטעינה האחרונה (במקום את כל המאגר) */
-async function syncCloud() {
+/* רענון מהיר: מושך רק אנשים שהשתנו מאז הטעינה האחרונה (במקום את כל המאגר).
+   אם במאגר יש פחות אנשים ממה שיש כאן (מישהו מחק) — טוען הכול מחדש ברקע. מחזיר true/false */
+let SYNCING = null;
+function syncCloud(noKV) { if (!SYNCING) SYNCING = syncCloud0(noKV).finally(() => { SYNCING = null; }); return SYNCING; }
+async function syncCloud0(noKV) {
   if (!CLOUD) return true;
-  if (!LOAD_AT) { const r = await loadCloud(); return !r.failed; }
+  if (!LOAD_AT) { const r = await loadCloud(); if (!r.failed) { PPL_READY = true; pcacheSave(); } return !r.failed; }
   const since = new Date(LOAD_AT).toISOString(), t0 = Date.now() - 120000;
   const got = [];
   for (let from = 0; ; from += 1000) {
@@ -4828,16 +4835,76 @@ async function syncCloud() {
   }
   if (got.length) {
     const idx = new Map(); S.people.forEach((p, i) => idx.set(p.uid, i));
-    got.forEach(p => { const i = idx.get(p.uid); if (i == null) S.people.push(p); else S.people[i] = p; });
-    DV++;
+    got.forEach(p => { normOne(p); const i = idx.get(p.uid); if (i == null) S.people.push(p); else S.people[i] = p; });
+    DV++; pcachePut(got);
   }
-  await loadKV();
-  LOAD_AT = t0;
+  if (!noKV) await loadKV();
+  LOAD_AT = t0; pcacheMeta();
+  const { count } = await sb.from('people').select('uid', { count: 'exact', head: true });
+  if (count != null && count < S.people.length) {   /* נמחקו אנשים — מסנכרנים את הרשימה המלאה */
+    const r = await loadCloud(); if (!r.failed) { normPeople(); rebuild(); pcacheSave(); return true; }
+  }
+  if (got.length) rebuild();
   return true;
+}
+/* ---- עותק מקומי של המאגר (IndexedDB) — כדי שהכניסה תהיה מיידית. נמחק ביציאה מהמערכת ---- */
+let PPL_READY = !CLOUD;
+const PPL_WAIT = [];
+const pplWait = () => PPL_READY ? Promise.resolve() : new Promise(r => PPL_WAIT.push(r));
+const PC = { db: null, name: '' };
+function pcOpen() {
+  if (PC.db) return Promise.resolve(PC.db);
+  if (!CLOUD || !ME || !window.indexedDB) return Promise.resolve(null);
+  PC.name = 'maagar-cache|' + ME.id + '|' + SCOPE;
+  return new Promise(res => {
+    const rq = indexedDB.open(PC.name, 1);
+    rq.onupgradeneeded = () => { const d = rq.result; d.createObjectStore('people', { keyPath: 'uid' }); d.createObjectStore('meta'); };
+    rq.onsuccess = () => { PC.db = rq.result; res(PC.db); };
+    rq.onerror = () => res(null); rq.onblocked = () => res(null);
+  });
+}
+function pcTx(store, mode, fn) {
+  return pcOpen().then(d => d && new Promise(res => {
+    try { const t = d.transaction(store, mode); const r = fn(t.objectStore(store)); t.oncomplete = () => res(r && r.result !== undefined ? r.result : true); t.onerror = t.onabort = () => res(null); }
+    catch (e) { res(null); }
+  }));
+}
+const pcacheMeta = () => pcTx('meta', 'readwrite', s => s.put({ at: LOAD_AT, n: S.people.length, v: 1 }, 'm'));
+function pcachePut(list) { if (!CLOUD || !PPL_READY || !list.length) return; pcTx('people', 'readwrite', s => { list.forEach(p => s.put(strip(p))); }); }
+function pcacheDel(uids) { if (!CLOUD || !uids.length) return; pcTx('people', 'readwrite', s => { uids.forEach(u => s.delete(u)); }); }
+async function pcacheSave() {
+  if (!CLOUD) return;
+  await pcTx('people', 'readwrite', s => { s.clear(); S.people.forEach(p => s.put(strip(p))); });
+  await pcacheMeta();
+}
+async function pcacheWipe() {
+  try { if (PC.db) { PC.db.close(); PC.db = null; } } catch (e) {}
+  try {
+    const all = indexedDB.databases ? await indexedDB.databases() : [];
+    await Promise.all(all.filter(d => d.name && d.name.startsWith('maagar-cache|')).map(d => new Promise(r => { const q = indexedDB.deleteDatabase(d.name); q.onsuccess = q.onerror = q.onblocked = () => r(); })));
+  } catch (e) {}
+}
+const normOne = p => { p.dyn = p.dyn || {}; p.dbs = p.dbs || []; p.tags = p.tags || []; p.phones = p.phones || []; p.log = p.log || []; };
+/* טעינת האנשים ברקע: קודם מהעותק המקומי (שנייה), אחר כך רק השינויים מהשרת. בפעם הראשונה — מהשרת */
+async function pplStart(onReady) {
+  const done = () => { normPeople(); rebuild(); PPL_READY = true; PPL_WAIT.splice(0).forEach(r => r()); onReady && onReady(); };
+  let meta = null, cached = null;
+  try { meta = await pcTx('meta', 'readonly', s => s.get('m')); if (meta && meta.at) cached = await pcTx('people', 'readonly', s => s.getAll()); } catch (e) {}
+  if (cached && cached.length && meta.at > Date.now() - 30 * 864e5) {
+    S.people = cached; LOAD_AT = meta.at; done();
+    const before = DV; await syncCloud(); if (DV !== before) onReady && onReady();
+  } else {
+    const r = await loadCloud();
+    done();
+    if (!r.failed) pcacheSave();
+  }
+  /* שינויים של אחרים — כל דקה, ברקע */
+  setInterval(async () => { if (document.hidden || !PPL_READY) return; const before = DV; await syncCloud(true); if (DV !== before) onReady && onReady(true); }, 60000);
 }
 async function reloadData() {
   if (!CLOUD || !ME) return;
-  await loadCloud(); normPeople(); rebuild(); refresh();
+  if (!LOAD_AT) { await loadCloud(); normPeople(); rebuild(); } else await syncCloud();
+  refresh();
 }
 function normPeople() {
   if (!S.dbs.length) S.dbs = [{ id: 'main', name: 'מאגר ראשי' }];
@@ -4886,10 +4953,13 @@ function rebuild() {
 }
 /* איש קשר אחראי: לאדם יכולים להיות כמה — נשמרים מופרדים בפסיק */
 const ownersOf = p => String((p && p.owner) || '').split(/\s*[,;]\s*/).filter(Boolean);
-const owners = () => Array.from(new Set(S.people.flatMap(ownersOf))).sort((a, b) => a.localeCompare(b, 'he'));
+/* חישובים על כל המאגר נשמרים עד שהנתונים משתנים (DV) */
+const memoDV = fn => { let dv = -1, v; return () => { if (dv !== DV) { v = fn(); dv = DV; } return v; }; };
+const owners = memoDV(() => { const t = new Set(); for (const p of S.people) for (const x of ownersOf(p)) t.add(x); return Array.from(t).sort((a, b) => a.localeCompare(b, 'he')); });
 /* בלי ...spread על כל האנשים — במאגר של 100 אלף זה מפיל את הדפדפן (Maximum call stack size exceeded) */
-const allTags = () => { const t = new Set(); for (const p of S.people) for (const x of (p.tags || [])) t.add(x); return Array.from(t).sort((a, b) => a.localeCompare(b, 'he')); };
-function cityCounts() {
+const allTags = memoDV(() => { const t = new Set(); for (const p of S.people) for (const x of (p.tags || [])) t.add(x); return Array.from(t).sort((a, b) => a.localeCompare(b, 'he')); });
+const cityCounts = memoDV(cityCounts0);
+function cityCounts0() {
   const m = new Map();
   S.people.forEach(p => { if (!p.city) return; const k = ckey(p.city); const o = m.get(k) || { c: p.city, n: 0, sup: 0, und: 0 }; o.n++; if (p.status === 'תומך') o.sup++; if (p.status === 'מתלבט') o.und++; m.set(k, o); });
   return Array.from(m.values()).sort((a, b) => b.n - a.n);
@@ -5381,8 +5451,18 @@ function homeData() {
   const map = new Map(), none = blank('', '');
   const ST = { 'תומך': 'sup', 'מתלבט': 'und', 'לא תומך': 'no', 'לא ידוע': 'unk' };
   for (const p of S.people) {
-    const o = p.city ? (map.get(ckey(p.city)) || (map.set(ckey(p.city), blank(ckey(p.city), p.city)), map.get(ckey(p.city)))) : none;
+    const ck = p.city ? ckey(p.city) : '';
+    let o = none; if (ck) { o = map.get(ck); if (!o) { o = blank(ck, p.city); map.set(ck, o); } }
     const cr = p.created || 0;
+    const h = stHist(p);
+    if (!h.length) {   /* מסלול מהיר: בלי היסטוריית סטטוס — הסטטוס קבוע מרגע ההוספה (רוב האנשים) */
+      const s0 = stOf(p), key = ST[s0] || 'unk', sup = s0 === 'תומך';
+      if (cr <= R.b) { o.n++; o[key]++; if (isMobile(p.phone) || (p.phones || []).some(isMobile)) o.ph++; if (p._site) o.kal++; }
+      if (cr >= R.a && cr <= R.b) o.add++;
+      if (R.c) { if (cr <= R.c[1]) { o.cn++; o['c' + key]++; } if (cr >= R.c[0] && cr <= R.c[1]) o.cadd++; }
+      for (let i = 0; i < PTS; i++) if (cr <= ts[i]) { o.tn[i]++; if (sup) o.tsup[i]++; }
+      continue;
+    }
     const sb = stAt(p, R.b);
     if (sb) { o.n++; o[ST[sb] || 'unk']++; if (isMobile(p.phone) || (p.phones || []).some(isMobile)) o.ph++; if (p._site) o.kal++; }
     if (cr >= R.a && cr <= R.b) o.add++;
@@ -5457,7 +5537,7 @@ function fltLabel() {
 const hpw = (id, btn, pop) => '<div class="hpw' + (HM.open === id ? ' on' : '') + '">' + btn + (HM.open === id ? '<div class="hpop" role="dialog">' + pop() + '</div>' : '') + '</div>';
 function hmPeriodBar(D) {
   const R = D.R, pr = PRESETS.find(p => p[0] === HM.preset);
-  const demo = S.people.some(p => (p.tags || []).includes('דמו'));
+  const demo = hmDemo();
   return hpw('rng', '<button class="hsel" data-act="hmOpen" data-v="rng" aria-expanded="' + (HM.open === 'rng') + '"><span class="hsi">' + hic('cal') + '</span><span class="hst"><span class="hsl">טווח תאריכים</span><b class="num">' + rlab(R.a, R.b) + '</b></span><span class="hcv">' + hic('chev') + '</span></button>',
       () => '<div class="hdr"><label><span class="fl">מתאריך</span><input type="date" data-hm="from" value="' + esc(isoDay(new Date(R.a))) + '"></label><label><span class="fl">עד תאריך</span><input type="date" data-hm="to" value="' + esc(isoDay(new Date(R.b))) + '"></label></div>') +
     hpw('per', '<button class="hpre" data-act="hmOpen" data-v="per" aria-expanded="' + (HM.open === 'per') + '">' + (pr ? pr[2] : 'טווח אישי') + '<span class="hcv">' + hic('chev') + '</span></button>',
@@ -5504,12 +5584,34 @@ document.addEventListener('click', e => { if (HM.open && S.view === 'home' && !e
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && HM.open && S.view === 'home') { HM.open = ''; hmBarRender(); } });
 
 /* ---------------------------------------------------------- המסך */
+/* ---- מהירות: החישוב נשמר עד שמשהו משתנה (נתונים / סינון / תקופה), ותמונת מצב נשמרת לכניסה הבאה ---- */
+const hmState = () => JSON.stringify([HM.preset, HM.from, HM.to, HM.cmp, HM.cfrom, HM.cto, HM.sort, HM.dir, HM.cities, HM.region, HM.cat]);
+const hmKey = () => DV + '|' + Math.floor(Date.now() / 60000) + '|' + hmState();
+const hmDemo = () => PPL_READY ? hmDemo0() : !!(hmSnap() || {}).demo;
+const hmDemo0 = memoDV(() => S.people.some(p => (p.tags || []).includes('דמו')));
+function homeD() { const k = hmKey(); if (!HM._D || HM._k !== k) { HM._D = homeData(); HM._k = k; } return HM._D; }
+const hmSnapKey = () => 'maagar-homesnap|' + (CLOUD && ME ? ME.id : 'local') + '|' + SCOPE;
+function hmSnap() {
+  if (HM._snap === undefined) { try { HM._snap = JSON.parse(localStorage.getItem(hmSnapKey()) || 'null'); } catch (e) { HM._snap = null; } }
+  return HM._snap && HM._snap.st === hmState() ? HM._snap : null;
+}
+function hmSnapSave() {
+  if (!CLOUD || !PPL_READY || !HM._D) return;
+  debounce('hmsnap', () => { try { HM._snap = { st: hmState(), D: HM._D, tot: S.people.length, demo: hmDemo0(), at: Date.now() }; localStorage.setItem(hmSnapKey(), JSON.stringify(HM._snap)); } catch (e) {} }, 1500);
+}
+function homeWarm() { if (PPL_READY) { homeD(); hmSnapSave(); } }
 RENDER.home = function (opts) {
   opts = opts || {};
   if (!opts.keepOpen) HM.open = '';
-  const D = opts.reuse && HM._D ? HM._D : homeData(); HM._D = D;
+  const snap = PPL_READY ? null : hmSnap();
+  if (!PPL_READY && !snap) {   /* כניסה ראשונה במחשב הזה — המאגר עוד יורד */
+    $('#v-home').innerHTML = '<div class="kpis" id="homeKpis">' + ['אנשים במאגר', 'תומכים', 'מתלבטים', 'נוספו בתקופה'].map((lb, i) => '<div class="kpi' + (i ? '' : ' hero') + '"><div class="lb">' + lb + '</div><div class="vl">—</div><div class="ft">מעדכן…</div></div>').join('') + '</div>';
+    return;
+  }
+  const D = snap ? snap.D : (opts.reuse && HM._D ? HM._D : homeD());
+  if (!snap) hmSnapSave();
   const { R, T } = D;
-  const tot = S.people.length;
+  const tot = snap ? snap.tot : S.people.length;
   const up = S.events.filter(e => !e.date || e.date >= isoDay(new Date())).sort((a, b) => (a.date || '').localeCompare(b.date || '')).slice(0, 3);
   const ft = (d, plain) => '<div class="ft">' + plain + '</div>';
   const kpi = (lb, v, foot, act, val, ic, cls) => '<div class="kpi ' + (cls || '') + '"><span class="ki">' + hic(ic) + '</span><div class="lb">' + lb + '</div><div class="vl" data-count="' + v + '">' + nf(v) + '</div>' + foot + '</div>';   /* כרטיסי מידע בלבד — לא לחיצים */
@@ -5528,7 +5630,7 @@ RENDER.home = function (opts) {
     '<span class="num cc"><b>' + pc1(o.cov) + '</b></span>' +
     '<span class="ct">' + spark(o.trend) + '</span></button>';
 
-  $('#v-home').classList.toggle('still', !!opts.refresh);
+  $('#v-home').classList.toggle('still', !!opts.refresh || !!HM._seen);   /* האנימציות — רק בפעם הראשונה */
   $('#v-home').innerHTML =
     (!tot ? '<div class="card"><div class="empty"><b>המאגר עדיין ריק</b>אפשר להעלות קובץ אקסל או להוסיף איש קשר ידנית.<div class="row" style="justify-content:center;margin-top:14px">' + (can('import') ? '<button class="btn" data-act="go" data-v="upload">העלאת אקסל</button>' : '') + (can('edit') ? '<button class="btn sec" data-act="newPerson">+ איש קשר חדש</button>' : '') + (CLOUD && ME && ME.hq === 'central' && can('edit') ? '<button class="btn sec" data-act="seedCloud">טעינת נתוני דמו לבדיקה</button>' : '') + '</div></div></div>' : '') +
     '<div class="kpis" id="homeKpis">' +
@@ -5553,7 +5655,8 @@ RENDER.home = function (opts) {
     '</div></div></div></div></div>' +
     '<div class="qkact"><div class="qkh">פעולות מהירות</div><div class="qkg">' + quick + '</div></div>';
   hmWire();
-  if (!opts.refresh) countUp($('#homeKpis'));
+  if (!opts.refresh && !HM._seen && !snap) countUp($('#homeKpis'));
+  HM._seen = true;
 };
 
 /* ---------------------------------------------------------- ייצוא: אקסל ודוח */
@@ -5695,14 +5798,14 @@ function matchQ(p, q) {
   const nm = norm(fullName(p)), rv = norm((p.last || '') + ' ' + (p.first || ''));
   return nm.includes(t) || rv.includes(t);
 }
-function filterPeople(f) {
+function filterPeople(f, list) {
   const kset = new Set(String(f.kalpis || '').split(/[\s,;]+/).map(kkey).filter(Boolean));
   const kc = f.kcity ? ckey(f.kcity) : (kset.size && f.city ? ckey(f.city) : '');
   const fd = f.dyn ? fieldById(f.dyn) : null;
   const dtz = digits(f.tz), dph = phKey(digits(f.phone)), dzip = digits(f.zip);
   const tFirst = norm(f.first), tLast = norm(f.last), tHouse = norm(f.house), tMail = norm(f.email);
   const dyns = Object.keys(f).filter(k => k.startsWith('d_') && f[k] !== '' && f[k] != null).map(k => [fieldById(k.slice(2)), f[k]]).filter(x => x[0]);
-  return S.people.filter(p => {
+  return (list || S.people).filter(p => {
     if (f.q && !matchQ(p, f.q)) return false;
     if (dtz && !digits(p.tz).includes(dtz)) return false;
     if (tFirst && !norm(p.first).includes(tFirst)) return false;
@@ -5758,9 +5861,17 @@ function sortPeople(arr, how) {
   return d.map(x => x.p);
 }
 /* תוצאות החיפוש נשמרות עד שמשתנה הסינון, המיון או הנתונים (DV) — מעבר עמוד / סימון לא מחשבים מחדש */
+/* רשימה ממוינת של כל המאגר — מחושבת פעם אחת (ומראש, כשהדפדפן פנוי). סינון על רשימה ממוינת שומר על הסדר — בלי למיין שוב */
+const SORTED = { dv: -1 };
+function sortedAll(how) {
+  if (SORTED.dv !== DV) { for (const k in SORTED) delete SORTED[k]; SORTED.dv = DV; }
+  if (!SORTED[how]) SORTED[how] = sortPeople(S.people.slice(), how);
+  return SORTED[how];
+}
+function srchWarm() { if (PPL_READY) { sortedAll(SR.sort || 'name'); srchResults(); } }
 function srchResults() {
   const key = DV + '|' + SR.sort + '|' + JSON.stringify(SR.f);
-  if (SR._ck !== key || !SR._res) { SR._res = sortPeople(filterPeople(SR.f), SR.sort); SR._ck = key; }
+  if (SR._ck !== key || !SR._res) { SR._res = filterPeople(SR.f, sortedAll(SR.sort || 'name')); SR._ck = key; }
   return SR._res;
 }
 RENDER.search = function (o) {
@@ -5846,6 +5957,7 @@ document.addEventListener('change', e => {
   renderSearchPanel(); renderResults();
 });
 function renderResults() {
+  if (!PPL_READY) { $('#srchRes').innerHTML = '<div class="empty"><b>מכין את החיפוש…</b>עוד רגע זה מוכן.</div>'; pplWait().then(() => { if (S.view === 'search') renderResults(); }); return; }
   const res = srchResults();
   SR.last = res;
   for (const u of Array.from(SR.sel)) if (!S.by.has(u)) SR.sel.delete(u);
@@ -6634,6 +6746,7 @@ async function upLoadUndo(id) {
 }
 async function runUpload() {
   if (!U.pv) return;
+  if (!PPL_READY) { loadBar(0, 0, 'מסיים לטעון את המאגר…'); await pplWait(); loadBar(); }
   if (CLOUD) {
     const keepF = S.fields.slice();   /* פרטים דינמיים שהקובץ יצר עכשיו (מין, מייל…) — הרענון מהשרת לא מכיר אותם עדיין, ובלי זה הערכים שלהם הולכים לאיבוד */
     loadBar(0, 0, 'בודק עדכונים במאגר…'); const ok = await syncCloud(); loadBar();
@@ -6696,7 +6809,7 @@ async function runUpload() {
   const errs = U.pv.rows.filter(x => x.act === 'err');   /* שומרים רק את שורות השגיאה — לא את כל הקובץ (בקובץ גדול זה מפיל את הדפדפן) */
   U.done = { id: upId, c: Object.assign({}, c), file: fname, partial: !okPut, errRows: errs.map((x, i) => ({ ri: i, errs: x.errs, warns: x.warns || [] })), head: U.head, body: errs.map(x => U.body[x.ri]) };
   U.pv = null; U.body = []; U.head = []; U.file = ''; U.eventId = null; U.extra = []; U.step = 1; U.wb = null; U.rows = null; U.sheets = [];   /* חוזרים ישר לכפתור ההעלאה; הסיכום מוצג למעלה */
-  renderTabs(); renderUpload();
+  renderTabs(); renderUpload(); idleWarm();   /* מכינים מראש את מסך הבית והחיפוש עם הנתונים החדשים */
   if (!okPut) { await modal('ההעלאה לא הושלמה', '<p>החיבור למאגר נפל באמצע השמירה, ולכן <b>חלק מהאנשים בקובץ לא נשמרו</b>.</p><p>מה עושים: מעלים שוב את אותו קובץ. מי שכבר נשמר יזוהה לפי ת.ז / טלפון ויתעדכן — לא ייכפל.</p>', [{ lb: 'הבנתי', v: true }]); return; }
   toast('העדכון הסתיים');
 }
@@ -7877,7 +7990,7 @@ async function evMatch(ev, quiet) {
 }
 /* רץ ברקע: מושך הרשמות, ומתאים למאגר כל אירוע שהסתיים */
 async function evSync(quiet) {
-  if (E.syncing) return;
+  if (E.syncing || !PPL_READY) return;   /* ההתאמה לפי טלפון/ת.ז צריכה את כל המאגר — מחכים שייטען */
   E.syncing = true; E.lastSync = Date.now();
   try {
     let changed = CLOUD ? await evFetchRows(quiet) : false;
@@ -8211,6 +8324,7 @@ async function pnFillOwners(x) {
 }
 /* מוסיף / מעדכן את הפונה במאגר */
 async function pnToDb() {
+  await pplWait();   /* בודקים אם האדם כבר קיים רק אחרי שכל המאגר נטען */
   const x = pnSel(); if (!x) return;
   const F = P.form, ph = F.phone ? nph(F.phone) : '', tz = F.tz ? nid(F.tz) : '';
   if (!F.first && !F.last) { toast('חסר שם'); $('#pf_first') && $('#pf_first').focus(); return; }
@@ -8615,10 +8729,10 @@ function friendlyAuthErr(m) {
 async function authFlow() {
   const urlErr = takeUrlError();
   const { data: { session } } = await sb.auth.getSession();
-  if (!session) return showLogin(urlErr);
+  if (!session) { pcacheWipe(); return showLogin(urlErr); }   /* אין משתמש מחובר — מוחקים את העותק המקומי של המאגר */
   const { data: acc, error } = await sb.rpc('my_access');
   if (error) return authScreen(authHead() + '<div class="abox r"><b>לא הצלחתי להתחבר למאגר</b><p>' + esc(error.message) + '</p></div><div class="arow"><button class="btn abtn" data-act="authRecheck">ניסיון נוסף</button><button class="btn sec abtn" data-act="authLogout">התנתקות</button></div>');
-  if (!acc) return showNoAccess(session.user);
+  if (!acc) { pcacheWipe(); return showNoAccess(session.user); }
   ME = acc; ME.perms = ME.perms || {};
   SCOPE = acc.hq === 'central' ? 'central' : ckey(acc.city);
   const want = localStorage.getItem('maagar-hq');
@@ -8719,7 +8833,7 @@ function showNoAccess(user) {
 let idleT = Date.now();
 function idleWatch() {
   ['click', 'keydown', 'mousemove', 'scroll'].forEach(ev => document.addEventListener(ev, () => { idleT = Date.now(); }, { passive: true }));
-  setInterval(() => { if (Date.now() - idleT > 60 * 60000) { sb.auth.signOut(); } }, 60000);
+  setInterval(async () => { if (Date.now() - idleT > 60 * 60000) { await pcacheWipe(); sb.auth.signOut(); } }, 60000);
 }
 /* ברכה לפי שעה, שבת וחגים (לפי הלוח העברי של הדפדפן) */
 function greeting(now) {
@@ -8781,7 +8895,7 @@ Object.assign(ACT, {
   authResend: el => sendCode(el),
   authVerify: el => verifyCode(el),
   authRecheck: () => authFlow(),
-  authLogout: async () => { await sb.auth.signOut(); location.reload(); },
+  authLogout: async () => { await pcacheWipe(); await sb.auth.signOut(); location.reload(); },
   reload: async () => { toast('טוען מחדש…'); await reloadData(); toast('הנתונים עודכנו'); }
 });
 
@@ -8922,8 +9036,10 @@ Object.assign(ACT, {
 /* ========================================================== הפעלה */
 async function startApp() {
   if (CLOUD) {
-    const r = await loadCloud();
-    if (!S.fields.length && !S.dbs.length && !r.people) defaultsOnly();
+    /* נכנסים מיד: ההגדרות (קטנות) עכשיו, האנשים ברקע — מהעותק המקומי ואז רק השינויים */
+    await loadKV();
+    if (!S.fields.length && !S.dbs.length) defaultsOnly();
+    pplStart(later => { if (!later || S.view === 'home') refresh(); idleWarm(); });
   } else {
     try { idb = await openDB(); } catch (e) { console.warn('IndexedDB לא זמין', e); }
     let fresh = true;
@@ -8948,6 +9064,12 @@ async function startApp() {
   if (CLOUD) { const ft = $('main .foot'); if (ft) ft.textContent = 'הנתונים נשמרים במאגר המשותף. כל משתמש רואה רק את מה שמותר לו — מטה מרכזי את הכול, מטה עירוני את העיר שלו.'; }
   const r = navParse(location.hash);   // רענון/קישור ישיר — חוזרים לאותו מסך
   go(r ? r.v : 'home', r ? navOpts(r) : {});
+  if (!CLOUD) idleWarm();
+}
+/* מחשבים מראש (כשהדפדפן פנוי) את מה שהמסכים הכבדים צריכים — כדי שהמעבר אליהם יהיה מיידי */
+function idleWarm() {
+  const run = window.requestIdleCallback || (f => setTimeout(f, 200));
+  run(() => { try { if (typeof homeWarm === 'function') homeWarm(); } catch (e) {} run(() => { try { if (typeof srchWarm === 'function') srchWarm(); cityCounts(); owners(); allTags(); } catch (e) {} }); });
 }
 /* ברירת מחדל למאגר ענן חדש וריק: פרטים דינמיים, מאגרים ותבניות — בלי אנשים */
 function defaultsOnly() {
