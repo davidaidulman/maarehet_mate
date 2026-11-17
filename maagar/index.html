@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
-<meta name="build" content="20261117-145728">
+<meta name="build" content="20261117-153128">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>דאטה ביתנו — מאגר התומכים</title>
 <style>
@@ -4789,7 +4789,9 @@ function rebuild() {
   S.by.clear(); S.byTz.clear(); S.byPhone.clear();
   S.people.forEach(indexPerson);
 }
-const owners = () => Array.from(new Set(S.people.map(p => p.owner).filter(Boolean))).sort((a, b) => a.localeCompare(b, 'he'));
+/* איש קשר אחראי: לאדם יכולים להיות כמה — נשמרים מופרדים בפסיק */
+const ownersOf = p => String((p && p.owner) || '').split(/\s*[,;]\s*/).filter(Boolean);
+const owners = () => Array.from(new Set(S.people.flatMap(ownersOf))).sort((a, b) => a.localeCompare(b, 'he'));
 const allTags = () => Array.from(new Set([].concat(...S.people.map(p => p.tags || [])))).sort((a, b) => a.localeCompare(b, 'he'));
 function cityCounts() {
   const m = new Map();
@@ -5612,7 +5614,7 @@ function filterPeople(f) {
     if (f.age !== '' && f.age != null) { if (ageOf(p) !== +f.age) return false; }
     if (f.lang && p.lang !== f.lang) return false;
     if (f.status && stOf(p) !== f.status) return false;
-    if (f.owner && p.owner !== f.owner) return false;
+    if (f.owner && !ownersOf(p).includes(f.owner)) return false;
     if (f.db && !(p.dbs || []).includes(f.db)) return false;
     if (f.tag && !(p.tags || []).includes(f.tag)) return false;
     if (f.upl && p.lastUpload !== f.upl) return false;
@@ -5791,7 +5793,7 @@ Object.assign(ACT, {
       if (a === 'status') { if (p.status !== v) { plog(p, 'סטטוס שונה בפעולה קבוצתית: ' + stOf(p) + ' ← ' + v); stLog(p, stOf(p), v, 'פעולה קבוצתית'); p.status = v; } }
       if (a === 'tag') { if (!p.tags.includes(v)) { p.tags.push(v); plog(p, 'נוספה תגית: ' + v); } }
       if (a === 'db') { if (!p.dbs.includes(db.id)) { p.dbs.push(db.id); plog(p, 'נוסף/ה למאגר: ' + v); } }
-      if (a === 'owner') { if (p.owner !== v) { plog(p, 'שויך/ה לאיש קשר אחראי: ' + v); p.owner = v; } }
+      if (a === 'owner') { if (!ownersOf(p).includes(v)) { plog(p, 'שויך/ה לאיש קשר אחראי: ' + v); p.owner = ownersOf(p).concat(v).join(', '); } }
       p.updated = Date.now();
     });
     await putPeople(list);
@@ -6229,10 +6231,74 @@ const HINTS = {
   lang: ['שפה', 'language', 'שפת אם'], birth: ['תאריך לידה', 'לידה', 'birth', 'birthday', 'ת. לידה'], owner: ['איש קשר אחראי', 'אחראי', 'רכז', 'רכזת', 'ממריץ', 'אלקטור', 'מטפל'],
   kalpi: ['קלפי', 'מספר קלפי', 'מס קלפי', 'kalpi'], kcity: ['יישוב קלפי', 'עיר קלפי', 'ישוב קלפי', 'יישוב הקלפי'], status: ['סטטוס תמיכה', 'תמיכה', 'סטטוס', 'status'], tags: ['תגית', 'תגיות', 'tags']
 };
+/* ===================================================== תבנית קבועה לקבצים מוכרים
+   ייצוא מערכת המפלגה (ועוד קבצים עם אותן כותרות): כל עמודה מוכרת הולכת לבד למקום הנכון.
+   כותרת → יעד:  שדה בסיס ('tz', 'phone2'...) | 'skip' | 'owner' (כמה עמודות מתחברות) | 'elector' (תגית) | 'optin' (הפוך → הסרה מדיוור)
+                 | { f: מזהה פרט דינמי, n: שם, ty: סוג, loose: כן/לא סלחני }  — הפרט נוצר לבד אם אין כזה. */
+const UP_TAG_ELECTOR = 'אלקטור בעבר';
+const UP_F = {
+  apt: { f: 'f_apt', n: 'מספר דירה', ty: 'text' }, zip: { f: 'f_zip', n: 'מיקוד', ty: 'text' }, gender: { f: 'f_gender', n: 'מין', ty: 'text' },
+  email: { f: 'f_email', n: 'דואר אלקטרוני', ty: 'text' }, father: { f: 'f_father', n: 'שם האב', ty: 'text' }, origin: { f: 'f_origin', n: 'ארץ מוצא', ty: 'text' },
+  aliya: { f: 'f_aliya', n: 'שנת עלייה', ty: 'number' }, hood: { f: 'f_hood', n: 'שכונה', ty: 'text' }, entr: { f: 'f_entrance', n: 'כניסה', ty: 'text' },
+  region: { f: 'f_region', n: 'מרחב', ty: 'text' }, note: { f: 'f_note', n: 'הערות', ty: 'text' }, cluster: { f: 'f_cluster', n: 'שם האשכול', ty: 'text' },
+  pay: { f: 'f_paystat', n: 'סטטוס תשלום התפקדות', ty: 'text' }, regdate: { f: 'f_regdate', n: 'תאריך התפקדות', ty: 'date' }, member: { f: 'f_member', n: 'מתפקדים', ty: 'bool' },
+  joinyear: { f: 'f_joinyear', n: 'שנת הצטרפות למפלגה', ty: 'number' }, standing: { f: 'f_standing', n: 'הוראות קבע', ty: 'bool', loose: 1 },
+  pubrole: { f: 'f_pubrole', n: 'תפקיד ציבורי', ty: 'text' }, inst: { f: 'f_inst', n: 'מוסדות במפלגה', ty: 'text' }, vip: { f: 'f_vip', n: 'VIP', ty: 'bool', loose: 1 },
+  hq: { f: 'f_hq', n: 'מטה משויך', ty: 'text' }, munic: { f: 'f_munic', n: 'עמדה לרשימה מוניציפאלית', ty: 'text' }, vote22: { f: 'f_vote22', n: 'סטטוס הצבעה בחירות 2022', ty: 'text' },
+  ussr: { f: 'f_ussr', n: 'מאפיין עליית ברית המועצות', ty: 'bool', loose: 1 }, reserve: { f: 'f_reserve', n: 'מילואימניק', ty: 'bool', loose: 1 },
+  change: { f: 'f_change', n: 'הצביע לגוש השינוי', ty: 'bool', loose: 1 }, likud: { f: 'f_likud', n: 'מתלבט ישראל ביתנו VS ליכוד', ty: 'bool', loose: 1 },
+  regular: { f: 'f_regular', n: 'מוזמנים קבועים', ty: 'bool', loose: 1 }, wantjoin: { f: 'f_wantjoin', n: 'מעוניין להתפקד', ty: 'bool', loose: 1 },
+  sign: { f: 'f_sign', n: 'מעוניין לתלות שלט', ty: 'bool', loose: 1 }, conf: { f: 'f_conf', n: 'מעוניין להשתתף בכנסים', ty: 'bool', loose: 1 },
+  homemeet: { f: 'f_homemeet', n: 'מעוניין להשתתף בחוגי בית', ty: 'bool', loose: 1 }, volfield: { f: 'f_volfield', n: 'התנדבות לשטח', ty: 'bool', loose: 1 },
+  volnet: { f: 'f_volnet', n: 'התנדבות לסושיאל/דוברות', ty: 'bool', loose: 1 }, hasbara: { f: 'f_hasbara', n: 'סיוע בהסברה והפצת מסרים ברשתות', ty: 'bool', loose: 1 },
+  optout: { f: 'f_optout', n: 'הסרה מדיוור', ty: 'bool' }, phHome: { f: 'f_phone_home', n: 'טלפון בית/נייח', ty: 'text' }, phIntl: { f: 'f_phone_intl', n: 'טלפון חו״ל', ty: 'text' }
+};
+const UP_TPL = [
+  ['tz', 'תעודת זהות|ת.ז|תז'], ['first', 'שם פרטי'], ['last', 'שם משפחה'], ['city', 'עיר/יישוב|עיר יישוב|עיר|יישוב'], ['street', 'רחוב'], ['house', 'מספר בית/בניין|מספר בית|מספר בניין'],
+  ['phone', 'טלפון|טלפון נייד|נייד'], ['phone2', 'טלפון משני 1|טלפון משני 2|טלפון משני|טלפונים נוספים|טלפון נוסף'], ['birth', 'תאריך לידה'], ['status', 'סטטוס תמיכה'],
+  ['lang', 'שפה'], ['kalpi', 'מספר קלפי'], ['tags', 'תגיות|תגית'],
+  ['owner', 'אלקטורים אחראיים|אלקטור אחראי|איש קשר במפלגה|שם ממריץ|איש קשר אחראי'], ['elector', 'אלקטור'], ['optin', 'מאשר דיוור|מאשר/ת דיוור'],
+  ['skip', 'גיל|מספר מצביע|כתובת קלפי|פרטי קלפי|סך האלקטורים האחראיים|סך הפניות|אלקטורים שסימנו כדרוש בירור|תאריך עידכון אחרון|תאריך עדכון אחרון|ת.ז ממריץ|תז ממריץ|מזהה מערכת|יצירת קשר עם מצביעים על ידי אלקטורים'],
+  ['apt', 'מספר דירה|דירה'], ['zip', 'מיקוד'], ['gender', 'מין|מגדר'], ['email', 'דואר אלקטרוני|אימייל|מייל|email'], ['father', 'שם האב'], ['origin', 'ארץ מוצא'],
+  ['aliya', 'שנת עלייה|שנת עליה'], ['hood', 'שכונה'], ['entr', 'כניסה'], ['region', 'מרחב'], ['note', 'הערה|הערות'], ['cluster', 'שם האשכול|אשכול'],
+  ['pay', 'Register Payment Status|סטטוס תשלום'], ['regdate', 'תאריך התפקדות'], ['joinyear', 'שנת הצטרפות למפלגה'], ['standing', 'הוראת קבע|הוראות קבע'],
+  ['pubrole', 'תפקיד ציבורי'], ['inst', 'מוסדות במפלגה'], ['vip', 'VIP'], ['hq', 'בחר מטה להשתייכות|מטה להשתייכות'], ['munic', 'עמדה לרשימה מוניציפאלית|עמדה לרשימה מוניציפלית'],
+  ['vote22', 'סטטוס הצבעה בחירות 2022'],
+  ['ussr', 'מאפין עליה ברית המועצות|מאפיין עליה ברית המועצות|מאפיין עליית ברית המועצות|מאפין עליית ברית המועצות'], ['reserve', 'מילואימניק|מילואמניק'],
+  ['change', 'מצביע לגוש השינוי|הצביע לגוש השינוי'], ['likud', 'מתלבט בין הליכוד לישראל ביתנו|מתלבט ישראל ביתנו VS ליכוד'], ['regular', 'מוזמנים קבועים'],
+  ['wantjoin', 'מעוניין להתפקד'], ['sign', 'מעוניין לתלות שלט'], ['conf', 'מעוניין להשתתף בכנסים'], ['homemeet', 'מעוניין להשתתף בחוגי בית'],
+  ['volfield', 'התנדבות בפעילות שטח|התנדבות לשטח'], ['volnet', 'התנדבות בפעילות ברשת|התנדבות לסושיאל/דוברות'], ['hasbara', 'סיוע בהסברה והפצת מסרים ברשתות']
+];
+const upKey = s => norm(s).replace(/[^א-תa-z0-9]/g, '');
+const UP_TPL_IX = (() => { const m = new Map(); UP_TPL.forEach(([t, alts]) => alts.split('|').forEach(a => { const k = upKey(a); if (!m.has(k)) m.set(k, t); })); return m; })();
+/* מוצא פרט דינמי קיים (לפי מזהה או שם) או יוצר אותו */
+function upField(key) {
+  const d = UP_F[key]; if (!d) return null;
+  let f = fieldById(d.f) || S.fields.find(x => upKey(x.name) === upKey(d.n));
+  if (!f) { f = { id: d.f, name: d.n, type: d.ty, inSearch: true, inCard: true }; S.fields.push(f); U.newFields = true; }
+  return f;
+}
+/* טלפונים מתא אחד: נייד / נייח-בית / חו"ל */
+function upPhones(s) {
+  const out = { mob: [], home: [], intl: [], bad: [] };
+  String(s).split(/[,;\/|\n]+|\s{2,}/).map(x => x.trim()).filter(Boolean).forEach(tok => {
+    let d = digits(tok);
+    if (!d) return;
+    if (/^\s*(\+|00)/.test(tok)) { d = d.replace(/^00/, ''); if (!d.startsWith('972')) { out.intl.push('+' + d); return; } }
+    const p = nph(tok);
+    if (isMobile(p)) out.mob.push(p); else if (okPhone(p)) out.home.push(p);
+    else if (d.length >= 8 && !d.startsWith('0')) out.intl.push('+' + d); else out.bad.push(tok);
+  });
+  return out;
+}
+const upYes = s => /^(כן|yes|y|true|1|v|✓|✔|x|יש|כ)$/i.test(String(s).trim());
+const upNo = s => /^(לא|no|n|false|0|-|אין|ל)$/i.test(String(s).trim()) || /^לא[ \s]/.test(String(s).trim());
+const upList = (a, b) => { const v = String(a || '').split(/\s*,\s*/).concat(b).map(x => String(x).trim()).filter(Boolean); return Array.from(new Set(v)).join(', '); };
 function targetsList() {
   return [['tz', 'ת.ז'], ['first', 'שם פרטי'], ['last', 'שם משפחה'], ['full', 'שם מלא (יפוצל לפרטי ומשפחה)'], ['phone', 'טלפון ראשי'], ['phone2', 'טלפון נוסף'],
     ['city', 'עיר'], ['street', 'רחוב'], ['house', 'מספר בית'], ['address', 'כתובת מלאה (תפוצל לרחוב ומספר)'], ['lang', 'שפה'], ['birth', 'תאריך לידה'],
-    ['owner', 'איש קשר אחראי'], ['kalpi', 'מספר קלפי'], ['kcity', 'יישוב הקלפי'], ['status', 'סטטוס תמיכה'], ['tags', 'תגיות']]
+    ['owner', 'איש קשר אחראי (אפשר כמה עמודות)'], ['kalpi', 'מספר קלפי'], ['kcity', 'יישוב הקלפי'], ['status', 'סטטוס תמיכה'], ['tags', 'תגיות'],
+    ['elector', 'אלקטור בעבר (תגית „' + UP_TAG_ELECTOR + '”)'], ['optin', 'מאשר דיוור (הפוך ← הסרה מדיוור)']]
     .concat(S.fields.map(f => ['dyn:' + f.id, 'פרט דינמי: ' + f.name])).concat([['new', '+ פרט דינמי חדש בשם העמודה'], ['skip', 'לא לייבא']]);
 }
 const tLabel = t => (targetsList().find(x => x[0] === t) || [t, t])[1];
@@ -6283,9 +6349,22 @@ function autoMap() {
     map[c.i] = t; how[c.i] = c.how; used.add(t);
   });
   if (used.has('full') && used.has('first') && used.has('last')) { const j = map.indexOf('full'); map[j] = 'skip'; how[j] = 'n'; }
+  /* תבנית קבועה: כותרות מוכרות גוברות על הניחוש */
+  U.tpl = 0;
+  U.head.forEach((h, i) => {
+    const t = UP_TPL_IX.get(upKey(h)); if (!t) return;
+    U.tpl++;
+    if (UP_F[t]) { const f = upField(t); map[i] = 'dyn:' + f.id; } else map[i] = t;
+    how[i] = 'h';
+  });
+  if (map.some(t => t === 'phone' || t === 'phone2')) { upField('phHome'); upField('phIntl'); }
+  if (map.includes('optin')) upField('optout');
+  if (map.some(t => t === 'dyn:' + (fieldById('f_regdate') || {}).id)) upField('member');
   U.map = map; U.how = how;
 }
 function detectHeaderRow(rows) {
+  /* שורה עם כמה כותרות מוכרות — היא שורת הכותרות, גם אם רוב העמודות בקובץ ריקות */
+  for (let r = 0; r < Math.min(15, rows.length); r++) if (rows[r].filter(c => typeof c === 'string' && UP_TPL_IX.has(upKey(c))).length >= 3) return r;
   let best = 0, bestN = -1;
   for (let r = 0; r < Math.min(15, rows.length); r++) {
     const n = rows[r].filter(c => String(c == null ? '' : c).trim() !== '').length;
@@ -6325,21 +6404,33 @@ function rowRecord(r) {
     if (t === 'skip') return;
     const raw = r[j]; const s = String(raw == null ? '' : raw).trim(); if (!s) return;
     if (t === 'tz') { const d = nid(s); if (!d) errs.push('ת.ז באורך חריג: ' + s); else if (!validId(d)) { if (U.opts.allowBadId) { rec.tz = d; warns.push('ספרת ביקורת שגויה'); } else errs.push('ספרת ביקורת שגויה: ' + d); } else rec.tz = d; }
-    else if (t === 'phone' || t === 'phone2') { const p = nph(s); if (!okPhone(p)) warns.push('טלפון לא תקין: ' + s); else if (t === 'phone' && !rec.phone) rec.phone = p; else (rec.phones = rec.phones || []).push(p); }
+    else if (t === 'phone' || t === 'phone2') {
+      const P = upPhones(s);
+      P.mob.forEach(p => { if (t === 'phone' && !rec.phone) rec.phone = p; else if (p !== rec.phone && !(rec.phones || []).includes(p)) (rec.phones = rec.phones || []).push(p); });
+      const fh = fieldById('f_phone_home'), fi = fieldById('f_phone_intl');
+      if (P.home.length) { if (fh) rec.dyn[fh.id] = upList(rec.dyn[fh.id], P.home.map(fmtPhone)); else (rec.phones = rec.phones || []).push(...P.home); }
+      if (P.intl.length && fi) rec.dyn[fi.id] = upList(rec.dyn[fi.id], P.intl);
+      P.bad.forEach(b => warns.push('טלפון לא תקין: ' + b));
+    }
+    else if (t === 'owner') rec.owner = upList(rec.owner, s.split(/[,;\n]+/));
+    else if (t === 'elector') { if (upYes(s) || /אלקטור/.test(s)) (rec.tags = rec.tags || []).push(UP_TAG_ELECTOR); else if (!upNo(s) && !/משתמש|רגיל/.test(s)) warns.push('אלקטור: ערך לא מזוהה — ' + s); }
+    else if (t === 'optin') { const fo = fieldById('f_optout'); if (fo) { if (upNo(s)) rec.dyn[fo.id] = true; else if (upYes(s)) rec.dyn[fo.id] = false; } }
     else if (t === 'full') { const parts = s.replace(/\s+/g, ' ').split(' '); if (!rec.first) rec.first = parts.length > 1 ? parts.slice(0, -1).join(' ') : parts[0]; if (!rec.last && parts.length > 1) rec.last = parts[parts.length - 1]; }
     else if (t === 'address') { const m = s.match(/^(.*?)[\s,]+(\d+\s*[א-ת]?)\s*$/); if (m) { rec.street = m[1].replace(/^(רח'?|רחוב)\s+/, '').trim(); rec.house = m[2].replace(/\s/g, ''); } else rec.street = s; }
-    else if (t === 'lang') rec.lang = mapLang(s);
+    else if (t === 'lang') { if (!rec.lang) rec.lang = mapLang(s); }
     else if (t === 'birth') { const d = parseDate(raw); if (d) rec.birth = d; else warns.push('תאריך לידה לא מזוהה: ' + s); }
     else if (t === 'status') { const st = mapStatus(s); if (st) rec.status = st; else warns.push('סטטוס לא מוכר: ' + s); }
-    else if (t === 'tags') rec.tags = s.split(/[,;]+/).map(x => x.trim()).filter(Boolean);
+    else if (t === 'tags') rec.tags = (rec.tags || []).concat(s.split(/[,;]+/).map(x => x.trim()).filter(Boolean));
     else if (t === 'kalpi') rec.kalpi = typeof raw === 'number' ? String(raw) : s;
     else if (t === 'new') rec.dyn['new:' + j] = s;
     else if (t.startsWith('dyn:')) {
       const f = fieldById(t.slice(4)); if (!f) return;
+      if (rec.dyn[f.id] != null && rec.dyn[f.id] !== '') return;      /* שתי עמודות לאותו פרט — הראשונה שמלאה קובעת */
       let v = s;
-      if (f.type === 'bool') { const st = mapStatus(s); v = /^(כן|yes|y|true|1|v|✓|x)$/i.test(s) ? true : /^(לא|no|n|false|0)$/i.test(s) ? false : (st === 'תומך' ? true : st === 'לא תומך' ? false : null); if (v == null) { warns.push(f.name + ': ערך לא מזוהה'); return; } }
+      const loose = Object.values(UP_F).some(d => d.loose && d.f === f.id);
+      if (f.type === 'bool') { const st = mapStatus(s); v = upYes(s) ? true : upNo(s) ? false : (st === 'תומך' ? true : st === 'לא תומך' ? false : loose ? true : null); if (v == null) { warns.push(f.name + ': ערך לא מזוהה'); return; } }
       else if (f.type === 'number') { v = parseFloat(s.replace(/,/g, '')); if (!isFinite(v)) return; }
-      else if (f.type === 'date') { v = parseDate(raw); if (!v) return; }
+      else if (f.type === 'date') { v = parseDate(raw); if (!v) return; if (f.id === 'f_regdate' && fieldById('f_member')) rec.dyn.f_member = true; }
       else if (f.type === 'multi') v = s.split(/[,;]+/).map(x => x.trim()).filter(Boolean);
       rec.dyn[f.id] = v;
     }
@@ -6436,7 +6527,8 @@ async function runUpload() {
     if (isNew) { p = newPersonObj(); p.dbs = []; p.created = now; p.log = []; S.people.push(p); undo.created.push(p.uid); }
     const st0 = isNew ? '' : stOf(p);
     const ch = [];
-    ['tz', 'first', 'last', 'city', 'street', 'house', 'lang', 'birth', 'owner', 'kalpi', 'kcity', 'status'].forEach(k => {
+    if (rec.owner) { const o = upList(p.owner, rec.owner.split(/\s*,\s*/)); if (o !== (p.owner || '')) { if (!isNew) ch.push(LBL.owner); p.owner = o; } }
+    ['tz', 'first', 'last', 'city', 'street', 'house', 'lang', 'birth', 'kalpi', 'kcity', 'status'].forEach(k => {
       const v = rec[k]; if (v == null || v === '') return;
       if (!isNew && U.opts.keepOld && p[k] && k !== 'status' && k !== 'kalpi' && k !== 'kcity' && k !== 'owner' && k !== 'lang' && false) return;
       if (p[k] !== v) { if (!isNew) ch.push(LBL[k]); p[k] = v; }
@@ -6446,7 +6538,7 @@ async function runUpload() {
     if (!U.opts.keepOld) { /* בלי שמירה על ערכים קיימים: ערכים ריקים בקובץ מוחקים */
       U.map.forEach((t, j) => { if (j < U.head.length && ['first', 'last', 'city', 'street', 'house', 'lang', 'owner', 'kalpi', 'kcity'].includes(t) && String(U.body[x.ri][j] == null ? '' : U.body[x.ri][j]).trim() === '' && p[t]) { p[t] = ''; ch.push(LBL[t]); } });
     }
-    Object.entries(rec.dyn).forEach(([id, v]) => { const f = fieldById(id); if (!f) return; if (JSON.stringify(p.dyn[id]) !== JSON.stringify(v)) { if (!isNew) ch.push(f.name); p.dyn[id] = v; } });
+    Object.entries(rec.dyn).forEach(([id, v]) => { const f = fieldById(id); if (!f) return; if (id === 'f_phone_home' || id === 'f_phone_intl') v = upList(p.dyn[id], String(v).split(/\s*,\s*/)); if (JSON.stringify(p.dyn[id]) !== JSON.stringify(v)) { if (!isNew) ch.push(f.name); p.dyn[id] = v; } });
     if (fieldById('f_src') && !p.dyn.f_src) p.dyn.f_src = 'אקסל';
     if (!p.dbs.includes(U.db)) p.dbs.push(U.db);
     (rec.tags || []).concat(U.opts.tag ? [U.opts.tag] : []).forEach(t => { if (!p.tags.includes(t)) p.tags.push(t); });
@@ -6487,7 +6579,9 @@ function upGroups() {
     { id: 'tz', lb: 'תעודת זהות', ds: 'הוספת ת.ז לאנשים', t: ['tz'] },
     { id: 'status', lb: 'סטטוס תמיכה', ds: 'תומך / מתלבט / לא תומך', t: ['status'], man: 'status' },
     { id: 'tags', lb: 'תגית', ds: 'סימון כל מי שבקובץ בתגית', t: ['tags'], man: 'tags' },
-    { id: 'owner', lb: 'איש קשר אחראי', ds: 'שיוך לרכז / ממריץ', t: ['owner'], man: 'owner' },
+    { id: 'owner', lb: 'איש קשר אחראי', ds: 'שיוך לרכז / ממריץ / אלקטור — אפשר כמה', t: ['owner'], man: 'owner' },
+    { id: 'elector', lb: 'אלקטור בעבר', ds: 'תגית „' + UP_TAG_ELECTOR + '” למי שהיה אלקטור', t: ['elector'] },
+    { id: 'optin', lb: 'הסרה מדיוור', ds: 'לפי „מאשר דיוור” — מי שלא מאשר מסומן כמוסר מדיוור', t: ['optin'] },
     { id: 'city', lb: 'עיר', ds: 'עיר מגורים', t: ['city'], man: 'city' },
     { id: 'addr', lb: 'כתובת', ds: 'רחוב ומספר בית', t: ['street', 'house', 'address'] },
     { id: 'kalpi', lb: 'קלפי', ds: 'מספר קלפי ויישוב הקלפי', t: ['kalpi', 'kcity'] },
@@ -6835,8 +6929,10 @@ const SMSP = { cfg: null, loading: false, at: 0, err: '' };
 const OPTOUT_FIELD = 'f_optout';
 const smsOptOut = p => !!(p && p.dyn && p.dyn[OPTOUT_FIELD] === true);
 async function smsEnsureOptField() {
-  if (!Array.isArray(S.fields) || S.fields.some(f => f.id === OPTOUT_FIELD)) return;
-  S.fields.push({ id: OPTOUT_FIELD, name: 'מוסר/ת מדיוור', type: 'bool', inSearch: true, inCard: true });
+  if (!Array.isArray(S.fields)) return;
+  const f = S.fields.find(x => x.id === OPTOUT_FIELD);
+  if (f) { if (f.name === 'מוסר/ת מדיוור') { f.name = 'הסרה מדיוור'; try { await saveKV('fields'); } catch (e) {} } return; }   /* אותו שם כמו בחיפוש המתקדם */
+  S.fields.push({ id: OPTOUT_FIELD, name: 'הסרה מדיוור', type: 'bool', inSearch: true, inCard: true });
   try { await saveKV('fields'); } catch (e) { console.warn(e); }
 }
 setTimeout(function chk() { if (S.dbs.length && (!CLOUD || ME)) smsEnsureOptField(); else setTimeout(chk, 3000); }, 3000);
@@ -6853,7 +6949,11 @@ async function smsDeliver(j, later) {
     if (error || !data || data.error) {
       const m = data && data.error;
       j.status = 'נכשל'; j.err = m === 'no_token' ? 'חסר מפתח API לספק' : m === 'no_sender' ? 'חסר שם שולח' : m === 'not_allowed' ? 'אין הרשאת סמסים' : m === 'unsupported' ? 'הספק לא מחובר לשליחה' : 'הספק לא ענה';
-    } else if (data.failed && !data.sent) { j.status = 'נכשל'; j.err = 'הספק דחה את השליחה'; j.resp = data.results; }
+    } else if (data.failed && !data.sent) {
+      const pm = ((data.results || []).map(x => x && x.body && x.body.error).find(Boolean)) || '';
+      j.status = 'נכשל'; j.resp = data.results;
+      j.err = /sender name is not approved/i.test(pm) ? 'שם השולח „' + j.sender + '” לא מאושר בפולסים — משתמשים בשם מאושר (למשל BEYTENU)' : pm ? 'פולסים: ' + pm : 'הספק דחה את השליחה';
+    }
     else { j.status = later ? 'מתוזמן אצל הספק' : 'נשלח'; j.sent = data.sent; j.failed = data.failed || 0; j.bad = data.bad || 0; j.resp = data.results; }
   } catch (e) { console.warn(e); j.status = 'נכשל'; j.err = 'הספק לא ענה'; }
   j.at = Date.now();
