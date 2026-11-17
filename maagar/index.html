@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
-<meta name="build" content="20261117-164057">
+<meta name="build" content="20261117-165118">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>דאטה ביתנו — מאגר התומכים</title>
 <style>
@@ -7102,7 +7102,8 @@ setTimeout(function chk() { if (S.dbs.length && (!CLOUD || ME)) smsEnsureOptFiel
 const SMS_PROV = [['pulseem', 'פולסים (Pulseem) — שליחה ויתרה אוטומטיות'], ['019', '019 SMS — יתרה אוטומטית'], ['manual', 'ספק אחר (b-elect וכו׳) — עדכון ידני']];
 /* האם המשלוחים יוצאים ישירות מהמערכת דרך הספק (כרגע: פולסים) */
 const smsLive = () => !!(SMSP.cfg && SMSP.cfg.provider === 'pulseem' && SMSP.cfg.has_token);
-const smsSendTime = t => { const d = new Date(t); return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate()) + ' ' + pad2(d.getHours()) + ':' + pad2(d.getMinutes()) + ':00'; };
+/* פולסים מקבלים רק dd/MM/yyyy HH:mm:ss בשעון ישראל (נבדק מול ה-API — כל פורמט אחר: Incorrect date time format) */
+const smsSendTime = t => { const d = new Date(t); return pad2(d.getDate()) + '/' + pad2(d.getMonth() + 1) + '/' + d.getFullYear() + ' ' + pad2(d.getHours()) + ':' + pad2(d.getMinutes()) + ':00'; };
 /* שליחה בפועל דרך פונקציית השרת sms-send. מעדכן את סטטוס המשלוח ושומר */
 async function smsDeliver(j, later) {
   const items = j.to.map(t => { const p = t.uid ? S.by.get(t.uid) : null; return { phone: t.phone, text: j.test ? j.text : smsFinal(j.text, p, j.opt !== false), ref: t.uid || t.phone }; });
@@ -7112,10 +7113,10 @@ async function smsDeliver(j, later) {
     if (error || !data || data.error) {
       const m = data && data.error;
       j.status = 'נכשל'; j.err = m === 'no_token' ? 'חסר מפתח API לספק' : m === 'no_sender' ? 'חסר שם שולח' : m === 'not_allowed' ? 'אין הרשאת סמסים' : m === 'unsupported' ? 'הספק לא מחובר לשליחה' : 'הספק לא ענה';
-    } else if (data.failed && !data.sent) {
+    } else if (!data.sent && (data.failed || ((data.results || []).some(x => x && x.body && x.body.error)))) {   /* גם כשפולסים מחזירים שגיאה בלי לספור כישלון */
       const pm = ((data.results || []).map(x => x && x.body && x.body.error).find(Boolean)) || '';
       j.status = 'נכשל'; j.resp = data.results;
-      j.err = /sender name is not approved/i.test(pm) ? 'שם השולח „' + j.sender + '” לא מאושר בפולסים — משתמשים בשם מאושר (למשל BEYTENU)' : pm ? 'פולסים: ' + pm : 'הספק דחה את השליחה';
+      j.err = /sender name is not approved/i.test(pm) ? 'שם השולח „' + j.sender + '” לא מאושר בפולסים — משתמשים בשם מאושר (למשל BEYTENU)' : /date time format/i.test(pm) ? 'פולסים לא קיבלו את מועד התזמון' : pm ? 'פולסים: ' + pm : 'הספק דחה את השליחה';
     }
     else { j.status = later ? 'מתוזמן אצל הספק' : 'נשלח'; j.sent = data.sent; j.failed = data.failed || 0; j.bad = data.bad || 0; j.resp = data.results; }
   } catch (e) { console.warn(e); j.status = 'נכשל'; j.err = 'הספק לא ענה'; }
