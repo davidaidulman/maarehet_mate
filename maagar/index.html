@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
-<meta name="build" content="20261117-181055">
+<meta name="build" content="20261117-183619">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>דאטה ביתנו — מאגר התומכים</title>
 <style>
@@ -4719,20 +4719,29 @@ async function putPeople(list, onProg) {
   if (!CLOUD) return txp('people', 'readwrite', s => { list.forEach(p => s.put(strip(p))); });
   /* אותו אדם פעמיים באותה שליחה מפיל את כל המנה בשרת (ON CONFLICT … a second time) — משאירים רק את המופע האחרון */
   const byUid = new Map(); list.forEach(p => { if (p && p.uid) { byUid.delete(p.uid); byUid.set(p.uid, p); } }); list = Array.from(byUid.values());
-  const B = 500, n = Math.ceil(list.length / B);
-  let next = 0, done = 0, bad = null;
+  /* מנות קטנות (250), רק 3 במקביל — שהשרת החינמי לא יגיע ל-timeout. מנה שנכשלה לא עוצרת את השאר:
+     בסוף מנסים אותה שוב במנות של 50, לאט. רק מה שנכשל גם אז — נחשב "לא נשמר" (putPeople.failed) */
+  const send = async (rows, tries, base) => { let err = null; for (let a = 0; a < tries; a++) { ({ error: err } = await sb.from('people').upsert(rows)); if (!err) return null; await wait(base * Math.pow(2, a)); } return err; };
+  const B = 250, n = Math.ceil(list.length / B), retry = [];
+  let next = 0, done = 0, lastErr = null;
   const worker = async () => {
-    while (!bad) {
+    for (;;) {
       const i = next++; if (i >= n) return;
-      const rows = list.slice(i * B, i * B + B).map(p => ({ uid: p.uid, data: strip(p) }));
-      let err = null;
-      for (let a = 0; a < 3; a++) { ({ error: err } = await sb.from('people').upsert(rows)); if (!err) break; await wait(1200 * (a + 1)); }
-      if (err) { bad = err; return; }
-      done += rows.length; if (onProg) onProg(done, list.length);
+      const part = list.slice(i * B, i * B + B);
+      const err = await send(part.map(p => ({ uid: p.uid, data: strip(p) })), 3, 1500);
+      if (err) { lastErr = err; retry.push(part); continue; }
+      done += part.length; if (onProg) onProg(done, list.length);
     }
   };
-  await Promise.all(Array.from({ length: Math.min(4, n) }, worker));
-  if (bad) { cloudErr(bad, 'אנשים'); setTimeout(reloadData, 600); return false; }
+  await Promise.all(Array.from({ length: Math.min(3, n) }, worker));
+  let failed = 0;
+  for (const part of retry) for (let i = 0; i < part.length; i += 50) {
+    const small = part.slice(i, i + 50);
+    const err = await send(small.map(p => ({ uid: p.uid, data: strip(p) })), 5, 2500);
+    if (err) { lastErr = err; failed += small.length; } else { done += small.length; if (onProg) onProg(done, list.length); }
+  }
+  putPeople.failed = failed;
+  if (failed) { cloudErr(lastErr, 'אנשים'); setTimeout(reloadData, 600); return false; }
   pcachePut(list);
   return true;
 }
@@ -6115,7 +6124,7 @@ function renderResults() {
         '<button class="btn sec sm" data-act="exportRes">ייצוא</button>' +
         '<button class="btn sec sm" data-act="saveGroup">שמירה כקבוצה</button>' +
         (nSel ? '<button class="btn sec sm" data-act="bulk">עדכון לנבחרים</button>' : '') +
-        '<button class="btn sm" data-act="smsRes">' + (nSel ? 'סמס ל-' + nf(nSel) + ' נבחרים' : 'סמס לכולם') + '</button>' +
+        (nSel ? '<button class="btn sm" data-act="smsRes">סמס ל-' + nf(nSel) + ' נבחרים</button>' : '') +   /* אין „סמס לכולם” — שלא ישלחו בטעות לכל המאגר */
       '</div></div>' +
     (res.length ? '<div class="tw"><table class="tbl"><thead><tr><th><input type="checkbox" data-act="selPage"' + (allOn ? ' checked' : '') + ' aria-label="בחירת כל הדף"></th>' +
       '<th>שם</th><th>טלפון</th><th>עיר</th><th>קלפי</th><th>סטטוס</th></tr></thead><tbody>' +
@@ -6149,7 +6158,7 @@ Object.assign(ACT, {
   saveGroup: async () => { const n = await promptM('שמירה כקבוצה', 'שם הקבוצה — תופיע בשליחת סמסים ותתעדכן לבד', ''); if (!n) return; S.groups.push({ id: uid(), name: n, filter: clone(SR.f) }); await saveKV('groups'); renderSearchPanel(); renderResults(); toast('הקבוצה „' + n + '” נשמרה'); },
   loadGroup: el => { const g = S.groups.find(x => x.id === el.dataset.v); if (!g) return; SR.f = Object.assign(defFilter(), clone(g.filter)); SR.page = 0; renderSearchPanel(); renderResults(); },
   delGroup: async el => { const g = S.groups.find(x => x.id === el.dataset.v); if (!g || !(await ask('מחיקת קבוצה', 'למחוק את הקבוצה „' + esc(g.name) + '”? האנשים עצמם לא יימחקו.', 'מחיקה', true))) return; S.groups = S.groups.filter(x => x !== g); await saveKV('groups'); renderSearchPanel(); renderResults(); },
-  smsRes: () => { if (SR.sel.size) go('sms', { src: 'sel' }); else go('sms', { src: 'last' }); },
+  smsRes: () => { if (SR.sel.size) go('sms', { src: 'sel' }); else toast('מסמנים קודם את האנשים שרוצים לשלוח להם'); },
   bulk: async () => {
     const r = await modal('פעולה על ' + nf(SR.sel.size) + ' נבחרים',
       '<label class="fl" for="bk_a">מה לעשות?</label><select id="bk_a" data-mv="a"><option value="status">שינוי סטטוס תמיכה</option><option value="tag">הוספת תגית</option><option value="db">הוספה למאגר</option><option value="owner">שיוך לאיש קשר אחראי</option></select>' +
@@ -7034,7 +7043,7 @@ async function runUpload() {
   U.done = { id: upId, c: Object.assign({}, c), file: fname, partial: !okPut, errRows: errs.map((x, i) => ({ ri: i, errs: x.errs, warns: x.warns || [] })), head: U.head, body: errs.map(x => U.body[x.ri]) };
   U.pv = null; U.body = []; U.head = []; U.file = ''; U.eventId = null; U.extra = []; U.step = 1; U.wb = null; U.rows = null; U.sheets = []; U.src = null;   /* חוזרים ישר לכפתור ההעלאה; הסיכום מוצג למעלה */
   renderTabs(); renderUpload(); idleWarm();   /* מכינים מראש את מסך הבית והחיפוש עם הנתונים החדשים */
-  if (!okPut) { await modal('ההעלאה לא הושלמה', '<p>החיבור למאגר נפל באמצע השמירה, ולכן <b>חלק מהאנשים בקובץ לא נשמרו</b>.</p><p>מה עושים: מעלים שוב את אותו קובץ. מי שכבר נשמר יזוהה לפי ת.ז / טלפון ויתעדכן — לא ייכפל.</p>', [{ lb: 'הבנתי', v: true }]); return; }
+  if (!okPut) { const nf0 = putPeople.failed || 0; await modal('ההעלאה כמעט הושלמה', '<p>השרת היה עמוס, ו-<b>' + nf(nf0) + ' אנשים מתוך ' + nf(changed.length) + '</b> לא נשמרו גם אחרי כמה ניסיונות. כל השאר נשמרו.</p><p>מה עושים: מעלים שוב את אותו קובץ — מי שכבר נשמר מזוהה ומדולג, ורק החסרים יישמרו.</p>', [{ lb: 'הבנתי', v: true }]); return; }
   toast('העדכון הסתיים');
 }
 function downloadErrors(src) {
@@ -7742,7 +7751,13 @@ Object.assign(ACT, {
     const at = later ? new Date(M.date + 'T' + (M.time || '10:00')).getTime() : Date.now();
     if (later && !(at > Date.now())) { toast('מועד התזמון צריך להיות בעתיד'); return; }
     const sp = smsParts(smsFinal(M.text, R.list[0].p, M.optLine));
-    if (!(await ask(later ? 'תזמון משלוח' : 'שליחת משלוח', (later ? 'לתזמן' : 'לשלוח') + ' את ההודעה ל-<b>' + nf(R.list.length) + '</b> נמענים' + (later ? ' ב-' + fmtWhen(at) : '') + '? זה בערך ' + nf(sp.parts * R.list.length) + ' הודעות.<br><span class="sm mut">' + (smsLive() ? 'ההודעות יוצאות דרך פולסים' + (later ? ', שישלחו אותן במועד שנקבע.' : ' מיד — אי אפשר לעצור אחרי האישור.') : 'כל עוד הספק לא מחובר, המשלוח יחכה כאן ותוכלו להוריד ממנו קובץ ל-b-elect.') + '</span>', later ? 'תזמון' : 'שליחה'))) return;
+    const n = R.list.length, msgs = sp.parts * n;
+    if (!(await ask(later ? 'תזמון משלוח' : 'שליחת משלוח',
+      '<b>האם אתה בטוח שברצונך ' + (later ? 'לתזמן' : 'לשלוח') + ' את הסמס' + (later ? ' ל-' + esc(fmtWhen(at)) : '') + '?</b>' +
+      '<div style="margin:10px 0;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--bg);white-space:pre-wrap;max-height:30vh;overflow:auto">' + esc(M.text) + '</div>' +
+      'ההודעה ' + (later ? 'תישלח' : 'תישלח עכשיו') + ' ל-<b>' + nf(n) + '</b> ' + (n === 1 ? 'איש' : 'אנשים') + (sp.parts > 1 ? ' (' + sp.parts + ' חלקים לכל אחד — סה״כ כ-' + nf(msgs) + ' הודעות)' : '') + '.' +
+      '<br><span class="sm mut">' + (smsLive() ? 'ההודעות יוצאות דרך פולסים' + (later ? ', שישלחו אותן במועד שנקבע.' : ' מיד — אי אפשר לעצור אחרי האישור.') : 'כל עוד הספק לא מחובר, המשלוח יחכה כאן ותוכלו להוריד ממנו קובץ ל-b-elect.') + '</span>',
+      later ? 'כן, לתזמן' : 'כן, לשלוח'))) return;
     const j = { id: uid(), name: M.name || 'משלוח ' + fmtWhen(Date.now()), text: M.text, opt: M.optLine, sender: M.sender, created: Date.now(), sendAt: at, status: later ? 'מתוזמן' : 'ממתין לספק', to: R.list.map(x => ({ phone: x.phone, uid: x.p ? x.p.uid : null })) };
     S.sms.unshift(j);
     if (smsLive()) { j.status = 'שולח…'; renderSmsJobs(); toast('שולח דרך פולסים…'); await smsDeliver(j, later); }
