@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
-<meta name="build" content="20261118-114139">
+<meta name="build" content="20261118-124428">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>דאטה ביתנו — מאגר התומכים</title>
 <style>
@@ -884,6 +884,9 @@ main:has(#v-map.on){max-width:none;padding-inline:20px}
 .smrep span{font-size:13px}
 .smrep .ar{margin-inline-start:auto;font-size:18px;color:var(--navy)}
 .smrep:hover{border-style:solid;border-color:var(--navy-l);background:var(--bbg)}
+.smopt{position:relative}
+.smopt-ed{position:absolute;top:8px;inset-inline-end:10px;border:1px solid var(--line);background:#fff;border-radius:8px;padding:3px 9px;font:inherit;font-size:12px;font-weight:800;color:var(--navy);cursor:pointer}
+.smopt-ed:hover{background:var(--navy);border-color:var(--navy);color:#fff}
 
 /* ---------- css/features/events.css ---------- */
 /* ============ דאטה ביתנו — אירועים ודפי נחיתה ============ */
@@ -4805,7 +4808,7 @@ const strip = p => { const o = {}; for (const k in p) if (k[0] !== '_') o[k] = p
 /* שני מצבים: CLOUD — מאגר משותף ב-Supabase עם התחברות והרשאות; אחרת — מקומי בדפדפן (IndexedDB) */
 const CLOUD = typeof SB_URL === 'string' && /^https:\/\//.test(SB_URL) && typeof SB_KEY === 'string' && SB_KEY.length > 20;
 let sb = null, ME = null, SCOPE = 'local';
-const GLOBAL_KEYS = ['fields', 'dbs', 'templates', 'smsbal'];
+const GLOBAL_KEYS = ['fields', 'dbs', 'templates', 'smsbal', 'smsopt'];   /* smsopt = נוסח שורת ההסרה בסמסים (טקסט אחד לכולם) */
 const kvScope = k => GLOBAL_KEYS.includes(k) ? 'g' : SCOPE;
 const isCityUser = () => CLOUD && ME && ME.hq === 'city';
 function cloudErr(error, what) {
@@ -4874,7 +4877,7 @@ async function delPeople(uids) {
   DV++; pcacheDel(uids);
   return true;
 }
-const KV_KEYS = ['fields', 'dbs', 'groups', 'templates', 'events', 'sms', 'activity', 'uploads', 'smsbal', 'settings'];
+const KV_KEYS = ['fields', 'dbs', 'groups', 'templates', 'events', 'sms', 'activity', 'uploads', 'smsbal', 'smsopt', 'settings'];
 /* ---- שמירת רשימות משותפות (אירועים, קבוצות, תבניות, משלוחים…) בלי לדרוס עבודה של אחרים ----
    כל משתמש מחזיק עותק מרגע הכניסה. לפני שמירה מושכים מהשרת את הרשימה העדכנית ומוסיפים לה רק את מה ששונה כאן
    (נוסף / השתנה / נמחק לפי id) — כך פריט שמישהו אחר הוסיף בינתיים לא נמחק. KV_BASE = מה שנטען/נשמר לאחרונה. */
@@ -7794,7 +7797,9 @@ function smsReset() {
 const SMS_SEG = 268;
 /* שורת ההסרה — נוספת כברירת מחדל לסוף כל הודעה (חובה לפי חוק התקשורת — "חוק הספאם") */
 const SMS_OPTOUT = 'להסרה מרשימת התפוצה, יש להשיב "הסר" למספר: 053-703-8787';
-function smsFinal(t, p, optLine) { const b = mergeText(t, p).replace(/\s+$/, ''); return !b ? '' : optLine === false ? b : b + '\n' + SMS_OPTOUT; }
+/* שורת ההסרה: נוסח שמנהל קבע (S.smsopt — משותף לכולם), ואם לא נקבע — ברירת המחדל */
+const smsOptText = () => (typeof S.smsopt === 'string' && S.smsopt.trim()) ? S.smsopt.trim() : SMS_OPTOUT;
+function smsFinal(t, p, optLine) { const b = mergeText(t, p).replace(/\s+$/, ''); return !b ? '' : optLine === false ? b : b + '\n' + smsOptText(); }
 /* ספק הסמסים: הגדרות בשרת (sms_provider), היתרה נקראת מהספק דרך פונקציית השרת sms-balance */
 const SMSP = { cfg: null, loading: false, at: 0, err: '' };
 /* "מוסר/ת מדיוור" — פרט דינמי (כן/לא) שנמצא בכל כרטיס ובחיפוש המתקדם. מי שמסומן — לא מקבל סמסים */
@@ -7891,7 +7896,7 @@ RENDER.sms = function (o) {
         '<div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr));margin-bottom:12px"><div><label class="fl" for="sm_name">שם המשלוח (לשימוש פנימי)</label><input id="sm_name" type="text" data-sm="name" value="' + esc(M.name) + '" placeholder="למשל: תזכורת חוג בית"></div>' +
         '<div><label class="fl" for="sm_sender">שם השולח</label><input id="sm_sender" type="text" data-sm="sender" maxlength="11" value="' + esc(M.sender) + '" style="direction:ltr;text-align:right"></div></div>' +
         '<label class="fl" for="smsText">ההודעה</label><textarea id="smsText" data-sm="text" rows="5" placeholder="כותבים כאן. אפשר להוסיף שדות אישיים מהכפתורים למטה.">' + esc(M.text) + '</textarea>' +
-        '<div class="smopt' + (M.optLine ? '' : ' off') + '"><label><input type="checkbox" id="smOptLine"' + (M.optLine ? ' checked' : '') + '><span>שורת הסרה מדיוור בסוף ההודעה</span></label><div class="smopt-t">' + esc(SMS_OPTOUT) + '</div>' +
+        '<div class="smopt' + (M.optLine ? '' : ' off') + '"><label><input type="checkbox" id="smOptLine"' + (M.optLine ? ' checked' : '') + '><span>שורת הסרה מדיוור בסוף ההודעה</span></label>' + (isAdmin() ? '<button type="button" class="smopt-ed" data-act="smsOptEdit">עריכת הנוסח</button>' : '') + '<div class="smopt-t" id="smOptTxt">' + esc(smsOptText()) + '</div>' +
           (M.optLine ? '' : '<div class="smopt-w">בלי שורת הסרה — מומלץ להשאיר אותה בכל הודעת דיוור</div>') + '</div>' +
         '<div class="smcnt" id="smsCount"></div>' +
         '<div class="row" style="margin-top:10px;gap:6px"><span class="sm mut" style="font-weight:700">הוספת שדה אישי:</span>' + TAGS.map(([k, l]) => '<button class="chip" data-act="smsTag" data-v="' + k + '">' + l + '</button>').join('') + '</div>' +
@@ -8108,6 +8113,21 @@ Object.assign(ACT, {
   smsAddPerson: el => { if (!M.persons.includes(el.dataset.v)) M.persons.push(el.dataset.v); renderSmsRcp(); renderSmsLive(); },
   smsDelPerson: el => { M.persons = M.persons.filter(u => u !== el.dataset.v); renderSmsRcp(); renderSmsLive(); },
   smsList: () => { const R = smsRecipients(); modal('הנמענים (' + nf(R.list.length) + ')', '<div style="max-height:50vh;overflow:auto"><table class="tbl"><tbody>' + R.list.slice(0, 300).map(x => '<tr><td>' + esc(x.p ? fullName(x.p) : '—') + '</td><td class="num"><span class="sg">' + fmtPhone(x.phone) + '</span></td><td class="mut">' + esc(x.p ? x.p.city || '' : '') + '</td></tr>').join('') + '</tbody></table>' + (R.list.length > 300 ? '<div class="mut sm" style="padding:8px">ועוד ' + nf(R.list.length - 300) + '…</div>' : '') + '</div>', [{ lb: 'סגירה', v: true }]); },
+  smsOptEdit: async () => {
+    if (!isAdmin()) { toast('רק מנהל/ת יכול/ה לשנות את נוסח שורת ההסרה'); return; }
+    const r = await modal('נוסח שורת ההסרה',
+      '<label class="fl" for="smopt_in">השורה שמתווספת בסוף כל הודעת דיוור</label><textarea id="smopt_in" data-mv="t" rows="3" maxlength="140" style="width:100%">' + esc(smsOptText()) + '</textarea>' +
+      '<div class="sm mut" style="margin-top:8px">לפי חוק התקשורת (״חוק הספאם״) כל הודעה פרסומית צריכה לכלול דרך פשוטה להסרה — למשל מספר להשיב אליו ״הסר״. הנוסח משותף לכל המשתמשים.</div>' +
+      '<div class="sm" style="margin-top:6px">ברירת המחדל: <span class="mut">' + esc(SMS_OPTOUT) + '</span></div>',
+      [{ lb: 'שמירה', v: 'save', def: true }, { lb: 'חזרה לברירת המחדל', cls: 'sec', v: 'reset' }, { lb: 'ביטול', cls: 'sec' }]);
+    if (!r || !r.v) return;
+    const t = r.v === 'reset' ? '' : String(r.vals.t || '').replace(/\s+/g, ' ').trim();
+    if (r.v === 'save' && !t) { toast('השורה לא יכולה להיות ריקה — אפשר לבחור „חזרה לברירת המחדל”'); return; }
+    if (r.v === 'save' && !/\d{3}|הסר/.test(t) && !(await ask('אין דרך הסרה בשורה?', 'בנוסח החדש לא מופיע מספר או המילה „הסר”. לשמור בכל זאת?', 'לשמור'))) return;
+    S.smsopt = t; await saveKV('smsopt');
+    const el = $('#smOptTxt'); if (el) el.textContent = smsOptText();
+    renderSmsLive(); toast(t ? 'נוסח שורת ההסרה עודכן' : 'חזרנו לנוסח ברירת המחדל');
+  },
   smsToReport: () => { RP.kind = 'sms'; RP.page = 0; go('reports'); },
   smsSend: async () => {
     const R = smsRecipients(); if (!R.list.length || !M.text.trim()) return;
