@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
-<meta name="build" content="20261118-213341">
+<meta name="build" content="20261118-215643">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>לוג ביתנו — מאגר התומכים</title>
 <style>
@@ -1212,6 +1212,154 @@ button.crow:hover{background:#F5F8FC}
 #homeCities .hpop{top:calc(100% + 6px)}
 .hpw .hpop .hdr{border-top:0;margin-top:0;padding-top:4px}
 
+/* ============ דף ראשי — פס פתיחה, מדדים עם כיוון, גרף, דורש טיפול (18.11) ============ */
+/* ---------- פס הפתיחה (הדבר החשוב במסך — --hero אחד בלבד) ---------- */
+.hhero{position:relative;overflow:hidden;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:32px;align-items:center;padding:26px 32px 26px 28px;margin-bottom:16px;
+  border-radius:var(--r-card);background:var(--hero);color:#fff;box-shadow:var(--hero-sh);animation:aUp .55s var(--ease) both}
+.hhero::before{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 35%,rgba(255,255,255,.14) 50%,transparent 65%);transform:translateX(-110%);animation:shine 6s ease-in-out 1.4s infinite;pointer-events:none}
+.hhero::after{content:"";position:absolute;width:340px;height:340px;border-radius:50%;left:-110px;top:-170px;background:radial-gradient(circle,rgba(255,255,255,.13),transparent 70%);pointer-events:none}
+.hhm{position:relative;z-index:1;min-width:0}
+.hhk{font-size:12px;font-weight:800;letter-spacing:.04em;color:#A9C4E0}
+.hhero h2{margin:4px 0 10px;font-size:27px;font-weight:900;color:#fff;letter-spacing:-.01em}
+.hhs{margin:0;font-size:17px;line-height:1.6;color:#C9DCF3}
+.hhs b{font-size:22px;font-weight:900;color:#fff;font-variant-numeric:tabular-nums}
+.hhs2{margin:2px 0 0;font-size:14px;color:#A9C4E0}
+.hhup{color:#F3D58B;font-weight:800;white-space:nowrap}
+.hhdn{color:var(--rbd);font-weight:800;white-space:nowrap}
+.hhcs{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.hhc{display:inline-flex;align-items:baseline;gap:7px;padding:7px 13px;border-radius:999px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.09);color:#fff;font:inherit;font-size:13px;cursor:pointer;
+  transition:background .2s,border-color .2s,transform .2s var(--ease);animation:aUp .5s var(--ease) both}
+.hhc:hover{background:rgba(255,255,255,.17);border-color:rgba(255,255,255,.32);transform:translateY(-2px)}
+.hhc span{color:#A9C4E0;font-size:12px}
+.hhc b{font-weight:800}
+.hhc em{font-style:normal;font-weight:800;color:#F3D58B}
+.hhc.lo em{color:var(--rbd)}
+.hhg{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:8px;min-width:170px}
+.hhr{position:relative;width:140px;height:140px}
+.hhr svg{width:100%;height:100%;transform:rotate(-90deg)}
+.hhr circle{fill:none;stroke-width:11;stroke-linecap:round}
+.hhr .trk{stroke:rgba(255,255,255,.14)}
+.hhr .val{stroke:var(--gold);filter:drop-shadow(0 0 6px rgba(232,184,75,.45));animation:hhRing 1.6s .25s var(--ease) both}
+@keyframes hhRing{from{stroke-dashoffset:var(--c)}}
+.hhrc{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.1}
+.hhrc b{font-size:30px;font-weight:900;color:#fff;font-variant-numeric:tabular-nums}
+.hhrc span{font-size:12px;font-weight:700;color:#A9C4E0;margin-top:2px}
+.hhgl{font-size:13px;color:#C9DCF3;text-align:center}
+.hhgl b{color:#fff;font-weight:800}
+.hhgoal{display:inline-flex;align-items:center;gap:6px;border:0;background:none;padding:2px 4px;font:inherit;font-size:12.5px;font-weight:700;color:#F3D58B;cursor:pointer;border-radius:8px;transition:background .15s}
+.hhgoal:hover{background:rgba(255,255,255,.1)}
+.hhgoal svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.9}
+
+/* ---------- כרטיסי המדדים: שינוי בתקופה + קו מגמה ---------- */
+.kpis .kpi{padding-bottom:0}
+.kt{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;margin-bottom:10px}
+.kt .ki{margin:0}
+.kdl{font-size:12px;font-weight:800;padding:3px 9px;border-radius:999px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.kdl.up{background:var(--gbg);color:var(--gtx)}
+.kdl.dn{background:var(--rbg);color:var(--rtx)}
+.kdl.z{background:var(--line3);color:var(--ink3)}
+.ksp{display:block;width:calc(100% + 40px);height:46px;margin:10px -20px 0;color:var(--navy-l)}
+.ksp .a{fill:currentColor;opacity:.1;stroke:none}
+.ksp .l{fill:none;stroke:currentColor;stroke-width:2}
+.ksp{animation:hcIn 1.3s .35s var(--ease) both}
+.kpi.g .ksp{color:var(--gtx)}
+.kpi.y .ksp{color:#4D78B0}
+.kpi.c .ki{background:#FFF5DC}
+.kpi.c .ki svg{stroke:var(--navy-d)}
+.kpi.c .ksp{color:var(--gold)}
+.kpi.c .vl{color:var(--navy)}
+
+/* ---------- שורות של שני כרטיסים באותו גובה ---------- */
+.hrow{display:grid;grid-template-columns:minmax(0,1.9fr) minmax(0,1fr);gap:16px;align-items:stretch;margin-bottom:16px}
+.hrow>.card{margin:0;display:flex;flex-direction:column;animation:aUp .55s .12s var(--ease) both}
+.hrow>.card>.cb{flex:1}
+.hrow2{margin-top:16px}
+
+/* ---------- הגרף ---------- */
+.hch{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.hch .cht{margin-inline-end:auto}
+.hcb{display:flex;flex-direction:column;padding-top:10px}
+.hchart{position:relative;height:250px}
+.hchart svg{display:block;overflow:visible}
+.hchart text{font-family:inherit;font-size:11.5px;fill:var(--ink3);font-variant-numeric:tabular-nums}
+.hgr line{stroke:var(--line3);stroke-width:1}
+.hl{fill:none;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.hpl.rev{animation:hcIn 1.4s var(--ease) both}
+@keyframes hcIn{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0)}}
+.hcur{stroke:var(--navy-l);stroke-width:1;stroke-dasharray:3 3;transition:opacity .15s}
+.hdot{stroke-width:2.5;transition:opacity .15s}
+.hctt{position:absolute;transform:translate(-50%,-100%);pointer-events:none;background:var(--dark);color:#fff;border-radius:11px;padding:8px 12px;font-size:12.5px;line-height:1.6;
+  box-shadow:0 14px 30px -12px rgba(7,31,62,.7);white-space:nowrap;display:flex;flex-direction:column;z-index:2}
+.hctt[hidden]{display:none}
+.hctt>b{color:#F3D58B;font-weight:800}
+.hctt span{display:flex;align-items:center;gap:6px;color:#C9DCF3}
+.hctt span b{color:#fff}
+.hctt i{width:8px;height:8px;border-radius:2px;display:inline-block}
+/* פילוח לפי סטטוס */
+.hdist{margin-top:auto;padding-top:14px;border-top:1px solid var(--line3)}
+.hdt{display:flex;align-items:baseline;gap:10px;font-size:13px;font-weight:800;color:var(--ink2);margin-bottom:9px}
+.hdt span{font-size:12px;font-weight:500;color:var(--ink3)}
+.hdb{display:flex;gap:3px;height:14px;border-radius:999px;overflow:hidden}
+.hdb button{border:0;padding:0;min-width:4px;height:100%;cursor:pointer;transition:filter .15s,transform .15s;animation:barIn 1s var(--ease) both}
+.hdb button:hover{filter:brightness(1.12) saturate(1.1)}
+.hdl{display:flex;flex-wrap:wrap;gap:4px 16px;margin-top:10px}
+.hdl button{display:inline-flex;align-items:center;gap:6px;border:0;background:none;padding:3px 2px;font:inherit;font-size:12.5px;color:var(--ink2);cursor:pointer;border-radius:6px}
+.hdl button:hover{color:var(--navy)}
+.hdl i{width:10px;height:10px;border-radius:3px;display:inline-block}
+.hdl b{color:var(--ink);font-weight:800}
+.hdl span{color:var(--ink3)}
+
+/* ---------- דורש טיפול ---------- */
+.htd{display:flex;flex-direction:column;gap:2px}
+.htdi{display:grid;grid-template-columns:40px minmax(0,1fr) auto;align-items:center;gap:12px;width:100%;padding:10px 8px;border:0;border-radius:13px;background:none;font:inherit;text-align:start;cursor:pointer;
+  transition:background .15s;animation:aUp .45s var(--ease) both}
+.htdi:not(.sk):hover{background:#F5F8FC}
+.htdi .ti{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--bbg)}
+.htdi .ti svg{width:20px;height:20px;fill:none;stroke:var(--navy);stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.htdi.w .ti{background:var(--ybg)}
+.htdi.w .ti svg{stroke:var(--ytx)}
+.htdi .tx{min-width:0;display:flex;flex-direction:column}
+.htdi .tx b{font-size:14px;color:var(--ink)}
+.htdi .tx small{font-size:12px;color:var(--ink3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.htdn{display:flex;align-items:center;gap:8px}
+.htdn>span{display:flex;flex-direction:column;align-items:flex-end;line-height:1.1}
+.htdn b{font-size:20px;font-weight:900;color:var(--navy)}
+.htdn small{font-size:11px;color:var(--ink3);font-weight:700}
+.htdn svg{width:16px;height:16px;fill:none;stroke:var(--ink3);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform .2s var(--ease),stroke .2s}
+.htdi:hover .htdn svg{transform:translateX(-3px);stroke:var(--navy)}
+.htdi.sk{cursor:default;animation:none}
+.htdi.sk .ti,.htdi.sk .tx i{background:var(--line3)}
+.htdi.sk .tx i{display:block;height:10px;border-radius:5px;margin:3px 0;width:70%}
+.htdi.sk .tx i+i{width:45%}
+.htok{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;height:100%;min-height:140px;text-align:center;color:var(--ink3);font-size:13px}
+.htok svg{width:34px;height:34px;fill:none;stroke:var(--gtx);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;margin-bottom:4px}
+.htok b{font-size:15px;color:var(--ink)}
+.htok.sm{min-height:90px}
+.htok.sm svg{stroke:var(--ink3);width:26px;height:26px}
+
+/* ---------- פעילות אחרונה + אירועים ---------- */
+.hfc .feed .it{align-items:flex-start;animation:aUp .45s var(--ease) both}
+.feed .ai{flex:none;width:30px;height:30px;border-radius:9px;display:grid;place-items:center;background:var(--bbg)}
+.feed .ai svg{width:16px;height:16px;fill:none;stroke:var(--navy);stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.hev{display:grid;grid-template-columns:48px minmax(0,1fr) auto;gap:12px;align-items:center;padding:11px 0;border-bottom:1px solid var(--line3)}
+.hev:last-child{border-bottom:0}
+.hevd{width:48px;height:52px;border-radius:13px;background:var(--bbg);display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
+.hevd b{font-size:20px;font-weight:900;color:var(--navy)}
+.hevd span{font-size:11px;font-weight:700;color:var(--ink2);margin-top:3px}
+.hevd svg{width:20px;height:20px;fill:none;stroke:var(--navy);stroke-width:1.9}
+.hevm{min-width:0;display:flex;flex-direction:column;align-items:flex-start}
+.hevm .link{font-weight:800;text-align:start}
+.hevm small{font-size:12px;color:var(--ink3);display:flex;gap:6px;align-items:center}
+.hevm em{font-style:normal;font-size:11px;font-weight:800;color:var(--ytx);background:var(--ybg);border-radius:999px;padding:1px 8px}
+.hevb{display:block;width:100%;height:6px;border-radius:999px;background:var(--line3);margin-top:7px;overflow:hidden}
+.hevb i{display:block;height:100%;border-radius:inherit;background:var(--gold);animation:barIn 1s .3s var(--ease) both}
+.hevc{display:flex;flex-direction:column;align-items:center;line-height:1.1}
+.hevc b{font-size:19px;font-weight:900;color:var(--navy)}
+.hevc small{font-size:11px;color:var(--ink3)}
+.cfs{display:inline-flex;align-items:center;gap:8px;white-space:nowrap}
+/* חוזרים למסך — בלי אנימציות כניסה */
+#v-home.still .hhero,#v-home.still .hhc,#v-home.still .hhr .val,#v-home.still .ksp,#v-home.still .hrow>.card,#v-home.still .hdb button,#v-home.still .htdi,#v-home.still .hfc .feed .it,#v-home.still .hevb i{animation:none}
+
 /* ---------- css/features/search.css ---------- */
 /* ============================================================
    לוג ביתנו — חיפוש מתקדם
@@ -1315,7 +1463,7 @@ main.wrap:has(#v-search.on){max-width:1440px}
 .msadd .msck{border-style:dashed;border-color:var(--navy-l)}
 .msadd .msck svg{stroke:var(--navy);opacity:1;transform:none;stroke-width:2.4}
 .msmore{padding:10px;font-size:12.5px;color:var(--ink3);text-align:center}
-.msf{display:flex;align-items:center;gap:10px;padding:8px 10px;border-top:1px solid var(--line3);background:#FAFBFD}
+.msf{order:10;display:flex;align-items:center;gap:10px;padding:8px 10px;border-top:1px solid var(--line3);background:#FAFBFD}
 .msct{flex:1;font-size:12.5px;font-weight:700;color:var(--ink2)}
 .msf .link:disabled{opacity:.4;cursor:default}
 
@@ -1330,10 +1478,18 @@ select.csn{display:none!important}
 /* ---------- שורת התוצאות: מיון, כמות בעמוד, פילוח לפי סטטוס ---------- */
 .srctl{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:700;color:var(--ink3)}
 .srctl .ms{min-height:34px;padding:4px 10px;font-size:13px;width:auto;min-width:96px}
-.srsum{display:flex;align-items:center;flex-wrap:wrap;gap:8px;padding:10px 18px;border-top:1px solid var(--line3);border-bottom:1px solid var(--line3);background:#FAFBFD;font-size:12.5px;color:var(--ink3);font-weight:700}
-.srstb{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line2);background:#fff;border-radius:999px;padding:3px 10px 3px 4px;font:inherit;cursor:pointer;transition:border-color .15s,box-shadow .15s,transform .15s}
-.srstb b{font-size:13px;color:var(--ink)}
-.srstb:hover{border-color:var(--navy-l);box-shadow:var(--sh-card);transform:translateY(-1px)}
+.srsum{padding:14px 18px 16px;border-top:1px solid var(--line3);border-bottom:1px solid var(--line3);background:#FAFBFD}
+.srsh{display:flex;align-items:baseline;gap:10px;margin-bottom:10px}.srsh span{font-size:14px;font-weight:800;color:var(--navy)}.srsh small{font-size:12px;color:var(--ink3)}
+/* פילוח לפי סטטוס: כרטיס רחב לכל סטטוס — מספר גדול, אחוז ופס */
+.srsg{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.srstb{display:flex;flex-direction:column;align-items:stretch;gap:6px;text-align:start;border:1px solid var(--line2);background:#fff;border-radius:14px;padding:11px 14px 12px;font:inherit;cursor:pointer;transition:border-color .15s,box-shadow .15s,transform .15s}
+.srstb:hover:not(:disabled){border-color:var(--navy-l);box-shadow:var(--sh-card);transform:translateY(-2px)}
+.srstb:disabled{cursor:default;opacity:.55}
+.srst1{display:flex;align-items:center;justify-content:space-between;gap:8px}.srst1 em{font-style:normal;font-size:13px;font-weight:800;color:var(--ink2)}
+.srstb b{font-size:28px;font-weight:900;line-height:1.05;color:var(--navy)}
+.srstbar{display:block;height:6px;border-radius:99px;background:var(--line3);overflow:hidden}.srstbar i{display:block;height:100%;border-radius:inherit;background:var(--ink3)}
+.st-g .srstbar i{background:var(--gtx)}.st-y .srstbar i{background:var(--gold)}.st-r .srstbar i{background:var(--rtx)}.st-b .srstbar i{background:var(--navy-l)}.st-n .srstbar i{background:var(--ink3)}
+.srsdup{display:flex;align-items:center;gap:10px;margin-top:10px;font-size:12.5px;font-weight:700;color:var(--ink3)}
 
 /* ---------- אנימציית החיפוש ---------- */
 .sload{padding:22px 22px 26px}
@@ -1360,6 +1516,9 @@ select.csn{display:none!important}
 #srchRes.srrev .srrow{animation:aUp .5s var(--ease) both}
 
 /* ---------- „רק אלה / כולם חוץ מאלה” בחלונית הבחירה המרובה ---------- */
+.msneg{display:flex;align-items:center;gap:8px;margin:0;padding:9px 14px;border-top:1px solid var(--line3);font-size:12.5px;font-weight:600;color:var(--ink2);cursor:pointer;order:9}
+.msneg input{width:16px;height:16px;accent-color:var(--rtx);margin:0}.msneg b{color:var(--rtx)}
+.msneg:has(input:checked){background:var(--rbg)}
 .msmode{display:flex;gap:4px;margin:8px 10px 2px;padding:3px;border-radius:10px;background:var(--line3)}
 .msmode button{flex:1;border:0;background:none;border-radius:8px;padding:6px 8px;font:inherit;font-size:12.5px;font-weight:800;color:var(--ink2);cursor:pointer;transition:background .15s,color .15s,box-shadow .15s}
 .msmode button:hover{color:var(--navy)}
@@ -1705,7 +1864,7 @@ main:has(#v-map.on){max-width:none;padding-inline:20px}
 .tpl{display:block;width:100%;text-align:start;border:1.5px solid var(--line2);background:#fff;border-radius:11px;padding:10px 12px;margin-bottom:8px}
 .tpl:hover{border-color:var(--navy-l)}
 .tpl b{display:block;font-size:14px;color:var(--ink)}
-.tpl span{display:block;font-size:12.5px;color:var(--ink2);line-height:1.5;margin-top:2px}
+.tpl span{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;font-size:12.5px;color:var(--ink2);line-height:1.5;margin-top:2px}
 /* ---------- יתרת סמסים + בדיקה לטלפון ---------- */
 #smsMsg .ch{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .smbal{display:inline-flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--line2);border-radius:14px;padding:6px 6px 6px 12px;
@@ -1796,6 +1955,59 @@ main:has(#v-map.on){max-width:none;padding-inline:20px}
 .smopt{position:relative}
 .smopt-ed{position:absolute;top:8px;inset-inline-end:10px;border:1px solid var(--line);background:#fff;border-radius:8px;padding:3px 9px;font:inherit;font-size:12px;font-weight:800;color:var(--navy);cursor:pointer}
 .smopt-ed:hover{background:var(--navy);border-color:var(--navy);color:#fff}
+
+/* ---------- תבניות: 4 בעמוד, חצים, עריכה, סידור ---------- */
+#smsTpl .smtph{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.smtph .sub{margin-inline-start:8px}
+.smtpa{display:inline-flex;gap:6px}
+.smtpi{width:32px;height:32px;display:inline-grid;place-items:center;flex:none;border:1px solid var(--line2);background:#fff;border-radius:9px;color:var(--navy);cursor:pointer;padding:0;
+  transition:background .15s,border-color .15s,color .15s,transform .15s}
+.smtpi svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.smtpi:hover:not(:disabled){border-color:var(--navy-l);background:var(--bbg);transform:translateY(-1px)}
+.smtpi:active:not(:disabled){transform:scale(.96)}
+.smtpi:disabled{opacity:.35;cursor:default}
+.smtpi.sm{width:28px;height:28px;border-radius:8px}
+.smtpi.sm svg{width:14px;height:14px}
+.smtpi.r{color:var(--rtx)}
+.smtpi.r:hover:not(:disabled){background:var(--rbg);border-color:var(--rbd)}
+.smtpl{display:flex;flex-direction:column;gap:8px}
+.smtpw{position:relative;animation:aUp .35s var(--ease) both}
+.smtpw .tpl{margin:0;padding-inline-end:76px;transition:border-color .15s,box-shadow .15s,transform .15s}
+.smtpw .tpl:hover{box-shadow:var(--sh-card);transform:translateY(-1px)}
+.smtpw.flash .tpl{border-color:var(--gold);box-shadow:0 0 0 3px rgba(232,184,75,.3)}
+.smtpx{position:absolute;top:8px;inset-inline-end:8px;display:flex;gap:4px;opacity:0;transition:opacity .15s}
+.smtpw:hover .smtpx,.smtpw:focus-within .smtpx{opacity:1}
+.smtpe{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.smtpp{display:flex;align-items:center;justify-content:space-between;margin-top:12px;padding-top:10px;border-top:1px solid var(--line3)}
+.smtpd{display:flex;gap:6px;align-items:center}
+.smtpd button{width:8px;height:8px;padding:0;border:0;border-radius:4px;background:var(--line);cursor:pointer;transition:width .2s var(--ease),background .2s}
+.smtpd button.on{width:20px;background:var(--gold)}
+/* כפתור „שמירה כתבנית” ליד ההודעה */
+.smtxh{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;margin-bottom:6px}
+.smtxh .fl{margin:0}
+.smsave{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line2);background:#fff;border-radius:9px;padding:5px 11px;font:inherit;font-size:12.5px;font-weight:800;color:var(--navy);cursor:pointer;
+  transition:border-color .15s,background .15s,transform .15s}
+.smsave svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.smsave:hover{border-color:var(--navy-l);background:var(--bbg);transform:translateY(-1px)}
+.smsave:active{transform:scale(.98)}
+/* חלון „סידור התבניות” */
+.tps{display:flex;flex-direction:column;gap:6px;max-height:min(52vh,460px);overflow-y:auto;padding:2px}
+.tpsp{font-size:11.5px;font-weight:800;color:var(--ink3);margin:10px 2px 0}
+.tpsp:first-child{margin-top:0}
+.tpsr{display:flex;align-items:center;gap:10px;border:1.5px solid var(--line2);background:#fff;border-radius:11px;padding:8px 10px;transition:border-color .15s,box-shadow .15s,opacity .15s}
+.tpsr[draggable="true"]{cursor:grab}
+.tpsr[draggable="true"]:active{cursor:grabbing}
+.tpsr.drag{opacity:.4}
+.tpsr.over{border-color:var(--gold);box-shadow:0 0 0 3px rgba(232,184,75,.25)}
+.tpsg{flex:none;color:var(--ink3);display:grid}
+.tpsg svg{width:16px;height:16px;fill:currentColor;stroke:none}
+.tpsn{flex:1;min-width:0}
+.tpsn b{display:block;font-size:13.5px;color:var(--ink)}
+.tpsn>span{display:block;font-size:12px;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tpsb{display:flex;gap:4px;flex:none}
+.tpsr.ed{border-color:var(--navy-l);background:var(--bbg)}
+.tpse{display:flex;flex-direction:column;gap:8px;width:100%}
+.tpse .row{justify-content:flex-end}
 
 /* ---------- css/features/events.css ---------- */
 /* ============ לוג ביתנו — אירועים ודפי נחיתה ============ */
@@ -2353,7 +2565,7 @@ body.ro .drawer .db::before{content:"צפייה בלבד — אין לך הרש�
 
 <div class="auth" id="auth">
   <div class="abg" aria-hidden="true"><i class="orb o1"></i><i class="orb o2"></i><i class="orb o3"></i><div class="agrid"></div></div>
-  <div class="authbox" id="authBox"><div class="abrand"><div class="alogo"><svg class="yblogo" viewBox="0 0 608.57 153.38" role="img" aria-label="ישראל ביתנו"><g transform="translate(-5.83)" fill="#212d66"><path d="m 125.41,90.79 h -47.1 v 18.37 h 10.3 c -2.5,2.42 -4.8,7.48 -4.8,12.43 0,3.74 0.8,7.81 2,11.88 h -10.7 v 18.26 h 31.4 v -16.94 c -2.8,-3.74 -4.4,-9.57 -4.4,-14.08 0,-4.95 0.8,-9.13 2.1,-11.55 h 18.8 c 5.7,0 9.1,2.97 9.1,9.68 v 32.89 h 18.2 v -32.89 c 0,-9.57 -1.8,-17.05 -6.7,-21.78 -4.3,-4.07 -10.9,-6.27 -18.2,-6.27 z"/><path d="m 254.61,119.72 c 0,-19.36 -7.3,-28.93 -24.1,-28.93 h -35.8 v 18.37 h 32.6 c 6.8,0 9.3,4.18 9.3,11.44 v 12.87 h -44.3 v 18.26 h 70.8 v -18.26 h -8.5 z"/><path d="m 560.61,112.57 c 0,14.3 -8.4,21.78 -23,21.78 -11.4,0 -19,-4.62 -21.8,-13.42 18.5,7.59 31.7,-3.74 31.7,-18.59 V 90.79 h -18.2 v 11.55 c 0,7.15 -5.8,8.91 -14.7,4.62 V 90.79 h -18.2 v 19.91 c 0,27.17 15.2,42.02 41.2,42.02 26,0 41.2,-15.07 41.2,-42.24 V 90.79 h -18.2 z"/><path d="m 463.51,90.79 h -34.1 v 18.37 h 31.7 c 5.7,0 9,2.97 9,9.68 v 32.89 h 18.3 v -32.89 c 0,-9.57 -1.9,-17.05 -6.8,-21.78 -4.2,-4.07 -10.8,-6.27 -18.1,-6.27 z"/><path d="m 305.8,77.04 h -18.1 v 32.12 h 39 c 0,9.79 -4.4,18.81 -22.5,27.28 l 8.9,16.94 c 22.7,-9.79 32.3,-27.72 32.3,-48.95 V 90.79 h -39.6 z"/><path d="m 422.01,92.99 v -2.2 h -18.2 v 2.2 c 0,12.43 -3.5,18.92 -12.5,19.03 l -16.5,-21.23 h -22.4 l 17.7,22.88 c -12.4,3.19 -20.3,15.51 -20.3,31.24 v 6.82 h 18.2 v -6.82 c 0,-11.44 3.5,-17.05 12.5,-17.93 l 19.2,24.75 h 22.5 l -20.7,-26.62 c 12.5,-2.97 20.5,-15.51 20.5,-32.12 z"/><polygon points="48.3,133.47 32.5,133.47 32.5,151.73 66.31,151.73 66.31,90.79 36.3,90.79 36.3,109.16 48.3,109.16"/><polygon points="6,151.73 24.11,151.73 24.11,90.79 5.83,90.79 5.83,109.16 6,109.16"/><polygon points="165.4,130.61 183.51,130.61 183.51,90.79 155.1,90.79 155.1,109.16 165.4,109.16"/><polygon points="596.3,130.61 614.4,130.61 614.4,90.79 586,90.79 586,109.16 596.3,109.16"/></g><g transform="translate(-5.83)"><polygon fill="#2988c9" points="279.53,29.25 614.4,65.37 614.4,53.63 273.84,0"/><polygon fill="#13c2e9" points="273.84,0 5.83,54.22 5.83,65.32 279.53,29.25"/></g></svg></div><div class="abt"><h1>לוג ביתנו</h1><p>מאגר התומכים של מטה הבחירות</p></div></div><div class="aload"><span class="spin"></span>טוען…</div></div>
+  <div class="authbox" id="authBox"><div class="abrand"><div class="alogo"><svg class="yblogo" viewBox="0 0 608.57 153.38" role="img" aria-label="ישראל ביתנו"><g transform="translate(-5.83)" fill="#212d66"><path d="m 125.41,90.79 h -47.1 v 18.37 h 10.3 c -2.5,2.42 -4.8,7.48 -4.8,12.43 0,3.74 0.8,7.81 2,11.88 h -10.7 v 18.26 h 31.4 v -16.94 c -2.8,-3.74 -4.4,-9.57 -4.4,-14.08 0,-4.95 0.8,-9.13 2.1,-11.55 h 18.8 c 5.7,0 9.1,2.97 9.1,9.68 v 32.89 h 18.2 v -32.89 c 0,-9.57 -1.8,-17.05 -6.7,-21.78 -4.3,-4.07 -10.9,-6.27 -18.2,-6.27 z"/><path d="m 254.61,119.72 c 0,-19.36 -7.3,-28.93 -24.1,-28.93 h -35.8 v 18.37 h 32.6 c 6.8,0 9.3,4.18 9.3,11.44 v 12.87 h -44.3 v 18.26 h 70.8 v -18.26 h -8.5 z"/><path d="m 560.61,112.57 c 0,14.3 -8.4,21.78 -23,21.78 -11.4,0 -19,-4.62 -21.8,-13.42 18.5,7.59 31.7,-3.74 31.7,-18.59 V 90.79 h -18.2 v 11.55 c 0,7.15 -5.8,8.91 -14.7,4.62 V 90.79 h -18.2 v 19.91 c 0,27.17 15.2,42.02 41.2,42.02 26,0 41.2,-15.07 41.2,-42.24 V 90.79 h -18.2 z"/><path d="m 463.51,90.79 h -34.1 v 18.37 h 31.7 c 5.7,0 9,2.97 9,9.68 v 32.89 h 18.3 v -32.89 c 0,-9.57 -1.9,-17.05 -6.8,-21.78 -4.2,-4.07 -10.8,-6.27 -18.1,-6.27 z"/><path d="m 305.8,77.04 h -18.1 v 32.12 h 39 c 0,9.79 -4.4,18.81 -22.5,27.28 l 8.9,16.94 c 22.7,-9.79 32.3,-27.72 32.3,-48.95 V 90.79 h -39.6 z"/><path d="m 422.01,92.99 v -2.2 h -18.2 v 2.2 c 0,12.43 -3.5,18.92 -12.5,19.03 l -16.5,-21.23 h -22.4 l 17.7,22.88 c -12.4,3.19 -20.3,15.51 -20.3,31.24 v 6.82 h 18.2 v -6.82 c 0,-11.44 3.5,-17.05 12.5,-17.93 l 19.2,24.75 h 22.5 l -20.7,-26.62 c 12.5,-2.97 20.5,-15.51 20.5,-32.12 z"/><polygon points="48.3,133.47 32.5,133.47 32.5,151.73 66.31,151.73 66.31,90.79 36.3,90.79 36.3,109.16 48.3,109.16"/><polygon points="6,151.73 24.11,151.73 24.11,90.79 5.83,90.79 5.83,109.16 6,109.16"/><polygon points="165.4,130.61 183.51,130.61 183.51,90.79 155.1,90.79 155.1,109.16 165.4,109.16"/><polygon points="596.3,130.61 614.4,130.61 614.4,90.79 586,90.79 586,109.16 596.3,109.16"/></g><g transform="translate(-5.83)"><polygon fill="#2988c9" points="279.53,29.25 614.4,65.37 614.4,53.63 273.84,0"/><polygon fill="#13c2e9" points="273.84,0 5.83,54.22 5.83,65.32 279.53,29.25"/></g></svg></div><div class="abt"><h1>לוג ביתנו</h1></div></div><div class="aload"><span class="spin"></span>טוען…</div></div>
 </div>
 
 <div class="scrim" id="scrim" data-act="closeCard"></div>
@@ -2613,6 +2825,74 @@ function loadBar(done, total, label) {
   el.querySelector('span').textContent = total ? nf(Math.min(done, total)) + ' מתוך ' + nf(total) : '';
   el.querySelector('em').style.width = (total ? Math.max(3, Math.min(100, done / total * 100)) : 3) + '%';
 }
+/* ---- שמירה בלי לדרוס עבודה של אחרים ----
+   לפני ששמים שינוי בכרטיס קיים קוראים pTouch(p) (שומר איך הכרטיס נראה רגע לפני). בשמירה נשלח רק מה שהשתנה
+   (people_patch בשרת — schema_people_patch.sql), והשרת מחיל אותו על הגרסה העדכנית שלו: מה שמישהו אחר שינה
+   בינתיים בשדות אחרים נשאר, היסטוריה ותגיות מצטרפות, ומי שנמחק בינתיים לא חוזר למאגר. */
+const PBASE = new WeakMap();
+const pTouch = p => { if (CLOUD && p && !PBASE.has(p)) PBASE.set(p, JSON.stringify(p)); };
+let PATCH_OK = true;   /* false = הפונקציה עוד לא הותקנה בשרת — שומרים כמו פעם */
+const PARR = ['tags', 'dbs', 'phones'], PPRE = ['log', 'sh'];
+const jeq = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+function pDiff(b, a) {
+  const e = {}; let any = false;
+  new Set(Object.keys(b).concat(Object.keys(a))).forEach(k => {
+    if (k[0] === '_' || k === 'uid') return;
+    const bv = b[k], av = a[k];
+    if (jeq(bv, av)) return;
+    any = true;
+    if (k === 'dyn' && bv && av && typeof bv === 'object' && typeof av === 'object' && !Array.isArray(av)) {
+      new Set(Object.keys(bv).concat(Object.keys(av))).forEach(q => { if (jeq(bv[q], av[q])) return; if (av[q] !== undefined) (e.dyn = e.dyn || {})[q] = av[q]; else (e.undyn = e.undyn || []).push(q); });
+    } else if (PPRE.includes(k) && Array.isArray(av)) {
+      const old = new Set((Array.isArray(bv) ? bv : []).map(x => JSON.stringify(x)));
+      const pre = av.filter(x => !old.has(JSON.stringify(x)));
+      if (pre.length) (e.pre = e.pre || {})[k] = pre;
+    } else if (PARR.includes(k) && Array.isArray(av)) {
+      const B = Array.isArray(bv) ? bv : [], bs = new Set(B.map(x => JSON.stringify(x))), as = new Set(av.map(x => JSON.stringify(x)));
+      const add = av.filter(x => !bs.has(JSON.stringify(x))), del = B.filter(x => !as.has(JSON.stringify(x)));
+      if (add.length || del.length) (e.arr = e.arr || {})[k] = { add, del };
+    } else if (av === undefined) (e.unset = e.unset || []).push(k);
+    else (e.set = e.set || {})[k] = av;
+  });
+  return any ? e : null;
+}
+const P_IDX = ['phone', 'phones', 'tz', 'city', 'street', 'kalpi', 'status', 'first', 'last', 'owner', 'tags', 'dbs'];
+/* מחזיר כמה לא נשמרו, או null אם people_patch לא קיים בשרת */
+async function pPatch(pl, onProg, total) {
+  const B = 200, n = Math.ceil(pl.length / B), gone = [];
+  let next = 0, done = 0, failed = 0, missing = false, idx = false, lastErr = null;
+  const worker = async () => {
+    for (;;) {
+      const i = next++; if (i >= n || missing) return;
+      const part = pl.slice(i * B, i * B + B);
+      let res = null, err = null;
+      for (let a = 0; a < 3; a++) {
+        ({ data: res, error: err } = await sb.rpc('people_patch', { p_rows: part.map(x => x[1]) }));
+        if (!err) break;
+        if (err.code === 'PGRST202' || err.code === '42883') { missing = true; return; }
+        await wait(1500 * Math.pow(2, a));
+      }
+      if (err) { lastErr = err; failed += part.length; continue; }
+      const got = new Map((res || []).map(r => [r.uid, r.data]));
+      part.forEach(([p]) => {
+        const d = got.get(p.uid); if (!d) { gone.push(p); return; }
+        if (P_IDX.some(k => !jeq(p[k], d[k]))) idx = true;
+        Object.keys(p).forEach(k => { delete p[k]; }); Object.assign(p, d); normOne(p);   /* הכרטיס עכשיו = מה שנשמר בשרת (כולל שינויים של אחרים) */
+      });
+      done += part.length; if (onProg) onProg(done, total);
+    }
+  };
+  await Promise.all(Array.from({ length: Math.min(3, n) }, worker));
+  if (missing && !done && !failed) return null;
+  if (missing) failed += pl.length - done - failed;
+  if (gone.length) {   /* נמחקו בינתיים ע״י משתמש אחר — לא מחזירים אותם */
+    const gs = new Set(gone.map(p => p.uid)); S.people = S.people.filter(p => !gs.has(p.uid)); idx = true;
+    toast(gone.length === 1 ? fullName(gone[0]) + ' נמחק/ה בינתיים ע״י משתמש אחר — השינוי לא נשמר אצלו/ה' : nf(gone.length) + ' אנשים נמחקו בינתיים ע״י משתמש אחר — השינוי לא נשמר אצלם');
+  }
+  if (idx) { DV++; await rebuildSliced(); }
+  if (failed) cloudErr(lastErr || { message: 'שמירה' }, 'אנשים');
+  return failed;
+}
 /* שמירת אנשים: מנות של 500, עד 4 במקביל, וכל מנה עד 3 ניסיונות. מחזיר false אם משהו לא נשמר */
 async function putPeople(list, onProg) {
   DV++;
@@ -2620,6 +2900,16 @@ async function putPeople(list, onProg) {
   if (!CLOUD) return txp('people', 'readwrite', s => { list.forEach(p => s.put(strip(p))); });
   /* אותו אדם פעמיים באותה שליחה מפיל את כל המנה בשרת (ON CONFLICT … a second time) — משאירים רק את המופע האחרון */
   const byUid = new Map(); list.forEach(p => { if (p && p.uid) { byUid.delete(p.uid); byUid.set(p.uid, p); } }); list = Array.from(byUid.values());
+  /* כרטיסים קיימים ששונו כאן (pTouch) — רק השינוי, ממוזג בשרת */
+  let failedP = 0;
+  const total = list.length, pl = [], rest = [];
+  list.forEach(p => { const b = PBASE.get(p); if (b == null) { rest.push(p); return; } PBASE.delete(p); if (!PATCH_OK) { rest.push(p); return; } const e = pDiff(JSON.parse(b), p); if (e) { e.uid = p.uid; pl.push([p, e]); } });
+  if (pl.length) {
+    const r = await pPatch(pl, onProg, total);
+    if (r === null) { PATCH_OK = false; pl.forEach(([p]) => rest.push(p)); } else failedP = r;
+  }
+  list = rest;
+  if (!list.length) { putPeople.failed = failedP; if (failedP) { setTimeout(reloadData, 600); return false; } pcachePut(pl.map(x => x[0])); return true; }
   /* מנות קטנות (250), רק 3 במקביל — שהשרת החינמי לא יגיע ל-timeout. מנה שנכשלה לא עוצרת את השאר:
      בסוף מנסים אותה שוב במנות של 50, לאט. רק מה שנכשל גם אז — נחשב "לא נשמר" (putPeople.failed) */
   const send = async (rows, tries, base) => { let err = null; for (let a = 0; a < tries; a++) { ({ error: err } = await sb.from('people').upsert(rows)); if (!err) return null; await wait(base * Math.pow(2, a)); } return err; };
@@ -2641,8 +2931,9 @@ async function putPeople(list, onProg) {
     const err = await send(small.map(p => ({ uid: p.uid, data: strip(p) })), 5, 2500);
     if (err) { lastErr = err; failed += small.length; } else { done += small.length; if (onProg) onProg(done, list.length); }
   }
-  putPeople.failed = failed;
+  putPeople.failed = failed + failedP;
   if (failed) { cloudErr(lastErr, 'אנשים'); setTimeout(reloadData, 600); return false; }
+  if (failedP) { setTimeout(reloadData, 600); return false; }
   pcachePut(list);
   return true;
 }
@@ -2684,8 +2975,11 @@ function kvMerge(k, server) {
   return local;
 }
 let KVV = 0;   /* גרסת ההגדרות המשותפות — עולה בכל שמירה/טעינה */
+/* פרטים דינמיים, מאגרים ונוסח שורת ההסרה — רק המטה המרכזי משנה (נאכף גם בשרת — schema_kv_central.sql) */
+const KV_CENTRAL = ['fields', 'dbs', 'smsopt'];
 async function saveKV(k) {
   KVV++;
+  if (CLOUD && KV_CENTRAL.includes(k) && (isCityUser() || !can('edit'))) { console.warn('saveKV ' + k + ': מטה מרכזי בלבד'); return; }
   if (k === 'settings') { try { localStorage.setItem('maagar-settings', JSON.stringify(S.settings || {})); } catch (e) {} if (!CLOUD) return txp('kv', 'readwrite', s => { s.put({ k, v: S[k] }); }); return; }
   if (!CLOUD) return txp('kv', 'readwrite', s => { s.put({ k, v: S[k] }); });
   const sc = kvScope(k), key = sc + '|' + k;
@@ -2853,6 +3147,8 @@ async function pplStart(onReady) {
   }
   /* שינויים של אחרים — כל דקה, ברקע */
   setInterval(async () => { if (document.hidden || !PPL_READY) return; const before = DV; await syncCloud(true, false, true); if (DV !== before) onReady && onReady(true); }, 60000);
+  /* חזרה ללשונית אחרי שהייתה ברקע — מושכים שינויים מיד (ברקע אין רענון כל דקה) */
+  document.addEventListener('visibilitychange', async () => { if (document.hidden || !PPL_READY) return; const before = DV; await syncCloud(true, false, true); if (DV !== before) onReady && onReady(true); });
 }
 async function reloadData() {
   if (!CLOUD || !ME) return;
@@ -3362,7 +3658,7 @@ const HM = Object.assign({ preset: '30d', from: '', to: '', cmp: 'prev', cfrom: 
   (() => { try { return JSON.parse(localStorage.getItem('maagar-home') || '{}') || {}; } catch (e) { return {}; } })());
 HM.open = '';
 if (!['sup', 'cov', 'abc'].includes(HM.sort)) { HM.sort = 'sup'; HM.dir = -1; }
-function hmSave() { try { const o = Object.assign({}, HM); delete o.open; localStorage.setItem('maagar-home', JSON.stringify(o)); } catch (e) {} }
+function hmSave() { try { const o = Object.assign({}, HM); delete o.open; for (const k in o) if (k[0] === '_') delete o[k]; localStorage.setItem('maagar-home', JSON.stringify(o)); } catch (e) {} }
 const dayStart = t => { const d = new Date(t); d.setHours(0, 0, 0, 0); return d.getTime(); };
 const isoMs = iso => { const p = String(iso).split('-').map(Number); return new Date(p[0], p[1] - 1, p[2]).getTime(); };
 const dlab = t => { const d = new Date(t); return pad2(d.getDate()) + '.' + pad2(d.getMonth() + 1) + '.' + d.getFullYear(); };
@@ -3443,13 +3739,18 @@ const hmFiltered = () => !!(HM.cities.length || HM.region || HM.cat);
 
 /* ---------------------------------------------------------- חישוב הנתונים */
 const PTS = 10;   // נקודות בקו המגמה
+const CP = 24;    // נקודות בגרף הגדול
 /* homeData(slices): כשמבקשים "בחלקים" — עוברים על המאגר במנות ומשחררים את המסך בין מנה למנה (מחזיר Promise) */
 function homeData(sliced) {
   const R = hmRange();
   const ts = []; for (let i = 0; i < PTS; i++) ts.push(Math.round(R.a + (R.b - R.a) * i / (PTS - 1)));
-  const blank = (k, c) => ({ k, c, n: 0, sup: 0, und: 0, no: 0, unk: 0, add: 0, cn: 0, csup: 0, cund: 0, cno: 0, cunk: 0, cadd: 0, ph: 0, kal: 0, tn: Array(PTS).fill(0), tsup: Array(PTS).fill(0) });
+  const cts = []; for (let i = 0; i < CP; i++) cts.push(Math.round(R.a + (R.b - R.a) * i / (CP - 1)));
+  const Pa = R.a - (R.b - R.a) - 1;   /* התקופה הקודמת — באותו אורך */
+  const gIdx = cr => { let lo = 0, hi = CP; while (lo < hi) { const m = (lo + hi) >> 1; if (cts[m] >= cr) hi = m; else lo = m + 1; } return lo; };
+  const blank = (k, c) => ({ k, c, n: 0, sup: 0, und: 0, no: 0, unk: 0, pot: 0, add: 0, cn: 0, csup: 0, cund: 0, cno: 0, cunk: 0, cpot: 0, cadd: 0, ph: 0, kal: 0,
+    n0: 0, sup0: 0, und0: 0, nsup: 0, psup: 0, tn: Array(PTS).fill(0), tsup: Array(PTS).fill(0), gn: Array(CP).fill(0), gs: Array(CP).fill(0), gu: Array(CP).fill(0) });
   const map = new Map(), none = blank('', '');
-  const ST = { 'תומך': 'sup', 'מתלבט': 'und', 'לא תומך': 'no', 'לא ידוע': 'unk' };
+  const ST = { 'תומך': 'sup', 'מתלבט': 'und', 'לא תומך': 'no', 'לא ידוע': 'unk', 'תומך פוטנציאלי': 'pot' };
   const L = S.people, N = L.length;
   const acc = (from, to) => { for (let j = from; j < to; j++) { const p = L[j];
     const ck = p._ck != null ? p._ck : (p.city ? ckey(p.city) : '');
@@ -3462,6 +3763,9 @@ function homeData(sliced) {
       if (cr >= R.a && cr <= R.b) o.add++;
       if (R.c) { if (cr <= R.c[1]) { o.cn++; o['c' + key]++; } if (cr >= R.c[0] && cr <= R.c[1]) o.cadd++; }
       for (let i = 0; i < PTS; i++) if (cr <= ts[i]) { o.tn[i]++; if (sup) o.tsup[i]++; }
+      if (cr < R.a) { o.n0++; if (sup) o.sup0++; else if (key === 'und') o.und0++; }
+      if (sup) { if (cr >= R.a && cr <= R.b) o.nsup++; else if (cr >= Pa && cr < R.a) o.psup++; }
+      if (cr <= R.b) { const gi = gIdx(cr); if (gi < CP) { o.gn[gi]++; if (sup) o.gs[gi]++; else if (key === 'und') o.gu[gi]++; } }   /* גרף: הפרשים — מצטברים בסוף */
       continue;
     }
     const sb = stAt(p, R.b);
@@ -3469,6 +3773,12 @@ function homeData(sliced) {
     if (cr >= R.a && cr <= R.b) o.add++;
     if (R.c) { const sc = stAt(p, R.c[1]); if (sc) { o.cn++; o['c' + (ST[sc] || 'unk')]++; } if (cr >= R.c[0] && cr <= R.c[1]) o.cadd++; }
     for (let i = 0; i < PTS; i++) { const s = stAt(p, ts[i]); if (s) { o.tn[i]++; if (s === 'תומך') o.tsup[i]++; } }
+    const s0 = stAt(p, R.a - 1);
+    if (s0) { o.n0++; if (s0 === 'תומך') o.sup0++; else if (s0 === 'מתלבט') o.und0++; }
+    if (sb === 'תומך' && s0 !== 'תומך') o.nsup++;
+    if (s0 === 'תומך' && stAt(p, Pa - 1) !== 'תומך') o.psup++;
+    let pn = 0, ps = 0, pu = 0;
+    for (let i = 0; i < CP; i++) { const s = stAt(p, cts[i]), n = s ? 1 : 0, a = s === 'תומך' ? 1 : 0, u = s === 'מתלבט' ? 1 : 0; o.gn[i] += n - pn; o.gs[i] += a - ps; o.gu[i] += u - pu; pn = n; ps = a; pu = u; }
   } };
   if (sliced) return (async () => { for (let i = 0; i < N; i += 8000) { acc(i, Math.min(N, i + 8000)); await yieldNow(); } return hmFinal(); })();
   acc(0, N);
@@ -3498,16 +3808,19 @@ function homeData(sliced) {
   const shown = cities.filter(keep);
   const T = blank('*', 'סה״כ');
   (hmFiltered() ? shown : cities.concat([none])).forEach(o => {
-    ['n', 'sup', 'und', 'no', 'unk', 'add', 'cn', 'csup', 'cund', 'cno', 'cunk', 'cadd', 'ph', 'kal'].forEach(f => { T[f] += o[f]; });
+    ['n', 'sup', 'und', 'no', 'unk', 'pot', 'add', 'cn', 'csup', 'cund', 'cno', 'cunk', 'cpot', 'cadd', 'ph', 'kal', 'n0', 'sup0', 'und0', 'nsup', 'psup'].forEach(f => { T[f] += o[f]; });
     for (let i = 0; i < PTS; i++) { T.tn[i] += o.tn[i]; T.tsup[i] += o.tsup[i]; }
+    for (let i = 0; i < CP; i++) { T.gn[i] += o.gn[i]; T.gs[i] += o.gs[i]; T.gu[i] += o.gu[i]; }
   });
+  for (let i = 1; i < CP; i++) { T.gn[i] += T.gn[i - 1]; T.gs[i] += T.gs[i - 1]; T.gu[i] += T.gu[i - 1]; }
+  cities.forEach(o => { delete o.gn; delete o.gs; delete o.gu; });   /* לא צריך לכל עיר — חוסך מקום בתמונת המצב */
   T.cov = T.n ? T.sup / T.n : 0; T.ccov = R.c && T.cn ? T.csup / T.cn : null;
   T.trend = T.tn.map((n, i) => n ? T.tsup[i] / n : null);
   const srt = { abc: (x, y) => x.c.localeCompare(y.c, 'he'), sup: (x, y) => x.sup - y.sup || x.n - y.n, cov: (x, y) => x.cov - y.cov || x.n - y.n, size: (x, y) => x.n - y.n };
   /* ברירת מחדל (dir = -1): א׳–ב׳ מהתחלה, מספרים מהגדול לקטן. לחיצה נוספת הופכת */
   const f = srt[HM.sort] || srt.sup, asc = HM.sort === 'abc' ? HM.dir < 0 : HM.dir > 0;
   shown.sort((x, y) => (asc ? f(x, y) : -f(x, y)) || x.c.localeCompare(y.c, 'he'));
-  return { R, ts, T, cities, shown };
+  return { R, ts, cts, T, cities, shown };
   }
 }
 
@@ -3590,6 +3903,185 @@ function hmWire() {
 document.addEventListener('click', e => { if (HM.open && S.view === 'home' && !e.target.closest('.hpw')) { HM.open = ''; hmBarRender(); } });
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && HM.open && S.view === 'home') { HM.open = ''; hmBarRender(); } });
 
+/* ========================================================== דף ראשי — פס פתיחה, מדדים עם כיוון, גרף, „דורש טיפול” */
+Object.assign(HI, {
+  goal: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/>',
+  conv: '<path d="M4 12a8 8 0 0 1 13.7-5.6L20 8.5M20 4v4.5h-4.5"/><path d="M9 12.5l2 2 4-4"/>',
+  copy: '<rect x="8" y="8" width="12" height="12" rx="2.5"/><path d="M16 8V6.5A2.5 2.5 0 0 0 13.5 4h-7A2.5 2.5 0 0 0 4 6.5v7A2.5 2.5 0 0 0 6.5 16H8"/>',
+  nophone: '<rect x="6.5" y="2.5" width="11" height="19" rx="2.5"/><path d="M4 4l16 16"/>',
+  arr: '<path d="M14 6l-6 6 6 6"/>',
+  check: '<circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.8 2.8L16.5 9.5"/>',
+  del: '<path d="M5 7h14M10 7V4h4v3M7 7l1 13h8l1-13"/>'
+});
+const HM_MON = ['ינו׳', 'פבר׳', 'מרץ', 'אפר׳', 'מאי', 'יוני', 'יולי', 'אוג׳', 'ספט׳', 'אוק׳', 'נוב׳', 'דצמ׳'];
+/* ---- פס הפתיחה: משפט שמסכם את התקופה + טבעת יעד (זהב) ---- */
+function hmHero(D, cityU) {
+  const { T, R } = D, pr = PRESETS.find(p => p[0] === HM.preset);
+  const lbl = (pr ? pr[1] : 'טווח אישי') + ' · ' + rshort(R.a, R.b);
+  const ns = T.nsup || 0, ps = T.psup || 0, added = Math.max(0, T.n - (T.n0 || 0));
+  let s1 = ns ? '<b class="num" data-count="' + ns + '">' + nf(ns) + '</b> תומכים חדשים בתקופה' : 'עוד אין תומכים חדשים בתקופה';
+  if (ns && ps && HM.preset !== 'all') { const ch = Math.round((ns - ps) / ps * 100); s1 += ch ? ' — <span class="' + (ch > 0 ? 'hhup' : 'hhdn') + '">' + (ch > 0 ? '▲ ' : '▼ ') + Math.abs(ch) + '%</span> לעומת התקופה הקודמת' : ' — בדיוק כמו בתקופה הקודמת'; }
+  const s2 = nf(added) + ' אנשים נכנסו למאגר · כיסוי התומכים עומד על ' + pc1(T.cov);
+  const C = D.shown.filter(o => o.c), big = C.filter(o => o.n >= Math.min(30, Math.max(5, T.n / 50)));
+  const chips = [];
+  if (!cityU && C.length > 1) {
+    const top = C.slice().sort((a, b) => (b.nsup || 0) - (a.nsup || 0))[0];
+    if (top && top.nsup) chips.push(['up', 'הכי הרבה תומכים חדשים', top.c, '+' + nf(top.nsup)]);
+    if (big.length > 1) {
+      const hi = big.slice().sort((a, b) => b.cov - a.cov)[0], lo = big.slice().sort((a, b) => a.cov - b.cov)[0];
+      chips.push(['hi', 'הכיסוי הכי גבוה', hi.c, pc1(hi.cov)]);
+      if (lo !== hi) chips.push(['lo', 'צריך חיזוק', lo.c, pc1(lo.cov)]);
+    }
+  }
+  const goal = !cityU && !hmFiltered() ? +((S.settings || {}).goal) || 0 : 0;
+  const val = goal ? T.sup / goal : T.cov, r = 54, Cc = +(2 * Math.PI * r).toFixed(1), off = +(Cc * (1 - Math.max(0, Math.min(1, val)))).toFixed(1);
+  const pctTxt = goal ? Math.min(999, Math.round(val * 100)) + '%' : pc1(T.cov);
+  return '<section class="hhero" aria-label="תמונת מצב">' +
+    '<div class="hhm"><div class="hhk">' + esc(lbl) + '</div>' +
+      '<h2>' + (cityU ? 'תמונת המצב בעיר' : hmFiltered() ? 'תמונת המצב · ' + esc(fltLabel()) : 'תמונת המצב של המטה') + '</h2>' +
+      '<p class="hhs">' + s1 + '</p><p class="hhs2">' + s2 + '</p>' +
+      (chips.length ? '<div class="hhcs">' + chips.map(([k, l, c, v], i) => '<button class="hhc ' + k + '" data-act="goCity" data-v="' + esc(c) + '" style="animation-delay:' + (300 + i * 80) + 'ms"><span>' + l + '</span><b>' + esc(c) + '</b><em class="num">' + v + '</em></button>').join('') + '</div>' : '') +
+    '</div>' +
+    '<div class="hhg"><div class="hhr"><svg viewBox="0 0 132 132" aria-hidden="true"><circle class="trk" cx="66" cy="66" r="' + r + '"/><circle class="val" cx="66" cy="66" r="' + r + '" style="stroke-dasharray:' + Cc + ';stroke-dashoffset:' + off + ';--c:' + Cc + '"/></svg>' +
+      '<div class="hhrc"><b class="num">' + pctTxt + '</b><span>' + (goal ? 'מהיעד' : 'כיסוי') + '</span></div></div>' +
+      '<div class="hhgl">' + (goal ? '<b class="num">' + nf(T.sup) + '</b> מתוך <b class="num">' + nf(goal) + '</b> תומכים' : 'תומכים מתוך כל המאגר') + '</div>' +
+      (isAdmin() && !cityU && !hmFiltered() ? '<button class="hhgoal" data-act="hmGoal">' + hic('goal') + (goal ? 'שינוי היעד' : 'קביעת יעד תומכים') + '</button>' : '') +
+    '</div></section>';
+}
+/* ---- כרטיס מדד: מספר, שינוי בתקופה (חץ ירוק / אדום), וקו מגמה קטן בתחתית ---- */
+function kspark(vals) {
+  const v = (vals || []).filter(x => x != null); if (v.length < 2) return '';
+  const w = 200, h = 44, mn = Math.min(...v), mx = Math.max(...v), rg = mx - mn || 1;
+  const pts = v.map((x, i) => [(i / (v.length - 1)) * w, h - 4 - ((x - mn) / rg) * (h - 10)]);
+  const ln = pts.map((p, i) => (i ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join(' ');
+  return '<svg class="ksp" viewBox="0 0 ' + w + ' ' + h + '" preserveAspectRatio="none" aria-hidden="true"><path class="a" d="' + ln + ' L' + w + ' ' + h + ' L0 ' + h + ' Z"/><path class="l" d="' + ln + '" pathLength="1" vector-effect="non-scaling-stroke"/></svg>';
+}
+function hmKpis(D) {
+  const { T } = D;
+  const dp = (x, pctMode) => x ? '<span class="kdl ' + (x > 0 ? 'up' : 'dn') + '" title="שינוי בתקופה">' + (x > 0 ? '▲ ' : '▼ ') + (pctMode ? Math.abs(x) + '%' : nf(Math.abs(x))) + '</span>' : '<span class="kdl z">ללא שינוי</span>';
+  const k = (lb, v, ic, cls, d, foot, sp) => '<div class="kpi ' + cls + '"><div class="kt"><span class="ki">' + hic(ic) + '</span>' + d + '</div><div class="lb">' + lb + '</div><div class="vl" data-count="' + v + '">' + nf(v) + '</div><div class="ft">' + foot + '</div>' + kspark(sp) + '</div>';
+  const ns = T.nsup || 0, ps = T.psup || 0, chg = ps && HM.preset !== 'all' ? Math.round((ns - ps) / ps * 100) : 0;
+  return '<div class="kpis" id="homeKpis">' +
+    k('אנשים במאגר', T.n, 'people', 'p', dp(T.n - (T.n0 || 0)), hmFiltered() ? 'בערים שנבחרו' : 'בכל המאגרים', T.gn) +
+    k('תומכים', T.sup, 'sup', 'g', dp(T.sup - (T.sup0 || 0)), pc1(T.cov) + ' מהמאגר', T.gs) +
+    k('מתלבטים', T.und, 'und', 'y', dp(T.und - (T.und0 || 0)), pct(T.und, T.n) + '% מהמאגר', T.gu) +
+    k('הפכו לתומכים', ns, 'conv', 'c', ps && HM.preset !== 'all' ? dp(chg, true) : '', HM.preset === 'all' ? 'מההתחלה' : 'בתקופה הקודמת: ' + nf(ps), (T.gs || []).map(x => x - ((T.gs || [0])[0] || 0))) +
+  '</div>';
+}
+/* ---- הגרף הגדול: תומכים ומתלבטים לאורך התקופה, נחשף בכניסה, עם ריחוף ---- */
+function hmChartCard(D) {
+  const T = D.T, cv = HM.cv === 'all' ? 'all' : 'su';
+  const st = [['תומך', T.sup, 'var(--navy)'], ['תומך פוטנציאלי', T.pot || 0, 'var(--gold)'], ['מתלבט', T.und, '#7FA3CF'], ['לא תומך', T.no, 'var(--rbd)'], ['לא ידוע', T.unk, 'var(--line)']].filter(x => x[1]);
+  const tot = st.reduce((n, x) => n + x[1], 0) || 1;
+  return '<div class="card hchc"><div class="ch hch"><span class="cht">התפתחות לאורך התקופה</span>' +
+      '<span class="legend">' + (cv === 'su' ? '<span><i style="background:var(--navy)"></i>תומכים</span><span><i style="background:#7FA3CF"></i>מתלבטים</span>' : '<span><i style="background:var(--navy-l)"></i>אנשים במאגר</span>') + '</span>' +
+      '<div class="seg"><button class="sg2' + (cv === 'su' ? ' on' : '') + '" data-act="hmCv" data-v="su">תומכים ומתלבטים</button><button class="sg2' + (cv === 'all' ? ' on' : '') + '" data-act="hmCv" data-v="all">כל המאגר</button></div></div>' +
+    '<div class="cb hcb"><div id="hmChart" class="hchart"></div>' +
+      '<div class="hdist"><div class="hdt">כל המאגר לפי סטטוס<span>לחיצה פותחת את האנשים בחיפוש</span></div>' +
+        '<div class="hdb">' + st.map(([s, n, c], i) => '<button data-act="hmGoSt" data-v="' + esc(s) + '" style="flex:' + n + ' 1 0;background:' + c + ';animation-delay:' + (200 + i * 90) + 'ms" title="' + esc(s) + ': ' + nf(n) + '" aria-label="' + esc(s) + ': ' + nf(n) + '"></button>').join('') + '</div>' +
+        '<div class="hdl">' + st.map(([s, n, c]) => '<button data-act="hmGoSt" data-v="' + esc(s) + '"><i style="background:' + c + '"></i>' + esc(s) + ' <b class="num">' + nf(n) + '</b><span class="num">' + Math.round(n / tot * 100) + '%</span></button>').join('') + '</div>' +
+      '</div></div></div>';
+}
+function hmChartDraw(D, anim) {
+  const box = $('#hmChart'); if (!box || !D || !D.T || !D.T.gn) return;
+  const T = D.T, ts = D.cts || [], all = HM.cv === 'all';
+  const W = Math.max(320, box.clientWidth), H = box.clientHeight || 250, L = 48, R = 12, Tp = 12, B = 30, iw = W - L - R, ih = H - Tp - B;
+  const series = all ? [['n', T.gn, 'var(--navy-l)', 'אנשים במאגר']] : [['s', T.gs, 'var(--navy)', 'תומכים'], ['u', T.gu, '#7FA3CF', 'מתלבטים']];
+  const mxRaw = Math.max(1, ...series.flatMap(x => x[1]));
+  const step = (() => { const r = mxRaw / 4, p = Math.pow(10, Math.floor(Math.log10(r))), m = r / p; return (m <= 1 ? 1 : m <= 2 ? 2 : m <= 2.5 ? 2.5 : m <= 5 ? 5 : 10) * p; })();
+  const mx = step * Math.ceil(mxRaw / step), n = ts.length;
+  const X = i => L + (n > 1 ? i / (n - 1) : 0) * iw, Y = v => Tp + ih - (v / mx) * ih;
+  const path = a => a.map((v, i) => (i ? 'L' : 'M') + X(i).toFixed(1) + ' ' + Y(v).toFixed(1)).join(' ');
+  const short = (ts[n - 1] - ts[0]) < 2.5 * DAY;
+  const tl = t => { const d = new Date(t); return short ? pad2(d.getHours()) + ':' + pad2(d.getMinutes()) : d.getDate() + ' ' + HM_MON[d.getMonth()]; };
+  let g = '';
+  for (let v = 0; v <= mx + 1e-9; v += step) g += '<line x1="' + L + '" x2="' + (W - R) + '" y1="' + Y(v).toFixed(1) + '" y2="' + Y(v).toFixed(1) + '"/><text x="' + (L - 10) + '" y="' + (Y(v) + 4).toFixed(1) + '" text-anchor="end">' + nf(Math.round(v)) + '</text>';
+  const xt = [0, Math.round((n - 1) / 3), Math.round(2 * (n - 1) / 3), n - 1].filter((v, i, a) => a.indexOf(v) === i);
+  const xl = xt.map(i => '<text x="' + X(i).toFixed(1) + '" y="' + (H - 8) + '" text-anchor="' + (i === 0 ? 'start' : i === n - 1 ? 'end' : 'middle') + '">' + tl(ts[i]) + '</text>').join('');
+  const defs = '<defs>' + series.map(([k, , c]) => '<linearGradient id="hg' + k + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:' + c + ';stop-opacity:.28"/><stop offset="1" style="stop-color:' + c + ';stop-opacity:0"/></linearGradient>').join('') + '</defs>';
+  const areas = series.map(([k, a, c]) => '<path class="ha" fill="url(#hg' + k + ')" d="' + path(a) + ' L' + X(n - 1).toFixed(1) + ' ' + Y(0) + ' L' + X(0) + ' ' + Y(0) + ' Z"/><path class="hl" style="stroke:' + c + '" d="' + path(a) + '"/>').join('');
+  box.innerHTML = '<svg width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="גרף ' + (all ? 'האנשים במאגר' : 'התומכים והמתלבטים') + ' לאורך התקופה">' + defs +
+    '<g class="hgr">' + g + '</g><g class="hpl' + (anim ? ' rev' : '') + '">' + areas + '</g><g class="hxl">' + xl + '</g>' +
+    '<line class="hcur" x1="0" x2="0" y1="' + Tp + '" y2="' + (Tp + ih) + '" style="opacity:0"/>' + series.map(([k, , c]) => '<circle class="hdot" r="4.5" style="fill:#fff;stroke:' + c + ';opacity:0"/>').join('') +
+    '<rect class="hhov" x="' + L + '" y="' + Tp + '" width="' + iw + '" height="' + ih + '" fill="transparent"/></svg><div class="hctt" hidden></div>';
+  const svgEl = $('svg', box), tt = $('.hctt', box), cur = $('.hcur', box), dots = $$('.hdot', box);
+  const show = e => {
+    const r = svgEl.getBoundingClientRect(), x = e.clientX - r.left, i = Math.max(0, Math.min(n - 1, Math.round((x - L) / iw * (n - 1))));
+    cur.setAttribute('x1', X(i)); cur.setAttribute('x2', X(i)); cur.style.opacity = 1;
+    dots.forEach((d, j) => { d.setAttribute('cx', X(i)); d.setAttribute('cy', Y(series[j][1][i])); d.style.opacity = 1; });
+    const d0 = new Date(ts[i]);
+    tt.innerHTML = '<b>' + (short ? dlab(ts[i]) + ' ' + pad2(d0.getHours()) + ':' + pad2(d0.getMinutes()) : dlab(ts[i])) + '</b>' + series.map(([, a, c, l]) => '<span><i style="background:' + c + '"></i>' + l + ' <b class="num">' + nf(a[i]) + '</b></span>').join('');
+    tt.hidden = false;
+    tt.style.left = Math.max(80, Math.min(W - 80, X(i))) + 'px'; tt.style.top = Math.max(6, Math.min(...series.map(s => Y(s[1][i]))) - 10) + 'px';
+  };
+  const hide = () => { cur.style.opacity = 0; dots.forEach(d => { d.style.opacity = 0; }); tt.hidden = true; };
+  const hov = $('.hhov', box); hov.addEventListener('mousemove', show); hov.addEventListener('mouseleave', hide);
+}
+window.addEventListener('resize', () => { if (S.view === 'home') debounce('hmch', () => hmChartDraw(HM._D, false), 150); });
+/* ---- „דורש טיפול”: מה כדאי לעשות היום — כל שורה פותחת את האנשים בחיפוש ---- */
+const HM_TODO = [
+  ['dup', 'copy', 'כרטיסים כפולים', 'קבוצות עם אותה ת.ז או אותו נייד', { dups: 'any' }, 'w'],
+  ['unk', 'und', 'עוד לא סווגו', 'סטטוס „לא ידוע” — לחזור אליהם בטלפון', { status: ['לא ידוע'] }, ''],
+  ['own', 'add', 'בלי איש קשר אחראי', 'אף אחד לא מטפל בהם עדיין', { owner: '__none' }, ''],
+  ['ph', 'nophone', 'בלי טלפון בכלל', 'אי אפשר להגיע אליהם בסמס או בשיחה', { hasPhone: 'none' }, 'w'],
+  ['kal', 'pin', 'בלי קלפי מזוהה', 'חשוב ליום הבחירות', { noKalpi: true }, '']
+];
+const hmTodoData = memoDV(() => {
+  const c = { dup: 0, unk: 0, own: 0, ph: 0, kal: 0 };
+  for (const p of S.people) { if (stOf(p) === 'לא ידוע') c.unk++; if (!ownersOf(p).length) c.own++; if (!allPhones(p).length) c.ph++; if (!p._site) c.kal++; }
+  try { if (typeof srDupMap === 'function') c.dup = srDupMap('any').groups.size; } catch (e) { /* */ }
+  return c;
+});
+function hmTodoCard() { return '<div class="card htdc"><div class="ch">דורש טיפול<span class="sub">לחיצה פותחת את הרשימה</span></div><div class="cb" id="hmTodo"><div class="htd">' + [0, 1, 2, 3].map(() => '<div class="htdi sk"><span class="ti"></span><span class="tx"><i></i><i></i></span><span></span></div>').join('') + '</div></div></div>'; }
+function hmTodoFill() {
+  const el = $('#hmTodo'); if (!el) return;
+  if (!PPL_READY) { pplWait().then(() => { if (S.view === 'home') hmTodoFill(); }); return; }
+  const c = hmTodoData(), N = S.people.length || 1;
+  const rows = HM_TODO.filter(r => c[r[0]] > 0);
+  el.innerHTML = rows.length ? '<div class="htd">' + rows.map(([k, ic, l, sub, , cls], i) => '<button class="htdi ' + cls + '" data-act="hmTodo" data-v="' + k + '" style="animation-delay:' + i * 60 + 'ms"><span class="ti">' + hic(ic) + '</span><span class="tx"><b>' + l + '</b><small>' + sub + '</small></span>' +
+      '<span class="htdn"><span><b class="num">' + nf(c[k]) + '</b>' + (k !== 'dup' ? '<small class="num">' + Math.round(c[k] / N * 100) + '%</small>' : '<small>קבוצות</small>') + '</span>' + hic('arr') + '</span></button>').join('') + '</div>'
+    : '<div class="htok">' + hic('check') + '<b>הכול מסודר</b><span>אין כרגע משהו שדורש טיפול</span></div>';
+}
+/* ---- פעילות אחרונה: אייקון לכל סוג פעולה ---- */
+const hmActIc = t => /נרשמ|אירוע|חוג/.test(t) ? 'cal' : /סמס/.test(t) ? 'msg' : /ייצוא/.test(t) ? 'dl' : /הועלה|קובץ|אקסל|העלאה/.test(t) ? 'up' : /נמחק|מחיקה|בוטל/.test(t) ? 'del' : /מיזוג|כפיל/.test(t) ? 'copy' : /חלוקה|שויך|איש קשר|נוסף/.test(t) ? 'add' : /סטטוס|תומכ|יעד/.test(t) ? 'sup' : /שדה|פרט/.test(t) ? 'flt' : 'week';
+function hmFeed() {
+  return '<div class="card hfc"><div class="ch">פעילות אחרונה</div><div class="cb" style="padding-block:6px"><div class="feed">' +
+    (S.activity.slice(0, 5).map((a, i) => '<div class="it" style="animation-delay:' + i * 50 + 'ms"><span class="ai">' + hic(hmActIc(a.text || '')) + '</span><div><div>' + esc(a.text) + '</div><div class="when">' + fmtWhen(a.t) + '</div></div></div>').join('') || '<div class="mut" style="padding:10px 0">עוד לא הייתה פעילות</div>') +
+    '</div></div></div>';
+}
+/* ---- אירועים קרובים: תאריך כמו בלוח שנה, כמה ימים נשארו, ופס נרשמים ---- */
+function hmEvents(up) {
+  const mx = Math.max(1, ...up.map(e => (e.regs || []).length)), today = dayStart(Date.now());
+  const soon = d => { if (!d) return ''; const k = Math.round((isoMs(d) - today) / DAY); return k <= 0 ? 'היום' : k === 1 ? 'מחר' : k < 8 ? 'בעוד ' + k + ' ימים' : ''; };
+  return '<div class="card hfc"><div class="ch">אירועים קרובים</div><div class="cb" style="padding-block:6px">' +
+    (up.map(e => { const d = e.date ? new Date(isoMs(e.date)) : null, n = (e.regs || []).length, sn = soon(e.date);
+      return '<div class="hev"><span class="hevd">' + (d ? '<b class="num">' + d.getDate() + '</b><span>' + HM_MON[d.getMonth()] + '</span>' : hic('cal')) + '</span>' +
+        '<span class="hevm"><button class="link" data-act="openEvent" data-v="' + e.id + '">' + esc(e.name) + '</button><small>' + (e.time ? e.time : '') + (sn ? '<em>' + sn + '</em>' : '') + '</small><span class="hevb"><i style="width:' + Math.round(n / mx * 100) + '%"></i></span></span>' +
+        '<span class="hevc"><b class="num">' + nf(n) + '</b><small>נרשמים</small></span></div>'; }).join('') || '<div class="htok sm">' + hic('cal') + '<span>אין אירועים קרובים</span></div>') +
+    '</div></div>';
+}
+Object.assign(ACT, {
+  hmCv: el => { HM.cv = el.dataset.v; hmSave(); $$('#v-home .hchc .sg2').forEach(b => b.classList.toggle('on', b.dataset.v === HM.cv));
+    const lg = $('#v-home .hchc .legend'); if (lg) lg.innerHTML = HM.cv === 'all' ? '<span><i style="background:var(--navy-l)"></i>אנשים במאגר</span>' : '<span><i style="background:var(--navy)"></i>תומכים</span><span><i style="background:#7FA3CF"></i>מתלבטים</span>';
+    hmChartDraw(HM._D, true); },
+  hmGoSt: el => go('search', { filter: { status: [el.dataset.v] } }),
+  hmTodo: el => { const r = HM_TODO.find(x => x[0] === el.dataset.v); if (r) go('search', { filter: clone(r[4]) }); },
+  hmGoal: async () => {
+    if (!isAdmin()) return toast('רק מנהל/ת מערכת יכול/ה לקבוע את היעד');
+    const cur = +((S.settings || {}).goal) || 0;
+    const r = await modal('יעד תומכים', '<label class="fl" for="hm_goal">כמה תומכים המטה רוצה להגיע בכל הארץ?</label><input id="hm_goal" type="text" inputmode="numeric" data-mv="x" value="' + (cur || '') + '" placeholder="למשל 50,000">' +
+      '<div class="sm mut" style="margin-top:8px">היעד מוצג בטבעת הזהב שבראש הדף הראשי, לכל המשתמשים.</div>',
+      [{ lb: 'שמירה', v: 'save', def: true }].concat(cur ? [{ lb: 'הסרת היעד', v: 'del', cls: 'sec' }] : []).concat([{ lb: 'ביטול', cls: 'sec' }]),
+      box => setTimeout(() => { const i = $('#hm_goal', box); if (i) { i.focus(); i.select(); } }, 30));
+    if (!r) return;
+    const n = r.v === 'del' ? 0 : +String(r.vals.x || '').replace(/[^\d]/g, '');
+    if (r.v === 'save' && !n) return toast('צריך לכתוב מספר');
+    S.settings = S.settings || {};
+    if (n > 0) S.settings.goal = n; else delete S.settings.goal;
+    await saveKV('settings'); activity(n > 0 ? 'נקבע יעד תומכים: ' + nf(n) : 'יעד התומכים הוסר');
+    RENDER.home({ refresh: true }); toast(n > 0 ? 'היעד נקבע: ' + nf(n) + ' תומכים' : 'היעד הוסר');
+  }
+});
 /* ---------------------------------------------------------- המסך */
 /* ---- מהירות: החישוב נשמר עד שמשהו משתנה (נתונים / סינון / תקופה), ותמונת מצב נשמרת לכניסה הבאה ---- */
 const hmState = () => JSON.stringify([HM.preset, HM.from, HM.to, HM.cmp, HM.cfrom, HM.cto, HM.sort, HM.dir, HM.cities, HM.region, HM.cat]);
@@ -3597,7 +4089,7 @@ const hmKey = () => DV + '|' + Math.floor(Date.now() / 60000) + '|' + hmState();
 const hmDemo = () => PPL_READY ? hmDemo0() : !!(hmSnap() || {}).demo;
 const hmDemo0 = memoDV(() => S.people.some(p => (p.tags || []).includes('דמו')));
 function homeD() { const k = hmKey(); if (!HM._D || HM._k !== k) { HM._D = homeData(); HM._k = k; } return HM._D; }
-const hmSnapKey = () => 'maagar-homesnap|' + (CLOUD && ME ? ME.id : 'local') + '|' + SCOPE;
+const hmSnapKey = () => 'maagar-homesnap2|' + (CLOUD && ME ? ME.id : 'local') + '|' + SCOPE;
 function hmSnap() {
   if (HM._snap === undefined) { try { HM._snap = JSON.parse(localStorage.getItem(hmSnapKey()) || 'null'); } catch (e) { HM._snap = null; } }
   return HM._snap && HM._snap.st === hmState() ? HM._snap : null;
@@ -3622,7 +4114,7 @@ RENDER.home = function (opts) {
   if (!opts.keepOpen) HM.open = '';
   const snap = PPL_READY ? null : hmSnap();
   /* חוזרים למסך הבית ושום דבר לא השתנה — משאירים את המסך כמו שהוא (מיידי) */
-  const rk = [hmKey(), PPL_READY, !!snap, S.activity.length, (S.activity[0] || {}).t, S.events.length, (S.groups || []).length].join('|');
+  const rk = [hmKey(), PPL_READY, !!snap, S.activity.length, (S.activity[0] || {}).t, S.events.length, (S.groups || []).length, (S.settings || {}).goal, HM.cv].join('|');
   if (!opts.refresh && !opts.keepOpen && HM._rk === rk && $('#homeKpis')) return;
   HM._rk = '';
   if (!PPL_READY && !snap) {   /* כניסה ראשונה במחשב הזה — המאגר עוד יורד */
@@ -3669,36 +4161,31 @@ RENDER.home = function (opts) {
   $('#v-home').classList.toggle('still', !!opts.refresh || !!HM._seen);   /* האנימציות — רק בפעם הראשונה */
   $('#v-home').innerHTML =
     (!tot ? '<div class="card"><div class="empty"><b>המאגר עדיין ריק</b>אפשר להעלות קובץ אקסל או להוסיף איש קשר ידנית.<div class="row" style="justify-content:center;margin-top:14px">' + (can('import') ? '<button class="btn" data-act="go" data-v="upload">העלאת אקסל</button>' : '') + (can('edit') ? '<button class="btn sec" data-act="newPerson">+ איש קשר חדש</button>' : '') + (CLOUD && ME && ME.hq === 'central' && can('edit') ? '<button class="btn sec" data-act="seedCloud">טעינת נתוני דמו לבדיקה</button>' : '') + '</div></div></div>' : '') +
-    '<div class="kpis" id="homeKpis">' +
-      kpi('אנשים במאגר', T.n, ft(0, hmFiltered() ? 'בערים שנבחרו' : 'בכל המאגרים'), 'goStatus', '', 'people', 'hero') +
-      kpi('תומכים', T.sup, ft(0, pc1(T.cov) + ' מהמאגר'), 'goStatus', 'תומך', 'sup', 'g') +
-      kpi('מתלבטים', T.und, ft(0, pct(T.und, T.n) + '% מהמאגר'), 'goStatus', 'מתלבט', 'und', 'y') +
-      kpi('נוספו בתקופה', T.add, ft(0, rlab(R.a, R.b)), 'goNew', '', 'week') +
-    '</div>' +
+    (tot ? hmHero(D, cityU) : '') +
     '<div class="htb" id="htb">' + hmPeriodBar(D) + '</div>' +
+    hmKpis(D) +
+    (tot ? '<div class="hrow">' + hmChartCard(D) + hmTodoCard() + '</div>' : '') +
     '<div class="card" id="homeCities"><div class="ch">' +
       '<span class="cht">תומכים לפי עיר</span>' + hmCityTools(D) +
       '<span class="legend"><span><i style="background:var(--navy)"></i>תומכים</span><span><i style="background:#7FA3CF"></i>מתלבטים</span></span>' +
       '<div class="seg">' + sortBtn('sup', 'מספר תומכים') + sortBtn('cov', 'כיסוי') + sortBtn('abc', 'א׳–ב׳') + '</div></div>' +
       '<div class="ctbl"><div class="crow chd"><span>עיר</span><span>תומכים ומתלבטים</span><span>תומכים</span><span>כיסוי</span><span>מגמה</span></div>' +
       '<div class="cscroll" id="hmRows">' + (D.shown.length ? D.shown.slice(0, HM_FIRST).map(crow).join('') : '<div class="empty" style="padding:26px">אין ערים שמתאימות לסינון</div>') + '</div></div>' +
-      '<div class="cfoot"><span>' + nf(D.shown.length) + ' ערים · כיסוי = תומכים מתוך האנשים במאגר של העיר · המגמה: ' + rlab(R.a, R.b) + '</span>' + spark(T.trend) + '</div>' +
+      '<div class="cfoot"><span>' + nf(D.shown.length) + ' ערים · כיסוי = תומכים מתוך האנשים במאגר של העיר · המגמה: ' + rlab(R.a, R.b) + '</span><span class="cfs"><span>מגמת הכיסוי בכל הערים</span>' + spark(T.trend) + '</span></div>' +
     '</div>' +
-    '<div class="cols"><div class="c2"><div class="card"><div class="ch">פעילות אחרונה</div><div class="cb" style="padding-block:6px"><div class="feed">' +
-      (S.activity.slice(0, 4).map(a => '<div class="it"><span class="dot"></span><div><div>' + esc(a.text) + '</div><div class="when">' + fmtWhen(a.t) + '</div></div></div>').join('') || '<div class="mut" style="padding:10px 0">עוד לא הייתה פעילות</div>') +
-    '</div></div></div></div><div class="c1">' + (cityU ? '<div class="card"><div class="ch">קבוצות שמורות</div><div class="cb" style="padding-block:6px"><div class="feed">' +
+    '<div class="hrow hrow2">' + hmFeed() + (cityU ? '<div class="card hfc"><div class="ch">קבוצות שמורות</div><div class="cb" style="padding-block:6px"><div class="feed">' +
       ((S.groups || []).slice(0, 4).map(g => '<div class="it"><div style="flex:1"><button class="link" data-act="grpOpen" data-v="' + esc(g.id) + '">' + esc(g.name) + '</button>' + (g.t ? '<div class="when">' + fmtDate(isoDay(new Date(g.t))) + '</div>' : '') + '</div></div>').join('') || '<div class="mut" style="padding:10px 0">עוד אין קבוצות. יוצרים קבוצה מהחיפוש המתקדם.</div>') +
-    '</div></div></div>' : '<div class="card"><div class="ch">אירועים קרובים</div><div class="cb" style="padding-block:6px"><div class="feed">' +
-      (up.map(e => '<div class="it"><div style="flex:1"><button class="link" data-act="openEvent" data-v="' + e.id + '">' + esc(e.name) + '</button><div class="when">' + fmtDate(e.date) + (e.time ? ' · ' + e.time : '') + '</div></div><span class="pill">' + nf(e.regs.length) + '</span></div>').join('') || '<div class="mut" style="padding:10px 0">אין אירועים קרובים</div>') +
-    '</div></div></div>') + '</div></div>' +
+      '</div></div></div>' : hmEvents(up)) + '</div>' +
     '<div class="qkact"><div class="qkh">פעולות מהירות</div><div class="qkg">' + quick + '</div></div>';
   hmWire();
   HM._rk = rk;
+  hmChartDraw(D, !opts.reuse);
+  setTimeout(hmTodoFill, 40);
   /* שאר הערים נכנסות רק כשגוללים בטבלה (יש מעל 1,000 ערים — כולן יחד מאטות את המסך) */
   if (D.shown.length > HM_FIRST) { let i = HM_FIRST; const box = $('#hmRows');
     const more = () => { if (i >= D.shown.length || box.scrollTop + box.clientHeight < box.scrollHeight - 300) return; box.insertAdjacentHTML('beforeend', D.shown.slice(i, i + 60).map((o, j) => crow(o, i + j)).join('')); i += 60; };
     box.addEventListener('scroll', more, { passive: true }); }
-  if (!opts.refresh && !HM._seen && !snap) countUp($('#homeKpis'));
+  if (!opts.refresh && !HM._seen && !snap) { countUp($('#homeKpis')); countUp($('#v-home .hhero')); }
   HM._seen = true;
 };
 
@@ -3728,25 +4215,45 @@ function hmXlsx() {
   saveXlsx([['סיכום', hmMeta(D).concat([[]]).concat(hmSummaryRows(D))], ['ערים', cities], ['מגמה', trend]], 'לוג ביתנו — דוח מצב ' + dlab(Date.now()) + '.xlsx');
   toast('קובץ האקסל ירד');
 }
+/* דוח ערים להדפסה / PDF — בסגנון מסמכי המטה: כותרת נקייה, בלוק לכל עיר (תווית מימין, ערך באמצע), סיכום בסוף */
 function hmReport() {
   const D = HM._D || homeData(), R = D.R, T = D.T;
   const w = window.open('', '_blank');
   if (!w) return toast('הדפדפן חסם חלון חדש — צריך לאשר חלונות קופצים לאתר');
-  const k = (lb, v, d) => '<div class="k"><span>' + lb + '</span><b>' + v + '</b>' + (d ? '<em>' + d + '</em>' : '') + '</div>';
-  const dd = (cur, prev, pts) => R.c && prev != null ? (cur - prev > 0 ? '▲ ' : cur - prev < 0 ? '▼ ' : '') + (pts ? (Math.round(Math.abs(cur - prev) * 1000) / 10) + ' נק׳' : nf(Math.abs(cur - prev))) : '';
-  const css = 'body{font-family:Heebo,Arial,sans-serif;direction:rtl;margin:0;color:#14202E;background:#fff}.top{background:linear-gradient(130deg,#0B2E5B,#1550A0 55%,#2366C2);color:#fff;padding:26px 36px}' +
-    '.top h1{margin:0;font-size:26px}.top p{margin:4px 0 0;color:#C9DCF3;font-size:14px}main{padding:24px 36px}.ks{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:22px}' +
-    '.k{border:1px solid #E3E8EF;border-radius:14px;padding:12px 14px}.k span{display:block;font-size:12px;color:#5A6A7D;font-weight:700}.k b{font-size:26px;color:#0B2E5B}.k em{display:block;font-style:normal;font-size:12px;color:#0F7A43}' +
-    'table{width:100%;border-collapse:collapse;font-size:13px}th{background:#F3F6FA;text-align:right;padding:8px;color:#0B2E5B}td{padding:7px 8px;border-bottom:1px solid #EEF1F5}h2{font-size:17px;color:#0B2E5B;margin:6px 0 10px}' +
-    '.bar{position:fixed;left:20px;top:20px}.bar button{font:inherit;font-weight:700;background:#E8B84B;border:0;border-radius:10px;padding:9px 16px;cursor:pointer}@media print{.bar{display:none}.top{-webkit-print-color-adjust:exact;print-color-adjust:exact}}';
-  const html = '<!DOCTYPE html><html lang="he" dir="rtl"><head><meta charset="utf-8"><title>לוג ביתנו — דוח מצב ' + dlab(Date.now()) + '</title><style>' + css + '</style></head><body>' +
-    '<div class="bar"><button onclick="print()">הדפסה / שמירה כ-PDF</button></div>' +
-    '<div class="top"><h1>לוג ביתנו — דוח מצב</h1><p>תקופה: ' + rlab(R.a, R.b) + (R.c ? ' · השוואה: ' + rlab(R.c[0], R.c[1]) : '') + ' · ' + esc(fltLabel()) + ' · הופק ' + dlab(Date.now()) + '</p></div><main>' +
-    '<div class="ks">' + k('אנשים במאגר', nf(T.n), dd(T.n, T.cn)) + k('תומכים', nf(T.sup), dd(T.sup, T.csup)) + k('כיסוי תומכים', pc1(T.cov), dd(T.cov, T.ccov, true)) + k('נוספו בתקופה', nf(T.add), dd(T.add, T.cadd)) +
-      k('מתלבטים', nf(T.und), dd(T.und, T.cund)) + k('לא תומכים', nf(T.no), dd(T.no, T.cno)) + k('עם טלפון נייד', pct(T.ph, T.n) + '%') + k('משויכים לקלפי', pct(T.kal, T.n) + '%') + '</div>' +
-    '<h2>תומכים לפי עיר</h2><table><thead><tr><th>עיר</th><th>מרחב</th><th>אנשים</th><th>תומכים</th><th>מתלבטים</th><th>כיסוי</th>' + (R.c ? '<th>שינוי</th>' : '') + '</tr></thead><tbody>' +
-      D.shown.map(o => '<tr><td><b>' + esc(o.c) + '</b></td><td>' + o.reg + '</td><td>' + nf(o.n) + '</td><td>' + nf(o.sup) + '</td><td>' + nf(o.und) + '</td><td>' + pc1(o.cov) + '</td>' + (R.c ? '<td>' + (o.ccov == null ? '—' : dd(o.cov, o.ccov, true)) + '</td>' : '') + '</tr>').join('') +
-    '</tbody></table></main></body></html>';
+  /* תומכים חדשים (הפכו לתומכים בתקופה) ותומכים פוטנציאליים — מעבר אחד על המאגר, רק לערים שבדוח */
+  const X = new Map(D.shown.map(o => [o.k, { nw: 0, pot: 0 }]));
+  const before = R.a - 1;
+  for (const p of S.people) {
+    const ck = p._ck != null ? p._ck : (p.city ? ckey(p.city) : ''); const x = X.get(ck); if (!x) continue;
+    const sb = stAt(p, R.b); if (!sb) continue;
+    if (sb === 'תומך פוטנציאלי') x.pot++;
+    if (sb === 'תומך' && stAt(p, before) !== 'תומך') x.nw++;
+  }
+  let totNew = 0; X.forEach(x => { totNew += x.nw; });
+  const font = Array.from(document.querySelectorAll('style')).map(s => s.textContent).filter(t => t.includes('@font-face')).join('\n');
+  const row = (lb, v, strong) => '<div class="r"><span>' + lb + '</span><b' + (strong ? ' class="s"' : '') + '>' + v + '</b></div>';
+  const city = o => { const x = X.get(o.k) || { nw: 0, pot: 0 };
+    return '<section class="c">' + row('שם העיר', '<span class="cn">' + esc(o.c) + '</span>', true) +
+      row('תומכים סה״כ', nf(o.sup), true) + row('תומכים חדשים', nf(x.nw), true) + row('מתלבטים', nf(o.und)) +
+      row('תומכים פוטנציאליים', nf(x.pot)) + row('לא תומכים', nf(o.no)) + row('ללא עמדה', nf(Math.max(0, o.unk - x.pot))) +
+      row('כיסוי', pc1(o.cov) + (R.c && o.ccov != null ? ' <small>(' + (o.cov - o.ccov >= 0 ? '+' : '−') + Math.round(Math.abs(o.cov - o.ccov) * 1000) / 10 + ' נק׳)</small>' : '')) + '</section>'; };
+  const css = font + 'body{font-family:Heebo,Arial,sans-serif;direction:rtl;margin:0;color:#14202E;background:#fff}.pg{max-width:820px;margin:0 auto;padding:34px 40px 30px}' +
+    '.kick{font-size:12px;font-weight:700;letter-spacing:.32em;color:#5A6A7D;margin:0 0 10px}.hd{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;padding-bottom:16px;border-bottom:4px solid #0B2E5B}' +
+    '.hd h1{margin:0;font-size:32px;font-weight:900;color:#0B2E5B;line-height:1.1}.hd p{margin:8px 0 0;font-size:14px;color:#5A6A7D}.hk{text-align:center;min-width:120px}.hk b{display:block;font-size:30px;font-weight:900;color:#0B2E5B;line-height:1}.hk span{font-size:12px;color:#5A6A7D;letter-spacing:.06em}' +
+    '.c{padding:14px 0 12px;border-bottom:1px solid #D5DCE5;break-inside:avoid;page-break-inside:avoid}.r{display:grid;grid-template-columns:150px 1fr;align-items:baseline;line-height:1.75;font-size:14.5px}' +
+    '.r span{color:#5A6A7D}.r b{font-weight:500;color:#14202E;font-variant-numeric:tabular-nums}.r b.s{font-weight:900;color:#0B2E5B}.r small{font-weight:500;color:#5A6A7D;font-size:12px}.cn{font-size:19px;color:#0B2E5B!important}' +
+    '.tot{margin-top:22px;padding-top:12px;border-top:4px solid #0B2E5B;font-size:18px;font-weight:900;color:#0B2E5B;break-inside:avoid}.ft{display:flex;justify-content:space-between;margin-top:22px;padding-top:12px;border-top:1px solid #D5DCE5;font-size:12.5px;color:#5A6A7D}' +
+    '.bar{position:fixed;left:20px;top:20px}.bar button{font:inherit;font-weight:700;background:#E8B84B;color:#071F3E;border:0;border-radius:10px;padding:9px 16px;cursor:pointer}@media print{.bar{display:none}.pg{padding:0 6px}@page{margin:14mm 12mm}}';
+  const flt = hmFiltered() ? ' · ' + esc(fltLabel()) : '';
+  const html = '<!DOCTYPE html><html lang="he" dir="rtl"><head><meta charset="utf-8"><title>דוח ערים ' + dlab(R.b) + '</title><style>' + css + '</style></head><body>' +
+    '<div class="bar"><button onclick="print()">הדפסה / שמירה כ-PDF</button></div><div class="pg">' +
+    '<p class="kick">מטה הבחירות הארצי · אגף מערכות מידע</p>' +
+    '<div class="hd"><div><h1>דוח ערים</h1><p>מ-' + dlab(R.a) + ' עד ' + dlab(R.b) + (R.c ? ' · השוואה: ' + rlab(R.c[0], R.c[1]) : '') + flt + ' · הופק ב-' + dlab(Date.now()) + '</p></div>' +
+      '<div class="hk"><b>' + nf(D.shown.length) + '</b><span>ערים בדוח</span></div></div>' +
+    (D.shown.length ? D.shown.map(city).join('') : '<p style="padding:30px 0;color:#5A6A7D">אין ערים שמתאימות לסינון</p>') +
+    '<div class="tot">סה״כ ' + nf(T.sup) + ' תומכים · נוספו ' + nf(totNew) + ' בתקופה</div>' +
+    '<div class="ft"><span>מטה הבחירות הארצי · מסמך פנימי — לא להפצה מחוץ למטה</span><span>הופק ב-' + dlab(Date.now()) + '</span></div>' +
+    '</div></body></html>';
   w.document.open(); w.document.write(html); w.document.close();
 }
 
@@ -3990,7 +4497,7 @@ function srchDirty() { const b = $('#srchGo'); if (b) b.classList.toggle('sdirty
 function srchGo() {
   SR.af = clone(SR.f); delete SR.af.grp; SR.page = 0; SR.sel.clear(); srchSave(); srchDirty(); srchReveal();
 }
-/* ---- חיפוש: לפחות 2 שניות של „מחפשים…” (התוצאות מחושבות בינתיים), ואז התוצאות נחשפות והמסך גולל אליהן לבד ---- */
+/* ---- חיפוש: התוצאות מיד, והמסך גולל אליהן ---- */
 let SRV = 0;
 const SRCH_STEPS = [[700, 'מסננים לפי מה שבחרתם…'], [1400, 'מסדרים את התוצאות…']];
 function srchLoading() {
@@ -4001,17 +4508,11 @@ function srchLoading() {
     '<div class="slbar"><i></i></div>' +
     '<div class="slrows">' + [0, 1, 2, 3, 4, 5].map(i => '<div class="slr" style="animation-delay:' + (i * 80) + 'ms"><i></i><i></i><i></i><i></i><i></i></div>').join('') + '</div></div>';
 }
-async function srchReveal() {
-  const my = ++SRV, t0 = performance.now();
-  SR._anim = true; srchLoading();
-  SRCH_STEPS.forEach(([ms, t]) => setTimeout(() => { const m = SRV === my && $('#slMsg'); if (m) m.textContent = t; }, ms));
-  await new Promise(r => requestAnimationFrame(() => setTimeout(r, 30)));   /* קודם מציירים את האנימציה, ואז מחשבים */
-  if (!PPL_READY) await pplWait();
-  try { if (my === SRV && !srchResults()) { await srchWarm(); srchResults(); } } catch (e) { console.warn(e); }
-  const left = 2000 - (performance.now() - t0); if (left > 0) await wait(left);
+async function srchReveal() {   /* בלי אנימציה (החלטת דוד 18.11): מחשבים ומציגים מיד. רק אם המאגר עוד נטען — „מחפשים…” עד שהוא מוכן */
+  const my = ++SRV;
+  if (!PPL_READY) { SR._anim = true; srchLoading(); await pplWait(); SR._anim = false; }
   if (my !== SRV) return;
-  SR._anim = false;
-  renderResults({ reveal: true });
+  renderResults({});
   if (S.view === 'search') srchScroll();
 }
 /* גלילה רכה (מתחילה ונגמרת לאט). גלגלת / מגע של המשתמש — עוצרים */
@@ -4215,7 +4716,7 @@ function renderResults(o) {
         (nSel >= 2 && nSel <= 8 ? '<button class="btn sec sm" data-act="srMergeSel">מיזוג הנבחרים</button>' : '') +
         (nSel ? '<button class="btn sm" data-act="smsRes">סמס ל-' + nf(nSel) + ' נבחרים</button>' : '') +   /* אין „סמס לכולם” — שלא ישלחו בטעות לכל המאגר */
       '</div></div>' +
-    (res.length ? '<div class="srsum"><span>לפי סטטוס:</span>' + STATUSES.filter(t => sc[t]).map(t => '<button class="srstb" data-act="srchStat" data-v="' + esc(t) + '" title="להציג רק ' + esc(t) + '">' + stPill(t) + '<b class="num">' + nf(sc[t]) + '</b></button>').join('') + (dm ? '<span class="srdupn">' + nf(SR._dg ? SR._dg.size : 0) + ' קבוצות של כרטיסים כפולים</span><button class="btn sm srmga" data-act="srMergeAuto">מיזוג אוטומטי — אותה ת.ז</button>' : '') + '</div>' : '') +
+    (res.length ? '<div class="srsum"><div class="srsh"><span>לפי סטטוס</span><small>' + nf(res.length) + ' תוצאות · לחיצה על סטטוס מציגה רק אותו</small></div><div class="srsg">' + STATUSES.map(t => { const n = sc[t] || 0, pc = res.length ? n / res.length : 0; return '<button class="srstb st-' + (ST_CLS[t] || 'n') + '" data-act="srchStat" data-v="' + esc(t) + '"' + (n ? '' : ' disabled') + ' title="להציג רק ' + esc(t) + '">' + '<span class="srst1">' + stPill(t) + '<em>' + (Math.round(pc * 1000) / 10) + '%</em></span><b class="num">' + nf(n) + '</b><i class="srstbar"><i style="width:' + (pc * 100).toFixed(1) + '%"></i></i></button>'; }).join('') + '</div>' + (dm ? '<div class="srsdup"><span class="srdupn">' + nf(SR._dg ? SR._dg.size : 0) + ' קבוצות של כרטיסים כפולים</span><button class="btn sm srmga" data-act="srMergeAuto">מיזוג אוטומטי — אותה ת.ז</button></div>' : '') + '</div>' : '') +
     (res.length ? '<div class="tw"><table class="tbl srtbl"><thead><tr><th class="srck"><input type="checkbox" data-act="selPage"' + (allOn ? ' checked' : '') + ' aria-label="בחירת כל הדף"></th>' +
       '<th>שם פרטי</th><th>שם משפחה</th><th>טלפון</th><th>עיר/יישוב</th><th>סטטוס תמיכה</th><th></th></tr></thead><tbody>' +
       rows.map((p, i) => '<tr class="srrow' + (SR.sel.has(p.uid) ? ' sel' : '') + dupCls(p, SR.page * per + i) + '" data-act="openCard" data-v="' + p.uid + '" tabindex="0"' + (o.reveal ? ' style="animation-delay:' + (120 + Math.min(i, 14) * 45) + 'ms"' : '') + '>' +
@@ -4326,7 +4827,7 @@ function msFoot() {
   if (!MSO) return; const n = msVals(MSO.k).length;
   const ng = srNeg(MSO.k);
   $('.msct', MSO.el).textContent = n ? (ng ? 'נבחרו ' + nf(n) + ' — יוצגו כל השאר' : 'נבחרו ' + nf(n)) : 'לא נבחר — מציג את כולם';
-  $$('.msmode button', MSO.el).forEach(b => { const on = (b.dataset.ms === 'exc') === ng; b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on)); });
+  const nb = $('[data-ms="neg"]', MSO.el); if (nb) nb.checked = ng;
   $('[data-ms="clear"]', MSO.el).disabled = !n;
 }
 function msList() {
@@ -4357,7 +4858,7 @@ function msPlace() {
   if (!MSO) return;
   const { el, btn } = MSO;
   if (!btn.isConnected || S.view !== 'search') { msClose(); return; }
-  el.style.minWidth = '280px'; popPlace(el, btn);
+  popPlace(el, btn, 280);
 }
 function msClose() {
   if (!MSO) return;
@@ -4381,7 +4882,7 @@ function msOpen(btn) {
   el.className = 'mspop'; el.tabIndex = -1; el.setAttribute('role', 'dialog');
   el.setAttribute('aria-label', (document.getElementById('sfl_' + k) || {}).textContent || '');
   el.innerHTML = (d.find ? '<div class="msq">' + MS_IC.q + '<input type="search" placeholder="הקלדה לחיפוש…" aria-label="חיפוש ברשימה" autocomplete="off" spellcheck="false"></div>' : '') +
-    '<div class="msmode" role="group" aria-label="סוג הסינון"><button type="button" data-ms="inc">רק אלה</button><button type="button" data-ms="exc">כולם חוץ מאלה</button></div>' +
+    (MS_NEG.includes(k) || srNeg(k) ? '<label class="msneg"><input type="checkbox" data-ms="neg"' + (srNeg(k) ? ' checked' : '') + '><span>להציג את כולם <b>חוץ</b> ממה שסימנתי</span></label>' : '') +
     (hint ? '<div class="mshint">' + esc(hint) + '</div>' : '') +
     '<div class="msl" role="listbox" aria-multiselectable="true"></div>' +
     '<div class="msf"><span class="msct"></span><button type="button" class="link sm" data-ms="clear">ניקוי</button><button type="button" class="btn sm" data-ms="done">סיום</button></div>';
@@ -4398,11 +4899,11 @@ function msOpen(btn) {
       else msToggle(it);
       return;
     }
-    const a = e.target.closest('[data-ms]'); if (!a) return;
+    const a = e.target.closest('[data-ms]'); if (!a || a.dataset.ms === 'neg' || e.target.closest('.msneg')) return;
     if (a.dataset.ms === 'clear') { msSet(MSO.k, []); msList(); }
-    else if (a.dataset.ms === 'inc' || a.dataset.ms === 'exc') { srNegSet(MSO.k, a.dataset.ms === 'exc'); msSet(MSO.k, msVals(MSO.k)); msFoot(); }
     else msCloseFocus();
   });
+  el.addEventListener('change', e => { if (e.target.dataset.ms !== 'neg' || !MSO) return; srNegSet(MSO.k, e.target.checked); msSet(MSO.k, msVals(MSO.k)); msFoot(); });
   el.addEventListener('keydown', e => {
     const items = $$('.msi', el), i = items.indexOf(document.activeElement);
     if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); msCloseFocus(); return; }
@@ -4432,8 +4933,8 @@ function msSync() {
 /* ======================================================= רשימה נפתחת (בחירה אחת) — באותו עיצוב של הבחירה המרובה.
    ה-<select> המקורי נשאר (מוסתר) ומחזיק את הערך, כך שכל מה שמאזין לו ממשיך לעבוד כרגיל. */
 let CSO = null;   /* { sel, b, el, opts } */
-function popPlace(el, btn) {
-  const r = btn.getBoundingClientRect(), W = window.innerWidth, H = window.innerHeight, w = Math.min(Math.max(r.width, 220), W - 16);
+function popPlace(el, btn, minW) {   /* הרוחב בפועל (כולל המינימום) — כדי שהחלונית לא תצא מהמסך */
+  const r = btn.getBoundingClientRect(), W = window.innerWidth, H = window.innerHeight, w = Math.min(Math.max(r.width, minW || 220), W - 16);
   el.style.width = w + 'px';
   el.style.right = Math.max(8, Math.min(W - r.right, W - w - 8)) + 'px';
   const h = el.offsetHeight, below = H - r.bottom - 10, up = below < h && r.top - 10 > below;
@@ -4515,6 +5016,8 @@ document.addEventListener('keydown', e => { const b = e.target.closest && e.targ
 /* ======================================================= כפילויות, „חוץ מ”, חלוקה לאנשי קשר, תיעוד ייצוא */
 /* ---- „חוץ מ”: לכל בחירה מרובה אפשר להפוך — כולם חוץ ממה שנבחר. נשמר ב-SR.f.neg = ['status', 'tag', …] ---- */
 const srNeg = k => srArr(SR.f.neg).includes(k);
+/* „חוץ מ” מוצע רק איפה שזה שימושי (החלטת דוד 18.11): סטטוס, תגית, קבוצה שמורה. שדה אחר שכבר מסומן כך (קבוצה ישנה) — מציגים כדי שאפשר יהיה לבטל */
+const MS_NEG = ['status', 'tag', 'grps'];
 function srNegSet(k, on) { const a = srArr(SR.f.neg).filter(x => x !== k); if (on) a.push(k); if (a.length) SR.f.neg = a; else delete SR.f.neg; }
 /* ---- כפילויות: אנשים עם אותה ת.ז או אותו מספר נייד. מחושב פעם אחת לכל גרסה של הנתונים ---- */
 const SR_DUP = { dv: -1, m: {} };
@@ -4578,7 +5081,7 @@ async function srMergeAuto() {
   const keeps = [], gone = []; let evCh = false;
   for (const ps of sets) {
     const keep = ps.slice().sort((a, b) => srFilled(b) - srFilled(a) || (b.updated || 0) - (a.updated || 0))[0], rest = ps.filter(p => p !== keep);
-    if (srMergeInto(keep, rest)) evCh = true;
+    pTouch(keep); if (srMergeInto(keep, rest)) evCh = true;
     keeps.push(keep); rest.forEach(p => gone.push(p));
   }
   const goneSet = new Set(gone.map(p => p.uid));
@@ -4611,7 +5114,7 @@ async function srMerge(uids) {
     box => box.addEventListener('change', e => { if (e.target.name === 'mgk') pick = e.target.value; }));
   if (!r) return;
   const keep = S.by.get(pick), rest = ps.filter(p => p.uid !== pick); if (!keep || !rest.length) return;
-  const evCh = srMergeInto(keep, rest);
+  pTouch(keep); const evCh = srMergeInto(keep, rest);
   const gone = rest.map(p => p.uid), goneSet = new Set(gone);
   rest.forEach(unindex); S.people = S.people.filter(p => !goneSet.has(p.uid)); gone.forEach(u => SR.sel.delete(u));
   reindex([keep]);
@@ -4683,7 +5186,7 @@ async function srDist() {
     for (const p of g) {
       const cur = ownersOf(p);
       const nv = mode === 'add' ? (cur.includes(n) ? cur : cur.concat(n)).join(', ') : n;
-      if (nv !== (p.owner || '')) { p.owner = nv; plog(p, 'שויך/ה לאיש קשר אחראי: ' + n + ' (חלוקה)'); p.updated = Date.now(); ch.push(p); }
+      if (nv !== (p.owner || '')) { pTouch(p); p.owner = nv; plog(p, 'שויך/ה לאיש קשר אחראי: ' + n + ' (חלוקה)'); p.updated = Date.now(); ch.push(p); }
       out.get(n).push(p);
     }
     acc += g.length;
@@ -4711,8 +5214,8 @@ async function srchFixGender() {
   const gf = ownField('gender'), ok = x => x === 'זכר' || x === 'נקבה', ch = [], L = S.people;
   for (let i = 0; i < L.length; i++) {
     const p = L[i];
-    if (p.gender) { const g = gNorm(p.gender); if (ok(g) && g !== p.gender) { p.gender = g; ch.push(p); } }
-    else if (gf && p.dyn && typeof p.dyn[gf.id] === 'string' && p.dyn[gf.id]) { const v = p.dyn[gf.id], g = gNorm(v); if (ok(g) && g !== v) { p.dyn[gf.id] = g; ch.push(p); } }
+    if (p.gender) { const g = gNorm(p.gender); if (ok(g) && g !== p.gender) { pTouch(p); p.gender = g; ch.push(p); } }
+    else if (gf && p.dyn && typeof p.dyn[gf.id] === 'string' && p.dyn[gf.id]) { const v = p.dyn[gf.id], g = gNorm(v); if (ok(g) && g !== v) { pTouch(p); p.dyn[gf.id] = g; ch.push(p); } }
     if ((i & 32767) === 32767) await yieldNow();
   }
   if (gf && isAdmin() && Array.isArray(gf.options) && gf.options.length && gf.options.every(o => ok(gNorm(o))) && gf.options.join('|') !== 'זכר|נקבה') { gf.options = ['זכר', 'נקבה']; await saveKV('fields'); }
@@ -4787,9 +5290,10 @@ Object.assign(ACT, {
     if (a === 'status' && !STATUSES.includes(v)) return;
     if (!(await ask('לבצע את הפעולה?', BK[a][0] + ': „' + esc(v) + '” — אצל ' + nf(n) + ' אנשים.' + (a === 'status' ? ' השינוי נרשם בהיסטוריה של כל אחד.' : ''), 'ביצוע'))) return;
     let db = null;
-    if (a === 'db') { db = S.dbs.find(d => d.name === v); if (!db) { db = { id: 'db' + uid(), name: v }; S.dbs.push(db); await saveKV('dbs'); } }
+    if (a === 'db') { db = S.dbs.find(d => d.name === v); if (!db && isCityUser()) { toast('רק המטה המרכזי יכול ליצור מאגר חדש'); return; } if (!db) { db = { id: 'db' + uid(), name: v }; S.dbs.push(db); await saveKV('dbs'); } }
     const list = Array.from(SR.sel).map(u => S.by.get(u)).filter(Boolean), ch = [];
     list.forEach(p => {
+      pTouch(p);   /* שומרים רק את השינוי — בלי לדרוס עבודה של אחרים */
       let did = false;
       if (a === 'status') { if (stOf(p) !== v) { plog(p, 'סטטוס שונה בפעולה קבוצתית: ' + stOf(p) + ' ← ' + v); stLog(p, stOf(p), v, 'פעולה קבוצתית'); p.status = v; did = true; } }
       if (a === 'tag') { p.tags = p.tags || []; if (!p.tags.includes(v)) { p.tags.push(v); plog(p, 'נוספה תגית: ' + v); did = true; } }
@@ -6034,8 +6538,17 @@ function upSplitFull(s) {
   return U.fullLF ? [parts.slice(1).join(' '), parts[0]] : [parts.slice(0, -1).join(' '), parts[parts.length - 1]];
 }
 function findExisting(rec) {
-  if (U.idBy === 'tz') { if (rec.tz) return S.byTz.get(rec.tz) || null; const ph = upRecPhone(rec); return ph ? S.byPhone.get(ph) || null : null; }
-  if (U.idBy === 'phone') { const ph = upRecPhone(rec); if (ph) return S.byPhone.get(ph) || null; const tz = rec.tz || rec._idtz; return tz ? S.byTz.get(tz) || null : null; }
+  /* מזהים לפי מה שנבחר; לא נמצא — מנסים את המזהה השני, כדי לא לפתוח כרטיס כפול:
+     ת.ז שלא במאגר + טלפון של אדם שאין לו ת.ז → אותו אדם (משלימים לו ת.ז). טלפון שלא במאגר + ת.ז קיימת → אותו אדם (ת.ז ייחודית) */
+  if (U.idBy === 'tz') {
+    if (rec.tz && S.byTz.has(rec.tz)) return S.byTz.get(rec.tz);
+    const ph = upRecPhone(rec), o = ph ? S.byPhone.get(ph) : null;
+    return o && (!rec.tz || !o.tz) ? o : null;
+  }
+  if (U.idBy === 'phone') {
+    const ph = upRecPhone(rec); if (ph && S.byPhone.has(ph)) return S.byPhone.get(ph);
+    const tz = rec.tz || rec._idtz; return tz ? S.byTz.get(tz) || null : null;
+  }
   if (rec.tz && S.byTz.has(rec.tz)) return S.byTz.get(rec.tz);
   const ph = rec.phone || (rec.phones || [])[0];
   if (ph && S.byPhone.has(ph)) { const o = S.byPhone.get(ph); if (!rec.tz || !o.tz) return o; }
@@ -6162,7 +6675,7 @@ async function runUpload() {
   if (!PPL_READY) { loadBar(0, 0, 'מסיים לטעון את המאגר…'); await pplWait(); loadBar(); }
   if (CLOUD) {
     const keepF = S.fields.slice();   /* פרטים דינמיים שהקובץ יצר עכשיו (מין, מייל…) — הרענון מהשרת לא מכיר אותם עדיין, ובלי זה הערכים שלהם הולכים לאיבוד */
-    loadBar(0, 0, 'בודק עדכונים במאגר…'); const ok = await syncCloud(); loadBar();
+    loadBar(0, 0, 'בודק עדכונים במאגר…'); const ok = await syncCloud(false, true); loadBar();   /* גם מחיקות של אחרים — שאנשים שנמחקו לא יחזרו */
     if (!ok) { toast('לא הצלחתי לבדוק את המאגר — ההעלאה לא בוצעה. נסו שוב.'); return; }
     keepF.forEach(f => { if (!S.fields.some(x => x.id === f.id)) S.fields.push(f); });
     /* אם במאגר השתנה משהו מאז — מחשבים מחדש את התצוגה (בחלקים) */
@@ -6589,7 +7102,7 @@ Object.assign(ACT, {
     const f = fieldById(el.dataset.v); if (!f) return;
     if (!(await ask('מחיקת פרט', 'למחוק את „' + esc(f.name) + '”? הערכים שלו יימחקו מכל הכרטיסים.', 'מחיקה', true))) return;
     S.fields = S.fields.filter(x => x !== f);
-    const ch = S.people.filter(p => p.dyn && f.id in p.dyn); ch.forEach(p => { delete p.dyn[f.id]; });
+    const ch = S.people.filter(p => p.dyn && f.id in p.dyn); ch.forEach(p => { pTouch(p); delete p.dyn[f.id]; });
     await putPeople(ch); await saveKV('fields'); activity('נמחק פרט דינמי "' + f.name + '"'); RENDER.fields();
   },
   fldFind: el => go('search', { filter: { dyn: el.dataset.v } }),
@@ -6599,7 +7112,7 @@ Object.assign(ACT, {
     if (!can('admin')) return toast(NOPERM.admin);
     const d = S.dbs.find(x => x.id === el.dataset.v); if (!d) return;
     if (!(await ask('מחיקת מאגר', 'למחוק את המאגר „' + esc(d.name) + '”? האנשים עצמם יישארו במערכת, רק השיוך למאגר יוסר.', 'מחיקה', true))) return;
-    S.dbs = S.dbs.filter(x => x !== d); const ch = S.people.filter(p => (p.dbs || []).includes(d.id)); ch.forEach(p => { p.dbs = p.dbs.filter(x => x !== d.id); });
+    S.dbs = S.dbs.filter(x => x !== d); const ch = S.people.filter(p => (p.dbs || []).includes(d.id)); ch.forEach(p => { pTouch(p); p.dbs = p.dbs.filter(x => x !== d.id); });
     await putPeople(ch); await saveKV('dbs'); RENDER.fields();
   }
 });
@@ -6788,7 +7301,7 @@ RENDER.sms = function (o) {
       '<div class="card" id="smsMsg"><div class="ch"><span>תוכן ההודעה</span><span class="smbal" id="smsBal"></span></div><div class="cb">' +
         '<div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr));margin-bottom:12px"><div><label class="fl" for="sm_name">שם המשלוח (לשימוש פנימי)</label><input id="sm_name" type="text" data-sm="name" value="' + esc(M.name) + '" placeholder="למשל: תזכורת חוג בית"></div>' +
         '<div><label class="fl" for="sm_sender">שם השולח</label><input id="sm_sender" type="text" data-sm="sender" maxlength="11" value="' + esc(M.sender) + '" style="direction:ltr;text-align:right"></div></div>' +
-        '<label class="fl" for="smsText">ההודעה</label><textarea id="smsText" data-sm="text" rows="5" placeholder="כותבים כאן. אפשר להוסיף שדות אישיים מהכפתורים למטה.">' + esc(M.text) + '</textarea>' +
+        '<div class="smtxh"><label class="fl" for="smsText">ההודעה</label><button type="button" class="smsave" data-act="smsSaveTpl" title="שמירת ההודעה כתבנית לשימוש חוזר">' + TPI.save + 'שמירה כתבנית</button></div><textarea id="smsText" data-sm="text" rows="5" placeholder="כותבים כאן. אפשר להוסיף שדות אישיים מהכפתורים למטה.">' + esc(M.text) + '</textarea>' +
         '<div class="smopt' + (M.optLine ? '' : ' off') + '"><label><input type="checkbox" id="smOptLine"' + (M.optLine ? ' checked' : '') + '><span>שורת הסרה מדיוור בסוף ההודעה</span></label>' + (isAdmin() ? '<button type="button" class="smopt-ed" data-act="smsOptEdit">עריכת הנוסח</button>' : '') + '<div class="smopt-t" id="smOptTxt">' + esc(smsOptText()) + '</div>' +
           (M.optLine ? '' : '<div class="smopt-w">בלי שורת הסרה — מומלץ להשאיר אותה בכל הודעת דיוור</div>') + '<div id="smOptSt">' + smsOptStatusHtml() + '</div></div>' +
         '<div class="smcnt" id="smsCount"></div>' +
@@ -6800,15 +7313,13 @@ RENDER.sms = function (o) {
       '<div class="card"><div class="ch">מתי לשלוח?</div><div class="cb"><div class="row">' +
         '<label class="opt"><input type="radio" name="smwhen" data-sm="when" value="now"' + (M.when === 'now' ? ' checked' : '') + '>עכשיו</label><label class="opt"><input type="radio" name="smwhen" data-sm="when" value="later"' + (M.when === 'later' ? ' checked' : '') + '>בתזמון</label>' +
         '<input type="date" data-sm="date" value="' + esc(M.date) + '" style="width:auto"' + (M.when === 'later' ? '' : ' disabled') + ' aria-label="תאריך"><input type="time" data-sm="time" value="' + esc(M.time) + '" style="width:auto"' + (M.when === 'later' ? '' : ' disabled') + ' aria-label="שעה"></div>' +
-        '<div class="row" style="margin-top:14px"><button class="btn" data-act="smsSend" id="smsSendBtn"></button><button class="btn sec" data-act="smsExport">הורדת קובץ לשליחה</button><button class="btn sec" data-act="smsSaveTpl">שמירה כתבנית</button></div></div></div>' +
+        '<div class="row" style="margin-top:14px"><button class="btn" data-act="smsSend" id="smsSendBtn"></button><button class="btn sec" data-act="smsExport">הורדת קובץ לשליחה</button></div></div></div>' +
     '</div><div class="c1">' +
-      '<div class="card" id="smsTpl"><div class="ch">תבניות<span class="sub">לחיצה טוענת את ההודעה</span></div><div class="cb">' +
-        (S.templates.map(t => '<div style="position:relative"><button class="tpl" data-act="smsLoadTpl" data-v="' + t.id + '"><b>' + esc(t.name) + '</b><span>' + esc(t.text) + '</span></button><button class="mini r" style="position:absolute;top:8px;inset-inline-end:8px" data-act="smsDelTpl" data-v="' + t.id + '" aria-label="מחיקת התבנית">×</button></div>').join('') || '<div class="mut sm">אין עדיין תבניות</div>') +
-      '</div></div>' +
+      '<div class="card" id="smsTpl"></div>' +
       '<div class="card"><div class="ch">תצוגה בטלפון<span class="sub" id="smsPrevWho"></span></div><div class="cb">' + smsPhoneHtml() + '</div></div>' +
     '</div></div>' +
     '<button class="smrep" data-act="smsToReport">' + svg('chart') + '<span><b>המשלוחים שנשלחו ומתוזמנים</b>נמצאים עכשיו במסך הדוחות — „דוח סמסים”</span><span class="ar">←</span></button>';
-  renderSmsRcp(); renderSmsLive(); renderSmsJobs();
+  renderSmsRcp(); renderSmsLive(); renderSmsJobs(); renderSmsTpl();
   smsEnsureOptField();
   if (CLOUD && ME) smsProvLoad().then(() => { if (smsAuto() && (!smsBal() || Date.now() - (smsBal().at || 0) > 5 * 60000)) smsBalRefresh(true); else if (S.view === 'sms') renderSmsLive(); });
 };
@@ -6902,6 +7413,103 @@ function exportJob(j) {
 
 
 /* ------------------------------------------------ יתרה וספק */
+/* ---------- תבניות: 4 בכל עמוד, חצים לעמוד הבא, עריכה / הוספה, וחלון „סידור” לשינוי הסדר ---------- */
+const TPL_PER = 4;
+let TPL_PAGE = 0;
+const TPI = {
+  plus: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>',
+  edit: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13.5 6.5 4 4"/></svg>',
+  del: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14M10 7V4h4v3M7 7l1 13h8l1-13"/></svg>',
+  prev: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>',
+  next: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg>',
+  up: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 15 6-6 6 6"/></svg>',
+  down: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>',
+  grip: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="6" r="1.2"/><circle cx="15" cy="6" r="1.2"/><circle cx="9" cy="12" r="1.2"/><circle cx="15" cy="12" r="1.2"/><circle cx="9" cy="18" r="1.2"/><circle cx="15" cy="18" r="1.2"/></svg>',
+  save: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h11l3 3v13H5z"/><path d="M8 4v5h7V4M8 20v-6h8v6"/></svg>'
+};
+function renderSmsTpl(flash) {
+  const el = $('#smsTpl'); if (!el) return;
+  const T = S.templates || [], pages = Math.max(1, Math.ceil(T.length / TPL_PER));
+  TPL_PAGE = Math.max(0, Math.min(TPL_PAGE, pages - 1));
+  const list = T.slice(TPL_PAGE * TPL_PER, TPL_PAGE * TPL_PER + TPL_PER);
+  el.innerHTML = '<div class="ch smtph"><span>תבניות<span class="sub">לחיצה טוענת את ההודעה</span></span><span class="smtpa">' +
+      '<button class="smtpi" data-act="smsTplAdd" title="תבנית חדשה" aria-label="תבנית חדשה">' + TPI.plus + '</button>' +
+      (T.length > 1 ? '<button class="smtpi" data-act="smsTplSet" title="סידור ועריכת התבניות" aria-label="סידור ועריכת התבניות">' + SMI.cog + '</button>' : '') + '</span></div>' +
+    '<div class="cb">' + (list.length
+      ? '<div class="smtpl">' + list.map((t, i) => '<div class="smtpw' + (flash === t.id ? ' flash' : '') + '" style="animation-delay:' + (i * 50) + 'ms"><button class="tpl" data-act="smsLoadTpl" data-v="' + t.id + '"><b>' + esc(t.name) + '</b><span>' + esc(t.text) + '</span></button>' +
+          '<span class="smtpx"><button class="smtpi sm" data-act="smsTplEdit" data-v="' + t.id + '" title="עריכה" aria-label="עריכת התבנית ' + esc(t.name) + '">' + TPI.edit + '</button>' +
+          '<button class="smtpi sm r" data-act="smsDelTpl" data-v="' + t.id + '" title="מחיקה" aria-label="מחיקת התבנית ' + esc(t.name) + '">' + TPI.del + '</button></span></div>').join('') + '</div>'
+      : '<div class="smtpe"><span class="mut sm">אין עדיין תבניות</span><button class="btn sec sm" data-act="smsTplAdd">תבנית חדשה</button></div>') +
+    (pages > 1 ? '<div class="smtpp"><button class="smtpi" data-act="smsTplPg" data-v="-1"' + (TPL_PAGE ? '' : ' disabled') + ' aria-label="העמוד הקודם">' + TPI.prev + '</button>' +
+      '<span class="smtpd" aria-label="עמוד ' + (TPL_PAGE + 1) + ' מתוך ' + pages + '">' + Array.from({ length: pages }, (_, i) => '<button type="button" class="' + (i === TPL_PAGE ? 'on' : '') + '" data-act="smsTplPg" data-p="' + i + '" aria-label="עמוד ' + (i + 1) + '"></button>').join('') + '</span>' +
+      '<button class="smtpi" data-act="smsTplPg" data-v="1"' + (TPL_PAGE < pages - 1 ? '' : ' disabled') + ' aria-label="העמוד הבא">' + TPI.next + '</button></div>' : '') +
+    '</div>';
+}
+/* חלון עריכה / תבנית חדשה */
+async function smsTplForm(t, text) {
+  const r = await modal(t ? 'עריכת תבנית' : 'תבנית חדשה',
+    '<label class="fl" for="tp_n">שם התבנית</label><input id="tp_n" type="text" data-mv="n" maxlength="60" value="' + esc(t ? t.name : (M.name || '')) + '" placeholder="למשל: תזכורת חוג בית">' +
+    '<label class="fl" for="tp_t" style="margin-top:12px">ההודעה</label><textarea id="tp_t" data-mv="t" rows="6" placeholder="הטקסט של התבנית. אפשר להשתמש בשדות אישיים כמו בהודעה.">' + esc(t ? t.text : (text || '')) + '</textarea>',
+    [{ lb: 'שמירה', v: true, def: true }, { lb: 'ביטול', cls: 'sec' }],
+    box => setTimeout(() => { const n = $('#tp_n', box); if (n) { n.focus(); n.select(); } }, 30));
+  if (!r) return null;
+  const n = String(r.vals.n || '').trim(), x = String(r.vals.t || '').replace(/\s+$/, '');
+  if (!n || !x.trim()) { toast('צריך שם וגם טקסט לתבנית'); return null; }
+  return { n, x };
+}
+async function smsTplAddNew(text) {
+  const f = await smsTplForm(null, text); if (!f) return;
+  const t = { id: uid(), name: f.n, text: f.x };
+  S.templates.push(t); await saveKV('templates');
+  TPL_PAGE = Math.ceil(S.templates.length / TPL_PER) - 1;
+  renderSmsTpl(t.id); toast('התבנית „' + f.n + '” נשמרה' + (TPL_PAGE ? ' — בעמוד ' + (TPL_PAGE + 1) : ''));
+}
+/* חלון „סידור”: גרירה או חצים לשינוי הסדר, עריכה ומחיקה בתוך החלון. נשמר רק בלחיצה על „שמירה” */
+async function smsTplSettings() {
+  let L = S.templates.map(t => Object.assign({}, t)), ed = -1, drag = -1;
+  const row = (t, i) => (i % TPL_PER === 0 ? '<div class="tpsp">עמוד ' + (i / TPL_PER + 1) + '</div>' : '') + (i === ed
+    ? '<div class="tpsr ed"><div class="tpse"><input type="text" data-tpf="name" data-i="' + i + '" maxlength="60" value="' + esc(t.name) + '" placeholder="שם התבנית" aria-label="שם התבנית">' +
+      '<textarea data-tpf="text" data-i="' + i + '" rows="4" placeholder="הטקסט של התבנית" aria-label="הטקסט של התבנית">' + esc(t.text) + '</textarea>' +
+      '<div class="row"><button type="button" class="btn sm" data-tp="ok" data-i="' + i + '">סיום עריכה</button></div></div></div>'
+    : '<div class="tpsr" draggable="true" data-i="' + i + '"><span class="tpsg" title="גרירה לשינוי המקום">' + TPI.grip + '</span><span class="tpsn"><b>' + (esc(t.name) || '<span class="mut">בלי שם</span>') + '</b><span>' + esc(t.text) + '</span></span>' +
+      '<span class="tpsb"><button type="button" class="smtpi sm" data-tp="up" data-i="' + i + '"' + (i ? '' : ' disabled') + ' aria-label="מקום אחד למעלה">' + TPI.up + '</button>' +
+      '<button type="button" class="smtpi sm" data-tp="down" data-i="' + i + '"' + (i < L.length - 1 ? '' : ' disabled') + ' aria-label="מקום אחד למטה">' + TPI.down + '</button>' +
+      '<button type="button" class="smtpi sm" data-tp="edit" data-i="' + i + '" aria-label="עריכה">' + TPI.edit + '</button>' +
+      '<button type="button" class="smtpi sm r" data-tp="del" data-i="' + i + '" aria-label="מחיקה">' + TPI.del + '</button></span></div>');
+  const draw = box => {
+    $('#tps', box).innerHTML = L.length ? L.map(row).join('') : '<div class="mut sm">אין תבניות</div>';
+    if (ed >= 0) { const n = $('[data-tpf="name"]', box); if (n) n.focus(); }
+  };
+  const r = await modal('סידור התבניות',
+    '<div class="sm mut" style="margin-bottom:10px">גוררים שורה (או לוחצים על החצים) כדי לקבוע את הסדר. 4 הראשונות מופיעות בעמוד הראשון, 4 הבאות בעמוד השני וכן הלאה.</div>' +
+    '<div id="tps" class="tps"></div><button type="button" class="btn sec sm" data-tp="add" style="margin-top:12px">+ תבנית חדשה</button>',
+    [{ lb: 'שמירה', v: true, def: true }, { lb: 'ביטול', cls: 'sec' }],
+    box => {
+      draw(box);
+      box.addEventListener('click', e => {
+        const b = e.target.closest('[data-tp]'); if (!b || b.disabled) return;
+        const i = +b.dataset.i, a = b.dataset.tp;
+        if (a === 'up' && i > 0) { [L[i - 1], L[i]] = [L[i], L[i - 1]]; }
+        else if (a === 'down' && i < L.length - 1) { [L[i + 1], L[i]] = [L[i], L[i + 1]]; }
+        else if (a === 'del') { L.splice(i, 1); if (ed === i) ed = -1; else if (ed > i) ed--; }
+        else if (a === 'edit') ed = i;
+        else if (a === 'ok') { if (!L[i].name.trim() && !L[i].text.trim()) L.splice(i, 1); ed = -1; }
+        else if (a === 'add') { L.push({ id: uid(), name: '', text: '' }); ed = L.length - 1; }
+        draw(box);
+        if (a === 'add') { const w = $('#tps', box); w.scrollTop = w.scrollHeight; }
+      });
+      box.addEventListener('input', e => { const f = e.target.dataset.tpf; if (f) L[+e.target.dataset.i][f] = e.target.value; });
+      box.addEventListener('dragstart', e => { const r0 = e.target.closest && e.target.closest('.tpsr[draggable="true"]'); if (!r0) return; drag = +r0.dataset.i; r0.classList.add('drag'); e.dataTransfer.effectAllowed = 'move'; try { e.dataTransfer.setData('text/plain', String(drag)); } catch (x) { /* */ } });
+      box.addEventListener('dragover', e => { const r0 = e.target.closest && e.target.closest('.tpsr'); if (drag < 0 || !r0) return; e.preventDefault(); $$('.tpsr.over', box).forEach(x => x !== r0 && x.classList.remove('over')); r0.classList.add('over'); });
+      box.addEventListener('dragleave', e => { const r0 = e.target.closest && e.target.closest('.tpsr'); if (r0 && !r0.contains(e.relatedTarget)) r0.classList.remove('over'); });
+      box.addEventListener('drop', e => { const r0 = e.target.closest && e.target.closest('.tpsr'); if (drag < 0 || !r0) return; e.preventDefault(); const to = +r0.dataset.i; if (to !== drag && !isNaN(to)) { const [t] = L.splice(drag, 1); L.splice(to, 0, t); if (ed === drag) ed = to; } drag = -1; draw(box); });
+      box.addEventListener('dragend', () => { drag = -1; $$('.tpsr.drag, .tpsr.over', box).forEach(x => x.classList.remove('drag', 'over')); });
+    });
+  if (!r) return;
+  const out = L.filter(t => String(t.text || '').trim()).map(t => Object.assign(t, { name: String(t.name || '').trim() || 'תבנית בלי שם' }));
+  S.templates = out; await saveKV('templates');
+  renderSmsTpl(); toast('סדר התבניות נשמר');
+}
 const SMI = {
   bal: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v10H8l-4 4z"/><path d="M8 10h8M8 13h5"/></svg>',
   ref: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14.3-4.6L4 8M4 4v4h4M4 13a8 8 0 0 0 14.3 4.6L20 16M20 20v-4h-4"/></svg>',
@@ -6974,8 +7582,12 @@ Object.assign(ACT, {
   smsSrc: el => { M.src = el.dataset.v; renderSmsRcp(); renderSmsLive(); },
   smsTag: el => { const t = $('#smsText'); const ins = '[' + el.dataset.v + ']'; const a = t.selectionStart || t.value.length, b = t.selectionEnd || t.value.length; t.value = t.value.slice(0, a) + ins + t.value.slice(b); M.text = t.value; t.focus(); t.selectionStart = t.selectionEnd = a + ins.length; renderSmsLive(); },
   smsLoadTpl: el => { const t = S.templates.find(x => x.id === el.dataset.v); if (!t) return; M.text = t.text; if (!M.name) M.name = t.name; $('#smsText').value = M.text; $('#sm_name').value = M.name; renderSmsLive(); },
-  smsDelTpl: async el => { const t = S.templates.find(x => x.id === el.dataset.v); if (!t || !(await ask('מחיקת תבנית', 'למחוק את התבנית „' + esc(t.name) + '”?', 'מחיקה', true))) return; S.templates = S.templates.filter(x => x !== t); await saveKV('templates'); RENDER.sms({}); },
-  smsSaveTpl: async () => { if (!M.text.trim()) { toast('אין עדיין הודעה לשמור'); return; } const n = await promptM('שמירה כתבנית', 'שם התבנית', M.name || ''); if (!n) return; S.templates.unshift({ id: uid(), name: n, text: M.text }); await saveKV('templates'); RENDER.sms({}); toast('התבנית נשמרה'); },
+  smsDelTpl: async el => { const t = S.templates.find(x => x.id === el.dataset.v); if (!t || !(await ask('מחיקת תבנית', 'למחוק את התבנית „' + esc(t.name) + '”?', 'מחיקה', true))) return; S.templates = S.templates.filter(x => x !== t); await saveKV('templates'); renderSmsTpl(); },
+  smsSaveTpl: () => { if (!M.text.trim()) { toast('אין עדיין הודעה לשמור'); return; } smsTplAddNew(M.text); },
+  smsTplAdd: () => smsTplAddNew(''),
+  smsTplEdit: async el => { const t = S.templates.find(x => x.id === el.dataset.v); if (!t) return; const f = await smsTplForm(t); if (!f) return; t.name = f.n; t.text = f.x; await saveKV('templates'); renderSmsTpl(t.id); toast('התבנית עודכנה'); },
+  smsTplSet: () => smsTplSettings(),
+  smsTplPg: el => { if (el.dataset.p != null) TPL_PAGE = +el.dataset.p; else TPL_PAGE += +el.dataset.v; renderSmsTpl(); },
   smsClrPersons: () => { M.persons = []; renderSmsRcp(); renderSmsLive(); },
   smsBalEdit: async () => {
     const b = smsBal();
@@ -7045,7 +7657,7 @@ Object.assign(ACT, {
     S.sms.unshift(j);
     if (smsLive()) { j.status = 'שולח…'; renderSmsJobs(); toast('שולח דרך פולסים…'); await smsDeliver(j, later); }
     else await smsBalUse(sp.parts * R.list.length);
-    const ps = R.list.map(x => x.p).filter(Boolean); ps.forEach(p => plog(p, (later ? 'תוזמן סמס: "' : 'סמס: "') + j.name + '"'));
+    const ps = R.list.map(x => x.p).filter(Boolean); ps.forEach(p => { pTouch(p); plog(p, (later ? 'תוזמן סמס: "' : 'סמס: "') + j.name + '"'); });
     await putPeople(ps); await saveKV('sms');
     activity((later ? 'תוזמן' : 'נוצר') + ' משלוח סמס "' + j.name + '" ל-' + nf(R.list.length) + ' נמענים');
     renderTabs(); renderSmsJobs(); renderSmsLive();
@@ -7537,7 +8149,7 @@ function matchRow(ev, r, tag) {
   if (!ph && !tz) return null;
   const v = r.data || {}, t = Date.parse(r.created_at) || Date.now();
   let p = rowPerson(r);
-  const isNew = !p;
+  const isNew = !p; if (p) pTouch(p);   /* קיים במאגר — נשמר רק השינוי */
   const cx = evExtra(ev).find(x => x.fid === EV_CITY), regCity = cx ? evCanonCity(v[cx.k]) : '';
   if (isNew) {
     p = newPersonObj(); p.created = t;
@@ -8567,7 +9179,7 @@ function authScreen(html) {
   b.classList.remove('swap'); void b.offsetWidth; b.classList.add('swap');
   const f = $('#authBox input'); if (f) setTimeout(() => f.focus(), 120);
 }
-const authHead = () => '<div class="abrand"><div class="alogo">' + AI.logo + '</div><div class="abt"><h1>' + BRAND + '</h1><p>מאגר התומכים של מטה הבחירות</p></div></div>';
+const authHead = () => '<div class="abrand"><div class="alogo">' + AI.logo + '</div><div class="abt"><h1>' + BRAND + '</h1></div></div>';
 const authBack = (act, lb) => '<button class="aback" data-act="' + act + '">' + AI.back + '<span>' + lb + '</span></button>';
 function authErr(msg) {
   let n = $('#authBox .aerr');
@@ -8630,8 +9242,7 @@ function showLogin(msg) {
       '<button class="gbtn" data-act="authGoogle"' + (pick ? '' : ' tabindex="-1"') + '>' + AI.google + '<span>התחברות עם Google</span></button>' +
       '<div class="aor"><span>או</span></div>' +
       '<button class="sbtn" data-act="authSms"' + (pick ? '' : ' tabindex="-1"') + '>' + AI.phone + '<span>קבלת קוד סודי ב-SMS</span></button>' +
-    '</div></div>' +
-    '<p class="afoot">אין לך משתמש? משתמשים נפתחים ע״י מנהל/ת המערכת במטה המרכזי, אחרי חתימה על הסכם סודיות.</p>');
+    '</div></div>');
 }
 function showPhone() {
   authScreen(authBack('authHome', 'חזרה') + authHead() +
