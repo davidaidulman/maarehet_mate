@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
-<meta name="build" content="20261118-133238">
+<meta name="build" content="20261118-155617">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>דאטה ביתנו — מאגר התומכים</title>
 <style>
@@ -523,6 +523,45 @@ main.wrap:has(#v-search.on){max-width:1440px}
 .sempty .sei svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .sempty .sk{display:inline;font-size:inherit;color:var(--navy)}
 @media (prefers-reduced-motion:reduce){.sgob.sdirty{animation:none}}
+
+/* ---------- בחירה מרובה: הכפתור (נראה כמו שדה) ---------- */
+#srchPanel .ms{display:flex;align-items:center;gap:6px;width:100%;min-height:38px;padding:6px 11px;border:1.5px solid var(--line);border-radius:var(--r-input);
+  background:#fff;font:inherit;font-size:14px;color:var(--ink);cursor:pointer;text-align:start;transition:border-color .16s,box-shadow .16s}
+#srchPanel .ms:hover{border-color:var(--navy-l)}
+#srchPanel .ms:focus-visible,#srchPanel .ms.open{outline:none;border-color:var(--navy-l);box-shadow:0 0 0 3px rgba(27,75,138,.13)}
+.ms .msv{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ms .msv.ph{color:var(--ink3)}
+.ms .msn{flex:none;display:inline-grid;place-items:center;min-width:20px;height:20px;padding:0 6px;border-radius:999px;background:var(--gold);color:var(--navy);font-size:11.5px;font-weight:900}
+.ms .msc{flex:none;width:16px;height:16px;fill:none;stroke:var(--ink3);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform .2s var(--ease)}
+.ms.open .msc{transform:rotate(180deg);stroke:var(--navy)}
+
+/* ---------- בחירה מרובה: החלונית ---------- */
+.mspop{position:fixed;z-index:50;display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line2);border-radius:14px;overflow:hidden;
+  box-shadow:0 26px 60px -20px rgba(7,31,62,.45),0 2px 6px rgba(11,46,91,.06);animation:msIn .18s var(--ease) both;outline:none}
+.mspop.up{animation-name:msInUp}
+@keyframes msIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+@keyframes msInUp{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.msq{position:relative;padding:10px 10px 8px;border-bottom:1px solid var(--line3)}
+.msq svg{position:absolute;inset-inline-start:21px;top:50%;margin-top:-1px;transform:translateY(-50%);width:16px;height:16px;fill:none;stroke:var(--ink3);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
+.msq input[type=search]{min-height:36px;padding:6px 12px;padding-inline-start:34px;border-radius:9px;font-size:14px}
+.mshint{padding:8px 14px 0;font-size:12px;line-height:1.5;color:var(--ink3)}
+.msl{max-height:290px;overflow-y:auto;padding:6px;display:flex;flex-direction:column;gap:1px}
+.msi{display:flex;align-items:center;gap:10px;width:100%;border:0;background:none;border-radius:9px;padding:8px 10px;font:inherit;font-size:14px;color:var(--ink);text-align:start;cursor:pointer;transition:background .12s}
+.msi:hover,.msi:focus-visible{background:var(--bbg);outline:none}
+.msi:active{transform:scale(.99)}
+.msil{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.msck{flex:none;width:18px;height:18px;display:grid;place-items:center;border:1.5px solid var(--line);border-radius:5px;background:#fff;transition:background .14s,border-color .14s}
+.msck svg{width:13px;height:13px;fill:none;stroke:#fff;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;opacity:0;transform:scale(.6);transition:opacity .14s,transform .16s var(--ease)}
+.msi.on{font-weight:700;color:var(--navy)}
+.msi.on .msck{background:var(--navy);border-color:var(--navy)}
+.msi.on .msck svg{opacity:1;transform:none}
+.msadd{font-weight:800;color:var(--navy)}
+.msadd .msck{border-style:dashed;border-color:var(--navy-l)}
+.msadd .msck svg{stroke:var(--navy);opacity:1;transform:none;stroke-width:2.4}
+.msmore{padding:10px;font-size:12.5px;color:var(--ink3);text-align:center}
+.msf{display:flex;align-items:center;gap:10px;padding:8px 10px;border-top:1px solid var(--line3);background:#FAFBFD}
+.msct{flex:1;font-size:12.5px;font-weight:700;color:var(--ink2)}
+.msf .link:disabled{opacity:.4;cursor:default}
 
 /* ---------- css/features/groups.css ---------- */
 /* ---------- קבוצות ---------- */
@@ -1347,6 +1386,11 @@ input.abig{min-height:54px;font-size:20px;letter-spacing:.04em;direction:ltr;tex
 @keyframes pop{50%{transform:scale(1.08)}}
 .aerr{border-radius:12px;padding:11px 14px;font-size:13.5px;line-height:1.6;background:var(--rbg);border:1px solid var(--rbd);color:var(--rtx);font-weight:600}
 .aerr.shake{animation:shake .42s ease}
+/* יציאה אוטומטית: הודעה במסך הכניסה + פס אזהרה 5 דקות לפני */
+.anote{border-radius:12px;padding:11px 14px;font-size:13.5px;line-height:1.6;background:var(--ybg);border:1px solid var(--ybd);color:var(--ytx);font-weight:600;animation:aUp .5s var(--ease) both}
+.idlebar{position:fixed;inset-inline:0;bottom:22px;margin:0 auto;width:max-content;max-width:min(720px,calc(100vw - 40px));z-index:90;display:flex;flex-direction:column;gap:3px;
+  padding:13px 20px;border-radius:var(--r-card);background:var(--dark);color:#C9DCF3;box-shadow:var(--sh-hover);font-size:13.5px;line-height:1.55;animation:aUp .5s var(--ease) both}
+.idlebar b{color:#F3D58B;font-size:15px}
 @keyframes shake{20%{transform:translateX(-7px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(2px)}}
 .spin{width:17px;height:17px;border-radius:50%;border:2.4px solid currentColor;border-top-color:transparent;animation:spin .8s linear infinite;display:inline-block;flex:none}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -6085,58 +6129,75 @@ function matchQ(p, q) {
   const nm = norm(fullName(p)), rv = norm((p.last || '') + ' ' + (p.first || ''));
   return nm.includes(t) || rv.includes(t);
 }
-function filterPeople(f, list) {
-  const kset = new Set(String(f.kalpis || '').split(/[\s,;]+/).map(kkey).filter(Boolean));
-  const kc = f.kcity ? ckey(f.kcity) : (kset.size && f.city ? ckey(f.city) : '');
+/* ---- ערכים מרובים: כל סינון יכול להיות ערך אחד (טקסט) או רשימה — קבוצות ישנות וקישורים מדף הבית / מהמפה ממשיכים לעבוד ---- */
+const srArr = v => Array.isArray(v) ? v.filter(x => x !== '' && x != null).map(String) : (v === '' || v == null || v === false) ? [] : [String(v)];
+const srKalpis = v => Array.isArray(v) ? v : String(v == null ? '' : v).split(/[\s,;]+/);
+/* מין: רק „זכר” / „נקבה” — ז / נ מהאקסלים נחשבים אותו דבר */
+const G_M = new Set(['ז', 'זכר', 'גבר', 'm', 'male']), G_F = new Set(['נ', 'נקבה', 'אישה', 'אשה', 'f', 'female']);
+const gNorm = v => { const t = norm(v).replace(/[.\s]/g, ''); return G_M.has(t) ? 'זכר' : G_F.has(t) ? 'נקבה' : String(v == null ? '' : v).trim(); };
+function dynHit(df, v, want) {
+  if (df.type === 'bool') return (want === 'כן') === (v === true);
+  if (df.type === 'multi') return (v || []).includes(want);
+  if (df.type === 'select') return v === want;
+  return norm(v).includes(norm(want));
+}
+/* בונה פעם אחת בדיקה לאדם אחד (p => true/false) — ואז רצים איתה על כל המאגר.
+   „קבוצה שמורה” (grps) = האדם נמצא לפחות באחת מהקבוצות שנבחרו (עד 3 רמות של קבוצה בתוך קבוצה) */
+function srchPred(f, depth) {
+  depth = depth || 0;
+  const kset = new Set(srKalpis(f.kalpis).map(kkey).filter(Boolean));
+  const cl = srArr(f.city), cset = cl.length ? new Set(cl.map(ckey)) : null;
+  const kc = f.kcity ? ckey(f.kcity) : '';
   const fd = f.dyn ? fieldById(f.dyn) : null;
   const dtz = digits(f.tz), dph = phKey(digits(f.phone)), dzip = digits(f.zip);
   const tFirst = norm(f.first), tLast = norm(f.last), tHouse = norm(f.house), tMail = norm(f.email);
-  const dyns = Object.keys(f).filter(k => k.startsWith('d_') && f[k] !== '' && f[k] != null).map(k => [fieldById(k.slice(2)), f[k]]).filter(x => x[0]);
-  return (list || S.people).filter(p => {
+  const st = srArr(f.status), stset = st.length ? new Set(st) : null;
+  const ll = srArr(f.lang), lset = ll.length ? new Set(ll) : null;
+  const tl = srArr(f.tag), tset = tl.length ? new Set(tl) : null;
+  const streets = srArr(f.street).map(norm).filter(Boolean);
+  const gw = f.gender ? gNorm(f.gender) : '';
+  const gids = srArr(f.grps);
+  const gpreds = depth < 3 ? gids.map(id => S.groups.find(g => g.id === id)).filter(Boolean).map(g => srchPred(Object.assign(defFilter(), g.filter || {}), depth + 1)) : [];
+  const dyns = Object.keys(f).filter(k => k.startsWith('d_') && srArr(f[k]).length).map(k => [fieldById(k.slice(2)), srArr(f[k])]).filter(x => x[0]);
+  return p => {
     if (f.q && !matchQ(p, f.q)) return false;
     if (dtz && !digits(p.tz).includes(dtz)) return false;
     if (tFirst && !norm(p.first).includes(tFirst)) return false;
     if (tLast && !norm(p.last).includes(tLast)) return false;
     if (dph && !allPhones(p).some(x => phKey(digits(x)).includes(dph))) return false;
-    if (f.city && ckey(p.city) !== ckey(f.city)) return false;
-    if (f.street && !norm(p.street).includes(norm(f.street))) return false;
+    if (cset && !cset.has(ckey(p.city))) return false;
+    if (streets.length) { const s = norm(p.street); if (!s || !streets.some(x => s.includes(x))) return false; }
     if (tHouse && norm(p.house) !== tHouse) return false;
     if (dzip && !zipOf(p).startsWith(dzip)) return false;
-    if (f.gender && norm(ownVal(p, 'gender')) !== norm(f.gender)) return false;
+    if (gw && gNorm(ownVal(p, 'gender')) !== gw) return false;
     if (tMail && !norm(ownVal(p, 'email')).includes(tMail)) return false;
     if (f.age !== '' && f.age != null) { if (ageOf(p) !== +f.age) return false; }
-    if (f.lang && p.lang !== f.lang) return false;
-    if (f.status && stOf(p) !== f.status) return false;
+    if (lset && !lset.has(p.lang)) return false;
+    if (stset && !stset.has(stOf(p))) return false;
     if (f.owner && !ownersOf(p).includes(f.owner)) return false;
     if (f.db && !(p.dbs || []).includes(f.db)) return false;
-    if (f.tag && !(p.tags || []).includes(f.tag)) return false;
+    if (tset && !(p.tags || []).some(t => tset.has(t))) return false;
     if (f.upl && p.lastUpload !== f.upl) return false;
     if (f.ageFrom || f.ageTo) { const a = ageOf(p); if (a == null) return false; if (f.ageFrom && a < +f.ageFrom) return false; if (f.ageTo && a > +f.ageTo) return false; }
     if (f.site !== '' && f.site != null) { if (!p._site || p._site.i !== +f.site) return false; }
-    if (kc && ckey(p.kcity || p.city) !== kc) return false;
+    if (kc) { if (ckey(p.kcity || p.city) !== kc) return false; }
+    else if (kset.size && cset && !cset.has(ckey(p.kcity || p.city))) return false;
     if (kset.size && !kset.has(kkey(p.kalpi))) return false;
     if (f.noKalpi && p._site) return false;
     if (fd) {
       const v = (p.dyn || {})[fd.id];
       if (f.dynVal === '' || f.dynVal == null) { if (v == null || v === '' || (Array.isArray(v) && !v.length) || v === false) return false; }
-      else if (fd.type === 'bool') { if ((f.dynVal === 'כן') !== (v === true)) return false; }
-      else if (fd.type === 'multi') { if (!(v || []).includes(f.dynVal)) return false; }
-      else if (fd.type === 'select') { if (v !== f.dynVal) return false; }
-      else if (!norm(v).includes(norm(f.dynVal))) return false;
+      else if (!dynHit(fd, v, f.dynVal)) return false;
     }
-    for (const [df, want] of dyns) {
-      const v = (p.dyn || {})[df.id];
-      if (df.type === 'bool') { if ((want === 'כן') !== (v === true)) return false; }
-      else if (df.type === 'multi') { if (!(v || []).includes(want)) return false; }
-      else if (df.type === 'select') { if (v !== want) return false; }
-      else if (!norm(v).includes(norm(want))) return false;
-    }
+    for (const [df, want] of dyns) { const v = (p.dyn || {})[df.id]; if (!want.some(w => dynHit(df, v, w))) return false; }
     if (f.hasPhone === 'yes' && !allPhones(p).length) return false;
     if (f.hasPhone === 'mobile' && !isMobile(p.phone) && !(p.phones || []).some(isMobile)) return false;
     if (f.hasPhone === 'none' && allPhones(p).length) return false;
+    if (gids.length && !gpreds.some(fn => fn(p))) return false;
     return true;
-  });
+  };
 }
+function filterPeople(f, list) { return (list || S.people).filter(srchPred(f)); }
 const HE_COLL = new Intl.Collator('he');
 const SORTS = { name: (a, b) => HE_COLL.compare(fullName(a), fullName(b)), city: (a, b) => HE_COLL.compare(a.city || '', b.city || '') || HE_COLL.compare(fullName(a), fullName(b)),
   status: (a, b) => STATUSES.indexOf(stOf(a)) - STATUSES.indexOf(stOf(b)), recent: (a, b) => (b.updated || b.created || 0) - (a.updated || a.created || 0) };
@@ -6180,7 +6241,7 @@ function srchWarm() {
 }
 function srchResults() {
   const how = SR.sort || 'name';
-  const key = DV + '|' + SR.sort + '|' + JSON.stringify(SR.af);
+  const key = DV + '|' + SR.sort + '|' + JSON.stringify(SR.af) + '|' + srArr(SR.af.grps).map(id => JSON.stringify((S.groups.find(g => g.id === id) || {}).filter || null)).join('|');
   if (SR._ck !== key || !SR._res) {
     if ((how === 'name' || how === 'city') && !(SORTED.dv === DV && SORTED[how]) && window.Worker) return null;   /* המיון עוד רץ ברקע */
     SR._res = filterPeople(SR.af, sortedAll(how)); SR._ck = key;
@@ -6204,13 +6265,6 @@ document.addEventListener('keydown', e => {
   if (e.key !== 'Enter' || !e.target.closest || !e.target.closest('#srchPanel') || e.isComposing) return;
   if (e.target.matches('input,select')) { e.preventDefault(); if (e.target.dataset.sf) SR.f[e.target.dataset.sf] = e.target.value; srchGo(); }
 });
-/* בחירת קבוצה שמורה → הסינון שלה נטען ומחפשים */
-document.addEventListener('change', e => {
-  if (e.target.id !== 'sf_grp') return;
-  const g = S.groups.find(x => x.id === e.target.value);
-  if (!g) { SR.f.grp = ''; srchDirty(); return; }
-  SR.f = Object.assign(defFilter(), clone(g.filter || {}), { grp: g.id }); renderSearchPanel(); srchGo();
-});
 RENDER.search = function (o) {
   /* חוזרים לחיפוש ושום דבר לא השתנה — המסך נשאר כמו שהוא (מיידי) */
   const pk = srchPK();
@@ -6222,14 +6276,14 @@ RENDER.search = function (o) {
   }
   if (!o.refresh || !$('#srchPanel')) renderSearchPanel();
   renderResults();
+  if (PPL_READY) srchFixGender(); else pplWait().then(srchFixGender);
 };
 /* אשכולות קלפי (מוקדי הצבעה) של העיר שנבחרה */
 function srchSites() {
-  const site = SR.f.site !== '' && SR.f.site != null ? SITES[+SR.f.site] : null;
-  const c = SR.f.city || (site && site.c) || '';
-  if (!c) return null;
-  const ck = ckey(c);
-  return SITES.filter(s => s.ck === ck).sort((a, b) => (a.n || a.s || '').localeCompare(b.n || b.s || '', 'he'));
+  const cs = srCityKeys();
+  if (!cs.length) return null;
+  const ks = new Set(cs);
+  return SITES.filter(s => ks.has(s.ck)).sort((a, b) => HE_COLL.compare(a.c, b.c) || (a.n || a.s || '').localeCompare(b.n || b.s || '', 'he'));
 }
 /* ---- רשימת הערים: כל היישובים מרשימת הקלפיות (זמינה מיד, בלי לחכות לטעינת האנשים),
    ואחרי שהמאגר נטען — גם יישובים נוספים שמופיעים אצל אנשים. מסודר לפי א׳–ב׳ ---- */
@@ -6248,10 +6302,8 @@ function srchRefreshOpts() {
   if (S.view !== 'search' || !$('#srchPanel')) { SR._pk = ''; return; }
   const fill = (id, arr, all) => { const el = $('#' + id); if (!el) return; const cur = el.value;
     el.innerHTML = '<option value="">' + all + '</option>' + arr.map(x => '<option value="' + esc(x) + '">' + esc(x) + '</option>').join(''); el.value = cur; };
-  fill('sf_city', srchCities(), 'כל הערים');
-  fill('sf_tag', allTags(), 'כל התגיות');
-  fill('sf_lang', Array.from(new Set(LANGS.concat(S.people.map(p => p.lang).filter(Boolean)))), 'כל השפות');
   fill('sf_owner', owners(), 'כולם');
+  msSync();
 }
 /* ---- הלשוניות של „סינון נוסף” ---- */
 const SRCH_TABS = [['addr', 'אזור מגורים'], ['kalpi', 'קלפי'], ['dyn', 'פרטים דינמיים'], ['more', 'עוד']];
@@ -6262,12 +6314,11 @@ function srchTabKeys(t) {
   if (t === 'dyn') return dyn.map(x => 'd_' + x.f.id);
   return ['owner', 'ageFrom', 'ageTo', 'age'];
 }
-const srchOn = k => { const v = SR.f[k]; return v !== '' && v != null && v !== false; };
+const srchOn = k => k === 'kalpis' ? msVals(k).length > 0 : srArr(SR.f[k]).length > 0;
 const SRCH_LBL = { street: 'רחוב', house: 'מספר בית', zip: 'מיקוד', kalpis: 'קלפי', site: 'אשכול קלפי', owner: 'איש קשר', age: 'גיל', ageFrom: 'מגיל', ageTo: 'עד גיל' };
 function renderSearchPanel() {
   const f = SR.f;
   const opt = (arr, cur, all) => '<option value="">' + (all || 'הכל') + '</option>' + arr.map(x => { const v = Array.isArray(x) ? x[0] : x, l = Array.isArray(x) ? x[1] : x; return '<option value="' + esc(v) + '"' + (String(cur == null ? '' : cur) === String(v) ? ' selected' : '') + '>' + esc(l) + '</option>'; }).join('');
-  const cities = srchCities();
   if (!PPL_READY) pplWait().then(srchRefreshOpts);
   const val = k => esc(f[k] == null ? '' : f[k]);
   const txt = (k, lbl, ph, extra) => '<div><label class="fl" for="sf_' + k + '">' + lbl + '</label><input id="sf_' + k + '" type="text" data-sf="' + k + '" value="' + val(k) + '"' + (ph ? ' placeholder="' + ph + '"' : '') + (extra || '') + '></div>';
@@ -6279,21 +6330,15 @@ function renderSearchPanel() {
     if (it.f.type === 'select' || it.f.type === 'multi') return '<div><label class="fl" for="' + id + '">' + lbl + '</label><select id="' + id + '" data-sf="' + k + '">' + opt(it.f.options || [], f[k]) + '</select></div>';
     return '<div><label class="fl" for="' + id + '">' + lbl + '</label><input id="' + id + '" type="text" data-sf="' + k + '" value="' + val(k) + '" placeholder="כל ערך"></div>';
   };
-  const gf = ownField('gender');
-  if (!SR._g || SR._g.dv !== DV) { const gs = new Set(); for (const p of S.people) { const v = ownVal(p, 'gender'); if (v) gs.add(v); } SR._g = { dv: DV, list: Array.from(gs) }; }
-  const genders = Array.from(new Set(['זכר', 'נקבה'].concat(gf && gf.options ? gf.options : [], SR._g.list)));
-  /* --- תמיד מוצג: מה שמחפשים הכי הרבה --- */
+  if (f.gender) f.gender = gNorm(f.gender);
+  /* --- תמיד מוצג: מה שמחפשים הכי הרבה. סטטוס, עיר, קבוצה, שפה ותגית — בחירה מרובה --- */
   const quick =
     grid([txt('tz', 'תעודת זהות', '', ' inputmode="numeric"'), txt('first', 'שם פרטי'), txt('last', 'שם משפחה'), txt('phone', 'מספר טלפון', '', ' inputmode="tel"'),
-      sel('status', 'סטטוס תמיכה', STATUSES), sel('city', 'עיר / יישוב', cities, 'כל הערים')]) +
-    grid([sel('gender', 'מין', genders),
-      '<div><label class="fl" for="sf_grp">קבוצה שמורה</label><select id="sf_grp"' + (S.groups.length ? '' : ' disabled') + '>' +
-        '<option value="">' + (S.groups.length ? 'בחירת קבוצה…' : 'עוד אין קבוצות') + '</option>' +
-        S.groups.slice().sort((a, b) => HE_COLL.compare(a.name, b.name)).map(g => '<option value="' + g.id + '"' + (f.grp === g.id ? ' selected' : '') + '>' + esc(g.name) + '</option>').join('') + '</select></div>',
+      msBtn('status', 'סטטוס תמיכה'), msBtn('city', 'עיר / יישוב')]) +
+    grid([sel('gender', 'מין', ['זכר', 'נקבה']), msBtn('grps', 'קבוצה שמורה'),
       txt('email', 'דואר אלקטרוני', '', ' inputmode="email"'),
       sel('hasPhone', 'קיים מספר טלפון?', [['yes', 'כן — יש טלפון'], ['mobile', 'כן — יש נייד'], ['none', 'לא — אין טלפון']]),
-      sel('lang', 'שפה', Array.from(new Set(LANGS.concat(S.people.map(p => p.lang).filter(Boolean)))), 'כל השפות'),
-      sel('tag', 'מקושר לתגית', allTags(), 'כל התגיות')]);
+      msBtn('lang', 'שפה'), msBtn('tag', 'מקושר לתגית')]);
   /* --- „סינון נוסף” — בלשוניות --- */
   const tab = SRCH_TABS.some(t => t[0] === SR.tab) ? SR.tab : 'addr';
   const cnt = t => srchTabKeys(t).filter(srchOn).length;
@@ -6301,13 +6346,20 @@ function renderSearchPanel() {
   let advBody = '';
   if (SR.more) {
     const { addr, dyn } = srchDynFields();
-    if (tab === 'addr') advBody = grid([txt('street', 'רחוב'), txt('house', 'מספר בית')].concat(addr.map((it, i) => dynCtl(it, 'a' + i)), [txt('zip', 'מיקוד', '', ' inputmode="numeric"')])) +
-      '<div class="snote">העיר נבחרת למעלה.</div>';
+    if (tab === 'addr') {
+      /* הסדר: שכונה · רחוב · מספר בית · מספר דירה · כניסה · מיקוד · מרחב */
+      const A = l => addr.find(x => x.lbl === l);
+      const nb = A('שכונה'), ap = A('מספר דירה'), en = A('כניסה'), mr = A('מרחב');
+      advBody = grid([nb && msBtn('d_' + nb.f.id, 'שכונה'), msBtn('street', 'רחוב'), txt('house', 'מספר בית'), ap && dynCtl(ap, 'a1'), en && dynCtl(en, 'a2'),
+        txt('zip', 'מיקוד', '', ' inputmode="numeric"'), mr && dynCtl(mr, 'a3')].filter(Boolean)) +
+        '<div class="snote">ברשימות השכונות והרחובות מופיעים הערכים של העיר שנבחרה למעלה. אפשר לבחור כמה, או להקליד.</div>';
+    }
     else if (tab === 'kalpi') {
       const sites = srchSites();
-      advBody = grid([txt('kalpis', 'מספר קלפי', 'למשל 12, 13.1'),
+      const many = sites && new Set(sites.map(s => s.ck)).size > 1;
+      advBody = grid([msBtn('kalpis', 'מספר קלפי'),
         '<div class="s2"><label class="fl" for="sf_site">אשכול קלפי</label>' + (sites
-          ? '<select id="sf_site" data-sf="site">' + opt(sites.map(s => [s.i, (s.n || s.s) + (s.ksRaw ? ' · קלפיות ' + s.ksRaw : '')]), f.site, 'כל האשכולות') + '</select>'
+          ? '<select id="sf_site" data-sf="site">' + opt(sites.map(s => [s.i, (s.n || s.s) + (many ? ' · ' + s.c : '') + (s.ksRaw ? ' · קלפיות ' + s.ksRaw : '')]), f.site, 'כל האשכולות') + '</select>'
           : '<select id="sf_site" disabled title="בוחרים קודם עיר"><option>בוחרים עיר למעלה</option></select>') + '</div>']);
     }
     else if (tab === 'dyn') advBody = dyn.length ? grid(dyn.map((it, i) => dynCtl(it, i))) : '<div class="snote">אין עדיין פרטים דינמיים לחיפוש.</div>';
@@ -6326,7 +6378,7 @@ function renderSearchPanel() {
   if (f.dyn) { const df = fieldById(f.dyn); chips.push(['dyn', (df ? df.name : 'פרט') + (f.dynVal ? ': ' + f.dynVal : ' — יש ערך')]); }
   SRCH_TABS.forEach(([t]) => { if (SR.more && t === tab) return; srchTabKeys(t).filter(srchOn).forEach(k => {
     const df = k.startsWith('d_') ? fieldById(k.slice(2)) : null;
-    const v = k === 'site' ? (site ? (site.n || site.s) : '') : String(f[k]);
+    const v = k === 'site' ? (site ? (site.n || site.s) : '') : k === 'kalpis' ? msVals(k).join(', ') : Array.isArray(f[k]) ? msText(k) : String(f[k]);
     chips.push([k, (df ? df.name : SRCH_LBL[k] || k) + ': ' + v]); }); });
   $('#v-search').innerHTML =
     '<div class="shead"><div><h2>חיפוש מתקדם</h2><p>בוחרים סינונים ולוחצים חיפוש (או Enter)</p></div>' +
@@ -6342,6 +6394,7 @@ function renderSearchPanel() {
         '<div class="sadvb">' + advBody + '</div></div>' : '') +
     '</div></div>' +
     '<div class="card" id="srchRes"></div>';
+  msRebind();
 }
 /* שינוי עיר → מעדכנים את רשימת אשכולות הקלפי */
 document.addEventListener('change', e => {
@@ -6395,8 +6448,215 @@ function renderResults() {
 }
 
 
+/* ======================================================= בחירה מרובה
+   כפתור שנראה כמו שדה; לחיצה פותחת חלונית עם חיפוש בהקלדה ו-V ליד כל ערך שנבחר.
+   הבחירה נשמרת ב-SR.f כרשימה (סטטוס, עיר, שפה, תגית, קבוצות, רחוב, שכונה, קלפי). */
+const MS_IC = {
+  ck: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>',
+  plus: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>',
+  q: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.3-4.3"/></svg>',
+  chev: '<svg class="msc" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>'
+};
+const SR_LANGS = memoDV(() => { const s = new Set(LANGS); for (const p of S.people) if (p.lang) s.add(p.lang); return Array.from(s); });
+/* הערים שנבחרו (ואם לא נבחרה — העיר של אשכול הקלפי שנבחר) */
+function srCityKeys() {
+  const cs = srArr(SR.f.city).map(ckey);
+  if (!cs.length && SR.f.site !== '' && SR.f.site != null && SITES[+SR.f.site]) cs.push(SITES[+SR.f.site].ck);
+  return cs;
+}
+/* רשימות שתלויות בעיר — נשמרות עד שהנתונים או העיר משתנים */
+const SR_OPTC = new Map(); let SR_OPTDV = -1;
+function srOptCache(k, fn) {
+  if (SR_OPTDV !== DV) { SR_OPTC.clear(); SR_OPTDV = DV; }
+  const ck = k + '|' + srCityKeys().sort().join(',');
+  if (!SR_OPTC.has(ck)) SR_OPTC.set(ck, fn());
+  return SR_OPTC.get(ck);
+}
+/* כל הערכים השונים של אנשים בערים שנבחרו (כל המאגר אם לא נבחרה עיר), לפי א׳–ב׳ */
+function srValsInCity(get) {
+  const cs = srCityKeys(), cset = cs.length ? new Set(cs) : null, m = new Map();
+  const add = v => { if (v == null || v === '' || v === false || v === true) return; const s = String(v).trim(), k = norm(s); if (k && !m.has(k)) m.set(k, s); };
+  for (const p of S.people) { if (cset && !cset.has(ckey(p.city))) continue; const v = get(p); if (Array.isArray(v)) v.forEach(add); else add(v); }
+  return Array.from(m.values()).sort((a, b) => HE_COLL.compare(a, b));
+}
+/* כל הקלפיות של הערים שנבחרו — מרשימת הקלפיות הרשמית + מה שמופיע אצל אנשים */
+function srKalpiOpts() {
+  const cs = srCityKeys(); if (!cs.length) return [];
+  const cset = new Set(cs), m = new Map();
+  const add = x => { x = String(x == null ? '' : x).trim(); const k = kkey(x); if (k && !m.has(k)) m.set(k, x); };
+  for (const s of SITES) if (cset.has(s.ck)) String(s.ksRaw || '').split(',').forEach(add);
+  for (const p of S.people) if (p.kalpi && cset.has(ckey(p.kcity || p.city))) add(p.kalpi);
+  return Array.from(m.values()).sort((a, b) => (parseFloat(a) - parseFloat(b)) || HE_COLL.compare(a, b));
+}
+const MS_DEF = {
+  status: { all: 'כל הסטטוסים', opts: () => STATUSES },
+  city: { all: 'כל הערים', find: true, key: ckey, opts: () => srchCities() },
+  lang: { all: 'כל השפות', find: true, opts: () => SR_LANGS() },
+  tag: { all: 'כל התגיות', find: true, empty: 'עוד אין תגיות', opts: () => allTags() },
+  grps: { all: 'בחירת קבוצות…', find: true, empty: 'עוד אין קבוצות שמורות — מסננים ולוחצים „שמירה כקבוצה” ליד התוצאות',
+    opts: () => S.groups.slice().sort((a, b) => HE_COLL.compare(a.name, b.name)).map(g => [g.id, g.name]) },
+  street: { all: 'כל הרחובות', find: true, free: true, opts: () => srOptCache('street', () => srValsInCity(p => p.street)),
+    hint: () => srCityKeys().length ? '' : 'מוצגים כל הרחובות במאגר. כדי לראות רק רחובות של עיר — בוחרים עיר למעלה.' },
+  kalpis: { all: 'כל הקלפיות', find: true, free: true, key: kkey, lab: x => 'קלפי ' + x, empty: 'אין קלפיות לעיר הזו', opts: () => srOptCache('kalpi', srKalpiOpts),
+    hint: () => srCityKeys().length ? '' : 'בוחרים עיר למעלה כדי לראות את כל הקלפיות שלה (או מקלידים מספר).' }
+};
+function msDef(k) {
+  if (MS_DEF[k]) return MS_DEF[k];
+  const f = k.startsWith('d_') && fieldById(k.slice(2)); if (!f) return null;
+  return { all: fkey(f.name) === fkey('שכונה') ? 'כל השכונות' : 'הכל', find: true, free: true,
+    opts: () => srOptCache(k, () => srValsInCity(p => (p.dyn || {})[f.id])),
+    hint: () => srCityKeys().length ? '' : 'מוצגים כל הערכים במאגר. כדי לצמצם לעיר — בוחרים עיר למעלה.' };
+}
+const msKeyFn = k => (msDef(k) || {}).key || norm;
+const msVals = k => k === 'kalpis' ? srKalpis(SR.f.kalpis).map(x => String(x).trim()).filter(Boolean) : srArr(SR.f[k]);
+const msLab = (k, v) => k === 'grps' ? ((S.groups.find(g => g.id === v) || {}).name || 'קבוצה שנמחקה') : ((msDef(k) || {}).lab || String)(v);
+const msText = k => msVals(k).map(v => msLab(k, v)).join(', ');
+function msSum(k) {
+  const d = msDef(k) || { all: 'הכל' }, n = msVals(k).length;
+  return '<span class="msv' + (n ? '' : ' ph') + '">' + esc(n ? msText(k) : d.all) + '</span>' + (n > 1 ? '<span class="msn">' + n + '</span>' : '') + MS_IC.chev;
+}
+function msBtn(k, lbl) {
+  return '<div><span class="fl" id="sfl_' + k + '">' + lbl + '</span><button type="button" class="ms" id="sf_' + k + '" data-act="msOpen" data-v="' + esc(k) + '" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="sfl_' + k + '">' + msSum(k) + '</button></div>';
+}
+const msOpts = k => { const d = msDef(k); return ((d && d.opts()) || []).map(o => Array.isArray(o) ? [String(o[0]), o[1]] : [String(o), msLab(k, String(o))]); };
+function msSet(k, arr) {
+  if (arr.length) SR.f[k] = arr; else if (k in defFilter()) SR.f[k] = ''; else delete SR.f[k];
+  SR.page = 0; if (MSO) MSO.changed = true;
+  const b = document.getElementById('sf_' + k); if (b) b.innerHTML = msSum(k);
+  srchDirty();
+}
+let MSO = null;   /* החלונית הפתוחה: { k, el, btn, d, opts, changed } */
+function msFoot() {
+  if (!MSO) return; const n = msVals(MSO.k).length;
+  $('.msct', MSO.el).textContent = n ? 'נבחרו ' + nf(n) : 'לא נבחר — מציג את כולם';
+  $('[data-ms="clear"]', MSO.el).disabled = !n;
+}
+function msList() {
+  if (!MSO) return;
+  const { el, k, d, opts } = MSO, q = $('.msq input', el), raw = q ? q.value.trim() : '', t = norm(raw), kf = msKeyFn(k);
+  const sel = msVals(k), sk = new Set(sel.map(kf)), known = new Set(opts.map(o => kf(o[0])));
+  const all = sel.filter(v => !known.has(kf(v))).map(v => [v, msLab(k, v)]).concat(opts);
+  let list = t ? all.filter(o => norm(o[1]).includes(t)) : all;
+  if (!t) list = list.filter(o => sk.has(kf(o[0]))).concat(list.filter(o => !sk.has(kf(o[0]))));   /* מה שנבחר — למעלה */
+  const free = d.free && t && !all.some(o => norm(o[0]) === t || norm(o[1]) === t) ? raw : '';
+  const LIM = 300, more = list.length - LIM;
+  $('.msl', el).innerHTML =
+    (free ? '<button type="button" class="msi msadd" data-mv="' + esc(free) + '"><span class="msck">' + MS_IC.plus + '</span><span class="msil">הוספת „' + esc(free) + '”</span></button>' : '') +
+    list.slice(0, LIM).map(o => { const on = sk.has(kf(o[0]));
+      return '<button type="button" role="option" class="msi' + (on ? ' on' : '') + '" aria-selected="' + on + '" data-mv="' + esc(o[0]) + '"><span class="msck">' + MS_IC.ck + '</span><span class="msil">' + esc(o[1]) + '</span></button>'; }).join('') +
+    (more > 0 ? '<div class="msmore">ועוד ' + nf(more) + ' — ממשיכים להקליד כדי לצמצם</div>' : '') +
+    (!list.length && !free ? '<div class="msmore">' + (t ? 'לא נמצא' : !PPL_READY ? 'הרשימה נטענת…' : (d.empty || 'אין אפשרויות')) + '</div>' : '');
+  msFoot();
+}
+function msToggle(it) {
+  const k = MSO.k, kf = msKeyFn(k), v = it.dataset.mv, cur = msVals(k), i = cur.findIndex(x => kf(x) === kf(v));
+  if (i >= 0) cur.splice(i, 1); else cur.push(v);
+  msSet(k, cur);
+  it.classList.toggle('on', i < 0); it.setAttribute('aria-selected', String(i < 0));
+  msFoot();
+}
+function msPlace() {
+  if (!MSO) return;
+  const { el, btn } = MSO;
+  if (!btn.isConnected || S.view !== 'search') { msClose(); return; }
+  const r = btn.getBoundingClientRect(), W = window.innerWidth, H = window.innerHeight, w = Math.min(Math.max(r.width, 280), W - 16);
+  el.style.width = w + 'px';
+  el.style.right = Math.max(8, Math.min(W - r.right, W - w - 8)) + 'px';
+  const h = el.offsetHeight, below = H - r.bottom - 10, up = below < h && r.top - 10 > below;
+  el.style.top = (up ? Math.max(8, r.top - 6 - h) : r.bottom + 6) + 'px';
+  el.classList.toggle('up', up);
+}
+function msClose() {
+  if (!MSO) return;
+  const { k, el, btn, changed } = MSO; MSO = null;
+  el.remove(); window.removeEventListener('scroll', msPlace, true); window.removeEventListener('resize', msPlace);
+  if (btn) { btn.classList.remove('open'); btn.setAttribute('aria-expanded', 'false'); }
+  /* העיר השתנתה — אשכול קלפי מעיר אחרת יורד, והלשוניות (רחובות, שכונות, קלפיות) מתעדכנות */
+  if (changed && k === 'city' && S.view === 'search' && $('#srchPanel')) {
+    const cs = new Set(srArr(SR.f.city).map(ckey)), s = SR.f.site !== '' && SR.f.site != null ? SITES[+SR.f.site] : null;
+    if (s && cs.size && !cs.has(s.ck)) SR.f.site = '';
+    renderSearchPanel();
+  }
+}
+const msCloseFocus = () => { const k = MSO && MSO.k; msClose(); const b = k && document.getElementById('sf_' + k); if (b) b.focus(); };
+function msOpen(btn) {
+  const k = btn.dataset.v, d = msDef(k); if (!d) return;
+  if (MSO && MSO.k === k) { msClose(); return; }
+  msClose();
+  btn = document.getElementById('sf_' + k) || btn; if (!btn.isConnected) return;
+  const el = document.createElement('div'), hint = d.hint ? d.hint() : '';
+  el.className = 'mspop'; el.tabIndex = -1; el.setAttribute('role', 'dialog');
+  el.setAttribute('aria-label', (document.getElementById('sfl_' + k) || {}).textContent || '');
+  el.innerHTML = (d.find ? '<div class="msq">' + MS_IC.q + '<input type="search" placeholder="הקלדה לחיפוש…" aria-label="חיפוש ברשימה" autocomplete="off" spellcheck="false"></div>' : '') +
+    (hint ? '<div class="mshint">' + esc(hint) + '</div>' : '') +
+    '<div class="msl" role="listbox" aria-multiselectable="true"></div>' +
+    '<div class="msf"><span class="msct"></span><button type="button" class="link sm" data-ms="clear">ניקוי</button><button type="button" class="btn sm" data-ms="done">סיום</button></div>';
+  document.body.appendChild(el);
+  MSO = { k, el, btn, d, opts: msOpts(k), changed: false };
+  btn.classList.add('open'); btn.setAttribute('aria-expanded', 'true');
+  msList(); msPlace();
+  const q = $('.msq input', el);
+  if (q) q.addEventListener('input', () => { msList(); msPlace(); });
+  el.addEventListener('click', e => {
+    const it = e.target.closest('.msi');
+    if (it) {
+      if (it.classList.contains('msadd')) { msSet(MSO.k, msVals(MSO.k).concat(it.dataset.mv)); if (q) { q.value = ''; q.focus(); } msList(); msPlace(); }
+      else msToggle(it);
+      return;
+    }
+    const a = e.target.closest('[data-ms]'); if (!a) return;
+    if (a.dataset.ms === 'clear') { msSet(MSO.k, []); msList(); } else msCloseFocus();
+  });
+  el.addEventListener('keydown', e => {
+    const items = $$('.msi', el), i = items.indexOf(document.activeElement);
+    if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); msCloseFocus(); return; }
+    if (e.key === 'ArrowDown') { e.preventDefault(); const n = items[i + 1] || items[0]; if (n) n.focus(); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); if (i <= 0 && q) q.focus(); else { const n = items[i - 1] || items[items.length - 1]; if (n) n.focus(); } }
+    else if (e.key === 'Enter' && e.target === q) { e.preventDefault(); if (items[0]) { items[0].click(); if (q.isConnected) q.select(); } }
+  });
+  el.addEventListener('focusout', e => { const r = e.relatedTarget; if (MSO && r && !el.contains(r) && r !== MSO.btn) msClose(); });
+  window.addEventListener('scroll', msPlace, true); window.addEventListener('resize', msPlace);
+  (q || $('.msi', el) || el).focus();
+}
+/* לחיצה מחוץ לחלונית — נסגרת */
+document.addEventListener('click', e => { if (!MSO) return; const path = e.composedPath(); if (path.includes(MSO.el) || path.includes(MSO.btn)) return; msClose(); });
+/* אחרי ציור מחדש של הטופס — החלונית הפתוחה נצמדת לכפתור החדש */
+function msRebind() {
+  if (!MSO) return;
+  const b = document.getElementById('sf_' + MSO.k);
+  if (!b) { msClose(); return; }
+  MSO.btn = b; b.classList.add('open'); b.setAttribute('aria-expanded', 'true'); msPlace();
+}
+/* המאגר סיים להיטען — מעדכנים את הכפתורים ואת הרשימה הפתוחה */
+function msSync() {
+  $$('#srchPanel .ms').forEach(b => { b.innerHTML = msSum(b.dataset.v); });
+  if (MSO) { MSO.opts = msOpts(MSO.k); msList(); msPlace(); }
+}
+
+/* ---- מין: רק „זכר” / „נקבה”. מי שנשמר עם ז / נ (למשל מהאקסלים) מתעדכן ברקע, פעם אחת ---- */
+let SR_GFIX = -1;
+async function srchFixGender() {
+  if (!PPL_READY || SR_GFIX === DV || !can('edit')) return;
+  SR_GFIX = DV;
+  const gf = ownField('gender'), ok = x => x === 'זכר' || x === 'נקבה', ch = [], L = S.people;
+  for (let i = 0; i < L.length; i++) {
+    const p = L[i];
+    if (p.gender) { const g = gNorm(p.gender); if (ok(g) && g !== p.gender) { p.gender = g; ch.push(p); } }
+    else if (gf && p.dyn && typeof p.dyn[gf.id] === 'string' && p.dyn[gf.id]) { const v = p.dyn[gf.id], g = gNorm(v); if (ok(g) && g !== v) { p.dyn[gf.id] = g; ch.push(p); } }
+    if ((i & 32767) === 32767) await yieldNow();
+  }
+  if (gf && isAdmin() && Array.isArray(gf.options) && gf.options.length && gf.options.every(o => ok(gNorm(o))) && gf.options.join('|') !== 'זכר|נקבה') { gf.options = ['זכר', 'נקבה']; await saveKV('fields'); }
+  if (!ch.length) return;
+  const saved = await putPeople(ch);
+  SR_GFIX = DV;
+  activity('עדכון מין ל„זכר” / „נקבה” אצל ' + ch.length + ' אנשים');
+  if (saved !== false) toast('המין עודכן ל„זכר” / „נקבה” אצל ' + nf(ch.length) + ' אנשים');
+  if (S.view === 'search' && SR.af) renderResults();
+}
+
 /* ---- הפעולות (כפתורי data-act) של המסך הזה ---- */
 Object.assign(ACT, {
+  msOpen: el => msOpen(el),
   clearFilter: () => { SR.f = defFilter(); SR.page = 0; renderSearchPanel(); renderResults(); },
   srchGo: () => srchGo(),
   srchReset: () => { SR.f = defFilter(); SR.af = null; SR.page = 0; SR.sel.clear(); srchSave(); renderSearchPanel(); renderResults(); toast('כל הסינונים אופסו'); },
@@ -6426,7 +6686,7 @@ Object.assign(ACT, {
   selAll: () => { SR.last.forEach(p => SR.sel.add(p.uid)); renderResults(); },
   selNone: () => { SR.sel.clear(); renderResults(); },
   exportRes: () => { const list = SR.sel.size ? SR.last.filter(p => SR.sel.has(p.uid)) : SR.last; if (!list.length) return; saveXlsx([['אנשים', peopleAoa(list)]], 'מאגר — ' + nf(list.length) + ' אנשים — ' + fmtDate(isoDay(new Date())) + '.xlsx'); },
-  saveGroup: async () => { const n = await promptM('שמירה כקבוצה', 'שם הקבוצה — תופיע בשליחת סמסים ותתעדכן לבד', ''); if (!n) return; const gf = clone(SR.af || SR.f); delete gf.grp; const g = { id: uid(), name: n, filter: gf, t: Date.now(), by: myName() }; S.groups.push(g); SR.f.grp = g.id; await saveKV('groups'); renderSearchPanel(); renderResults(); toast('הקבוצה „' + n + '” נשמרה'); },
+  saveGroup: async () => { const n = await promptM('שמירה כקבוצה', 'שם הקבוצה — תופיע בשליחת סמסים ותתעדכן לבד', ''); if (!n) return; const gf = clone(SR.af || SR.f); delete gf.grp; const g = { id: uid(), name: n, filter: gf, t: Date.now(), by: myName() }; S.groups.push(g); await saveKV('groups'); renderSearchPanel(); renderResults(); toast('הקבוצה „' + n + '” נשמרה'); },
   loadGroup: el => { const g = S.groups.find(x => x.id === el.dataset.v); if (!g) return; SR.f = Object.assign(defFilter(), clone(g.filter)); SR.page = 0; renderSearchPanel(); renderResults(); },
   delGroup: async el => { const g = S.groups.find(x => x.id === el.dataset.v); if (!g || !(await ask('מחיקת קבוצה', 'למחוק את הקבוצה „' + esc(g.name) + '”? האנשים עצמם לא יימחקו.', 'מחיקה', true))) return; S.groups = S.groups.filter(x => x !== g); await saveKV('groups'); renderSearchPanel(); renderResults(); },
   smsRes: () => { if (SR.sel.size) go('sms', { src: 'sel' }); else toast('מסמנים קודם את האנשים שרוצים לשלוח להם'); },
@@ -6569,7 +6829,8 @@ function newPersonObj() { return { uid: uid(), tz: '', first: '', last: '', phon
 function openCard(u, tab) {
   const orig = u ? S.by.get(u) : null;
   if (u && !orig) return;
-  C = { p: orig ? clone(strip(orig)) : newPersonObj(), isNew: !orig, tab: tab || 'det', dirty: false, err: {} };
+  /* base = איך הכרטיס נראה כשנפתח — בשמירה משווים אליו כדי לדעת מה שיניתי כאן (ולא לדרוס שינויים של אחרים) */
+  C = { p: orig ? clone(strip(orig)) : newPersonObj(), base: orig ? clone(strip(orig)) : null, isNew: !orig, tab: tab || 'det', dirty: false, err: {} };
   C.p.phones = C.p.phones || []; C.p.dyn = C.p.dyn || {}; C.p.dbs = C.p.dbs || []; C.p.tags = C.p.tags || [];
   renderCard();
   $('#drawer').classList.add('on'); $('#drawer').setAttribute('aria-hidden', 'false'); $('#scrim').classList.add('on');
@@ -6649,7 +6910,6 @@ function cardKalpiBox(p, site) {
   return '<div class="full kbox"><div class="kh">קלפי</div><div class="fgrid">' +
     '<div><label class="fl" for="cf_kcity">יישוב הקלפי</label><input id="cf_kcity" type="text" data-cf="kcity" list="dl_kcities_c" value="' + esc(p.kcity || '') + '" placeholder="' + esc(p.city || 'בחירת יישוב') + '" autocomplete="off"></div>' +
     '<div><label class="fl" for="cf_kalpi">מספר קלפי</label>' + ksel + '</div>' +
-    '<div><span class="fl">מקום הקלפי</span><div class="kval">' + (site ? esc(site.n || '—') : '<span class="mut">—</span>') + '</div></div>' +
     '<div><span class="fl">כתובת הקלפי</span><div class="kval">' + (site ? esc([site.s, site.c].filter(Boolean).join(', ')) : '<span class="mut">—</span>') + '</div></div>' +
     '<div class="full sm">' + note + '</div>' +
   '</div></div>';
@@ -6726,39 +6986,69 @@ function cardDirty() {
 }
 const LBL = { tz: 'ת.ז', first: 'שם פרטי', last: 'שם משפחה', phone: 'טלפון ראשי', phones: 'טלפונים נוספים', city: 'עיר', street: 'רחוב', house: 'מספר בית', lang: 'שפה', birth: 'תאריך לידה',
   owner: 'איש קשר אחראי', kalpi: 'קלפי', kcity: 'יישוב הקלפי', status: 'סטטוס', dbs: 'מאגרים', tags: 'תגיות' };
+/* משלב לתוך p את הגרסה העדכנית (sv): שדות שלא שיניתי כאן — מ-sv; שדות ששיניתי — שלי. פרטים דינמיים — כל פרט לחוד */
+function cardMerge(p, sv, old) {
+  const base = C.base || old, J = v => JSON.stringify(v == null ? '' : v), mine = {};
+  Object.keys(p).concat(Object.keys(base)).forEach(k => { if (k[0] === '_' || k === 'log' || k === 'sh' || k === 'dyn' || k === 'updated' || k in mine) return; if (J(p[k]) !== J(base[k])) mine[k] = p[k]; });
+  const dyn = Object.assign({}, sv.dyn || {}), pd = p.dyn || {}, bd = base.dyn || {};
+  new Set(Object.keys(pd).concat(Object.keys(bd))).forEach(k => { if (J(pd[k]) !== J(bd[k])) { if (pd[k] == null) delete dyn[k]; else dyn[k] = pd[k]; } });
+  Object.keys(p).forEach(k => { if (k[0] !== '_') delete p[k]; });
+  Object.assign(p, clone(sv), mine, { dyn });
+  Object.keys(old).forEach(k => { if (k[0] !== '_') delete old[k]; });
+  Object.assign(old, clone(sv));   /* כך היומן בכרטיס רושם רק את מה שאני שיניתי */
+}
+/* כפילויות: ת.ז שכבר קיימת — חוסם. טלפון שכבר קיים (חדש בכרטיס הזה) — שואלים, כי לפעמים כל המשפחה רשומה על מספר אחד.
+   בענן בודקים בשרת (person_dups — כל הארץ, גם ערים שמטה עירוני לא רואה); אחרת לפי מה שנטען */
+async function cardDups(p) {
+  const had = new Set(C.base ? allPhones(C.base) : []);
+  const tz = p.tz && !(C.base && C.base.tz === p.tz) ? p.tz : '';
+  const phones = allPhones(p).filter(ph => !had.has(ph));
+  if (!tz && !phones.length) return { tz: null, ph: [] };
+  if (CLOUD) {
+    const { data, error } = await sb.rpc('person_dups', { p_uid: p.uid, p_tz: tz || null, p_phones: phones });
+    if (!error && Array.isArray(data)) {
+      const who = r => r.name ? r.name + (r.city ? ' (' + r.city + ')' : '') : 'אדם ' + (r.city ? 'מ' + r.city : 'במטה אחר') + ' שלא מוצג לך';
+      const t = data.find(r => r.kind === 'tz');
+      return { tz: t ? who(t) : null, ph: Array.from(new Map(data.filter(r => r.kind === 'phone' && r.val).map(r => [r.val, r.val + '|' + who(r)])).values()) };
+    }
+    console.warn('person_dups', error);   /* הפונקציה עוד לא הותקנה בשרת — בודקים לפי מה שנטען */
+  }
+  await pplWait();
+  const o = tz && S.byTz.get(tz);
+  return { tz: o && o.uid !== p.uid ? fullName(o) + (o.city ? ' (' + o.city + ')' : '') : null,
+    ph: phones.map(ph => { const x = S.byPhone.get(ph); return x && x.uid !== p.uid ? ph + '|' + fullName(x) + (x.city ? ' (' + x.city + ')' : '') : null; }).filter(Boolean) };
+}
 async function cardSave() {
   if (!can('edit')) return toast(NOPERM.edit);
   const p = C.p; C.err = {};
   p.first = (p.first || '').trim(); p.last = (p.last || '').trim();
-  if (p.tz) { const d = nid(p.tz); if (!d) C.err.tz = 'ת.ז לא תקינה'; else { p.tz = d; if (!validId(d)) C.err.tz = 'ספרת הביקורת לא מתאימה — כדאי לבדוק שוב'; const o = S.byTz.get(d); if (o && o.uid !== p.uid) C.err.tz = 'ת.ז הזאת כבר שייכת ל' + fullName(o); } }
+  if (p.tz) { const d = nid(p.tz); if (!d) C.err.tz = 'ת.ז לא תקינה'; else { p.tz = d; if (!validId(d)) C.err.tz = 'ספרת הביקורת לא מתאימה — כדאי לבדוק שוב'; const o = S.byTz.get(d); if (o && o.uid !== p.uid) C.err.tz = 'ת.ז הזאת כבר קיימת במאגר: ' + fullName(o) + '. אי אפשר לפתוח כרטיס נוסף — מחפשים את הכרטיס הקיים'; } }
   if (p.phone) { const ph = nph(p.phone); if (!okPhone(ph)) C.err.phone = 'מספר הטלפון לא תקין'; else p.phone = ph; }
   p.phones = p.phones.map(nph).filter(x => okPhone(x) && x !== p.phone);
   if (!p.first && !p.last && !p.phone && !p.tz) C.err.first = 'צריך לפחות שם, טלפון או ת.ז';
   const hard = Object.keys(C.err).filter(k => !(k === 'tz' && C.err.tz.startsWith('ספרת')));
   if (hard.length) { C.tab = 'det'; renderCard(); toast('יש שדות שצריך לתקן'); return; }
+  const dup = await cardDups(p);
+  if (dup.tz) { C.err.tz = 'ת.ז הזאת כבר קיימת במאגר: ' + dup.tz + '. אי אפשר לפתוח כרטיס נוסף — מחפשים את הכרטיס הקיים'; C.tab = 'det'; renderCard(); toast('ת.ז הזאת כבר קיימת במאגר'); return; }
+  if (dup.ph.length) {
+    if (C.auto) return false;   /* שמירה אוטומטית לפני התנתקות — לא שומרים מה שצריך אישור */
+    const li = dup.ph.map(x => { const [ph, w] = x.split('|'); return '<li><b class="num">' + esc(fmtPhone(ph)) + '</b> — ' + esc(w) + '</li>'; }).join('');
+    if (!(await ask('הטלפון כבר קיים במאגר', 'כבר יש במאגר אדם עם ' + (dup.ph.length > 1 ? 'הטלפונים האלה' : 'הטלפון הזה') + ':<ul style="margin:8px 0 10px;padding-inline-start:18px">' + li + '</ul>לפעמים בני משפחה רשומים על אותו מספר. בטוח/ה שזה אדם אחר ולהמשיך?', 'כן, להמשיך ולשמור'))) return;
+  }
+  if (C.err.tz && C.auto) return false;
   if (C.err.tz && !(await ask('ספרת ביקורת', 'ספרת הביקורת של ת.ז ' + p.tz + ' לא מתאימה. לשמור בכל זאת?', 'שמירה בכל זאת'))) { renderCard(); return; }
   C.err = {};
   const old = S.by.get(p.uid);
   const now = Date.now();
   if (old && CLOUD) {
-    /* מישהו אחר עדכן את הכרטיס בזמן שהיה פתוח? משלבים: הגרסה העדכנית מהשרת + רק השדות ששיניתי כאן */
+    /* מישהו אחר עדכן את הכרטיס בזמן שהיה פתוח? משלבים בשקט: הגרסה העדכנית מהשרת + רק השדות ששיניתי כאן (לעומת איך שהכרטיס נפתח) */
     const { data: row, error: re } = await sb.from('people').select('data').eq('uid', p.uid).maybeSingle();
     if (re) { cloudErr(re, 'בדיקת הכרטיס'); return; }
     if (!row) {
+      if (C.auto) return false;
       if (!(await ask('האדם נמחק בינתיים', fullName(p) + ' נמחק/ה מהמאגר ע״י משתמש אחר בזמן שהכרטיס היה פתוח. להחזיר אותו/ה למאגר עם הפרטים שלך?', 'להחזיר ולשמור'))) return;
-    } else if ((row.data.updated || 0) !== (old.updated || 0)) {
-      const sv = row.data, mine = {};
-      Object.keys(p).forEach(k => { if (k[0] === '_' || k === 'log' || k === 'sh' || k === 'dyn' || k === 'updated') return; if (JSON.stringify(p[k] == null ? '' : p[k]) !== JSON.stringify(old[k] == null ? '' : old[k])) mine[k] = p[k]; });
-      const dyn = Object.assign({}, sv.dyn || {});
-      new Set(Object.keys(p.dyn || {}).concat(Object.keys(old.dyn || {}))).forEach(k => { if (JSON.stringify((p.dyn || {})[k]) !== JSON.stringify((old.dyn || {})[k])) { if ((p.dyn || {})[k] == null) delete dyn[k]; else dyn[k] = p.dyn[k]; } });
-      const who = ((sv.log || [])[0] || {}).by;
-      Object.keys(p).forEach(k => { if (k[0] !== '_') delete p[k]; });
-      Object.assign(p, clone(sv), mine, { dyn });
-      Object.keys(old).forEach(k => { if (k[0] !== '_') delete old[k]; });
-      Object.assign(old, clone(sv));
-      toast('הכרטיס עודכן בינתיים' + (who ? ' ע״י ' + who : ' ע״י משתמש אחר') + ' — השינויים שלך שולבו בגרסה העדכנית');
-    }
-  }
+    } else cardMerge(p, row.data, old);
+  } else if (old && C.base && (old.updated || 0) !== (C.base.updated || 0)) cardMerge(p, strip(old), old);   /* מקומי: עודכן בינתיים (התאמת אירוע, העלאה) */
   if (old) {
     const ch = Object.keys(LBL).filter(k => JSON.stringify(old[k] || '') !== JSON.stringify(p[k] || ''));
     const dch = S.fields.filter(f => JSON.stringify((old.dyn || {})[f.id] == null ? '' : old.dyn[f.id]) !== JSON.stringify(p.dyn[f.id] == null ? '' : p.dyn[f.id])).map(f => f.name);
@@ -6782,6 +7072,13 @@ async function cardSave() {
   C.isNew = false; C.dirty = false;
   openCard(u, C.tab);
   refresh();
+  return true;
+}
+/* לפני התנתקות אוטומטית (auth.js): שומרים כרטיס פתוח עם שינויים — אם אפשר בלי לשאול שאלות */
+async function cardAutoSave() {
+  if (!C || !C.dirty) return true;
+  C.auto = true;
+  try { return !!(await cardSave()); } catch (e) { console.error('cardAutoSave', e); return false; } finally { if (C) C.auto = false; }
 }
 
 
@@ -7207,7 +7504,9 @@ function rowRecord(r) {
     else if (t === 'owner') rec.owner = upList(rec.owner, s.split(/[,;\n]+/));
     else if (t === 'elector') { if (upYes(s) || /אלקטור/.test(s)) (rec.tags = rec.tags || []).push(UP_TAG_ELECTOR); else if (!upNo(s) && !/משתמש|רגיל/.test(s)) warns.push('אלקטור: ערך לא מזוהה — ' + s); }
     else if (t === 'optin') { const fo = fieldById('f_optout'); if (fo) { if (upNo(s)) rec.dyn[fo.id] = true; else if (upYes(s)) rec.dyn[fo.id] = false; } }
-    else if (t === 'full') { const parts = s.replace(/\s+/g, ' ').split(' '); if (!rec.first) rec.first = parts.length > 1 ? parts.slice(0, -1).join(' ') : parts[0]; if (!rec.last && parts.length > 1) rec.last = parts[parts.length - 1]; }
+    else if (t === 'full') { const [f, l] = upSplitFull(s); if (!rec.first) rec.first = f; if (!rec.last && l) rec.last = l; }
+    else if (t === 'idph') { const m = upPhones(s).mob[0]; if (m) rec._idph = m; }     /* טלפון רק לזיהוי (שורה בלי ת.ז) — לא מעדכן את הטלפון */
+    else if (t === 'idtz') { const d = nid(s); if (d && (validId(d) || U.opts.allowBadId)) rec._idtz = d; }
     else if (t === 'address') { const m = s.match(/^(.*?)[\s,]+(\d+\s*[א-ת]?)\s*$/); if (m) { rec.street = m[1].replace(/^(רח'?|רחוב)\s+/, '').trim(); rec.house = m[2].replace(/\s/g, ''); } else rec.street = s; }
     else if (t === 'lang') { if (!rec.lang) rec.lang = mapLang(s); }
     else if (t === 'birth') { const d = parseDate(raw); if (d) rec.birth = d; else warns.push('תאריך לידה לא מזוהה: ' + s); }
@@ -7228,15 +7527,23 @@ function rowRecord(r) {
     }
     else rec[t] = s;
   });
-  if (U.idBy === 'tz' && !rec.tz) errs.push('חסרה ת.ז — לפיה מזהים את האנשים בקובץ הזה');
-  else if (U.idBy === 'phone' && !rec.phone && !(rec.phones || []).length) errs.push('חסר טלפון — לפיו מזהים את האנשים בקובץ הזה');
-  else if (!rec.tz && !rec.phone && !(rec.phones || []).length) errs.push('אין ת.ז או טלפון לזיהוי האדם');
+  /* זיהוי: לפי מה שנבחר, ושורה שחסר בה — לפי השני (ת.ז ↔ טלפון). שגיאה רק כשאין אף אחד מהם */
+  if (U.idBy === 'tz' && !rec.tz && !upRecPhone(rec)) errs.push('אין ת.ז וגם אין טלפון — אי אפשר לזהות את האדם');
+  else if (U.idBy === 'phone' && !upRecPhone(rec) && !rec.tz && !rec._idtz) errs.push('אין טלפון וגם אין ת.ז — אי אפשר לזהות את האדם');
+  else if (!rec.tz && !rec._idtz && !upRecPhone(rec)) errs.push('אין ת.ז או טלפון לזיהוי האדם');
   if (isCityUser()) { if (!rec.city) rec.city = ME.city; else if (ckey(rec.city) !== SCOPE) errs.push('עיר אחרת (' + rec.city + ') — אין הרשאה'); }
   return { rec, errs, warns };
 }
+const upRecPhone = rec => rec.phone || (rec.phones || [])[0] || rec._idph || '';
+/* שם מלא → [פרטי, משפחה]. ברירת מחדל: המילה האחרונה = שם משפחה; U.fullLF — המילה הראשונה = שם משפחה („כהן משה”) */
+function upSplitFull(s) {
+  const parts = String(s || '').replace(/\s+/g, ' ').trim().split(' ').filter(Boolean);
+  if (parts.length < 2) return [parts[0] || '', ''];
+  return U.fullLF ? [parts.slice(1).join(' '), parts[0]] : [parts.slice(0, -1).join(' '), parts[parts.length - 1]];
+}
 function findExisting(rec) {
-  if (U.idBy === 'tz') return rec.tz ? S.byTz.get(rec.tz) || null : null;
-  if (U.idBy === 'phone') { const ph = rec.phone || (rec.phones || [])[0]; return ph ? S.byPhone.get(ph) || null : null; }
+  if (U.idBy === 'tz') { if (rec.tz) return S.byTz.get(rec.tz) || null; const ph = upRecPhone(rec); return ph ? S.byPhone.get(ph) || null : null; }
+  if (U.idBy === 'phone') { const ph = upRecPhone(rec); if (ph) return S.byPhone.get(ph) || null; const tz = rec.tz || rec._idtz; return tz ? S.byTz.get(tz) || null : null; }
   if (rec.tz && S.byTz.has(rec.tz)) return S.byTz.get(rec.tz);
   const ph = rec.phone || (rec.phones || [])[0];
   if (ph && S.byPhone.has(ph)) { const o = S.byPhone.get(ph); if (!rec.tz || !o.tz) return o; }
@@ -7257,7 +7564,7 @@ function buildPreview() {
       const { rec, errs, warns } = rowRecord(B[ri]);
       let act = 'err', ex = null;
       if (!errs.length) {
-        const k = rec.tz || rec.phone || (rec.phones || [])[0];
+        const k = rec.tz || rec._idtz || upRecPhone(rec);
         if (seen.has(k)) act = 'dup';
         else { seen.set(k, ri); ex = findExisting(rec); act = ex ? (U.opts.mode === 'add' ? 'skip' : 'upd') : (U.opts.mode === 'update' ? 'skip' : 'new'); }
       }
@@ -7295,6 +7602,21 @@ async function upStatusGuard() {
   if (!r) return false;
   rows.forEach((x, i) => { if (r.v === 'keep' || (i < UPG_MAX && !r.vals['g' + i])) { delete x.rec.status; x.keptOpp = true; } });
   return true;
+}
+/* ---- שם מלא: במאגר אין „שם מלא” — רק פרטי ומשפחה. שואלים אם לפצל; בלי פיצול אי אפשר להמשיך ---- */
+async function upFullAsk() {
+  const j = U.map.indexOf('full');
+  if (j < 0 || j >= U.head.length || U.fullOk) return true;
+  const ex = []; for (let i = 0; i < U.body.length && ex.length < 3; i++) { const v = String(U.body[i][j] == null ? '' : U.body[i][j]).trim(); if (v.includes(' ')) ex.push(v); }
+  const list = () => ex.map(v => { const [f, l] = upSplitFull(v); return '<li><b>' + esc(v) + '</b> ← שם פרטי: ' + esc(f) + ' · שם משפחה: ' + esc(l) + '</li>'; }).join('');
+  const r = await modal('פיצול השם המלא', 'בעמודה <b>„' + esc(U.head[j]) + '”</b> כתוב שם מלא. במאגר שם פרטי ושם משפחה נשמרים בנפרד, ולכן צריך לפצל אותו.' +
+    (ex.length ? '<ul id="upFullEx" style="margin:10px 0;padding-inline-start:18px;line-height:1.9">' + list() + '</ul>' : '') +
+    '<label class="opt"><input type="checkbox" data-mv="lf" id="upFullLF"' + (U.fullLF ? ' checked' : '') + '>בקובץ הזה שם המשפחה כתוב קודם (למשל „כהן משה”)</label>',
+    [{ lb: 'לפצל ולהמשיך', v: true, def: true }, { lb: 'לא לפצל', cls: 'sec', v: 'no' }],
+    b => { const c = $('#upFullLF', b); if (c) c.addEventListener('change', () => { U.fullLF = c.checked; const u = $('#upFullEx', b); if (u) u.innerHTML = list(); }); });
+  if (r && r.v === true) { U.fullLF = !!r.vals.lf; U.fullOk = true; U.pvKey = ''; buildPreview(); return true; }
+  if (r && r.v === 'no') await modal('אי אפשר להמשיך', 'בלי לפצל את השם המלא לשם פרטי ושם משפחה אי אפשר להעלות את הקובץ.<br>אפשר לפצל, או לסדר את הקובץ בשתי עמודות (שם פרטי, שם משפחה) ולהעלות אותו שוב.', [{ lb: 'הבנתי', v: true, def: true }]);
+  return false;
 }
 /* ---- גיבוי לביטול העלאה: איך נראו האנשים לפני, ומי נוסף ---- */
 async function upSaveUndo(id, data) {
@@ -7373,7 +7695,9 @@ async function runUpload() {
     Object.keys(rec.dyn).forEach(k => { if (newMap[k]) { rec.dyn[newMap[k]] = rec.dyn[k]; delete rec.dyn[k]; } });
     let p = x.act === 'upd' ? findExisting(rec) || x.ex : null;
     const isNew = !p;
-    if (isNew) { p = newPersonObj(); p.dbs = []; p.created = now; p.log = []; S.people.push(p); undo.created.push(p.uid); }
+    if (isNew) { p = newPersonObj(); p.dbs = []; p.created = now; p.log = []; S.people.push(p); undo.created.push(p.uid);
+      if (rec._idph && !rec.phone && !(rec.phones || []).length) p.phone = rec._idph;   /* נמצא לפי עמודת הזיהוי — האדם החדש מקבל אותה */
+      if (rec._idtz && !rec.tz) p.tz = rec._idtz; }
     const st0 = isNew ? '' : stOf(p), sig0 = isNew ? '' : upSig(p);
     const ch = [];
     if (rec.owner) { const o = upList(p.owner, rec.owner.split(/\s*,\s*/)); if (o !== (p.owner || '')) { if (!isNew) ch.push(LBL.owner); p.owner = o; } }
@@ -7449,7 +7773,7 @@ function upGroups() {
 const upCols = g => U.auto.map((t, j) => g.t.includes(t) ? j : -1).filter(j => j >= 0);
 const idCol = k => U.auto.findIndex(t => k === 'tz' ? t === 'tz' : (t === 'phone' || t === 'phone2'));
 function wzInit() {
-  U.sel = {}; U.manual = {}; U.adv = false;
+  U.sel = {}; U.manual = {}; U.adv = false; U.fullOk = false; U.fullLF = false;
   upGroups().forEach(g => { if (upCols(g).length) U.sel[g.id] = true; });
   U.idBy = idCol('tz') >= 0 ? 'tz' : idCol('phone') >= 0 ? 'phone' : '';
   if (U.idBy === 'tz') delete U.sel.tz;          /* לפי ת.ז מזהים — לא "מעדכנים" אותה */
@@ -7464,6 +7788,9 @@ function wzApply() {
   U.auto.forEach((t, j) => { if (t === 'new' || (t.startsWith('dyn:') && !G.some(g => g.t.includes(t)))) map[j] = t; });
   if (U.idBy === 'tz') { const j = idCol('tz'); if (j >= 0) map[j] = 'tz'; }
   if (U.idBy === 'phone') { const j = U.auto.indexOf('phone') >= 0 ? U.auto.indexOf('phone') : U.auto.indexOf('phone2'); if (j >= 0) map[j] = 'phone'; }
+  /* זיהוי חלופי: עמודת הטלפון / ת.ז נקראת גם כשלא מעדכנים אותה — רק כדי לזהות שורות שחסר בהן המזהה הראשי */
+  if (U.idBy === 'tz') { const j = idCol('phone'); if (j >= 0 && map[j] === 'skip') map[j] = 'idph'; }
+  if (U.idBy === 'phone') { const j = idCol('tz'); if (j >= 0 && map[j] === 'skip') map[j] = 'idtz'; }
   U.extra = G.filter(g => U.sel[g.id] && !upCols(g).length && g.man && String(U.manual[g.id] || '').trim()).map(g => ({ t: g.man, v: U.manual[g.id] }));
   U.map = map.concat(U.extra.map(x => x.t));
   U.how = U.head.map((h, j) => map[j] === 'skip' ? 'n' : 'h');
@@ -7551,6 +7878,7 @@ function renderUpload() {
   h += step(2, 'איך מזהים את האנשים?', (U.idBy === 'tz' ? 'לפי ת.ז' : U.idBy === 'phone' ? 'לפי טלפון' : '') + ' · ' + { upsert: 'מעדכנים קיימים ומוסיפים חדשים', add: 'רק מוסיפים חדשים', update: 'רק מעדכנים קיימים' }[U.opts.mode], () =>
     '<p class="wp">לפי מה מוצאים כל שורה בקובץ את האדם שכבר במאגר.</p>' +
     '<div class="ugrid two">' + idOpt('tz', 'לפי תעודת זהות') + idOpt('phone', 'לפי מספר טלפון') + '</div>' +
+    (U.idBy && idCol('tz') >= 0 && idCol('phone') >= 0 ? '<p class="wp sm" style="margin-top:8px">שורה שחסרה בה ' + (U.idBy === 'tz' ? 'ת.ז — תזוהה לפי הטלפון' : 'טלפון — תזוהה לפי הת.ז') + '.</p>' : '') +
     '<div class="usub">מה עושים עם השורות?</div><div class="useg">' +
       [['upsert', 'מעדכנים קיימים ומוסיפים חדשים'], ['update', 'רק מעדכנים מי שכבר במאגר'], ['add', 'רק מוסיפים אנשים חדשים']].map(([k, l]) => '<button class="' + (U.opts.mode === k ? 'on' : '') + '" data-act="upMode" data-v="' + k + '">' + l + '</button>').join('') + '</div>' +
     '<div class="uopts"><label class="opt"><input type="checkbox" data-uo="keepOld"' + (U.opts.keepOld ? ' checked' : '') + '>תא ריק בקובץ לא מוחק ערך קיים</label>' +
@@ -7583,7 +7911,7 @@ function renderUpload() {
       '<div class="usub">תצוגה מקדימה <span class="mut sm">— 8 השורות הראשונות</span></div>' +
       '<div class="tw upv"><table class="tbl"><thead><tr><th>שורה</th><th>מה יקרה</th><th>' + (U.idBy === 'phone' ? 'טלפון' : 'ת.ז') + '</th><th>במאגר</th>' + cols.map(x => '<th>' + esc(x[0]) + '</th>').join('') + '</tr></thead><tbody>' +
       U.pv.rows.slice(0, 8).map(x => { const r = x.rec, a = A[x.act];
-        return '<tr><td class="mut num">' + (x.ri + 1) + '</td><td><span class="pill ' + a[1] + '">' + a[0] + '</span>' + (x.errs.length ? '<div class="sm" style="color:var(--rtx)">' + esc(x.errs[0]) + '</div>' : '') + '</td><td class="num">' + esc(U.idBy === 'phone' ? fmtPhone(r.phone || (r.phones || [])[0] || '') : (r.tz || '')) + '</td><td>' + (x.ex ? esc(fullName(x.ex)) : '<span class="mut">—</span>') + '</td>' +
+        return '<tr><td class="mut num">' + (x.ri + 1) + '</td><td><span class="pill ' + a[1] + '">' + a[0] + '</span>' + (x.errs.length ? '<div class="sm" style="color:var(--rtx)">' + esc(x.errs[0]) + '</div>' : '') + '</td><td class="num">' + esc(U.idBy === 'phone' ? (fmtPhone(upRecPhone(r)) || r.tz || r._idtz || '') : (r.tz || fmtPhone(upRecPhone(r)) || '')) + '</td><td>' + (x.ex ? esc(fullName(x.ex)) : '<span class="mut">—</span>') + '</td>' +
           cols.map(cc => '<td>' + esc(cc[1](r) || '') + '</td>').join('') + '</tr>'; }).join('') +
       '</tbody></table></div>' +
       '<div class="wnav"><button class="btn big" data-act="upRun"' + (c.new + c.upd ? '' : ' disabled') + '>הוספה למאגר (' + nf(c.new + c.upd) + ')</button>' +
@@ -7651,7 +7979,7 @@ Object.assign(ACT, {
   newDb: async () => { const n = await promptM('מאגר חדש', 'שם המאגר', ''); if (!n) return; const d = { id: 'db' + uid(), name: n }; S.dbs.push(d); await saveKV('dbs'); U.db = d.id; activity('נוצר מאגר חדש: ' + n); refresh(); },
   pickFile: () => { const f = $('#fileIn'); f.value = ''; f.onchange = () => { if (f.files[0]) readUpload(f.files[0]); }; f.click(); },
   upReset: () => { U.file = ''; U.head = []; U.body = []; U.pv = null; U.done = null; U.extra = []; U.step = 1; renderUpload(); },
-  upRun: async el => { el.disabled = true; el.textContent = 'מוסיף למאגר…'; await wait(20); await runUpload(); },
+  upRun: async el => { if (!(await upFullAsk())) return; el.disabled = true; el.textContent = 'מוסיף למאגר…'; await wait(20); await runUpload(); },
   upErrors: async () => { if (U.pvP) await U.pvP; downloadErrors(); },
   upErrorsDone: () => downloadErrors(U.done),
   upDoneX: () => { U.done = null; renderUpload(); },
@@ -7698,7 +8026,9 @@ Object.assign(ACT, {
     toast('ההעלאה בוטלה: ' + nf(restore.length) + ' הוחזרו · ' + nf(del.length) + ' נמחקו' + (skipped ? ' · ' + nf(skipped) + ' דולגו' : ''));
   },
   upNoEvent: () => { U.eventId = null; U.db = (S.dbs[0] || { id: 'main' }).id; renderUpload(); },
-  upGo: el => { U.step = +el.dataset.v; wzApply(); renderUpload(); const s = $('#v-upload .wst.on'); if (s) s.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); },
+  upGo: async el => {
+    if (+el.dataset.v >= 4 && U.step === 3 && !(await upFullAsk())) return;
+    U.step = +el.dataset.v; wzApply(); renderUpload(); const s = $('#v-upload .wst.on'); if (s) s.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); },
   upPick: el => { const id = el.dataset.v; U.sel[id] = !U.sel[id]; if (!U.sel[id]) delete U.sel[id]; wzApply(); renderUpload(); },
   upIdBy: el => { U.idBy = el.dataset.v; if (U.idBy === 'tz') delete U.sel.tz; wzApply(); renderUpload(); },
   upMode: el => { U.opts.mode = el.dataset.v; wzApply(); renderUpload(); },
@@ -7763,6 +8093,7 @@ Object.assign(ACT, {
     await saveKV('fields'); RENDER.fields();
   },
   fldDel: async el => {
+    if (!can('admin')) return toast(NOPERM.admin);   /* פרט דינמי משותף לכל הארץ — מחיקה רק למנהל/ת */
     const f = fieldById(el.dataset.v); if (!f) return;
     if (!(await ask('מחיקת פרט', 'למחוק את „' + esc(f.name) + '”? הערכים שלו יימחקו מכל הכרטיסים.', 'מחיקה', true))) return;
     S.fields = S.fields.filter(x => x !== f);
@@ -7773,7 +8104,8 @@ Object.assign(ACT, {
   fldDemo: () => { const p = S.people.find(x => x.dyn && Object.keys(x.dyn).length > 2) || S.people[0]; if (p) openCard(p.uid, 'dyn'); },
   dbRename: async el => { const d = S.dbs.find(x => x.id === el.dataset.v); const n = await promptM('שינוי שם מאגר', 'שם חדש', d.name); if (!n) return; d.name = n; await saveKV('dbs'); RENDER.fields(); },
   dbDel: async el => {
-    const d = S.dbs.find(x => x.id === el.dataset.v);
+    if (!can('admin')) return toast(NOPERM.admin);
+    const d = S.dbs.find(x => x.id === el.dataset.v); if (!d) return;
     if (!(await ask('מחיקת מאגר', 'למחוק את המאגר „' + esc(d.name) + '”? האנשים עצמם יישארו במערכת, רק השיוך למאגר יוסר.', 'מחיקה', true))) return;
     S.dbs = S.dbs.filter(x => x !== d); const ch = S.people.filter(p => (p.dbs || []).includes(d.id)); ch.forEach(p => { p.dbs = p.dbs.filter(x => x !== d.id); });
     await putPeople(ch); await saveKV('dbs'); RENDER.fields();
@@ -8220,7 +8552,7 @@ function evCode() { const a = 'abcdefghjkmnpqrstuvwxyz23456789', r = crypto.getR
 function newEventObj() {
   const d = new Date(Date.now() + 7 * 864e5);
   return { id: 'ev' + uid(), code: '', name: '', date: isoDay(d), time: '19:30', loc: { city: isCityUser() ? ME.city : '', street: '', house: '', apt: '' }, place: '', desc: '',
-    fields: { first: true, last: true, phone: true, tz: true }, db: 'main', tag: '', confirm: true, img: '', imgCustom: false, created: Date.now(), regs: [] };
+    fields: { first: true, last: true, phone: true, tz: true }, extra: [{ k: 'xcity', label: 'עיר מגורים', fid: EV_CITY }], db: 'main', tag: '', confirm: true, img: '', imgCustom: false, created: Date.now(), regs: [] };
 }
 const evLoc = ev => ev.loc || { city: '', street: '', house: '', apt: '' };
 function evPlace(ev) {
@@ -8255,8 +8587,19 @@ function evPubData(ev) {
    כל שדה: { k:'x…', label, fid, type, options }. fid = הפרט הדינמי שהתשובה נכנסת אליו בכרטיס בהתאמה למאגר.
    שדה בשם של פרט קיים — מתחבר אליו לבד. שדה חדש — בשמירה שואלים אם להוסיף אותו כפרט דינמי. */
 const evExtra = ev => Array.isArray(ev && ev.extra) ? ev.extra : [];
+/* „עיר מגורים” — שדה מיוחד: התשובה נכנסת לעיר שבכרטיס (לא לפרט דינמי). בלעדיו נרשם חדש נכנס בלי עיר — לא עם העיר של האירוע */
+const EV_CITY = '@city';
+const EV_CITY_NAMES = ['עיר', 'עיר מגורים', 'יישוב', 'ישוב', 'יישוב מגורים', 'עיר/יישוב', 'מקום מגורים', 'איפה את/ה גר/ה'];
+const evIsCityName = name => EV_CITY_NAMES.some(n => fkey(n) === fkey(name));
+let EV_CITYMAP = null;
+function evCanonCity(s) {   /* „אשקלון ” / „אשקלון.” → השם כמו ברשימת היישובים */
+  s = String(s == null ? '' : s).replace(/\s+/g, ' ').trim(); if (!s) return '';
+  if (!EV_CITYMAP) { EV_CITYMAP = new Map(); SITES.forEach(x => { if (x.c && !EV_CITYMAP.has(ckey(x.c))) EV_CITYMAP.set(ckey(x.c), x.c); }); }
+  return EV_CITYMAP.get(ckey(s)) || s;
+}
+const evXLinked = x => x.fid === EV_CITY || !!(x.fid && fieldById(x.fid));
 const evFieldByName = name => S.fields.find(f => fkey(f.name) === fkey(name));
-function evExtraSync(x) { const f = x.fid && fieldById(x.fid); if (f) { x.type = ['bool', 'select', 'multi', 'number', 'date'].includes(f.type) ? f.type : 'text'; x.options = f.options || []; } else { x.fid = ''; x.type = 'text'; x.options = []; } return x; }
+function evExtraSync(x) { if (x.fid === EV_CITY) { x.type = 'text'; x.options = []; return x; } const f = x.fid && fieldById(x.fid); if (f) { x.type = ['bool', 'select', 'multi', 'number', 'date'].includes(f.type) ? f.type : 'text'; x.options = f.options || []; } else { x.fid = ''; x.type = 'text'; x.options = []; } return x; }
 function evExtraVal(x, raw) {   /* תשובה מהטופס → ערך לפרט הדינמי */
   const s = String(raw == null ? '' : raw).trim(); if (!s) return null;
   const f = x.fid && fieldById(x.fid); if (!f) return null;
@@ -8410,14 +8753,14 @@ function renderEvEdit() {
 function edChipsHtml() {
   const d = E.draft, F = d.fields;
   return FLD_EV.map(([k, lb]) => '<label class="edchip' + (F[k] ? ' on' : '') + '"><input type="checkbox" data-edf="' + k + '"' + (F[k] ? ' checked' : '') + '>' + AI.check + lb + '</label>').join('') +
-    evExtra(d).map(x => '<span class="edchip on edx" title="' + esc(x.fid && fieldById(x.fid) ? 'התשובה תיכנס לפרט „' + fieldById(x.fid).name + '” בכרטיס' : 'שדה חדש') + '">' + AI.check + esc(x.label) +
+    evExtra(d).map(x => '<span class="edchip on edx" title="' + esc(x.fid === EV_CITY ? 'התשובה תיכנס לעיר בכרטיס של הנרשם' : x.fid && fieldById(x.fid) ? 'התשובה תיכנס לפרט „' + fieldById(x.fid).name + '” בכרטיס' : 'שדה חדש') + '">' + AI.check + esc(x.label) +
       '<button type="button" class="edxdel" data-act="edXDel" data-v="' + x.k + '" aria-label="הסרת השדה ' + esc(x.label) + '">×</button></span>').join('') +
     (evExtra(d).length < 6 ? '<button type="button" class="edchip edxadd" data-act="edXAdd">+ שדה נוסף</button>' : '');
 }
 function edXNoteHtml() {
   const xs = evExtra(E.draft); if (!xs.length) return '';
-  const link = xs.filter(x => x.fid && fieldById(x.fid)), fresh = xs.filter(x => !(x.fid && fieldById(x.fid)));
-  return '<div class="edxn">' + (link.length ? '<span>' + link.map(x => '„' + esc(x.label) + '”').join(', ') + ' — ' + (link.length > 1 ? 'פרטים קיימים: התשובות ייכנסו לכרטיס' : 'פרט קיים: התשובה תיכנס לכרטיס') + ' של כל נרשם בהתאמה למאגר.</span>' : '') +
+  const city = xs.filter(x => x.fid === EV_CITY), link = xs.filter(x => x.fid !== EV_CITY && x.fid && fieldById(x.fid)), fresh = xs.filter(x => !evXLinked(x));
+  return '<div class="edxn">' + (city.length ? '<span>„' + esc(city[0].label) + '” — נכנס לעיר בכרטיס של נרשם חדש (בלי השדה הזה נרשם חדש נכנס בלי עיר).</span>' : '') + (link.length ? '<span>' + link.map(x => '„' + esc(x.label) + '”').join(', ') + ' — ' + (link.length > 1 ? 'פרטים קיימים: התשובות ייכנסו לכרטיס' : 'פרט קיים: התשובה תיכנס לכרטיס') + ' של כל נרשם בהתאמה למאגר.</span>' : '') +
     (fresh.length ? '<span>' + fresh.map(x => '„' + esc(x.label) + '”').join(', ') + ' — ' + (fresh.length > 1 ? 'עוד לא קיימים' : 'עוד לא קיים') + ' בפרטים הדינמיים. בשמירה תישאלו אם להוסיף.</span>' : '') + '</div>';
 }
 function edXRefresh() { const c = $('#edChips'); if (c) c.innerHTML = edChipsHtml(); const n = $('#edXNote'); if (n) n.innerHTML = edXNoteHtml(); renderEdPreview(); }
@@ -8576,7 +8919,7 @@ async function evSave() {
   if (!d.loc.city) return bad('#ed_city', 'חסרה עיר');
   if (!d.fields.phone && !d.fields.tz) return toast('צריך לפחות טלפון או ת.ז בטופס');
   d.extra = evExtra(d).filter(x => String(x.label || '').trim());
-  d.extra.forEach(x => { if (!(x.fid && fieldById(x.fid))) { const f = evFieldByName(x.label); x.fid = f ? f.id : ''; } });
+  d.extra.forEach(x => { if (!evXLinked(x)) { if (evIsCityName(x.label)) { x.fid = EV_CITY; return; } const f = evFieldByName(x.label); x.fid = f ? f.id : ''; } });
   const fresh = d.extra.filter(x => !x.fid);
   if (fresh.length) {
     const names = fresh.map(x => '<b>„' + esc(x.label) + '”</b>').join(', ');
@@ -8645,20 +8988,29 @@ function matchRow(ev, r, tag) {
   const v = r.data || {}, t = Date.parse(r.created_at) || Date.now();
   let p = rowPerson(r);
   const isNew = !p;
+  const cx = evExtra(ev).find(x => x.fid === EV_CITY), regCity = cx ? evCanonCity(v[cx.k]) : '';
   if (isNew) {
     p = newPersonObj(); p.created = t;
     p.first = String(v.first || '').trim(); p.last = String(v.last || '').trim();
     if (ph) p.phone = ph; if (tz) p.tz = tz;
-    p.city = isCityUser() ? ME.city : evCity(ev);
+    /* העיר: מה שהנרשם כתב בטופס („עיר מגורים”) — לא העיר של האירוע. מטה עירוני יכול להוסיף רק אנשים מהעיר שלו */
+    p.city = isCityUser() ? ME.city : regCity;
     p.status = 'תומך פוטנציאלי';
     p.dbs = [(S.dbs[0] && S.dbs[0].id) || 'main'];
     if (fieldById('f_src')) p.dyn.f_src = 'דף נחיתה';
     S.people.push(p); S.by.set(p.uid, p); if (tz) S.byTz.set(tz, p); if (ph) S.byPhone.set(ph, p);
     plog(p, 'נרשם/ה לאירוע "' + ev.name + '" — נוסף/ה למאגר כתומך פוטנציאלי');
+    if (!regCity && !isCityUser()) plog(p, 'העיר לא ידועה — לא צוינה בטופס (האירוע היה ב' + (evCity(ev) || 'מקום לא ידוע') + ')');
+    else if (regCity && isCityUser() && ckey(regCity) !== ckey(ME.city)) plog(p, 'בטופס האירוע ציין/ה עיר מגורים: ' + regCity);
     stLog(p, '', 'תומך פוטנציאלי', 'אירוע: ' + ev.name);
-  } else plog(p, 'נרשם/ה לאירוע "' + ev.name + '" — נוספה התגית "' + tag + '"');
+  } else {
+    plog(p, 'נרשם/ה לאירוע "' + ev.name + '" — נוספה התגית "' + tag + '"');
+    if (regCity && !p.city && !isCityUser()) p.city = regCity;
+    else if (regCity && p.city && ckey(regCity) !== ckey(p.city)) plog(p, 'בטופס האירוע ציין/ה עיר מגורים: ' + regCity);
+  }
   if (tag && !p.tags.includes(tag)) p.tags.push(tag);
   evExtra(ev).forEach(x => {   /* שדות נוספים מהטופס → לכרטיס */
+    if (x.fid === EV_CITY) return;
     const raw = v[x.k]; if (raw == null || String(raw).trim() === '') return;
     const val = evExtraVal(x, raw);
     if (val != null) { p.dyn = p.dyn || {}; p.dyn[x.fid] = val; }
@@ -8760,10 +9112,14 @@ Object.assign(ACT, {
   edXAdd: async () => {
     if (!E.draft) return;
     const r = await modal('שדה נוסף בטופס ההרשמה', '<label class="fl" for="edx_in">שם השדה (כמו שיופיע בטופס)</label><input type="text" id="edx_in" data-mv="x" list="edxDl" maxlength="40" placeholder="למשל: כתובת מייל, מגיעים עם רכב?">' +
-      '<datalist id="edxDl">' + S.fields.map(f => '<option value="' + esc(f.name) + '">').join('') + '</datalist>' +
+      '<datalist id="edxDl">' + (evExtra(E.draft).some(x => x.fid === EV_CITY) ? '' : '<option value="עיר מגורים">') + S.fields.map(f => '<option value="' + esc(f.name) + '">').join('') + '</datalist>' +
       '<div class="sm mut" style="margin-top:8px">אם בוחרים שם של פרט דינמי קיים — התשובה תיכנס אליו בכרטיס של הנרשם.</div>', [{ lb: 'הוספה', v: true, def: true }, { lb: 'ביטול', cls: 'sec' }]);
     const name = r && r.v && String(r.vals.x || '').trim(); if (!name) return;
     if (FLD_EV.some(([, lb]) => fkey(lb) === fkey(name)) || evExtra(E.draft).some(x => fkey(x.label) === fkey(name))) { toast('השדה הזה כבר בטופס'); return; }
+    if (evIsCityName(name)) {
+      if (evExtra(E.draft).some(x => x.fid === EV_CITY)) { toast('שדה העיר כבר בטופס'); return; }
+      E.draft.extra = evExtra(E.draft).concat([{ k: 'xcity', label: name, fid: EV_CITY }]); edXRefresh(); toast('נוסף — התשובה תיכנס לעיר בכרטיס'); return;
+    }
     const f = evFieldByName(name);
     E.draft.extra = evExtra(E.draft).concat([{ k: 'x' + Math.random().toString(36).slice(2, 8), label: f ? f.name : name, fid: f ? f.id : '' }]);
     edXRefresh();
@@ -9624,12 +9980,13 @@ function canManage(u) {
   return u.manager_id === ME.id;
 }
 const ACT_PERM = { newPerson: 'edit', cardSave: 'edit', cardDelete: 'edit', cardStatus: 'edit', cardAddTag: 'edit', cardDelTag: 'edit', cardAddPhone: 'edit',
-  cardDelPhone: 'edit', cardAddField: 'edit', cardMulti: 'edit', bulk: 'edit', fldAdd: 'edit', fldEdit: 'edit', fldDel: 'edit', newDb: 'edit', dbRename: 'edit',
-  dbDel: 'edit', clearDemo: 'edit', seedCloud: 'edit', evDelete: 'edit', newEvent: 'edit', evEdit: 'edit', evSave: 'edit', evMakeLink: 'edit',
+  cardDelPhone: 'edit', cardAddField: 'edit', cardMulti: 'edit', bulk: 'edit', fldAdd: 'edit', fldEdit: 'edit', fldDel: 'admin', newDb: 'edit', dbRename: 'edit',
+  dbDel: 'admin', clearDemo: 'edit', seedCloud: 'edit', evDelete: 'edit', newEvent: 'edit', evEdit: 'edit', evSave: 'edit', evMakeLink: 'edit',
   pickFile: 'import', upRun: 'import', evImport: 'import',
   exportRes: 'export', evExport: 'export', evDownload: 'export', smsExport: 'export', smsJobExport: 'export',
   smsSend: 'sms', cardSms: 'sms', evSms: 'sms', smsRes: 'sms', smsList: 'sms' };
-const NOPERM = { edit: 'אין לך הרשאה לערוך את המאגר', import: 'אין לך הרשאה להעלות קבצים', export: 'אין לך הרשאה לייצא רשימות', sms: 'אין לך הרשאה לשלוח סמסים' };
+/* 'admin' = מנהל/ת מערכת ומעלה בלבד (can('admin') — אין תיבה כזו במסך המשתמשים, כך שרק התפקיד קובע) */
+const NOPERM = { admin: 'רק מנהל/ת מערכת יכול/ה למחוק פרט דינמי או מאגר — הם משותפים לכל הארץ', edit: 'אין לך הרשאה לערוך את המאגר', import: 'אין לך הרשאה להעלות קבצים', export: 'אין לך הרשאה לייצא רשימות', sms: 'אין לך הרשאה לשלוח סמסים' };
 const AI = {
   logo: '<svg viewBox="0 0 40 40" aria-hidden="true"><ellipse cx="20" cy="10" rx="12" ry="4.6" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M8 10v20c0 2.5 5.4 4.6 12 4.6s12-2.1 12-4.6V10" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M8 20c0 2.5 5.4 4.6 12 4.6s12-2.1 12-4.6" fill="none" stroke="currentColor" stroke-width="2.6"/><circle cx="29" cy="29" r="7" fill="#E8B84B"/><path d="M26 29.2l2.1 2 3.9-4.1" fill="none" stroke="#0B2E5B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
   central: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21V8l8-5 8 5v13"/><path d="M9 21v-6h6v6M8 11h.01M12 11h.01M16 11h.01"/></svg>',
@@ -9697,11 +10054,13 @@ async function authFlow() {
 }
 const hqBtn = (k, b, s, pick) => '<button class="hqb hq-' + k + (pick === k ? ' on' : '') + '" data-act="authHq" data-v="' + k + '" role="radio" aria-checked="' + (pick === k) + '">' +
   '<span class="hqi">' + AI[k] + '</span><span class="hqt"><b>' + b + '</b><span>' + s + '</span></span><span class="hqc">' + AI.check + '</span></button>';
+/* אחרי יציאה אוטומטית: הודעה אחת במסך הכניסה */
+function idleNote() { let t = ''; try { t = sessionStorage.getItem('idleOut') || ''; sessionStorage.removeItem('idleOut'); } catch (e) { /* */ } return t ? '<div class="anote" role="status">' + esc(t) + '</div>' : ''; }
 function showLogin(msg) {
   const pick = localStorage.getItem('maagar-hq') || '';
   authScreen(authHead() +
     '<p class="alead">כניסה למורשים בלבד. בוחרים את המטה שלך ומתחברים.</p>' +
-    (msg ? '<div class="aerr" role="alert">' + esc(msg) + '</div>' : '') +
+    (msg ? '<div class="aerr" role="alert">' + esc(msg) + '</div>' : '') + idleNote() +
     '<div class="hqpick" role="radiogroup" aria-label="המטה שלך">' +
       hqBtn('central', 'מטה מרכזי', 'גישה לכל הארץ', pick) +
       hqBtn('city', 'מטה עירוני', 'גישה לעיר שלך', pick) +
@@ -9783,15 +10142,31 @@ function showNoAccess(user) {
     '<div class="abox r"><b>אין לך גישה למערכת</b><p>החשבון <b class="sg">' + esc(who) + '</b> לא רשום כמשתמש. משתמשים נפתחים ע״י מנהל/ת המערכת במטה המרכזי, אחרי חתימה על הסכם סודיות.</p></div>' +
     '<button class="btn abtn" data-act="authLogout">התחברות עם חשבון אחר</button>');
 }
-let idleT = Date.now();
+let idleT = Date.now(), idleBusy = false;
+const IDLE_MIN = 60, IDLE_WARN = 5;   /* יציאה אחרי שעה בלי פעילות; אזהרה 5 דקות לפני */
+function idleBar(on, left) {
+  let b = $('#idleBar');
+  if (!on) { if (b) b.remove(); return; }
+  if (!b) { b = document.createElement('div'); b.id = 'idleBar'; b.className = 'idlebar'; b.setAttribute('role', 'alert'); document.body.appendChild(b); }
+  b.innerHTML = '<b>עוד ' + (left <= 1 ? 'דקה' : left + ' דקות') + ' תתבצע יציאה אוטומטית</b><span>לא הייתה פעילות כמעט שעה. כל תזוזה של העכבר או הקלדה משאירה אותך מחובר/ת.' + (typeof C !== 'undefined' && C && C.dirty ? ' בכרטיס הפתוח יש שינויים — הם יישמרו לפני היציאה.' : '') + '</span>';
+}
 function idleWatch() {
-  ['click', 'keydown', 'mousemove', 'scroll'].forEach(ev => document.addEventListener(ev, () => { idleT = Date.now(); }, { passive: true }));
+  ['click', 'keydown', 'mousemove', 'scroll'].forEach(ev => document.addEventListener(ev, () => { idleT = Date.now(); if ($('#idleBar')) idleBar(false); }, { passive: true }));
   /* יומן פעילות (schema_audit.sql): כניסה — פעם אחת לכל לשונית; נוכחות — כל 5 דקות כשבאמת עובדים (לדוח זמני הפעילות) */
   if (CLOUD) {
     try { if (!sessionStorage.getItem('audl')) { sessionStorage.setItem('audl', '1'); sb.rpc('audit_seen', { p_act: 'login' }).then(() => {}, () => {}); } } catch (e) { /* */ }
     setInterval(() => { if (Date.now() - idleT < 5 * 60000 && document.visibilityState === 'visible') sb.rpc('audit_seen', { p_act: 'ping' }).then(() => {}, () => {}); }, 5 * 60000);
   }
-  setInterval(async () => { if (Date.now() - idleT > 60 * 60000) { try { sessionStorage.removeItem('srch'); } catch (e) { /* */ } await pcacheWipe(); sb.auth.signOut(); } }, 60000);
+  setInterval(async () => {
+    const idle = Date.now() - idleT;
+    if (idle <= IDLE_MIN * 60000) { idleBar(idle > (IDLE_MIN - IDLE_WARN) * 60000, Math.ceil((IDLE_MIN * 60000 - idle) / 60000)); return; }
+    if (idleBusy) return; idleBusy = true;
+    /* כרטיס פתוח עם שינויים — שומרים לפני היציאה (אם צריך אישור, למשל טלפון כפול — לא נשמר, ומספרים על זה במסך הכניסה) */
+    let note = 'יצאת מהמערכת אוטומטית אחרי שעה בלי פעילות.';
+    if (typeof C !== 'undefined' && C && C.dirty) { const nm = fullName(C.p) || 'איש הקשר החדש'; const ok = await cardAutoSave(); note += ok ? ' השינויים בכרטיס של ' + nm + ' נשמרו לפני היציאה.' : ' השינויים בכרטיס של ' + nm + ' לא נשמרו, כי היה צריך אישור שלך.'; }
+    try { sessionStorage.removeItem('srch'); sessionStorage.setItem('idleOut', note); } catch (e) { /* */ }
+    idleBar(false); await pcacheWipe(); sb.auth.signOut();
+  }, 30000);
 }
 /* ברכה לפי שעה, שבת וחגים (לפי הלוח העברי של הדפדפן) */
 function greeting(now) {
