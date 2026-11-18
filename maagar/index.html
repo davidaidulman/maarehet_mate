@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
-<meta name="build" content="20261118-082558">
+<meta name="build" content="20261118-083131">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>דאטה ביתנו — מאגר התומכים</title>
 <style>
@@ -6193,6 +6193,28 @@ function srchSites() {
   const ck = ckey(c);
   return SITES.filter(s => s.ck === ck).sort((a, b) => (a.n || a.s || '').localeCompare(b.n || b.s || '', 'he'));
 }
+/* ---- רשימת הערים: כל היישובים מרשימת הקלפיות (זמינה מיד, בלי לחכות לטעינת האנשים),
+   ואחרי שהמאגר נטען — גם יישובים נוספים שמופיעים אצל אנשים. מסודר לפי א׳–ב׳ ---- */
+let SR_CITIES = { k: '', list: [] };
+function srchCities() {
+  const k = PPL_READY ? 'r' + DV : 'base';
+  if (SR_CITIES.k === k) return SR_CITIES.list;
+  const m = new Map();
+  for (const s of SITES) if (s.c && !m.has(ckey(s.c))) m.set(ckey(s.c), s.c);
+  if (PPL_READY) for (const c of cityCounts()) if (!m.has(ckey(c.c))) m.set(ckey(c.c), c.c);
+  SR_CITIES = { k, list: Array.from(m.values()).sort((a, b) => HE_COLL.compare(a, b)) };
+  return SR_CITIES.list;
+}
+/* כשהמאגר מסיים להיטען — משלימים את הרשימות הנפתחות (תגיות, אנשי קשר, שפות, מין, ערים) בלי לצייר מחדש את הטופס */
+function srchRefreshOpts() {
+  if (S.view !== 'search' || !$('#srchPanel')) { SR._pk = ''; return; }
+  const fill = (id, arr, all) => { const el = $('#' + id); if (!el) return; const cur = el.value;
+    el.innerHTML = '<option value="">' + all + '</option>' + arr.map(x => '<option value="' + esc(x) + '">' + esc(x) + '</option>').join(''); el.value = cur; };
+  fill('sf_city', srchCities(), 'כל הערים');
+  fill('sf_tag', allTags(), 'כל התגיות');
+  fill('sf_lang', Array.from(new Set(LANGS.concat(S.people.map(p => p.lang).filter(Boolean)))), 'כל השפות');
+  fill('sf_owner', owners(), 'כולם');
+}
 /* ---- הלשוניות של „סינון נוסף” ---- */
 const SRCH_TABS = [['addr', 'אזור מגורים'], ['kalpi', 'קלפי'], ['dyn', 'פרטים דינמיים'], ['more', 'עוד']];
 function srchTabKeys(t) {
@@ -6207,7 +6229,8 @@ const SRCH_LBL = { street: 'רחוב', house: 'מספר בית', zip: 'מיקו�
 function renderSearchPanel() {
   const f = SR.f;
   const opt = (arr, cur, all) => '<option value="">' + (all || 'הכל') + '</option>' + arr.map(x => { const v = Array.isArray(x) ? x[0] : x, l = Array.isArray(x) ? x[1] : x; return '<option value="' + esc(v) + '"' + (String(cur == null ? '' : cur) === String(v) ? ' selected' : '') + '>' + esc(l) + '</option>'; }).join('');
-  const cities = cityCounts().map(c => c.c);
+  const cities = srchCities();
+  if (!PPL_READY) pplWait().then(srchRefreshOpts);
   const val = k => esc(f[k] == null ? '' : f[k]);
   const txt = (k, lbl, ph, extra) => '<div><label class="fl" for="sf_' + k + '">' + lbl + '</label><input id="sf_' + k + '" type="text" data-sf="' + k + '" value="' + val(k) + '"' + (ph ? ' placeholder="' + ph + '"' : '') + (extra || '') + '></div>';
   const sel = (k, lbl, arr, all) => '<div><label class="fl" for="sf_' + k + '">' + lbl + '</label><select id="sf_' + k + '" data-sf="' + k + '">' + opt(arr, f[k], all) + '</select></div>';
