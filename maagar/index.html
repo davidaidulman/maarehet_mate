@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
-<meta name="build" content="20261118-125222">
+<meta name="build" content="20261118-133238">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>דאטה ביתנו — מאגר התומכים</title>
 <style>
@@ -1228,6 +1228,23 @@ main.wrap:has(#v-pniyot.on){max-width:1440px}            /* המסך הזה רח
 .rpsms td{vertical-align:top}
 .rpsmt{color:var(--ink2);font-size:12.5px;line-height:1.5;margin-top:3px;max-width:440px;white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .rpdl{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;margin-inline-end:6px;vertical-align:-3px}
+
+/* ---- דוח פעילות + גיבוי ---- */
+.rabk{display:flex;align-items:center;gap:16px;margin:0 0 16px;padding:14px 18px;border-radius:var(--r-card);background:linear-gradient(120deg,#0B2E5B,#1550A0);color:#fff;box-shadow:var(--sh-card)}
+.rabk b{display:block;font-size:15.5px}
+.rabk span{font-size:13px;color:#C9DCF3}
+.rabk .btn{margin-inline-start:auto;background:#fff;color:var(--navy);border-color:#fff;white-space:nowrap}
+.rabk .btn:hover{background:var(--gold);border-color:var(--gold)}
+.ratbl .rarow{cursor:pointer}
+.ratbl .rarow:hover td{background:#F1F6FD}
+.ratbl .rarow.on td{background:#FFF7E3}
+.radel{color:#B42318;font-weight:800}
+.rafeed tr.rad td{background:#FFF6F5}
+.rades{max-width:420px;white-space:normal;font-size:13.5px}
+.raact{white-space:nowrap;text-align:end}
+.raact .mini{margin-inline-start:6px}
+.mini.raundo{border-color:var(--navy);color:var(--navy);font-weight:800}
+.mini.raundo:hover{background:var(--navy);color:#fff}
 
 /* ---------- css/features/auth.css ---------- */
 /* ============ דאטה ביתנו — מסך הכניסה ============ */
@@ -9148,7 +9165,9 @@ Object.assign(ACT, {
    הנתונים: p.sh (היסטוריית סטטוס מסודרת — נרשמת מ-17.11.2026) + שינויים ישנים שנשלפים מההיסטוריה של הכרטיס (p.log).
    ============================================================ */
 const RP = { kind: 'status', days: 30, from: '', to: '', city: '', src: '', sel: '', page: 0, smsSt: '', smsQ: '' };
-const RP_KINDS = [['status', 'המרות סטטוס'], ['sms', 'סמסים']];
+const RP_KINDS = [['status', 'המרות סטטוס'], ['sms', 'סמסים'], ['act', 'פעילות משתמשים']];
+/* דוח פעילות + שחזור — רק לדוד (owner) ולאמיר (senior). גם השרת בודק את זה (schema_audit.sql) */
+const rpActOk = () => !!(CLOUD && ME && roleRank(ME.role) >= 3);
 VKEY.reports = () => DV + '|' + KVV + '|' + PPL_READY + '|' + RP.kind + '|' + S.sms.length;
 const RP_SRCS = [['', 'כל המקורות'], ['ידני', 'עדכון ידני'], ['אקסל', 'העלאת אקסל'], ['אירוע', 'הרשמה לאירוע'], ['פעולה קבוצתית', 'פעולה קבוצתית מהחיפוש'], ['ביטול העלאה', 'ביטול העלאה']];
 const RP_LOGRX = /^סטטוס שונה( בפעולה קבוצתית)?: (.+?) ← (.+)$/;
@@ -9191,10 +9210,12 @@ function rpMatch(x) {
   const [f, to] = RP.sel.split('|'); return x.f === f && x.to === to;
 }
 
-const rpKinds = () => '<div class="rpkind" role="tablist" aria-label="בחירת דוח">' + RP_KINDS.map(([k, l]) => '<button role="tab" aria-selected="' + (RP.kind === k) + '" class="' + (RP.kind === k ? 'on' : '') + '" data-act="rpKind" data-v="' + k + '">' + l + '</button>').join('') + '</div>';
+const rpKinds = () => '<div class="rpkind" role="tablist" aria-label="בחירת דוח">' + RP_KINDS.filter(([k]) => k !== 'act' || rpActOk()).map(([k, l]) => '<button role="tab" aria-selected="' + (RP.kind === k) + '" class="' + (RP.kind === k ? 'on' : '') + '" data-act="rpKind" data-v="' + k + '">' + l + '</button>').join('') + '</div>';
 const rpPeriod = () => '<div><span class="fl">תקופה</span><div class="rpseg">' + [[7, '7 ימים'], [30, '30 יום'], [90, '3 חודשים'], [0, 'הכול'], ['custom', 'תאריכים']].map(([k, l]) => '<button class="' + (String(RP.days) === String(k) ? 'on' : '') + '" data-act="rpDays" data-v="' + k + '">' + l + '</button>').join('') + '</div></div>' +
   (RP.days === 'custom' ? '<div class="rpdates"><div><label class="fl" for="rp_from">מתאריך</label><input id="rp_from" type="date" data-rp="from" value="' + esc(RP.from) + '"></div><div><label class="fl" for="rp_to">עד תאריך</label><input id="rp_to" type="date" data-rp="to" value="' + esc(RP.to) + '"></div></div>' : '');
 RENDER.reports = function () {
+  if (RP.kind === 'act' && !rpActOk()) RP.kind = 'status';
+  if (RP.kind === 'act') { rpActRender(); return; }
   if (RP.kind === 'sms') {
     $('#v-reports').innerHTML =
       '<div class="shead"><div><h2>דוחות</h2><p>כל המשלוחים שיצאו ושמתוזמנים — מתי, למי, מה נשלח ואיך זה הסתיים</p></div>' + rpKinds() + '</div>' +
@@ -9229,6 +9250,7 @@ function rpCalc() {
 }
 function rpBody() {
   if (RP.kind === 'sms') return rpSmsBody();
+  if (RP.kind === 'act') return rpActBody();
   const C = rpCalc(), all = C.all, conv = { length: C.nConv };
   const n = k => C.cnt[k];
   const kpi = (k, lb, ft, hero) => '<button class="kpi' + (hero ? ' hero' : '') + (RP.sel === k ? ' rpon' : '') + '" data-act="rpSel" data-v="' + k + '"><div class="lb">' + lb + '</div><div class="vl">' + nf(n(k)) + '</div><div class="ft">' + ft + '</div></button>';
@@ -9334,9 +9356,139 @@ function rpSmsPdf() {
   (d.fonts && d.fonts.ready ? Promise.race([d.fonts.ready, new Promise(r => setTimeout(r, 1500))]) : Promise.resolve()).then(() => setTimeout(go, 150));
   toast('בחלון שנפתח בוחרים „שמירה כ-PDF” כיעד');
 }
+/* ============ דוח פעילות משתמשים + שחזור (יומן השרת audit_log) ============ */
+const RA = { uid: '', tbl: '', act: '', q: '', page: 0, sum: null, feed: null, sess: null, busy: false, k: '' };
+const RA_TBL = { people: 'אנשים', kv: 'רשימות משותפות', members: 'משתמשים', inquiries: 'פניות' };
+const RA_KV = { fields: 'הפרטים הדינמיים', dbs: 'המאגרים', groups: 'הקבוצות', templates: 'תבניות הסמס', events: 'האירועים', uploads: 'היסטוריית ההעלאות', smsopt: 'שורת ההסרה' };
+const raMin = m => { m = Math.round(m || 0); return m < 60 ? m + ' דק׳' : Math.floor(m / 60) + ':' + String(m % 60).padStart(2, '0') + ' שע׳'; };
+const raRange = () => { const [a, b] = rpRange(); return [new Date(a || 0).toISOString(), new Date(b === Infinity ? Date.now() + 864e5 : b).toISOString()]; };
+const raFld = k => (typeof LBL !== 'undefined' && LBL[k]) || ({ status: 'סטטוס', dyn: 'פרטים דינמיים', tags: 'תגיות', owner: 'איש קשר', kalpi: 'קלפי', kcity: 'יישוב קלפי', dbs: 'מאגרים', email: 'דוא״ל', gender: 'מין', zip: 'מיקוד' })[k] || k;
+function raWhat(r) {
+  const n = r.n, many = n > 1;
+  if (r.act === 'login') return 'נכנס/ה למערכת';
+  if (r.act === 'logout') return 'יצא/ה מהמערכת';
+  if (r.tbl === 'people') return (r.act === 'insert' ? 'הוסיף/ה ' : r.act === 'update' ? 'עדכן/ה ' : 'מחק/ה ') + (many ? nf(n) + ' אנשים' : 'את ' + (r.labels && r.labels[0] || 'כרטיס'));
+  if (r.tbl === 'kv') { const nm = (r.labels && r.labels[0]) || ''; return (r.act === 'delete' ? 'מחק/ה את ' : 'שינה/תה את ') + (RA_KV[nm] || 'הרשימה „' + nm + '”'); }
+  if (r.tbl === 'members') return (r.act === 'insert' ? 'הוסיף/ה משתמש: ' : r.act === 'update' ? 'עדכן/ה את המשתמש ' : 'מחק/ה את המשתמש ') + ((r.labels && r.labels[0]) || '');
+  if (r.tbl === 'inquiries') return (r.act === 'update' ? 'עדכן/ה ' : 'מחק/ה ') + (many ? nf(n) + ' פניות' : 'פנייה של ' + ((r.labels && r.labels[0]) || ''));
+  return r.act;
+}
+async function raLoad() {
+  if (RA.busy) return;
+  const [a, b] = raRange(), k = [a.slice(0, 13), b.slice(0, 13), RA.uid, RA.tbl, RA.act, RA.q, RA.page].join('|');
+  RA.busy = true; RA.k = k;
+  try {
+    const [s1, f1, s2] = await Promise.all([
+      sb.rpc('audit_summary', { p_from: a, p_to: b }),
+      sb.rpc('audit_feed', { p_from: a, p_to: b, p_uid: RA.uid || null, p_tbl: RA.tbl || null, p_act: RA.act || null, p_q: RA.q.trim() || null, p_off: RA.page * 50, p_lim: 50 }),
+      RA.uid ? sb.rpc('audit_sessions', { p_uid: RA.uid, p_from: a, p_to: b }) : Promise.resolve({ data: null })
+    ]);
+    if (s1.error || f1.error) { RA.err = (s1.error || f1.error).message || 'שגיאה'; RA.sum = RA.sum || []; RA.feed = RA.feed || []; }
+    else { RA.err = ''; RA.sum = s1.data || []; RA.feed = f1.data || []; RA.sess = s2 && s2.data; }
+  } catch (e) { RA.err = String(e); }
+  RA.busy = false;
+  if (S.view === 'reports' && RP.kind === 'act') rpActBody(true);
+}
+function rpActRender() {
+  $('#v-reports').innerHTML =
+    '<div class="shead"><div><h2>דוחות</h2><p>מי עבד, מתי וכמה זמן, ומה כל אחד עשה — ושחזור של כל שינוי או מחיקה</p></div>' + rpKinds() + '</div>' +
+    '<div class="rabk"><div><b>גיבוי מלא למחשב</b><span>כל האנשים וכל הרשימות בקובץ אחד, דחוס. כדאי להוריד פעם ביום־יומיים ולשמור במקום בטוח.</span></div><button class="btn sec" data-act="raBackup">' +
+      '<svg class="rpdl" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11m0 0-4-4m4 4 4-4M5 20h14"/></svg>הורדת גיבוי מלא</button></div>' +
+    '<div class="card"><div class="cb"><div class="rpf">' + rpPeriod() +
+      '<div><label class="fl" for="ra_tbl">סוג</label><select id="ra_tbl" data-ra="tbl">' + [['', 'הכול']].concat(Object.entries(RA_TBL)).map(([k, l]) => '<option value="' + k + '"' + (RA.tbl === k ? ' selected' : '') + '>' + l + '</option>').join('') + '</select></div>' +
+      '<div><label class="fl" for="ra_act">פעולה</label><select id="ra_act" data-ra="act">' + [['', 'הכול'], ['insert', 'הוספה'], ['update', 'עדכון'], ['delete', 'מחיקה'], ['login', 'כניסה למערכת']].map(([k, l]) => '<option value="' + k + '"' + (RA.act === k ? ' selected' : '') + '>' + l + '</option>').join('') + '</select></div>' +
+      '<div><label class="fl" for="ra_q">חיפוש לפי שם</label><input id="ra_q" type="search" data-ra="q" value="' + esc(RA.q) + '" placeholder="שם של אדם / משתמש"></div>' +
+    '</div></div></div><div id="rpBody"></div>';
+  rpActBody();
+}
+function rpActBody(fromLoad) {
+  const box = $('#rpBody'); if (!box) return;
+  const [a, b] = raRange(), k = [a.slice(0, 13), b.slice(0, 13), RA.uid, RA.tbl, RA.act, RA.q, RA.page].join('|');
+  if (!fromLoad && (RA.k !== k || !RA.feed)) { box.innerHTML = '<div class="card"><div class="empty"><b>טוען את יומן הפעילות…</b></div></div>'; raLoad(); return; }
+  if (RA.err) { box.innerHTML = '<div class="card"><div class="empty"><b>לא הצלחתי לטעון את היומן</b>' + esc(RA.err) + '</div></div>'; return; }
+  const sum = (RA.sum || []).slice().sort((x, y) => (y.minutes || 0) - (x.minutes || 0));
+  const feed = RA.feed || [], total = feed.length ? +feed[0].total : 0, pages = Math.max(1, Math.ceil(total / 50));
+  const selU = RA.uid && sum.find(x => x.uid === RA.uid);
+  box.innerHTML =
+    '<div class="card"><div class="ch">זמני פעילות<span class="sub">לחיצה על משתמש מציגה רק את הפעולות שלו</span></div>' +
+      (sum.length ? '<div class="tw"><table class="tbl ratbl"><thead><tr><th>משתמש</th><th class="num">ימים</th><th class="num">זמן פעיל</th><th>פעילות ראשונה</th><th>פעילות אחרונה</th><th class="num">כניסות</th><th class="num">הוספות</th><th class="num">עדכונים</th><th class="num">מחיקות</th></tr></thead><tbody>' +
+        sum.map(u => '<tr class="rarow' + (RA.uid === u.uid ? ' on' : '') + '" data-act="raUser" data-v="' + u.uid + '" tabindex="0"><td><b>' + esc(u.who || '—') + '</b></td><td class="num">' + nf(u.days) + '</td><td class="num"><b>' + raMin(u.minutes) + '</b></td>' +
+          '<td class="mut">' + rpAbs(Date.parse(u.first_at)) + '</td><td class="mut">' + rpAbs(Date.parse(u.last_at)) + '</td><td class="num">' + nf(u.logins) + '</td><td class="num">' + nf(u.ins) + '</td><td class="num">' + nf(u.upd) + '</td><td class="num' + (u.del ? ' radel' : '') + '">' + nf(u.del) + '</td></tr>').join('') +
+        '</tbody></table></div>' : '<div class="empty">אין פעילות בתקופה הזו. היומן התחיל לרשום ב-18.11.2026.</div>') + '</div>' +
+    (selU && RA.sess && RA.sess.length ? '<div class="card"><div class="ch">ישיבות העבודה של ' + esc(selU.who || '') + '<span class="sub">ישיבה = עבודה רציפה בלי הפסקה של יותר מ-20 דקות</span><button class="link sm" data-act="raUser" data-v="">הצגת כולם</button></div>' +
+      '<div class="tw"><table class="tbl"><thead><tr><th>יום</th><th>התחלה</th><th>סיום</th><th class="num">משך</th><th class="num">פעולות</th></tr></thead><tbody>' +
+      RA.sess.slice(0, 60).map(x => { const s1 = Date.parse(x.start_at), e1 = Date.parse(x.end_at); return '<tr><td>' + rpAbs(s1).split(' ')[0] + '</td><td>' + rpAbs(s1).split(' ')[1] + '</td><td>' + rpAbs(e1).split(' ')[1] + '</td><td class="num">' + raMin(Math.max(1, (e1 - s1) / 60000)) + '</td><td class="num">' + nf(x.actions) + '</td></tr>'; }).join('') +
+      '</tbody></table></div></div>' : '') +
+    '<div class="card" id="rpList"><div class="ch"><span>יומן הפעולות <span class="sub">' + nf(total) + '</span></span>' + (RA.uid ? '<button class="link sm" data-act="raUser" data-v="">כל המשתמשים</button>' : '') + '</div>' +
+      (feed.length ? '<div class="tw"><table class="tbl rafeed"><thead><tr><th>מתי</th><th>מי</th><th>מה</th><th>פרטים</th><th></th></tr></thead><tbody>' +
+        feed.map(r => { const more = r.n > 3 && r.tbl === 'people' ? ' ועוד ' + nf(r.n - 3) : '';
+          const det = r.tbl === 'people' || r.tbl === 'inquiries' ? esc((r.labels || []).filter(Boolean).join(', ')) + more : '';
+          const fl = r.act === 'update' && r.changed && r.changed.length ? '<div class="sm mut">שדות: ' + esc(r.changed.slice(0, 6).map(raFld).join(', ')) + (r.changed.length > 6 ? '…' : '') + '</div>' : '';
+          const can = r.restorable > 0 && r.tbl !== 'members' && !(r.tbl === 'kv' && r.act === 'insert');
+          return '<tr class="' + (r.act === 'delete' ? 'rad' : '') + '"><td class="mut" style="white-space:nowrap">' + rpAbs(Date.parse(r.at)) + '</td><td><b>' + esc(r.who || '—') + '</b></td>' +
+            '<td>' + esc(raWhat(r)) + '</td><td class="rades">' + det + fl + (r.restored ? '<div class="sm" style="color:var(--gtx)">שוחזר' + (r.restored < r.n ? ' (' + nf(r.restored) + ')' : '') + '</div>' : '') + '</td>' +
+            '<td class="raact">' + (r.tbl === 'people' && r.n > 1 ? '<button class="mini" data-act="raRows" data-bt="' + r.bt + '" data-tbl="' + esc(r.tbl || '') + '" data-a="' + r.act + '">פירוט</button>' : '') +
+              (can ? '<button class="mini raundo" data-act="raRestore" data-bt="' + r.bt + '" data-tbl="' + esc(r.tbl || '') + '" data-a="' + r.act + '" data-n="' + r.restorable + '" data-w="' + esc(raWhat(r)) + '">' + (r.act === 'insert' ? 'ביטול ההוספה' : 'שחזור') + '</button>' : '') + '</td></tr>'; }).join('') +
+        '</tbody></table></div>' +
+        (pages > 1 ? '<div class="pager"><span>עמוד ' + (RA.page + 1) + ' מתוך ' + nf(pages) + '</span><div class="row"><button class="btn sec sm" data-act="raPage" data-v="-1"' + (RA.page ? '' : ' disabled') + '>הקודם</button><button class="btn sec sm" data-act="raPage" data-v="1"' + (RA.page < pages - 1 ? '' : ' disabled') + '>הבא</button></div></div>' : '')
+        : '<div class="empty">אין פעולות להצגה</div>') + '</div>';
+}
+document.addEventListener('input', e => { const k = e.target.dataset && e.target.dataset.ra; if (!k || e.target.tagName === 'SELECT') return; RA[k] = e.target.value; RA.page = 0; debounce('ra', rpActBody, 400); });
+document.addEventListener('change', e => { const k = e.target.dataset && e.target.dataset.ra; if (!k) return; RA[k] = e.target.value; RA.page = 0; rpActBody(); });
+/* גיבוי מלא: קובץ JSON שורה-לכל-אדם, דחוס (gzip) — נבנה בחלקים כדי לא להפיל את הדפדפן גם עם 100 אלף איש */
+async function raBackup() {
+  if (!PPL_READY) { toast('המאגר עוד נטען — עוד רגע'); await pplWait(); }
+  const t0 = Date.now(), enc = new TextEncoder(), parts = [];
+  const head = { type: 'maagar-backup', v: 1, at: new Date().toISOString(), by: myName(), scope: SCOPE, people: S.people.length };
+  const kv = {}; KV_KEYS.forEach(k => { if (k !== 'settings') kv[k] = S[k]; });
+  let write, done;
+  if (window.CompressionStream) {
+    const cs = new CompressionStream('gzip'), w = cs.writable.getWriter(); write = s => w.write(enc.encode(s));
+    done = (async () => { const r = new Response(cs.readable); return r.blob(); })();
+    write(JSON.stringify(head) + '\n' + JSON.stringify({ kv }) + '\n');
+    for (let i = 0; i < S.people.length; i += 2000) { let s = ''; for (const p of S.people.slice(i, i + 2000)) s += JSON.stringify(strip(p)) + '\n'; await write(s); if (i % 20000 === 0) await new Promise(r => setTimeout(r, 0)); }
+    await w.close();
+    const blob = await done; parts.push(blob);
+  } else {
+    parts.push(new Blob([JSON.stringify(head) + '\n' + JSON.stringify({ kv }) + '\n' + S.people.map(p => JSON.stringify(strip(p))).join('\n')], { type: 'application/json' }));
+  }
+  const gz = !!window.CompressionStream, blob = parts[0];
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = 'גיבוי דאטה ביתנו ' + fmtDate(isoDay(new Date())).replace(/\//g, '-') + (gz ? '.jsonl.gz' : '.jsonl');
+  document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 4000);
+  activity('הורדת גיבוי מלא (' + nf(S.people.length) + ' אנשים)');
+  toast('הגיבוי ירד — ' + nf(S.people.length) + ' אנשים, ' + (blob.size / 1048576).toFixed(1) + ' MB (' + Math.round((Date.now() - t0) / 1000) + ' שנ׳)');
+}
 /* ---- הפעולות (כפתורי data-act) של המסך הזה — קידומת rp ---- */
 Object.assign(ACT, {
-  rpKind: el => { RP.kind = el.dataset.v; RP.sel = ''; RP.page = 0; RENDER.reports(); },
+  rpKind: el => { RP.kind = el.dataset.v; RP.sel = ''; RP.page = 0; RA.k = ''; RENDER.reports(); },
+  raUser: el => { RA.uid = RA.uid === el.dataset.v ? '' : el.dataset.v; RA.page = 0; rpActBody(); },
+  raPage: el => { RA.page = Math.max(0, RA.page + +el.dataset.v); rpActBody(); const l = $('#rpList'); if (l) l.scrollIntoView({ block: 'start' }); },
+  raBackup: async el => { el.disabled = true; const t = el.innerHTML; el.textContent = 'מכין את הגיבוי…'; try { await raBackup(); } catch (e) { console.warn(e); toast('הגיבוי לא הצליח: ' + e.message); } el.disabled = false; el.innerHTML = t; },
+  raRows: async el => {
+    const { data, error } = await sb.rpc('audit_rows', { p_bt: +el.dataset.bt, p_tbl: el.dataset.tbl || null, p_act: el.dataset.a, p_lim: 300 });
+    if (error) { toast('לא הצלחתי לטעון את הפירוט'); return; }
+    modal('פירוט הפעולה', '<div style="max-height:56vh;overflow:auto"><table class="tbl"><thead><tr><th>שם</th><th>שדות</th><th></th></tr></thead><tbody>' +
+      (data || []).map(r => '<tr><td>' + esc(r.label || r.rk) + '</td><td class="sm mut">' + esc((r.changed || []).map(raFld).join(', ')) + '</td><td>' + (r.restored_at ? '<span class="sm" style="color:var(--gtx)">שוחזר</span>' : '<button class="mini" data-act="raOne" data-v="' + r.id + '">שחזור</button>') + '</td></tr>').join('') +
+      '</tbody></table>' + ((data || []).length >= 300 ? '<div class="sm mut" style="padding:8px">מוצגים 300 הראשונים</div>' : '') + '</div>', [{ lb: 'סגירה', cls: 'sec' }]);
+  },
+  raOne: async el => {
+    el.disabled = true; const { data, error } = await sb.rpc('audit_restore', { p_ids: [+el.dataset.v] });
+    if (error || !data || !data.ok) { el.disabled = false; toast('השחזור לא הצליח'); return; }
+    el.outerHTML = '<span class="sm" style="color:var(--gtx)">שוחזר</span>'; RA.k = ''; reloadData();
+  },
+  raRestore: async el => {
+    const n = +el.dataset.n, act = el.dataset.a;
+    const msg = act === 'insert' ? 'הפעולה תמחק את מה שנוסף' + (n > 1 ? ' (' + nf(n) + ')' : '') + '.' : act === 'delete' ? 'הפעולה תחזיר את מה שנמחק' + (n > 1 ? ' (' + nf(n) + ')' : '') + ', בדיוק כמו שהיה.' : 'הפעולה תחזיר את הערכים שהיו לפני העדכון' + (n > 1 ? ' (' + nf(n) + ')' : '') + '. שינויים אחרים שנעשו בינתיים בשדות אחרים — נשארים.';
+    if (!(await ask(act === 'insert' ? 'ביטול ההוספה' : 'שחזור', '<b>' + esc(el.dataset.w) + '</b><br><br>' + msg + '<br><span class="sm mut">גם השחזור עצמו נרשם ביומן.</span>', act === 'insert' ? 'כן, לבטל' : 'כן, לשחזר', act === 'insert'))) return;
+    el.disabled = true; el.textContent = 'משחזר…';
+    const ids = await sb.rpc('audit_batch_ids', { p_bt: +el.dataset.bt, p_tbl: el.dataset.tbl || null, p_act: act });
+    if (ids.error) { toast('השחזור לא הצליח'); el.disabled = false; return; }
+    let ok = 0; const all = ids.data || [];
+    for (let i = 0; i < all.length; i += 500) { const r = await sb.rpc('audit_restore', { p_ids: all.slice(i, i + 500) }); if (r.error || !r.data || !r.data.ok) { toast('השחזור נעצר באמצע — ' + nf(ok) + ' שוחזרו'); break; } ok += r.data.restored; }
+    toast('שוחזרו ' + nf(ok) + (ok === 1 ? ' פריט' : ' פריטים') + ' — מרענן את הנתונים');
+    RA.k = ''; await reloadData(); if (S.view === 'reports') RENDER.reports();
+  },
   rpSmsPdf: () => rpSmsPdf(),
   rpSmsXlsx: () => {
     if (!can('export')) { toast(NOPERM.export); return; }
@@ -9634,6 +9786,11 @@ function showNoAccess(user) {
 let idleT = Date.now();
 function idleWatch() {
   ['click', 'keydown', 'mousemove', 'scroll'].forEach(ev => document.addEventListener(ev, () => { idleT = Date.now(); }, { passive: true }));
+  /* יומן פעילות (schema_audit.sql): כניסה — פעם אחת לכל לשונית; נוכחות — כל 5 דקות כשבאמת עובדים (לדוח זמני הפעילות) */
+  if (CLOUD) {
+    try { if (!sessionStorage.getItem('audl')) { sessionStorage.setItem('audl', '1'); sb.rpc('audit_seen', { p_act: 'login' }).then(() => {}, () => {}); } } catch (e) { /* */ }
+    setInterval(() => { if (Date.now() - idleT < 5 * 60000 && document.visibilityState === 'visible') sb.rpc('audit_seen', { p_act: 'ping' }).then(() => {}, () => {}); }, 5 * 60000);
+  }
   setInterval(async () => { if (Date.now() - idleT > 60 * 60000) { try { sessionStorage.removeItem('srch'); } catch (e) { /* */ } await pcacheWipe(); sb.auth.signOut(); } }, 60000);
 }
 /* ברכה לפי שעה, שבת וחגים (לפי הלוח העברי של הדפדפן) */
@@ -9696,7 +9853,7 @@ Object.assign(ACT, {
   authResend: el => sendCode(el),
   authVerify: el => verifyCode(el),
   authRecheck: () => authFlow(),
-  authLogout: async () => { try { sessionStorage.removeItem('srch'); } catch (e) { /* */ } await pcacheWipe(); await sb.auth.signOut(); location.reload(); },
+  authLogout: async () => { try { sessionStorage.removeItem('srch'); sessionStorage.removeItem('audl'); } catch (e) { /* */ } await pcacheWipe(); await sb.auth.signOut(); location.reload(); },
   reload: async () => { toast('טוען מחדש…'); await reloadData(); toast('הנתונים עודכנו'); }
 });
 
