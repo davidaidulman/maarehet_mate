@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
-<meta name="build" content="20261118-113207">
+<meta name="build" content="20261118-114139">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>דאטה ביתנו — מאגר התומכים</title>
 <style>
@@ -877,6 +877,14 @@ main:has(#v-map.on){max-width:none;padding-inline:20px}
 .aph-nav .n3{width:10px;height:10px;border-right:2px solid var(--ink2);border-bottom:2px solid var(--ink2);transform:rotate(-45deg)}
 #smsNoProv[hidden]{display:none}
 
+/* קישור לדוח הסמסים (במקום רשימת המשלוחים) */
+.smrep{display:flex;align-items:center;gap:14px;width:100%;margin-top:18px;padding:14px 18px;border:1px dashed var(--line);border-radius:var(--r-card);background:#fff;font:inherit;text-align:start;cursor:pointer;color:var(--ink2);transition:all .15s}
+.smrep svg{width:22px;height:22px;flex:none;fill:none;stroke:var(--navy);stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.smrep b{display:block;color:var(--navy);font-size:15px}
+.smrep span{font-size:13px}
+.smrep .ar{margin-inline-start:auto;font-size:18px;color:var(--navy)}
+.smrep:hover{border-style:solid;border-color:var(--navy-l);background:var(--bbg)}
+
 /* ---------- css/features/events.css ---------- */
 /* ============ דאטה ביתנו — אירועים ודפי נחיתה ============ */
 #v-events svg{fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
@@ -1207,6 +1215,16 @@ main.wrap:has(#v-pniyot.on){max-width:1440px}            /* המסך הזה רח
 .rpc.on{box-shadow:0 0 0 2px var(--gold)}
 #rpList .ch{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .rpc.dk{color:#fff}
+
+/* ---- בחירת דוח ---- */
+.rpkind{display:inline-flex;background:#fff;border:1px solid var(--line);border-radius:12px;padding:4px;gap:4px;box-shadow:var(--sh-card)}
+.rpkind button{border:0;background:none;font:inherit;font-size:14px;font-weight:800;color:var(--ink2);padding:8px 16px;border-radius:9px;cursor:pointer;transition:all .15s}
+.rpkind button:hover{color:var(--navy);background:var(--bbg)}
+.rpkind button.on{background:var(--navy);color:#fff}
+/* ---- דוח סמסים ---- */
+.rpsms td{vertical-align:top}
+.rpsmt{color:var(--ink2);font-size:12.5px;line-height:1.5;margin-top:3px;max-width:440px;white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.rpdl{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;margin-inline-end:6px;vertical-align:-3px}
 
 /* ---------- css/features/auth.css ---------- */
 /* ============ דאטה ביתנו — מסך הכניסה ============ */
@@ -7878,7 +7896,7 @@ RENDER.sms = function (o) {
         '<div class="smcnt" id="smsCount"></div>' +
         '<div class="row" style="margin-top:10px;gap:6px"><span class="sm mut" style="font-weight:700">הוספת שדה אישי:</span>' + TAGS.map(([k, l]) => '<button class="chip" data-act="smsTag" data-v="' + k + '">' + l + '</button>').join('') + '</div>' +
         '<div class="smtest"><label class="fl" for="sm_test">בדיקה לפני השליחה — ההודעה תישלח רק למספר הזה</label><div class="row" style="flex-wrap:nowrap">' +
-          '<input id="sm_test" type="tel" data-sm="testPhone" value="' + esc(M.testPhone || (CLOUD && ME && ME.phone ? fmtPhone('0' + String(ME.phone).replace(/^972/, '')) : '')) + '" placeholder="050-0000000" style="direction:ltr;text-align:right;max-width:220px">' +
+          '<input id="sm_test" type="tel" data-sm="testPhone" value="' + esc(M.testPhone || '') + '" placeholder="050-0000000" style="direction:ltr;text-align:right;max-width:220px">' +
           '<button class="btn sec" data-act="smsTest">שליחת בדיקה לטלפון</button></div></div>' +
       '</div></div>' +
       '<div class="card"><div class="ch">מתי לשלוח?</div><div class="cb"><div class="row">' +
@@ -7891,7 +7909,7 @@ RENDER.sms = function (o) {
       '</div></div>' +
       '<div class="card"><div class="ch">תצוגה בטלפון<span class="sub" id="smsPrevWho"></span></div><div class="cb">' + smsPhoneHtml() + '</div></div>' +
     '</div></div>' +
-    '<div class="card"><div class="ch">משלוחים<span class="sub">מתוזמנים ואחרונים</span></div><div class="cb tight" id="smsJobs"></div></div>';
+    '<button class="smrep" data-act="smsToReport">' + svg('chart') + '<span><b>המשלוחים שנשלחו ומתוזמנים</b>נמצאים עכשיו במסך הדוחות — „דוח סמסים”</span><span class="ar">←</span></button>';
   renderSmsRcp(); renderSmsLive(); renderSmsJobs();
   smsEnsureOptField();
   if (CLOUD && ME) smsProvLoad().then(() => { if (smsAuto() && (!smsBal() || Date.now() - (smsBal().at || 0) > 5 * 60000)) smsBalRefresh(true); else if (S.view === 'sms') renderSmsLive(); });
@@ -7970,15 +7988,14 @@ function smsPhoneHtml() {
 }
 const smsLinkify = t => esc(t).replace(/(https?:\/\/[^\s<]+|www\.[^\s<]+|[a-z0-9-]+\.(?:co\.il|org\.il|gov\.il|com|org|net|li|ly|me|io)(?:\/[^\s<]*)?)/gi, '<u>$1</u>');
 
-function renderSmsJobs() {
+/* רשימת המשלוחים מוצגת בדוחות („דוח סמסים”) — כאן רק מעדכנים סטטוסים שהזמן שלהם עבר ומרעננים את הדוח אם הוא פתוח */
+function smsJobsNorm() {
   const now = Date.now();
   S.sms.forEach(j => { if (j.status === 'מתוזמן' && j.sendAt <= now) j.status = 'ממתין לספק'; if (j.status === 'מתוזמן אצל הספק' && j.sendAt <= now) j.status = 'נשלח'; });
-  const pc = st => st === 'נשלח' ? 'g' : st === 'נכשל' ? 'r' : st === 'בוטל' ? 'n' : st === 'מתוזמן אצל הספק' ? 'b' : st === 'יוצא לקובץ' ? 'g' : 'y';
-  $('#smsJobs').innerHTML = S.sms.length ? '<div class="tw"><table class="tbl"><thead><tr><th>משלוח</th><th>נמענים</th><th>מועד</th><th>סטטוס</th><th></th></tr></thead><tbody>' +
-    S.sms.slice(0, 30).map(j => '<tr><td><b>' + esc(j.name || 'משלוח') + '</b><div class="mut sm" style="white-space:normal;max-width:420px">' + esc(j.text.slice(0, 90)) + (j.text.length > 90 ? '…' : '') + '</div></td><td class="num">' + nf(j.to.length) + '</td><td class="mut">' + fmtWhen(j.sendAt) + '</td>' +
-      '<td><span class="pill ' + pc(j.status) + '"' + (j.err ? ' title="' + esc(j.err) + '"' : '') + '>' + esc(j.status) + '</span>' + (j.err ? '<div class="sm" style="color:var(--rtx)">' + esc(j.err) + '</div>' : j.via && j.sent != null ? '<div class="mut sm">' + nf(j.sent) + ' יצאו' + (j.failed ? ' · ' + nf(j.failed) + ' נכשלו' : '') + (j.bad ? ' · ' + nf(j.bad) + ' מספרים לא תקינים' : '') + '</div>' : '') + '</td>' +
-      '<td><div class="row" style="flex-wrap:nowrap;gap:6px">' + (j.status === 'נכשל' && smsLive() ? '<button class="mini" data-act="smsJobRetry" data-v="' + j.id + '">ניסיון חוזר</button>' : '') + (j.via ? '' : '<button class="mini" data-act="smsJobExport" data-v="' + j.id + '">קובץ לשליחה</button>') + (!j.via && (j.status === 'מתוזמן' || j.status === 'ממתין לספק') ? '<button class="mini" data-act="smsJobDone" data-v="' + j.id + '">סימון כנשלח</button><button class="mini r" data-act="smsJobCancel" data-v="' + j.id + '">ביטול</button>' : '') + '</div></td></tr>').join('') +
-    '</tbody></table></div>' : '<div class="empty">עוד לא נשלחו משלוחים</div>';
+}
+function renderSmsJobs() {
+  smsJobsNorm();
+  if (S.view === 'reports' && RP.kind === 'sms' && $('#rpBody')) rpBody();
 }
 function exportJob(j) {
   saveXlsx([['לשליחה', [['טלפון', 'שם', 'הודעה']].concat(j.to.map(t => { const p = t.uid ? S.by.get(t.uid) : null; return [t.phone, p ? fullName(p) : '', smsFinal(j.text, p, j.opt === true)]; }))]], 'סמס — ' + (j.name || 'משלוח') + '.xlsx');
@@ -8076,7 +8093,7 @@ Object.assign(ACT, {
     if (!isMobile(ph)) { toast('צריך מספר נייד תקין לבדיקה'); $('#sm_test') && $('#sm_test').focus(); return; }
     if (!M.text.trim()) { toast('אין עדיין הודעה לבדוק'); return; }
     const R = smsRecipients(), p = R.list[0] ? R.list[0].p : null;
-    const j = { id: uid(), name: 'בדיקה — ' + (M.name || 'משלוח'), text: smsFinal(M.text, p, M.optLine), opt: false, sender: M.sender, created: Date.now(), sendAt: Date.now(), status: 'ממתין לספק', test: true, to: [{ phone: ph, uid: null }] };
+    const j = { id: uid(), by: myName(), name: 'בדיקה — ' + (M.name || 'משלוח'), text: smsFinal(M.text, p, M.optLine), opt: false, sender: M.sender, created: Date.now(), sendAt: Date.now(), status: 'ממתין לספק', test: true, to: [{ phone: ph, uid: null }] };
     S.sms.unshift(j);
     if (smsLive()) {
       j.status = 'שולח…'; renderSmsJobs(); toast('שולח הודעת בדיקה…');
@@ -8091,6 +8108,7 @@ Object.assign(ACT, {
   smsAddPerson: el => { if (!M.persons.includes(el.dataset.v)) M.persons.push(el.dataset.v); renderSmsRcp(); renderSmsLive(); },
   smsDelPerson: el => { M.persons = M.persons.filter(u => u !== el.dataset.v); renderSmsRcp(); renderSmsLive(); },
   smsList: () => { const R = smsRecipients(); modal('הנמענים (' + nf(R.list.length) + ')', '<div style="max-height:50vh;overflow:auto"><table class="tbl"><tbody>' + R.list.slice(0, 300).map(x => '<tr><td>' + esc(x.p ? fullName(x.p) : '—') + '</td><td class="num"><span class="sg">' + fmtPhone(x.phone) + '</span></td><td class="mut">' + esc(x.p ? x.p.city || '' : '') + '</td></tr>').join('') + '</tbody></table>' + (R.list.length > 300 ? '<div class="mut sm" style="padding:8px">ועוד ' + nf(R.list.length - 300) + '…</div>' : '') + '</div>', [{ lb: 'סגירה', v: true }]); },
+  smsToReport: () => { RP.kind = 'sms'; RP.page = 0; go('reports'); },
   smsSend: async () => {
     const R = smsRecipients(); if (!R.list.length || !M.text.trim()) return;
     const later = M.when === 'later';
@@ -8104,7 +8122,7 @@ Object.assign(ACT, {
       'ההודעה ' + (later ? 'תישלח' : 'תישלח עכשיו') + ' ל-<b>' + nf(n) + '</b> ' + (n === 1 ? 'איש' : 'אנשים') + (sp.parts > 1 ? ' (' + sp.parts + ' חלקים לכל אחד — סה״כ כ-' + nf(msgs) + ' הודעות)' : '') + '.' +
       '<br><span class="sm mut">' + (smsLive() ? 'ההודעות יוצאות דרך פולסים' + (later ? ', שישלחו אותן במועד שנקבע.' : ' מיד — אי אפשר לעצור אחרי האישור.') : 'כל עוד הספק לא מחובר, המשלוח יחכה כאן ותוכלו להוריד ממנו קובץ ל-b-elect.') + '</span>',
       later ? 'כן, לתזמן' : 'כן, לשלוח'))) return;
-    const j = { id: uid(), name: M.name || 'משלוח ' + fmtWhen(Date.now()), text: M.text, opt: M.optLine, sender: M.sender, created: Date.now(), sendAt: at, status: later ? 'מתוזמן' : 'ממתין לספק', to: R.list.map(x => ({ phone: x.phone, uid: x.p ? x.p.uid : null })) };
+    const j = { id: uid(), by: myName(), name: M.name || 'משלוח ' + fmtWhen(Date.now()), text: M.text, opt: M.optLine, sender: M.sender, created: Date.now(), sendAt: at, status: later ? 'מתוזמן' : 'ממתין לספק', to: R.list.map(x => ({ phone: x.phone, uid: x.p ? x.p.uid : null })) };
     S.sms.unshift(j);
     if (smsLive()) { j.status = 'שולח…'; renderSmsJobs(); toast('שולח דרך פולסים…'); await smsDeliver(j, later); }
     else await smsBalUse(sp.parts * R.list.length);
@@ -9109,7 +9127,9 @@ Object.assign(ACT, {
    דוח המרות: מי עבר מאיזה סטטוס לאיזה, מתי, ע״י מי ומאיפה.
    הנתונים: p.sh (היסטוריית סטטוס מסודרת — נרשמת מ-17.11.2026) + שינויים ישנים שנשלפים מההיסטוריה של הכרטיס (p.log).
    ============================================================ */
-const RP = { days: 30, from: '', to: '', city: '', src: '', sel: '', page: 0 };
+const RP = { kind: 'status', days: 30, from: '', to: '', city: '', src: '', sel: '', page: 0, smsSt: '', smsQ: '' };
+const RP_KINDS = [['status', 'המרות סטטוס'], ['sms', 'סמסים']];
+VKEY.reports = () => DV + '|' + KVV + '|' + PPL_READY + '|' + RP.kind + '|' + S.sms.length;
 const RP_SRCS = [['', 'כל המקורות'], ['ידני', 'עדכון ידני'], ['אקסל', 'העלאת אקסל'], ['אירוע', 'הרשמה לאירוע'], ['פעולה קבוצתית', 'פעולה קבוצתית מהחיפוש'], ['ביטול העלאה', 'ביטול העלאה']];
 const RP_LOGRX = /^סטטוס שונה( בפעולה קבוצתית)?: (.+?) ← (.+)$/;
 
@@ -9151,13 +9171,24 @@ function rpMatch(x) {
   const [f, to] = RP.sel.split('|'); return x.f === f && x.to === to;
 }
 
+const rpKinds = () => '<div class="rpkind" role="tablist" aria-label="בחירת דוח">' + RP_KINDS.map(([k, l]) => '<button role="tab" aria-selected="' + (RP.kind === k) + '" class="' + (RP.kind === k ? 'on' : '') + '" data-act="rpKind" data-v="' + k + '">' + l + '</button>').join('') + '</div>';
+const rpPeriod = () => '<div><span class="fl">תקופה</span><div class="rpseg">' + [[7, '7 ימים'], [30, '30 יום'], [90, '3 חודשים'], [0, 'הכול'], ['custom', 'תאריכים']].map(([k, l]) => '<button class="' + (String(RP.days) === String(k) ? 'on' : '') + '" data-act="rpDays" data-v="' + k + '">' + l + '</button>').join('') + '</div></div>' +
+  (RP.days === 'custom' ? '<div class="rpdates"><div><label class="fl" for="rp_from">מתאריך</label><input id="rp_from" type="date" data-rp="from" value="' + esc(RP.from) + '"></div><div><label class="fl" for="rp_to">עד תאריך</label><input id="rp_to" type="date" data-rp="to" value="' + esc(RP.to) + '"></div></div>' : '');
 RENDER.reports = function () {
+  if (RP.kind === 'sms') {
+    $('#v-reports').innerHTML =
+      '<div class="shead"><div><h2>דוחות</h2><p>כל המשלוחים שיצאו ושמתוזמנים — מתי, למי, מה נשלח ואיך זה הסתיים</p></div>' + rpKinds() + '</div>' +
+      '<div class="card"><div class="cb"><div class="rpf">' + rpPeriod() +
+        '<div><label class="fl" for="rp_smsq">חיפוש במשלוחים</label><input id="rp_smsq" type="search" data-rp="smsQ" value="' + esc(RP.smsQ) + '" placeholder="שם המשלוח או מילה מההודעה"></div>' +
+        '<div><label class="fl" for="rp_smsst">סטטוס</label><select id="rp_smsst" data-rp="smsSt">' + [['', 'כל הסטטוסים'], ['נשלח', 'נשלח'], ['מתוזמן אצל הספק', 'מתוזמן'], ['נכשל', 'נכשל'], ['ממתין לספק', 'ממתין לספק'], ['יוצא לקובץ', 'יצא לקובץ'], ['בוטל', 'בוטל']].map(([k, l]) => '<option value="' + k + '"' + (RP.smsSt === k ? ' selected' : '') + '>' + l + '</option>').join('') + '</select></div>' +
+      '</div></div></div><div id="rpBody"></div>';
+    rpBody(); return;
+  }
   const cities = cityCounts().map(c => c.c).sort((a, b) => a.localeCompare(b, 'he'));
   $('#v-reports').innerHTML =
-    '<div class="shead"><div><h2>דוחות</h2><p>מי עבר מאיזה סטטוס לאיזה — מתי, ע״י מי ומאיפה</p></div></div>' +
+    '<div class="shead"><div><h2>דוחות</h2><p>מי עבר מאיזה סטטוס לאיזה — מתי, ע״י מי ומאיפה</p></div>' + rpKinds() + '</div>' +
     '<div class="card"><div class="cb"><div class="rpf">' +
-      '<div><span class="fl">תקופה</span><div class="rpseg">' + [[7, '7 ימים'], [30, '30 יום'], [90, '3 חודשים'], [0, 'הכול'], ['custom', 'תאריכים']].map(([k, l]) => '<button class="' + (String(RP.days) === String(k) ? 'on' : '') + '" data-act="rpDays" data-v="' + k + '">' + l + '</button>').join('') + '</div></div>' +
-      (RP.days === 'custom' ? '<div class="rpdates"><div><label class="fl" for="rp_from">מתאריך</label><input id="rp_from" type="date" data-rp="from" value="' + esc(RP.from) + '"></div><div><label class="fl" for="rp_to">עד תאריך</label><input id="rp_to" type="date" data-rp="to" value="' + esc(RP.to) + '"></div></div>' : '') +
+      rpPeriod() +
       '<div><label class="fl" for="rp_city">עיר</label><input id="rp_city" type="text" data-rp="city" list="dl_rp_city" value="' + esc(RP.city) + '" placeholder="כל הערים" autocomplete="off"></div>' +
       '<div><label class="fl" for="rp_src">מקור השינוי</label><select id="rp_src" data-rp="src">' + RP_SRCS.map(([k, l]) => '<option value="' + k + '"' + (RP.src === k ? ' selected' : '') + '>' + l + '</option>').join('') + '</select></div>' +
     '</div></div></div>' +
@@ -9177,6 +9208,7 @@ function rpCalc() {
   return RPC;
 }
 function rpBody() {
+  if (RP.kind === 'sms') return rpSmsBody();
   const C = rpCalc(), all = C.all, conv = { length: C.nConv };
   const n = k => C.cnt[k];
   const kpi = (k, lb, ft, hero) => '<button class="kpi' + (hero ? ' hero' : '') + (RP.sel === k ? ' rpon' : '') + '" data-act="rpSel" data-v="' + k + '"><div class="lb">' + lb + '</div><div class="vl">' + nf(n(k)) + '</div><div class="ft">' + ft + '</div></button>';
@@ -9215,8 +9247,82 @@ function rpBody() {
 document.addEventListener('input', e => { const k = e.target.dataset && e.target.dataset.rp; if (!k || e.target.tagName === 'SELECT') return; RP[k] = e.target.value; RP.page = 0; debounce('rp', rpBody, 200); });
 document.addEventListener('change', e => { const k = e.target.dataset && e.target.dataset.rp; if (!k) return; RP[k] = e.target.value; RP.page = 0; rpBody(); });
 
+/* ============ דוח סמסים ============ */
+const RP_SMS_PC = st => st === 'נשלח' || st === 'יוצא לקובץ' ? 'g' : st === 'נכשל' ? 'r' : st === 'בוטל' ? 'n' : st === 'מתוזמן אצל הספק' ? 'b' : 'y';
+const rpSmsWhen = j => j.sendAt || j.created || 0;
+const rpSmsSent = j => j.sent != null ? j.sent : (j.status === 'נשלח' || j.status === 'יוצא לקובץ' ? (j.to || []).length : 0);
+function rpSmsList() {
+  smsJobsNorm();
+  const [a, b] = rpRange(), q = norm(RP.smsQ);
+  return S.sms.filter(j => { const t = rpSmsWhen(j); return t >= a && t <= b && (!RP.smsSt || j.status === RP.smsSt) && (!q || norm((j.name || '') + ' ' + (j.text || '')).includes(q)); })
+    .sort((x, y) => rpSmsWhen(y) - rpSmsWhen(x));
+}
+function rpSmsKpis(list) {
+  const k = { jobs: list.length, sent: 0, failed: 0, sched: 0 };
+  list.forEach(j => { k.sent += rpSmsSent(j); k.failed += j.status === 'נכשל' ? (j.failed || (j.to || []).length) : (j.failed || 0); if (/מתוזמן/.test(j.status)) k.sched++; });
+  return k;
+}
+function rpSmsBody() {
+  const list = rpSmsList(), K = rpSmsKpis(list);
+  const per = 50, pages = Math.max(1, Math.ceil(list.length / per)); if (RP.page >= pages) RP.page = pages - 1;
+  const pg = list.slice(RP.page * per, RP.page * per + per);
+  const kpi = (lb, v, ft, hero) => '<div class="kpi' + (hero ? ' hero' : '') + '"><div class="lb">' + lb + '</div><div class="vl">' + nf(v) + '</div><div class="ft">' + ft + '</div></div>';
+  const live = typeof smsLive === 'function' && smsLive();
+  $('#rpBody').innerHTML =
+    '<div class="kpis rpk">' + kpi('הודעות שיצאו', K.sent, 'בתקופה שנבחרה', true) + kpi('משלוחים', K.jobs, 'כולל הודעות בדיקה') + kpi('מתוזמנים', K.sched, 'יצאו במועד שנקבע') + kpi('נכשלו', K.failed, 'הודעות שלא יצאו') + '</div>' +
+    '<div class="card" id="rpList"><div class="ch"><span>המשלוחים <span class="sub">' + nf(list.length) + '</span></span>' +
+      '<div class="row" style="gap:8px"><button class="btn sec sm" data-act="rpSmsXlsx"' + (list.length ? '' : ' disabled') + '>ייצוא לאקסל</button><button class="btn sm" data-act="rpSmsPdf"' + (list.length ? '' : ' disabled') + '><svg class="rpdl" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11m0 0-4-4m4 4 4-4M5 20h14"/></svg>הורדת PDF</button></div></div>' +
+      (list.length ? '<div class="tw"><table class="tbl rpsms"><thead><tr><th>משלוח</th><th>מועד</th><th class="num">נמענים</th><th class="num">יצאו</th><th>סטטוס</th><th>שולח</th><th>ע״י</th><th></th></tr></thead><tbody>' +
+        pg.map(j => '<tr><td><b>' + esc(j.name || 'משלוח') + '</b>' + (j.test ? ' <span class="pill n">בדיקה</span>' : '') + '<div class="rpsmt">' + esc(j.text || '') + '</div></td>' +
+          '<td class="mut" style="white-space:nowrap">' + fmtWhen(rpSmsWhen(j)) + '</td><td class="num">' + nf((j.to || []).length) + '</td>' +
+          '<td class="num">' + nf(rpSmsSent(j)) + (j.failed ? '<div class="sm" style="color:var(--rtx)">' + nf(j.failed) + ' נכשלו</div>' : '') + '</td>' +
+          '<td><span class="pill ' + RP_SMS_PC(j.status) + '">' + esc(j.status) + '</span>' + (j.err ? '<div class="sm" style="color:var(--rtx);max-width:220px;white-space:normal">' + esc(j.err) + '</div>' : '') + '</td>' +
+          '<td dir="ltr" style="text-align:right">' + esc(j.sender || '') + '</td><td>' + esc(j.by || '—') + '</td>' +
+          '<td><div class="row" style="flex-wrap:nowrap;gap:6px">' + (j.status === 'נכשל' && live ? '<button class="mini" data-act="smsJobRetry" data-v="' + j.id + '">ניסיון חוזר</button>' : '') +
+            (j.via ? '' : '<button class="mini" data-act="smsJobExport" data-v="' + j.id + '">קובץ לשליחה</button>') +
+            (!j.via && (j.status === 'מתוזמן' || j.status === 'ממתין לספק') ? '<button class="mini" data-act="smsJobDone" data-v="' + j.id + '">סימון כנשלח</button><button class="mini r" data-act="smsJobCancel" data-v="' + j.id + '">ביטול</button>' : '') + '</div></td></tr>').join('') +
+        '</tbody></table></div>' +
+        (pages > 1 ? '<div class="pager"><span>מציג ' + nf(RP.page * per + 1) + '–' + nf(RP.page * per + pg.length) + ' מתוך ' + nf(list.length) + '</span><div class="row"><button class="btn sec sm" data-act="rpPage" data-v="-1"' + (RP.page ? '' : ' disabled') + '>הקודם</button><button class="btn sec sm" data-act="rpPage" data-v="1"' + (RP.page < pages - 1 ? '' : ' disabled') + '>הבא</button></div></div>' : '')
+        : '<div class="empty"><b>אין משלוחים בתקופה הזו</b>' + (S.sms.length ? 'אפשר לבחור תקופה אחרת למעלה.' : 'כל משלוח שיוצא ממסך הסמסים יופיע כאן.') + '</div>') +
+    '</div>';
+}
+const rpAbs = t => { const d = new Date(t), z = n => (n < 10 ? '0' : '') + n; return z(d.getDate()) + '.' + z(d.getMonth() + 1) + '.' + d.getFullYear() + ' ' + z(d.getHours()) + ':' + z(d.getMinutes()); };
+const rpPeriodLbl = () => RP.days === 'custom' ? (RP.from ? fmtDate(RP.from) : 'מההתחלה') + ' – ' + (RP.to ? fmtDate(RP.to) : 'היום') : RP.days ? RP.days + ' הימים האחרונים' : 'כל התקופה';
+/* PDF — דף מעוצב שנפתח בחלון ההדפסה של הדפדפן; שם בוחרים „שמירה כ-PDF” */
+function rpSmsPdf() {
+  const list = rpSmsList(); if (!list.length) return;
+  const K = rpSmsKpis(list), e = esc;
+  const html = '<!DOCTYPE html><html lang="he" dir="rtl"><head><meta charset="utf-8"><title>דוח סמסים — ' + e(fmtDate(isoDay(new Date()))) + '</title>' +
+    '<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;600;800&display=swap" rel="stylesheet">' +
+    '<style>@page{size:A4 landscape;margin:12mm}*{box-sizing:border-box}body{font-family:Heebo,Arial,sans-serif;color:#14202E;margin:0;font-size:11px;-webkit-print-color-adjust:exact;print-color-adjust:exact}' +
+    'h1{font-size:20px;margin:0 0 2px;color:#0B2E5B}.sub{color:#5A6A7D;margin:0 0 12px;font-size:12px}' +
+    '.k{display:flex;gap:10px;margin:0 0 14px}.k div{border:1px solid #D5DCE5;border-radius:8px;padding:8px 12px;min-width:120px}.k b{display:block;font-size:18px;color:#0B2E5B}' +
+    'table{width:100%;border-collapse:collapse}th{background:#0B2E5B;color:#fff;font-weight:600;text-align:right;padding:6px 8px;font-size:10.5px}' +
+    'td{border-bottom:1px solid #E3E7EE;padding:6px 8px;vertical-align:top}tr:nth-child(even) td{background:#F6F8FB}.t{color:#5A6A7D;white-space:pre-wrap;max-width:380px}.n{text-align:center}.r{color:#8E2323}' +
+    'thead{display:table-header-group}tr{page-break-inside:avoid}.f{margin-top:10px;color:#7A889A;font-size:10px}</style></head><body>' +
+    '<h1>דוח סמסים</h1><p class="sub">' + e(rpPeriodLbl()) + (RP.smsSt ? ' · סטטוס: ' + e(RP.smsSt) : '') + (RP.smsQ ? ' · חיפוש: ' + e(RP.smsQ) : '') + ' · הופק ' + e(rpAbs(Date.now())) + (myName() ? ' ע״י ' + e(myName()) : '') + '</p>' +
+    '<div class="k"><div>הודעות שיצאו<b>' + nf(K.sent) + '</b></div><div>משלוחים<b>' + nf(K.jobs) + '</b></div><div>מתוזמנים<b>' + nf(K.sched) + '</b></div><div>נכשלו<b>' + nf(K.failed) + '</b></div></div>' +
+    '<table><thead><tr><th>משלוח</th><th>ההודעה</th><th>מועד</th><th class="n">נמענים</th><th class="n">יצאו</th><th>סטטוס</th><th>שולח</th><th>ע״י</th></tr></thead><tbody>' +
+    list.map(j => '<tr><td><b>' + e(j.name || 'משלוח') + '</b>' + (j.test ? ' (בדיקה)' : '') + '</td><td class="t">' + e(j.text || '') + '</td><td style="white-space:nowrap">' + e(rpAbs(rpSmsWhen(j))) + '</td><td class="n">' + nf((j.to || []).length) + '</td><td class="n">' + nf(rpSmsSent(j)) + '</td>' +
+      '<td' + (j.status === 'נכשל' ? ' class="r"' : '') + '>' + e(j.status) + (j.err ? '<br>' + e(j.err) : '') + '</td><td dir="ltr">' + e(j.sender || '') + '</td><td>' + e(j.by || '') + '</td></tr>').join('') +
+    '</tbody></table><div class="f">ישראל ביתנו · ' + nf(list.length) + ' משלוחים</div></body></html>';
+  const fr = document.createElement('iframe');
+  fr.setAttribute('aria-hidden', 'true'); fr.style.cssText = 'position:fixed;width:0;height:0;border:0;inset-inline-start:-9999px';
+  document.body.appendChild(fr);
+  const d = fr.contentWindow.document; d.open(); d.write(html); d.close();
+  const go = () => { try { fr.contentWindow.focus(); fr.contentWindow.print(); } catch (x) { /* */ } setTimeout(() => fr.remove(), 60000); };
+  (d.fonts && d.fonts.ready ? Promise.race([d.fonts.ready, new Promise(r => setTimeout(r, 1500))]) : Promise.resolve()).then(() => setTimeout(go, 150));
+  toast('בחלון שנפתח בוחרים „שמירה כ-PDF” כיעד');
+}
 /* ---- הפעולות (כפתורי data-act) של המסך הזה — קידומת rp ---- */
 Object.assign(ACT, {
+  rpKind: el => { RP.kind = el.dataset.v; RP.sel = ''; RP.page = 0; RENDER.reports(); },
+  rpSmsPdf: () => rpSmsPdf(),
+  rpSmsXlsx: () => {
+    if (!can('export')) { toast(NOPERM.export); return; }
+    const list = rpSmsList(); if (!list.length) return;
+    saveXlsx([['סמסים', [['משלוח', 'ההודעה', 'מועד', 'נמענים', 'יצאו', 'נכשלו', 'סטטוס', 'שגיאה', 'שולח', 'ע״י', 'בדיקה']].concat(list.map(j => [j.name || '', j.text || '', rpAbs(rpSmsWhen(j)), (j.to || []).length, rpSmsSent(j), j.failed || 0, j.status, j.err || '', j.sender || '', j.by || '', j.test ? 'כן' : '']))]], 'דוח סמסים — ' + fmtDate(isoDay(new Date())) + '.xlsx');
+  },
   rpDays: el => { const v = el.dataset.v; RP.days = v === 'custom' ? 'custom' : +v; RP.page = 0; RENDER.reports(); },
   rpSel: el => { RP.sel = RP.sel === el.dataset.v ? '' : el.dataset.v; RP.page = 0; rpBody(); const l = $('#rpList'); if (l && RP.sel) l.scrollIntoView({ block: 'start', behavior: 'smooth' }); },
   rpPage: el => { RP.page += +el.dataset.v; rpBody(); $('#rpList').scrollIntoView({ block: 'start' }); },
