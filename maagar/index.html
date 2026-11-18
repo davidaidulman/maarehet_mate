@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
-<meta name="build" content="20261118-083131">
+<meta name="build" content="20261118-113207">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>דאטה ביתנו — מאגר התומכים</title>
 <style>
@@ -6444,14 +6444,31 @@ function grpDesc(f) {
   Object.keys(f).filter(k => k.startsWith('d_')).forEach(k => { const df = fieldById(k.slice(2)); if (df) add(df.name, f[k]); });
   return out.filter(Boolean).join(' · ');
 }
-/* כמה אנשים בקבוצה — נשמר עד שהנתונים משתנים */
-const GR_CNT = new Map(); let GR_DV = -1;
+/* כמה אנשים בקבוצה — נשמר עד שהנתונים משתנים. החישוב (מעבר על כל המאגר לכל קבוצה) רץ ברקע ובחלקים,
+   והמספרים נכנסים לטבלה כשהם מוכנים — המסך לא נתקע */
+const GR_CNT = new Map(); let GR_DV = -1, GRW = null;
 function grpCount(g) {
   if (!PPL_READY) return null;
   if (GR_DV !== DV) { GR_CNT.clear(); GR_DV = DV; }
   const k = JSON.stringify(g.filter || {});
-  if (!GR_CNT.has(k)) GR_CNT.set(k, filterPeople(Object.assign(defFilter(), g.filter || {})).length);
-  return GR_CNT.get(k);
+  return GR_CNT.has(k) ? GR_CNT.get(k) : null;
+}
+function grpCountsBg() {
+  if (!PPL_READY || GRW) return;
+  if (GR_DV !== DV) { GR_CNT.clear(); GR_DV = DV; }
+  GRW = (async () => {
+    const dv = DV;
+    for (const g of S.groups.slice()) {
+      const k = JSON.stringify(g.filter || {});
+      if (!GR_CNT.has(k)) {
+        const f = Object.assign(defFilter(), g.filter || {}), L = S.people; let n = 0;
+        for (let i = 0; i < L.length; i += 4000) { n += filterPeople(f, L.slice(i, i + 4000)).length; await yieldNow(); if (DV !== dv) { GRW = null; return; } }
+        GR_CNT.set(k, n);
+      }
+      $$('#v-groups [data-gc="' + g.id + '"]').forEach(c => { c.textContent = nf(GR_CNT.get(k)); });
+    }
+    GRW = null;
+  })();
 }
 const GRI = {
   open: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.3-4.3"/></svg>',
@@ -6472,7 +6489,7 @@ RENDER.groups = function () {
         list.map(g => { const n = grpCount(g); return '<tr class="grrow" data-act="grpOpen" data-v="' + g.id + '" tabindex="0">' +
           '<td class="grnm">' + esc(g.name) + '</td>' +
           '<td class="grds">' + esc(grpDesc(g.filter) || 'כל המאגר') + '</td>' +
-          '<td class="num grn">' + (n == null ? '<span class="mut">…</span>' : nf(n)) + '</td>' +
+          '<td class="num grn" data-gc="' + g.id + '">' + (n == null ? '<span class="mut">…</span>' : nf(n)) + '</td>' +
           '<td class="mut">' + (g.t ? fmtWhen(g.t) : '—') + (g.by ? '<br><span class="sm">' + esc(g.by) + '</span>' : '') + '</td>' +
           '<td class="gract"><button class="grb" data-act="grpOpen" data-v="' + g.id + '" title="פתיחה בחיפוש המתקדם">' + GRI.open + 'פתיחה</button>' +
             '<button class="grb" data-act="grpSms" data-v="' + g.id + '" title="שליחת סמס לקבוצה">' + GRI.sms + 'סמס</button>' +
@@ -6483,6 +6500,7 @@ RENDER.groups = function () {
       : '<div class="empty"><b>עוד אין קבוצות</b>יוצרים קבוצה בחיפוש המתקדם: מסננים ולוחצים „שמירה כקבוצה”.<div style="margin-top:14px"><button class="btn" data-act="grpNew">+ קבוצה חדשה</button></div></div>') +
     '</div>';
   if (!PPL_READY) pplWait().then(() => { if (S.view === 'groups') RENDER.groups({}); });
+  else grpCountsBg();
 };
 document.addEventListener('input', e => { if (e.target.dataset.gr !== 'q') return; GR.q = e.target.value; debounce('gr', () => { RENDER.groups({}); const q = $('[data-gr="q"]'); if (q) { q.focus(); q.setSelectionRange(q.value.length, q.value.length); } }, 150); });
 
@@ -7813,7 +7831,16 @@ function smsParts(t) {
   const len = Array.from(String(t || '')).length;
   return { len, parts: len === 0 ? 0 : Math.ceil(len / SMS_SEG) };
 }
+/* הנמענים נשמרים עד שמשהו רלוונטי משתנה — בלי לסרוק את כל המאגר בכל הקשה על המקלדת */
+const SMSR = { k: '', v: null };
 function smsRecipients() {
+  const k = ['group', 'db', 'event'].includes(M.src) ? [DV, KVV, M.src, M.group, M.db, M.event].join('|') : '';
+  if (k && SMSR.k === k && SMSR.v) return SMSR.v;
+  const v = smsRecipients0();
+  SMSR.k = k; SMSR.v = k ? v : null;
+  return v;
+}
+function smsRecipients0() {
   let people = [];
   if (M.src === 'group') { const g = S.groups.find(x => x.id === M.group); people = g ? filterPeople(Object.assign(defFilter(), g.filter)) : []; }
   else if (M.src === 'db') people = S.people.filter(p => (p.dbs || []).includes(M.db));
