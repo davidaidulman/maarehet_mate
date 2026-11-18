@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
-<meta name="build" content="20261118-124428">
+<meta name="build" content="20261118-125222">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>דאטה ביתנו — מאגר התומכים</title>
 <style>
@@ -7796,7 +7796,7 @@ function smsReset() {
 /* מקטע אחד אצל הספק = עד 268 תווים. מעבר לזה — ההודעה נספרת כשתיים (חיוב כפול) */
 const SMS_SEG = 268;
 /* שורת ההסרה — נוספת כברירת מחדל לסוף כל הודעה (חובה לפי חוק התקשורת — "חוק הספאם") */
-const SMS_OPTOUT = 'להסרה מרשימת התפוצה, יש להשיב "הסר" למספר: 053-703-8787';
+const SMS_OPTOUT = 'להסרה יש להשיב 490 למספר: 0508085670';
 /* שורת ההסרה: נוסח שמנהל קבע (S.smsopt — משותף לכולם), ואם לא נקבע — ברירת המחדל */
 const smsOptText = () => (typeof S.smsopt === 'string' && S.smsopt.trim()) ? S.smsopt.trim() : SMS_OPTOUT;
 function smsFinal(t, p, optLine) { const b = mergeText(t, p).replace(/\s+$/, ''); return !b ? '' : optLine === false ? b : b + '\n' + smsOptText(); }
