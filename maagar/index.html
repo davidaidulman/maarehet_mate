@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
-<meta name="build" content="20261118-081204">
+<meta name="build" content="20261118-082558">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>דאטה ביתנו — מאגר התומכים</title>
 <style>
@@ -508,6 +508,21 @@ main.wrap:has(#v-search.on){max-width:1440px}
   transition:all .15s;white-space:nowrap;cursor:pointer}
 .srbtn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
 .srrow:hover .srbtn{background:var(--navy);border-color:var(--navy);color:#fff}
+
+/* ---------- כפתורי חיפוש / איפוס ---------- */
+.sgo{gap:8px}
+.sgob{min-width:132px;font-size:15px}
+.sgob svg{width:18px;height:18px;margin-inline-end:7px;vertical-align:-4px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.sgob.sdirty{box-shadow:0 0 0 3px rgba(232,184,75,.55),0 12px 22px -12px rgba(11,46,91,.9);animation:sgoP 1.8s ease-in-out infinite}
+@keyframes sgoP{50%{box-shadow:0 0 0 6px rgba(232,184,75,.25),0 12px 22px -12px rgba(11,46,91,.9)}}
+.sreset{background:#fff;color:#B42318;border:1.5px solid #F1C4BE;padding-inline:12px;min-width:0}
+.sreset svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;display:block}
+.sreset:hover{background:#B42318;border-color:#B42318;color:#fff}
+.sempty{padding:56px 20px}
+.sempty .sei{width:58px;height:58px;border-radius:16px;margin:0 auto 14px;display:grid;place-items:center;background:var(--bbg);color:var(--navy)}
+.sempty .sei svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.sempty .sk{display:inline;font-size:inherit;color:var(--navy)}
+@media (prefers-reduced-motion:reduce){.sgob.sdirty{animation:none}}
 
 /* ---------- css/features/groups.css ---------- */
 /* ---------- קבוצות ---------- */
@@ -6127,20 +6142,46 @@ function srchWarm() {
 }
 function srchResults() {
   const how = SR.sort || 'name';
-  const key = DV + '|' + SR.sort + '|' + JSON.stringify(SR.f);
+  const key = DV + '|' + SR.sort + '|' + JSON.stringify(SR.af);
   if (SR._ck !== key || !SR._res) {
     if ((how === 'name' || how === 'city') && !(SORTED.dv === DV && SORTED[how]) && window.Worker) return null;   /* המיון עוד רץ ברקע */
-    SR._res = filterPeople(SR.f, sortedAll(how)); SR._ck = key;
+    SR._res = filterPeople(SR.af, sortedAll(how)); SR._ck = key;
   }
   return SR._res;
 }
-const srchPK = () => [DV, PPL_READY, JSON.stringify(SR.f), SR.sort, SR.page, SR.sel.size, S.fields.length].join('|');
+const srchPK = () => [DV, PPL_READY, JSON.stringify(SR.f), JSON.stringify(SR.af), SR.sort, SR.page, SR.sel.size, S.fields.length].join('|');
+/* ---- חיפוש בלחיצה: SR.f = מה שמסומן בטופס, SR.af = מה שחיפשו בפועל (null = עוד לא חיפשו — אין תוצאות).
+   נשמר ל-sessionStorage: עובר בין מסכים וריענון, ומתאפס ביציאה מהמערכת (authLogout) ובסגירת הלשונית. */
+if (SR.af === undefined) SR.af = null;
+function srchSave() { try { sessionStorage.setItem('srch', JSON.stringify({ f: SR.f, af: SR.af, more: !!SR.more, tab: SR.tab || '' })); } catch (e) { /* */ } }
+(function srchLoad() { try { const o = JSON.parse(sessionStorage.getItem('srch') || 'null'); if (o && o.f) { SR.f = Object.assign(defFilter(), o.f); SR.af = o.af ? Object.assign(defFilter(), o.af) : null; SR.more = !!o.more; SR.tab = o.tab || ''; } } catch (e) { /* */ } })();
+const srchDirtyNow = () => { const f = Object.assign({}, SR.f); delete f.grp; return SR.af ? JSON.stringify(f) !== JSON.stringify(SR.af) : JSON.stringify(f) !== JSON.stringify(defFilter()); };
+function srchDirty() { const b = $('#srchGo'); if (b) b.classList.toggle('sdirty', srchDirtyNow()); }
+function srchGo() {
+  SR.af = clone(SR.f); delete SR.af.grp; SR.page = 0; SR.sel.clear(); srchSave(); srchDirty(); renderResults();
+  const r = $('#srchRes'); if (r && r.getBoundingClientRect().top > window.innerHeight * .7) r.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+/* Enter בכל שדה של הטופס = חיפוש */
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Enter' || !e.target.closest || !e.target.closest('#srchPanel') || e.isComposing) return;
+  if (e.target.matches('input,select')) { e.preventDefault(); if (e.target.dataset.sf) SR.f[e.target.dataset.sf] = e.target.value; srchGo(); }
+});
+/* בחירת קבוצה שמורה → הסינון שלה נטען ומחפשים */
+document.addEventListener('change', e => {
+  if (e.target.id !== 'sf_grp') return;
+  const g = S.groups.find(x => x.id === e.target.value);
+  if (!g) { SR.f.grp = ''; srchDirty(); return; }
+  SR.f = Object.assign(defFilter(), clone(g.filter || {}), { grp: g.id }); renderSearchPanel(); srchGo();
+});
 RENDER.search = function (o) {
   /* חוזרים לחיפוש ושום דבר לא השתנה — המסך נשאר כמו שהוא (מיידי) */
   const pk = srchPK();
   if (!o.filter && !o.refresh && SR._pk === pk && $('#srchPanel') && $('#srchRes .tbl, #srchRes .empty')) return;
   SR._pk = '';
-  if (o.filter) { SR.f = Object.assign(defFilter(), o.filter); SR.page = 0; SR.sel.clear(); }
+  if (o.filter) {   /* הגיעו עם סינון מוכן (דף הבית, מפה, קבוצה…) — מחפשים מיד. סינון ריק = מתחילים מחדש */
+    SR.f = Object.assign(defFilter(), o.filter); SR.page = 0; SR.sel.clear();
+    SR.af = Object.keys(o.filter).length ? clone(SR.f) : null; srchSave();
+  }
   if (!o.refresh || !$('#srchPanel')) renderSearchPanel();
   renderResults();
 };
@@ -6159,10 +6200,10 @@ function srchTabKeys(t) {
   if (t === 'addr') return ['street', 'house', 'zip'].concat(addr.map(x => 'd_' + x.f.id));
   if (t === 'kalpi') return ['kalpis', 'site'];
   if (t === 'dyn') return dyn.map(x => 'd_' + x.f.id);
-  return ['owner', 'age'];
+  return ['owner', 'ageFrom', 'ageTo', 'age'];
 }
 const srchOn = k => { const v = SR.f[k]; return v !== '' && v != null && v !== false; };
-const SRCH_LBL = { street: 'רחוב', house: 'מספר בית', zip: 'מיקוד', kalpis: 'קלפי', site: 'אשכול קלפי', owner: 'איש קשר', age: 'גיל' };
+const SRCH_LBL = { street: 'רחוב', house: 'מספר בית', zip: 'מיקוד', kalpis: 'קלפי', site: 'אשכול קלפי', owner: 'איש קשר', age: 'גיל', ageFrom: 'מגיל', ageTo: 'עד גיל' };
 function renderSearchPanel() {
   const f = SR.f;
   const opt = (arr, cur, all) => '<option value="">' + (all || 'הכל') + '</option>' + arr.map(x => { const v = Array.isArray(x) ? x[0] : x, l = Array.isArray(x) ? x[1] : x; return '<option value="' + esc(v) + '"' + (String(cur == null ? '' : cur) === String(v) ? ' selected' : '') + '>' + esc(l) + '</option>'; }).join('');
@@ -6185,7 +6226,9 @@ function renderSearchPanel() {
     grid([txt('tz', 'תעודת זהות', '', ' inputmode="numeric"'), txt('first', 'שם פרטי'), txt('last', 'שם משפחה'), txt('phone', 'מספר טלפון', '', ' inputmode="tel"'),
       sel('status', 'סטטוס תמיכה', STATUSES), sel('city', 'עיר / יישוב', cities, 'כל הערים')]) +
     grid([sel('gender', 'מין', genders),
-      '<div><span class="fl">טווח גילאים</span><div class="sage"><input type="number" min="0" max="120" data-sf="ageFrom" value="' + val('ageFrom') + '" placeholder="מגיל" aria-label="מגיל"><span>–</span><input type="number" min="0" max="120" data-sf="ageTo" value="' + val('ageTo') + '" placeholder="עד" aria-label="עד גיל"></div></div>',
+      '<div><label class="fl" for="sf_grp">קבוצה שמורה</label><select id="sf_grp"' + (S.groups.length ? '' : ' disabled') + '>' +
+        '<option value="">' + (S.groups.length ? 'בחירת קבוצה…' : 'עוד אין קבוצות') + '</option>' +
+        S.groups.slice().sort((a, b) => HE_COLL.compare(a.name, b.name)).map(g => '<option value="' + g.id + '"' + (f.grp === g.id ? ' selected' : '') + '>' + esc(g.name) + '</option>').join('') + '</select></div>',
       txt('email', 'דואר אלקטרוני', '', ' inputmode="email"'),
       sel('hasPhone', 'קיים מספר טלפון?', [['yes', 'כן — יש טלפון'], ['mobile', 'כן — יש נייד'], ['none', 'לא — אין טלפון']]),
       sel('lang', 'שפה', Array.from(new Set(LANGS.concat(S.people.map(p => p.lang).filter(Boolean)))), 'כל השפות'),
@@ -6208,6 +6251,7 @@ function renderSearchPanel() {
     }
     else if (tab === 'dyn') advBody = dyn.length ? grid(dyn.map((it, i) => dynCtl(it, i))) : '<div class="snote">אין עדיין פרטים דינמיים לחיפוש.</div>';
     else advBody = grid([sel('owner', 'איש קשר אחראי', owners(), 'כולם'),
+      '<div><span class="fl">טווח גילאים</span><div class="sage"><input type="number" min="0" max="120" data-sf="ageFrom" value="' + val('ageFrom') + '" placeholder="מגיל" aria-label="מגיל"><span>–</span><input type="number" min="0" max="120" data-sf="ageTo" value="' + val('ageTo') + '" placeholder="עד" aria-label="עד גיל"></div></div>',
       '<div><label class="fl" for="sf_age">גיל מדויק</label><input id="sf_age" type="number" min="0" max="120" data-sf="age" value="' + val('age') + '"></div>']);
   }
   /* סינונים פעילים שלא רואים כרגע (מהמפה, מדף הבית, מקבוצה שמורה, או בלשונית סגורה) */
@@ -6223,15 +6267,15 @@ function renderSearchPanel() {
     const df = k.startsWith('d_') ? fieldById(k.slice(2)) : null;
     const v = k === 'site' ? (site ? (site.n || site.s) : '') : String(f[k]);
     chips.push([k, (df ? df.name : SRCH_LBL[k] || k) + ': ' + v]); }); });
-  const nG = S.groups.length;
   $('#v-search').innerHTML =
-    '<div class="shead"><div><h2>חיפוש מתקדם</h2><p>התוצאות מתעדכנות תוך כדי הקלדה</p></div>' +
-      '<div class="row"><button class="btn sec" data-act="grpPick">' + svg('layers') + 'קבוצות שמורות' + (nG ? '<span class="sbadge">' + nG + '</span>' : '') + '</button></div></div>' +
+    '<div class="shead"><div><h2>חיפוש מתקדם</h2><p>בוחרים סינונים ולוחצים חיפוש (או Enter)</p></div>' +
+      '<div class="row sgo"><button class="btn sgob' + (srchDirtyNow() ? ' sdirty' : '') + '" id="srchGo" data-act="srchGo">' + svg('search') + 'חיפוש</button>' +
+      '<button class="btn sreset" data-act="srchReset" title="איפוס כל הסינונים" aria-label="איפוס כל הסינונים"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M10 7V4h4v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/></svg></button></div></div>' +
     '<div class="card" id="srchPanel"><div class="cb">' + quick +
       '<div class="sbar">' +
         '<button class="sadv' + (SR.more ? ' on' : '') + '" data-act="moreFilter" aria-expanded="' + !!SR.more + '">' + svg('sliders') + (SR.more ? 'פחות סינונים' : 'סינון נוסף') + (advN ? '<span class="sbadge">' + advN + '</span>' : '') + '</button>' +
         chips.map(([k, l]) => '<span class="tag">' + esc(l) + '<button data-act="clearChip" data-v="' + esc(k) + '" aria-label="הסרה">×</button></span>').join('') +
-        '<span style="flex:1"></span><button class="link sm" style="color:var(--ink2)" data-act="clearFilter">ניקוי הכל</button>' +
+
       '</div>' +
       (SR.more ? '<div class="sadvp"><div class="stabs" role="tablist">' + SRCH_TABS.map(([t, l]) => '<button role="tab" aria-selected="' + (t === tab) + '" class="stab' + (t === tab ? ' on' : '') + '" data-act="srchTab" data-v="' + t + '">' + l + (cnt(t) ? '<span class="sbadge">' + cnt(t) + '</span>' : '') + '</button>').join('') + '</div>' +
         '<div class="sadvb">' + advBody + '</div></div>' : '') +
@@ -6247,6 +6291,11 @@ document.addEventListener('change', e => {
 });
 function renderResults() {
   if (!PPL_READY) { $('#srchRes').innerHTML = '<div class="empty"><b>מכין את החיפוש…</b>עוד רגע זה מוכן.</div>'; pplWait().then(() => { if (S.view === 'search') renderResults(); }); return; }
+  if (!SR.af) {
+    SR.last = []; SR._pk = srchPK();
+    $('#srchRes').innerHTML = '<div class="empty sempty"><div class="sei">' + svg('search') + '</div><b>עוד לא חיפשתם</b>בוחרים סינונים למעלה ולוחצים <b class="sk">חיפוש</b> או Enter — והתוצאות יופיעו כאן.</div>';
+    return;
+  }
   const res = srchResults();
   if (!res) { if (!$('#srchRes .empty')) $('#srchRes').innerHTML = '<div class="empty"><b>מכין את החיפוש…</b></div>'; srchWarm().then(() => { if (S.view === 'search') renderResults(); }); return; }
   SR.last = res;
@@ -6288,8 +6337,10 @@ function renderResults() {
 /* ---- הפעולות (כפתורי data-act) של המסך הזה ---- */
 Object.assign(ACT, {
   clearFilter: () => { SR.f = defFilter(); SR.page = 0; renderSearchPanel(); renderResults(); },
+  srchGo: () => srchGo(),
+  srchReset: () => { SR.f = defFilter(); SR.af = null; SR.page = 0; SR.sel.clear(); srchSave(); renderSearchPanel(); renderResults(); toast('כל הסינונים אופסו'); },
   clearSite: () => { SR.f.site = ''; renderSearchPanel(); renderResults(); },
-  clearChip: el => { const k = el.dataset.v; if (k === 'age') { SR.f.age = ''; } else if (k === 'dyn') { SR.f.dyn = ''; SR.f.dynVal = ''; } else SR.f[k] = k === 'noKalpi' ? false : ''; renderSearchPanel(); renderResults(); },
+  clearChip: el => { const k = el.dataset.v; if (k === 'age') { SR.f.age = ''; } else if (k === 'dyn') { SR.f.dyn = ''; SR.f.dynVal = ''; } else SR.f[k] = k === 'noKalpi' ? false : ''; if (SR.af) { SR.af = clone(SR.f); delete SR.af.grp; srchSave(); } renderSearchPanel(); renderResults(); },
   moreFilter: () => { SR.more = !SR.more; renderSearchPanel(); renderResults(); },
   srchTab: el => { SR.tab = el.dataset.v; renderSearchPanel(); renderResults(); },
   grpPick: async () => {
@@ -6314,7 +6365,7 @@ Object.assign(ACT, {
   selAll: () => { SR.last.forEach(p => SR.sel.add(p.uid)); renderResults(); },
   selNone: () => { SR.sel.clear(); renderResults(); },
   exportRes: () => { const list = SR.sel.size ? SR.last.filter(p => SR.sel.has(p.uid)) : SR.last; if (!list.length) return; saveXlsx([['אנשים', peopleAoa(list)]], 'מאגר — ' + nf(list.length) + ' אנשים — ' + fmtDate(isoDay(new Date())) + '.xlsx'); },
-  saveGroup: async () => { const n = await promptM('שמירה כקבוצה', 'שם הקבוצה — תופיע בשליחת סמסים ותתעדכן לבד', ''); if (!n) return; S.groups.push({ id: uid(), name: n, filter: clone(SR.f), t: Date.now(), by: myName() }); await saveKV('groups'); renderSearchPanel(); renderResults(); toast('הקבוצה „' + n + '” נשמרה'); },
+  saveGroup: async () => { const n = await promptM('שמירה כקבוצה', 'שם הקבוצה — תופיע בשליחת סמסים ותתעדכן לבד', ''); if (!n) return; const gf = clone(SR.af || SR.f); delete gf.grp; const g = { id: uid(), name: n, filter: gf, t: Date.now(), by: myName() }; S.groups.push(g); SR.f.grp = g.id; await saveKV('groups'); renderSearchPanel(); renderResults(); toast('הקבוצה „' + n + '” נשמרה'); },
   loadGroup: el => { const g = S.groups.find(x => x.id === el.dataset.v); if (!g) return; SR.f = Object.assign(defFilter(), clone(g.filter)); SR.page = 0; renderSearchPanel(); renderResults(); },
   delGroup: async el => { const g = S.groups.find(x => x.id === el.dataset.v); if (!g || !(await ask('מחיקת קבוצה', 'למחוק את הקבוצה „' + esc(g.name) + '”? האנשים עצמם לא יימחקו.', 'מחיקה', true))) return; S.groups = S.groups.filter(x => x !== g); await saveKV('groups'); renderSearchPanel(); renderResults(); },
   smsRes: () => { if (SR.sel.size) go('sms', { src: 'sel' }); else toast('מסמנים קודם את האנשים שרוצים לשלוח להם'); },
@@ -9172,7 +9223,7 @@ function onField(e) {
   if (d.sf) {
     SR.f[d.sf] = val; SR.page = 0;
     if (d.sf === 'dyn') { SR.f.dynVal = ''; renderSearchPanel(); }
-    if (el.type === 'search' || el.type === 'text' || el.type === 'number') debounce('sr', renderResults, 180); else renderResults();
+    srchDirty();   /* התוצאות מתעדכנות רק בלחיצה על חיפוש / Enter */
   } else if (d.cf && C) {
     C.p[d.cf] = val; C.dirty = true; cardDirty();
     if ((d.cf === 'kalpi' || d.cf === 'kcity' || d.cf === 'city') && e.type === 'change') renderCard();
@@ -9407,7 +9458,7 @@ function showNoAccess(user) {
 let idleT = Date.now();
 function idleWatch() {
   ['click', 'keydown', 'mousemove', 'scroll'].forEach(ev => document.addEventListener(ev, () => { idleT = Date.now(); }, { passive: true }));
-  setInterval(async () => { if (Date.now() - idleT > 60 * 60000) { await pcacheWipe(); sb.auth.signOut(); } }, 60000);
+  setInterval(async () => { if (Date.now() - idleT > 60 * 60000) { try { sessionStorage.removeItem('srch'); } catch (e) { /* */ } await pcacheWipe(); sb.auth.signOut(); } }, 60000);
 }
 /* ברכה לפי שעה, שבת וחגים (לפי הלוח העברי של הדפדפן) */
 function greeting(now) {
@@ -9469,7 +9520,7 @@ Object.assign(ACT, {
   authResend: el => sendCode(el),
   authVerify: el => verifyCode(el),
   authRecheck: () => authFlow(),
-  authLogout: async () => { await pcacheWipe(); await sb.auth.signOut(); location.reload(); },
+  authLogout: async () => { try { sessionStorage.removeItem('srch'); } catch (e) { /* */ } await pcacheWipe(); await sb.auth.signOut(); location.reload(); },
   reload: async () => { toast('טוען מחדש…'); await reloadData(); toast('הנתונים עודכנו'); }
 });
 
@@ -9664,7 +9715,7 @@ function defaultsOnly() {
   try { S.settings = JSON.parse(localStorage.getItem('maagar-settings') || '{}') || {}; } catch (e) { S.settings = {}; }
   if (!CLOUD) { $('#auth').hidden = true; return startApp(); }
   sb = (window.SB_MOCK || supabase).createClient(SB_URL, SB_KEY, { auth: { persistSession: true, detectSessionInUrl: true, flowType: 'pkce' } });
-  sb.auth.onAuthStateChange((ev) => { if (ev === 'SIGNED_OUT') location.reload(); });
+  sb.auth.onAuthStateChange((ev) => { if (ev === 'SIGNED_OUT') { try { sessionStorage.removeItem('srch'); } catch (e) { /* */ } location.reload(); } });
   await authFlow();
 })();
 /* מעבר בין מסכים בכפתורי הדפדפן: core/30-ui.js (popstate) */
