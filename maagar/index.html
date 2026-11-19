@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
-<meta name="build" content="20261119-081326">
+<meta name="build" content="20261119-082134">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>לוג ביתנו — מאגר התומכים</title>
 <style>
@@ -1359,6 +1359,17 @@ button.crow:hover{background:#F5F8FC}
 .cfs{display:inline-flex;align-items:center;gap:8px;white-space:nowrap}
 /* חוזרים למסך — בלי אנימציות כניסה */
 #v-home.still .hhero,#v-home.still .hhc,#v-home.still .hhr .val,#v-home.still .ksp,#v-home.still .hrow>.card,#v-home.still .hdb button,#v-home.still .htdi,#v-home.still .hfc .feed .it,#v-home.still .hevb i{animation:none}
+
+/* ---------- „איש קשר חדש” — ליד טווח התאריכים (הפעולה הראשית במסך: זהב) ---------- */
+.hnew{display:inline-flex;align-items:center;gap:8px;min-height:50px;padding:0 18px 0 16px;border-radius:15px;border:1.5px solid var(--gold);background:var(--gold);color:var(--navy-d);
+  font:inherit;font-size:14.5px;font-weight:800;cursor:pointer;box-shadow:0 12px 24px -16px rgba(155,110,10,.9);transition:transform .2s var(--ease),box-shadow .2s,filter .2s}
+.hnew svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.hnew:hover{transform:translateY(-2px);filter:brightness(1.04);box-shadow:0 16px 28px -16px rgba(155,110,10,.95)}
+.hnew:active{transform:scale(.98)}
+/* „דורש טיפול”: מספרים מהפעם הקודמת בזמן העדכון */
+#hmTodo.stale .htd{opacity:.6;transition:opacity .3s}
+#hmTodoSub.upd{color:var(--ytx);font-weight:700}
+.htere{font-size:11.5px;color:var(--ink3);direction:ltr;max-width:90%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
 /* ---------- css/features/search.css ---------- */
 /* ============================================================
@@ -3922,6 +3933,7 @@ function hmPeriodBar(D) {
       () => '<div class="hdr"><label><span class="fl">מתאריך</span><input type="date" data-hm="from" value="' + esc(isoDay(new Date(R.a))) + '"></label><label><span class="fl">עד תאריך</span><input type="date" data-hm="to" value="' + esc(isoDay(new Date(R.b))) + '"></label></div>') +
     hpw('per', '<button class="hpre" data-act="hmOpen" data-v="per" aria-expanded="' + (HM.open === 'per') + '">' + (pr ? pr[2] : 'טווח אישי') + '<span class="hcv">' + hic('chev') + '</span></button>',
       () => '<div class="hpl">' + PRESETS.map(([k, lb]) => '<button class="hopt' + (HM.preset === k ? ' on' : '') + '" data-act="hmPreset" data-v="' + k + '">' + lb + '</button>').join('') + '</div>') +
+    (can('edit') ? '<button class="hnew" data-act="newPerson">' + hic('add') + 'איש קשר חדש</button>' : '') +
     '<span class="sp"></span>' +
     (demo ? '<span class="pill y">נתוני דמו' + (can('edit') ? ' · <button class="link" style="font-size:11.5px" data-act="clearDemo">מחיקה</button>' : '') + '</span>' : '');
 }
@@ -3980,7 +3992,9 @@ function hmHero(D, cityU) {
   const lbl = (pr ? pr[1] : 'טווח אישי') + ' · ' + rshort(R.a, R.b);
   const ns = T.nsup || 0, ps = T.psup || 0, added = Math.max(0, T.n - (T.n0 || 0));
   let s1 = ns ? '<b class="num" data-count="' + ns + '">' + nf(ns) + '</b> תומכים חדשים בתקופה' : 'עוד אין תומכים חדשים בתקופה';
-  if (ns && ps && HM.preset !== 'all') { const ch = Math.round((ns - ps) / ps * 100); s1 += ch ? ' — <span class="' + (ch > 0 ? 'hhup' : 'hhdn') + '">' + (ch > 0 ? '▲ ' : '▼ ') + Math.abs(ch) + '%</span> לעומת התקופה הקודמת' : ' — בדיוק כמו בתקופה הקודמת'; }
+  /* אחוזים רק כשיש בסיס של ממש (20+ בתקופה הקודמת) — אחרת „5,075%” מטעה; מראים את המספר עצמו */
+  if (ns && HM.preset !== 'all' && ps >= 20) { const ch = Math.round((ns - ps) / ps * 100); s1 += ch ? ' — <span class="' + (ch > 0 ? 'hhup' : 'hhdn') + '">' + (ch > 0 ? '▲ ' : '▼ ') + Math.abs(ch) + '%</span> לעומת התקופה הקודמת' : ' — בדיוק כמו בתקופה הקודמת'; }
+  else if (ns && HM.preset !== 'all') s1 += ' — לעומת ' + nf(ps) + ' בתקופה הקודמת';
   const s2 = nf(added) + ' אנשים נכנסו למאגר · כיסוי התומכים עומד על ' + pc1(T.cov);
   const C = D.shown.filter(o => o.c), big = C.filter(o => o.n >= Math.min(30, Math.max(5, T.n / 50)));
   const chips = [];
@@ -4020,12 +4034,12 @@ function hmKpis(D) {
   const { T } = D;
   const dp = (x, pctMode) => x ? '<span class="kdl ' + (x > 0 ? 'up' : 'dn') + '" title="שינוי בתקופה">' + (x > 0 ? '▲ ' : '▼ ') + (pctMode ? Math.abs(x) + '%' : nf(Math.abs(x))) + '</span>' : '<span class="kdl z">ללא שינוי</span>';
   const k = (lb, v, ic, cls, d, foot, sp) => '<div class="kpi ' + cls + '"><div class="kt"><span class="ki">' + hic(ic) + '</span>' + d + '</div><div class="lb">' + lb + '</div><div class="vl" data-count="' + v + '">' + nf(v) + '</div><div class="ft">' + foot + '</div>' + kspark(sp) + '</div>';
-  const ns = T.nsup || 0, ps = T.psup || 0, chg = ps && HM.preset !== 'all' ? Math.round((ns - ps) / ps * 100) : 0;
+  const ns = T.nsup || 0, ps = T.psup || 0, pctOk = ps >= 20 && HM.preset !== 'all', chg = pctOk ? Math.round((ns - ps) / ps * 100) : ns - ps;
   return '<div class="kpis" id="homeKpis">' +
     k('אנשים במאגר', T.n, 'people', 'p', dp(T.n - (T.n0 || 0)), hmFiltered() ? 'בערים שנבחרו' : 'בכל המאגרים', T.gn) +
     k('תומכים', T.sup, 'sup', 'g', dp(T.sup - (T.sup0 || 0)), pc1(T.cov) + ' מהמאגר', T.gs) +
     k('מתלבטים', T.und, 'und', 'y', dp(T.und - (T.und0 || 0)), pct(T.und, T.n) + '% מהמאגר', T.gu) +
-    k('הפכו לתומכים', ns, 'conv', 'c', ps && HM.preset !== 'all' ? dp(chg, true) : '', HM.preset === 'all' ? 'מההתחלה' : 'בתקופה הקודמת: ' + nf(ps), (T.gs || []).map(x => x - ((T.gs || [0])[0] || 0))) +
+    k('הפכו לתומכים', ns, 'conv', 'c', HM.preset !== 'all' ? dp(chg, pctOk) : '', HM.preset === 'all' ? 'מההתחלה' : 'בתקופה הקודמת: ' + nf(ps), (T.gs || []).map(x => x - ((T.gs || [0])[0] || 0))) +
   '</div>';
 }
 /* ---- הגרף הגדול: תומכים ומתלבטים לאורך התקופה, נחשף בכניסה, עם ריחוף ---- */
@@ -4087,39 +4101,58 @@ const HM_TODO = [
   ['kal', 'pin', 'בלי קלפי מזוהה', 'חשוב ליום הבחירות', { noKalpi: true }, '']
 ];
 /* החישוב רץ ברקע ובחלקים (עד ~12 מ״ש בכל פעם), רק כשהמחשב פנוי — כדי שהכניסה למערכת תהיה חלקה גם עם מאות אלפי אנשים */
-let HMT = { dv: -1, c: null, p: null, pdv: -1 };
+let HMT = { dv: -1, c: null, p: null, pdv: -1, err: '' };
+const hmTodoKey = () => 'maagar-hmtodo|' + (CLOUD && ME ? ME.id : 'local') + '|' + (typeof SCOPE !== 'undefined' ? SCOPE : '');
 function hmTodoCalc() {
   if (HMT.dv === DV && HMT.c) return Promise.resolve(HMT.c);
   if (HMT.p && HMT.pdv === DV) return HMT.p;
   const dv = DV;
   const p = (async () => {
-    const c = { dup: 0, unk: 0, own: 0, ph: 0, kal: 0 }, L = S.people; let t = performance.now();
-    for (let i = 0; i < L.length; i++) {
-      const x = L[i];
-      if (stOf(x) === 'לא ידוע') c.unk++; if (!ownersOf(x).length) c.own++; if (!allPhones(x).length) c.ph++; if (!x._site) c.kal++;
-      if ((i & 1023) === 1023 && performance.now() - t > 12) { await yieldNow(); if (DV !== dv) return null; t = performance.now(); }
+    try {
+      const c = { dup: 0, unk: 0, own: 0, ph: 0, kal: 0, n: 0 }, L = S.people; let t = performance.now();
+      for (let i = 0; i < L.length; i++) {
+        const x = L[i]; if (!x) continue;
+        c.n++;
+        if (stOf(x) === 'לא ידוע') c.unk++; if (!ownersOf(x).length) c.own++; if (!allPhones(x).length) c.ph++; if (!x._site) c.kal++;
+        if ((i & 1023) === 1023 && performance.now() - t > 12) { await yieldNow(); if (DV !== dv) return null; t = performance.now(); }
+      }
+      if (typeof srDupMapAsync === 'function') { const d = await srDupMapAsync('any'); if (!d) return null; c.dup = d.groups.size; }
+      if (DV !== dv) return null;
+      HMT.dv = dv; HMT.c = c; HMT.err = '';
+      try { localStorage.setItem(hmTodoKey(), JSON.stringify({ c, at: Date.now() })); } catch (e) { /* */ }
+      return c;
+    } catch (e) {
+      console.error('דורש טיפול — החישוב נכשל', e);
+      HMT.err = String((e && e.message) || e); HMT.p = null;
+      return 'err';
     }
-    if (typeof srDupMapAsync === 'function') { const d = await srDupMapAsync('any'); if (!d) return null; c.dup = d.groups.size; }
-    if (DV !== dv) return null;
-    HMT.dv = dv; HMT.c = c;
-    return c;
   })();
   HMT.p = p; HMT.pdv = dv;
   return p;
 }
-function hmTodoCard() { return '<div class="card htdc"><div class="ch">דורש טיפול<span class="sub">לחיצה פותחת את הרשימה</span></div><div class="cb" id="hmTodo"><div class="htd">' + [0, 1, 2, 3].map(() => '<div class="htdi sk"><span class="ti"></span><span class="tx"><i></i><i></i></span><span></span></div>').join('') + '</div></div></div>'; }
+function hmTodoCard() { return '<div class="card htdc"><div class="ch">דורש טיפול<span class="sub" id="hmTodoSub">לחיצה פותחת את הרשימה</span></div><div class="cb" id="hmTodo"><div class="htd">' + [0, 1, 2, 3].map(() => '<div class="htdi sk"><span class="ti"></span><span class="tx"><i></i><i></i></span><span></span></div>').join('') + '</div></div></div>'; }
 function hmTodoFill() {
   const el = $('#hmTodo'); if (!el) return;
-  if (!PPL_READY) { pplWait().then(() => { if (S.view === 'home') hmTodoFill(); }); return; }
   if (HMT.dv === DV && HMT.c) { hmTodoPaint(HMT.c); return; }
-  (window.requestIdleCallback || (f => setTimeout(f, 300)))(() => hmTodoCalc().then(c => {
+  /* בינתיים — המספרים מהפעם הקודמת במחשב הזה (אם יש), עם „מתעדכן…” */
+  if (!el.dataset.cached) { let o = null; try { o = JSON.parse(localStorage.getItem(hmTodoKey()) || 'null'); } catch (e) { /* */ } if (o && o.c) { el.dataset.cached = '1'; hmTodoPaint(o.c, true); } }
+  if (!PPL_READY) { pplWait().then(() => { if (S.view === 'home') hmTodoFill(); }); return; }
+  /* החישוב עצמו רץ בחלקים קטנים (עד ~12 מ״ש בכל פעם) — המסך לא נתקע */
+  setTimeout(() => hmTodoCalc().then(c => {
     if (S.view !== 'home') return;
-    if (c) hmTodoPaint(c); else setTimeout(hmTodoFill, 600);   /* הנתונים התעדכנו באמצע — מחשבים שוב */
-  }), { timeout: 4000 });
+    if (c === 'err') hmTodoErr(); else if (c) hmTodoPaint(c); else setTimeout(hmTodoFill, 600);
+  }), 150);
 }
-function hmTodoPaint(c) {
+function hmTodoErr() {
   const el = $('#hmTodo'); if (!el) return;
-  const N = S.people.length || 1;
+  const sub = $('#hmTodoSub'); if (sub) sub.textContent = '';
+  el.innerHTML = '<div class="htok">' + hic('no') + '<b>לא הצלחנו לספור כרגע</b><span class="htere">' + esc(HMT.err) + '</span><button class="btn sec sm" data-act="hmTodoRetry" style="margin-top:8px">לנסות שוב</button></div>';
+}
+function hmTodoPaint(c, stale) {
+  const el = $('#hmTodo'); if (!el) return;
+  const N = c.n || S.people.length || 1;
+  const sub = $('#hmTodoSub'); if (sub) { sub.textContent = stale ? 'מתעדכן…' : 'לחיצה פותחת את הרשימה'; sub.classList.toggle('upd', !!stale); }
+  el.classList.toggle('stale', !!stale);
   const rows = HM_TODO.filter(r => c[r[0]] > 0);
   el.innerHTML = rows.length ? '<div class="htd">' + rows.map(([k, ic, l, sub, , cls], i) => '<button class="htdi ' + cls + '" data-act="hmTodo" data-v="' + k + '" style="animation-delay:' + i * 60 + 'ms"><span class="ti">' + hic(ic) + '</span><span class="tx"><b>' + l + '</b><small>' + sub + '</small></span>' +
       '<span class="htdn"><span><b class="num">' + nf(c[k]) + '</b>' + (k !== 'dup' ? '<small class="num">' + Math.round(c[k] / N * 100) + '%</small>' : '<small>קבוצות</small>') + '</span>' + hic('arr') + '</span></button>').join('') + '</div>'
@@ -4148,6 +4181,7 @@ Object.assign(ACT, {
     const lg = $('#v-home .hchc .legend'); if (lg) lg.innerHTML = HM.cv === 'all' ? '<span><i style="background:var(--navy-l)"></i>אנשים במאגר</span>' : '<span><i style="background:var(--navy)"></i>תומכים</span><span><i style="background:#7FA3CF"></i>מתלבטים</span>';
     hmChartDraw(HM._D, true); },
   hmGoSt: el => go('search', { filter: { status: [el.dataset.v] } }),
+  hmTodoRetry: () => { HMT = { dv: -1, c: null, p: null, pdv: -1, err: '' }; const el = $('#hmTodo'); if (el) el.innerHTML = hmTodoCard().replace(/^.*?<div class="cb" id="hmTodo">/, '').replace(/<\/div><\/div>$/, ''); hmTodoFill(); },
   hmTodo: el => { const r = HM_TODO.find(x => x[0] === el.dataset.v); if (r) go('search', { filter: clone(r[4]) }); },
   hmGoal: async () => {
     if (!isAdmin()) return toast('רק מנהל/ת מערכת יכול/ה לקבוע את היעד');
@@ -4220,19 +4254,7 @@ RENDER.home = function (opts) {
   const up = S.events.filter(e => !e.date || e.date >= isoDay(new Date())).sort((a, b) => (a.date || '').localeCompare(b.date || '')).slice(0, 3);
   const ft = (d, plain) => '<div class="ft">' + plain + '</div>';
   const kpi = (lb, v, foot, act, val, ic, cls) => '<div class="kpi ' + (cls || '') + '"><span class="ki">' + hic(ic) + '</span><div class="lb">' + lb + '</div><div class="vl" data-count="' + v + '">' + nf(v) + '</div>' + foot + '</div>';   /* כרטיסי מידע בלבד — לא לחיצים */
-  const qa = (act, v, ic, b, t, cls) => '<button class="qk ' + (cls || '') + '" data-act="' + act + '"' + (v ? ' data-v="' + v + '"' : '') + '><span class="qki">' + hic(ic) + '</span><span class="qkt"><b>' + b + '</b><span>' + t + '</span></span></button>';
   const cityU = isCityUser();   /* מטה עירוני: בלי סמסים / אירועים / העלאה (auth.js CITY_NO_VIEWS) */
-  const quick = cityU ? [
-    can('edit') ? qa('newPerson', '', 'add', 'איש קשר חדש', 'הוספה ידנית למאגר', 'gold') : '',
-    qa('go', 'search', 'find', 'חיפוש מתקדם', 'סינון לפי רחוב, קלפי וסטטוס'),
-    qa('go', 'groups', 'people', 'קבוצות', 'הקבוצות השמורות של העיר'),
-    qa('go', 'map', 'pin', 'מפת הקלפיות', 'הקלפיות והתומכים בעיר')
-  ].join('') : [
-    can('edit') ? qa('newPerson', '', 'add', 'איש קשר חדש', 'הוספה ידנית למאגר', 'gold') : '',
-    can('import') ? qa('go', 'upload', 'up', 'העלאת אקסל', 'עדכון מאגר מקובץ') : '',
-    qa('go', 'search', 'find', 'חיפוש מתקדם', 'סינון לפי עיר, קלפי וסטטוס'),
-    can('sms') ? qa('go', 'sms', 'msg', 'שליחת סמס', 'לקבוצה, לרשימה או לאדם') : qa('go', 'events', 'cal', 'אירועים', 'דפי נחיתה ונרשמים')
-  ].join('');
   const sortBtn = (k, lb) => '<button class="sg2' + (HM.sort === k ? ' on' : '') + '" data-act="hmSort" data-v="' + k + '">' + lb + (HM.sort === k ? '<i>' + (HM.dir < 0 ? '▾' : '▴') + '</i>' : '') + '</button>';
   const crow = (o, i) => '<button class="crow" data-act="goCity" data-v="' + esc(o.c) + '" style="--d:' + Math.min(i, 12) * 40 + 'ms">' +
     '<span class="cn"><b>' + esc(o.c) + '</b>' + (o.reg ? '<small>' + o.reg + '</small>' : '') + '</span>' +
@@ -4258,8 +4280,7 @@ RENDER.home = function (opts) {
     '</div>' +
     '<div class="hrow hrow2">' + hmFeed() + (cityU ? '<div class="card hfc"><div class="ch">קבוצות שמורות</div><div class="cb" style="padding-block:6px"><div class="feed">' +
       ((S.groups || []).slice(0, 4).map(g => '<div class="it"><div style="flex:1"><button class="link" data-act="grpOpen" data-v="' + esc(g.id) + '">' + esc(g.name) + '</button>' + (g.t ? '<div class="when">' + fmtDate(isoDay(new Date(g.t))) + '</div>' : '') + '</div></div>').join('') || '<div class="mut" style="padding:10px 0">עוד אין קבוצות. יוצרים קבוצה מהחיפוש המתקדם.</div>') +
-      '</div></div></div>' : hmEvents(up)) + '</div>' +
-    '<div class="qkact"><div class="qkh">פעולות מהירות</div><div class="qkg">' + quick + '</div></div>';
+      '</div></div></div>' : hmEvents(up)) + '</div>';
   hmWire();
   HM._rk = rk;
   hmChartDraw(D, !opts.reuse);
