@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
-<meta name="build" content="20261118-215643">
+<meta name="build" content="20261119-081326">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>לוג ביתנו — מאגר התומכים</title>
 <style>
@@ -1662,7 +1662,7 @@ main:has(#v-map.on){max-width:none;padding-inline:20px}
 .mpsel{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:700;color:var(--ink2)}
 .mpsel select{max-width:290px}
 .mpbody{flex:1;display:flex;min-height:0}
-.mpcanvas{flex:1;min-width:0;background:#0E1A26;position:relative}
+.mpcanvas{flex:1;min-width:0;background:#0E1A26;position:relative;isolation:isolate;z-index:0}   /* השכבות של המפה (z-index 400+) נשארות בתוך המפה — לא מעל תפריט הצד */
 .mpcanvas:not(.dark){background:#EEF2F6}
 .mpcanvas.picking,.mpcanvas.picking .leaflet-interactive{cursor:crosshair!important}
 .mpload{position:absolute;inset:0;display:grid;place-items:center;color:#fff;font-weight:700}
@@ -2187,6 +2187,66 @@ main:has(#v-map.on){max-width:none;padding-inline:20px}
 .edchip.edxadd{border-style:dashed;background:#fff;color:var(--navy);cursor:pointer;font:inherit;font-size:14px;font-weight:800}
 .edchip.edxadd:hover{background:var(--bbg)}
 .edxn{display:flex;flex-direction:column;gap:4px;margin-top:10px;padding:10px 12px;border-radius:10px;background:var(--bbg);color:var(--ink2);font-size:13px;line-height:1.5}
+
+/* ============ רשימת האירועים — חיפוש, כרטיסים אנכיים וטבלה (19.11) ============ */
+main.wrap:has(#v-events.on){max-width:1440px}
+.evtop{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:16px}
+.evtop .evadd{margin-top:0}
+.evq{flex:0 1 420px;display:flex;align-items:center;gap:8px;background:#fff;border:1.5px solid var(--line);border-radius:var(--r-btn);padding:0 14px;box-shadow:var(--sh-card);
+  transition:border-color .15s,box-shadow .15s}
+.evq:focus-within{border-color:var(--navy-l);box-shadow:0 0 0 3px rgba(27,75,138,.13)}
+.evq svg{width:18px;height:18px;color:var(--ink3);flex:none}
+.evq input{border:0!important;box-shadow:none!important;background:none!important;padding:11px 0!important;min-width:0;font-size:14.5px}
+
+/* ---------- כרטיסים אנכיים ---------- */
+.evgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));gap:16px}
+.evv{display:flex;flex-direction:column;text-align:start;padding:0;overflow:hidden;background:var(--card);border:1px solid var(--line2);border-radius:var(--r-card);
+  box-shadow:var(--sh-card);font:inherit;color:inherit;cursor:pointer;min-height:300px;transition:transform .2s var(--ease),box-shadow .2s var(--ease),border-color .2s;animation:aUp .5s var(--ease) both}
+.evv:hover{transform:translateY(-3px);box-shadow:var(--sh-hover);border-color:var(--bbd)}
+.evv:active{transform:scale(.99)}
+.evvt{position:relative;display:block;height:118px;flex:none;overflow:hidden;background:linear-gradient(150deg,var(--navy) 0%,var(--navy-l) 100%)}
+.evvt::after{content:"";position:absolute;width:180px;height:180px;border-radius:50%;left:-50px;top:-90px;background:radial-gradient(circle,rgba(255,255,255,.16),transparent 70%)}
+.evvt img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .5s var(--ease)}
+.evv:hover .evvt img{transform:scale(1.04)}
+.evvt.img::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(6,26,53,.05) 30%,rgba(6,26,53,.7) 100%)}
+.evvd{position:absolute;bottom:12px;inset-inline-start:14px;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:58px;height:62px;padding:0 8px;
+  border-radius:14px;background:rgba(255,255,255,.96);color:var(--navy);line-height:1;box-shadow:0 10px 22px -12px rgba(7,31,62,.8)}
+.evvd b{font-size:26px;font-weight:900}
+.evvd small{font-size:11.5px;font-weight:700;color:var(--ink2);margin-top:4px;white-space:nowrap}
+.evvs{position:absolute;top:12px;inset-inline-end:12px;z-index:2;font-size:12px;font-weight:800;padding:4px 10px;border-radius:999px;background:rgba(255,255,255,.18);color:#fff;
+  border:1px solid rgba(255,255,255,.25);backdrop-filter:blur(4px)}
+.evvs.now{background:var(--gold);border-color:var(--gold);color:var(--navy-d)}
+.evvs.soon{background:#fff;border-color:#fff;color:var(--navy)}
+.evvs.past{background:rgba(6,26,53,.45)}
+.evvb{flex:1;display:flex;flex-direction:column;gap:5px;padding:14px 16px 10px;min-width:0}
+.evvn{font-size:16.5px;font-weight:800;color:var(--navy);line-height:1.35;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
+.evv .evm{font-size:13px}
+.evvf{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 16px;border-top:1px solid var(--line3);background:#FAFBFD}
+.evvc{display:flex;align-items:baseline;gap:6px}
+.evvc b{font-size:22px;font-weight:900;color:var(--navy)}
+.evvc small{font-size:12px;font-weight:700;color:var(--ink3)}
+.evvgo{display:inline-flex;align-items:center;gap:2px;font-size:13px;font-weight:800;color:var(--navy-l);transition:gap .2s var(--ease),color .2s}
+.evvgo svg{width:16px;height:16px}
+.evv:hover .evvgo{gap:6px;color:var(--navy)}
+.evv.past .evvt:not(.img){background:linear-gradient(150deg,#5A6A7D,#7A889A)}
+.evv.past .evvt img{filter:grayscale(.6)}
+.evv.past .evvn,.evv.past .evvc b{color:var(--ink2)}
+
+/* ---------- טבלת כל האירועים (בסגנון פניות הציבור) ---------- */
+.evtblh{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:30px 0 12px}
+.evtblh h3{margin:0;font-size:15px;font-weight:900;color:var(--navy)}
+.evtblh .pntabs{margin:0}
+.evtbl{animation:aUp .5s .1s var(--ease) both}
+.evtbl svg{fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.evsrt{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700;color:var(--ink3)}
+.evsrt .ms{min-height:40px;width:auto;min-width:160px}
+.evwd{display:block;font-size:12px;color:var(--ink3)}
+.evtn{display:flex;align-items:center;gap:10px;min-width:120px}
+.evtn b{font-size:15px;color:var(--navy);min-width:28px}
+.evtb{display:block;width:96px;height:7px;border-radius:999px;background:var(--line3);overflow:hidden}
+.evtb i{display:block;height:100%;border-radius:inherit;background:var(--gold);animation:barIn .9s var(--ease) both}
+.pnrow.evpast td{color:var(--ink2)}
+.pnrow.evpast .pnnm{color:var(--ink2)}
 
 /* ---------- css/features/pniyot.css ---------- */
 /* ============ לוג ביתנו — פניות הציבור ============ */
@@ -4026,17 +4086,40 @@ const HM_TODO = [
   ['ph', 'nophone', 'בלי טלפון בכלל', 'אי אפשר להגיע אליהם בסמס או בשיחה', { hasPhone: 'none' }, 'w'],
   ['kal', 'pin', 'בלי קלפי מזוהה', 'חשוב ליום הבחירות', { noKalpi: true }, '']
 ];
-const hmTodoData = memoDV(() => {
-  const c = { dup: 0, unk: 0, own: 0, ph: 0, kal: 0 };
-  for (const p of S.people) { if (stOf(p) === 'לא ידוע') c.unk++; if (!ownersOf(p).length) c.own++; if (!allPhones(p).length) c.ph++; if (!p._site) c.kal++; }
-  try { if (typeof srDupMap === 'function') c.dup = srDupMap('any').groups.size; } catch (e) { /* */ }
-  return c;
-});
+/* החישוב רץ ברקע ובחלקים (עד ~12 מ״ש בכל פעם), רק כשהמחשב פנוי — כדי שהכניסה למערכת תהיה חלקה גם עם מאות אלפי אנשים */
+let HMT = { dv: -1, c: null, p: null, pdv: -1 };
+function hmTodoCalc() {
+  if (HMT.dv === DV && HMT.c) return Promise.resolve(HMT.c);
+  if (HMT.p && HMT.pdv === DV) return HMT.p;
+  const dv = DV;
+  const p = (async () => {
+    const c = { dup: 0, unk: 0, own: 0, ph: 0, kal: 0 }, L = S.people; let t = performance.now();
+    for (let i = 0; i < L.length; i++) {
+      const x = L[i];
+      if (stOf(x) === 'לא ידוע') c.unk++; if (!ownersOf(x).length) c.own++; if (!allPhones(x).length) c.ph++; if (!x._site) c.kal++;
+      if ((i & 1023) === 1023 && performance.now() - t > 12) { await yieldNow(); if (DV !== dv) return null; t = performance.now(); }
+    }
+    if (typeof srDupMapAsync === 'function') { const d = await srDupMapAsync('any'); if (!d) return null; c.dup = d.groups.size; }
+    if (DV !== dv) return null;
+    HMT.dv = dv; HMT.c = c;
+    return c;
+  })();
+  HMT.p = p; HMT.pdv = dv;
+  return p;
+}
 function hmTodoCard() { return '<div class="card htdc"><div class="ch">דורש טיפול<span class="sub">לחיצה פותחת את הרשימה</span></div><div class="cb" id="hmTodo"><div class="htd">' + [0, 1, 2, 3].map(() => '<div class="htdi sk"><span class="ti"></span><span class="tx"><i></i><i></i></span><span></span></div>').join('') + '</div></div></div>'; }
 function hmTodoFill() {
   const el = $('#hmTodo'); if (!el) return;
   if (!PPL_READY) { pplWait().then(() => { if (S.view === 'home') hmTodoFill(); }); return; }
-  const c = hmTodoData(), N = S.people.length || 1;
+  if (HMT.dv === DV && HMT.c) { hmTodoPaint(HMT.c); return; }
+  (window.requestIdleCallback || (f => setTimeout(f, 300)))(() => hmTodoCalc().then(c => {
+    if (S.view !== 'home') return;
+    if (c) hmTodoPaint(c); else setTimeout(hmTodoFill, 600);   /* הנתונים התעדכנו באמצע — מחשבים שוב */
+  }), { timeout: 4000 });
+}
+function hmTodoPaint(c) {
+  const el = $('#hmTodo'); if (!el) return;
+  const N = S.people.length || 1;
   const rows = HM_TODO.filter(r => c[r[0]] > 0);
   el.innerHTML = rows.length ? '<div class="htd">' + rows.map(([k, ic, l, sub, , cls], i) => '<button class="htdi ' + cls + '" data-act="hmTodo" data-v="' + k + '" style="animation-delay:' + i * 60 + 'ms"><span class="ti">' + hic(ic) + '</span><span class="tx"><b>' + l + '</b><small>' + sub + '</small></span>' +
       '<span class="htdn"><span><b class="num">' + nf(c[k]) + '</b>' + (k !== 'dup' ? '<small class="num">' + Math.round(c[k] / N * 100) + '%</small>' : '<small>קבוצות</small>') + '</span>' + hic('arr') + '</span></button>').join('') + '</div>'
@@ -5022,22 +5105,38 @@ function srNegSet(k, on) { const a = srArr(SR.f.neg).filter(x => x !== k); if (o
 /* ---- כפילויות: אנשים עם אותה ת.ז או אותו מספר נייד. מחושב פעם אחת לכל גרסה של הנתונים ---- */
 const SR_DUP = { dv: -1, m: {} };
 const DUP_LBL = { any: 'ת.ז או נייד זהים', tz: 'אותה ת.ז', phone: 'אותו מספר נייד' };
-function srDupMap(mode) {
-  if (SR_DUP.dv !== DV) { SR_DUP.dv = DV; SR_DUP.m = {}; }
-  if (SR_DUP.m[mode]) return SR_DUP.m[mode];
+/* החישוב עצמו — כ„גנרטור” שעוצר מדי פעם, כדי שאפשר יהיה להריץ אותו גם בחלקים ברקע (בלי לתקוע את המסך) */
+function* srDupGen(mode, L) {
   const par = new Map(), first = new Map();
   const find = u => { let r = u; while (par.get(r) !== r) r = par.get(r); while (par.get(u) !== r) { const n = par.get(u); par.set(u, r); u = n; } return r; };
   const link = (u, key) => { const o = first.get(key); if (o === undefined) { first.set(key, u); return; } const a = find(u), b = find(o); if (a !== b) par.set(a, b); };
-  for (const p of S.people) {
+  for (let i = 0; i < L.length; i++) {
+    const p = L[i];
     par.set(p.uid, p.uid);
     if (mode !== 'phone') { const d = digits(p.tz).replace(/^0+/, ''); if (d.length >= 5) link(p.uid, 'z' + d); }
     if (mode !== 'tz') for (const x of allPhones(p)) { const k = phKey(digits(x)); if (isMobile(k)) link(p.uid, 'p' + k); }
+    if ((i & 1023) === 1023) yield;
   }
-  const groups = new Map();
-  for (const u of par.keys()) { const r = find(u); const g = groups.get(r); if (g) g.push(u); else groups.set(r, [u]); }
+  const groups = new Map(); let i = 0;
+  for (const u of par.keys()) { const r = find(u); const g = groups.get(r); if (g) g.push(u); else groups.set(r, [u]); if ((++i & 4095) === 0) yield; }
   const by = new Map();
   for (const [r, g] of groups) { if (g.length < 2) groups.delete(r); else g.forEach(u => by.set(u, r)); }
-  return (SR_DUP.m[mode] = { by, groups });
+  return { by, groups };
+}
+function srDupMap(mode) {
+  if (SR_DUP.dv !== DV) { SR_DUP.dv = DV; SR_DUP.m = {}; }
+  if (SR_DUP.m[mode]) return SR_DUP.m[mode];
+  const g = srDupGen(mode, S.people); let r; while (!(r = g.next()).done) { /* */ }
+  return (SR_DUP.m[mode] = r.value);
+}
+/* אותו חישוב ברקע: עד ~12 מ״ש בכל פעם ואז משחרר את המסך. מחזיר null אם הנתונים השתנו באמצע */
+async function srDupMapAsync(mode) {
+  if (SR_DUP.dv === DV && SR_DUP.m[mode]) return SR_DUP.m[mode];
+  const dv = DV, g = srDupGen(mode, S.people); let r, t = performance.now();
+  while (!(r = g.next()).done) { if (performance.now() - t > 12) { await yieldNow(); if (DV !== dv) return null; t = performance.now(); } }
+  if (DV !== dv) return null;
+  if (SR_DUP.dv !== DV) { SR_DUP.dv = DV; SR_DUP.m = {}; }
+  return (SR_DUP.m[mode] = r.value);
 }
 /* כמה פרטים מלאים בכרטיס — הכרטיס המלא ביותר נשאר במיזוג */
 const srFilled = p => Object.keys(p).filter(k => k[0] !== '_' && p[k] !== '' && p[k] != null && !(Array.isArray(p[k]) && !p[k].length)).length + Object.keys(p.dyn || {}).length + (stOf(p) !== 'לא ידוע' ? 3 : 0);
@@ -5820,7 +5919,7 @@ RENDER.map = function (o) {
     $('#mp_strong').checked = MV.strong; $('#mp_has').checked = MV.has;
   }
   mapTabsRender();
-  if (MPL.tab === 'map') mapEnsure().then(() => { mapDraw(); if (o.site != null) mapSelSite(SITES[+o.site], true); else mapSide(); });
+  if (MPL.tab === 'map') mapEnsure().then(() => requestAnimationFrame(() => setTimeout(() => { mapDraw(); if (o.site != null) mapSelSite(SITES[+o.site], true); else mapSide(); }, 0)));   /* המפה מופיעה, והנקודות בפריים הבא */
 };
 const MPI = {
   full: '<svg viewBox="0 0 24 24" aria-hidden="true" class="ic"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>',
@@ -5837,10 +5936,14 @@ function mapTabsRender() {
 
 /* ---- טעינת הספרייה ובניית המפה (פעם אחת) ---- */
 let MP_READY = null;
+/* ספריית המפה (Leaflet) — נטענת פעם אחת. כדי שהכניסה למפה תהיה חלקה היא נטענת מראש כשהמחשב פנוי */
+function mapLib() { if (!window.L) { const src = $('#leafletsrc'), el = document.createElement('script'); el.textContent = src ? src.textContent : ''; document.head.appendChild(el); } }
+setTimeout(() => { (window.requestIdleCallback || (f => setTimeout(f, 0)))(() => { try { mapLib(); siteStats(); } catch (e) { /* */ } }, { timeout: 15000 }); }, 6000);
 function mapEnsure() {
   if (MP_READY) return MP_READY;
-  MP_READY = new Promise(res => {
-    if (!window.L) { const src = $('#leafletsrc'), el = document.createElement('script'); el.textContent = src ? src.textContent : ''; document.head.appendChild(el); }
+  /* קודם המסך מופיע („טוען את המפה…”), ורק בפריים הבא בונים את המפה — בלי לתקוע את המעבר בין המסכים */
+  MP_READY = new Promise(res => requestAnimationFrame(() => setTimeout(() => {
+    mapLib();
     const L = window.L;
     $('#mapCanvas').innerHTML = '';
     const map = MP.map = L.map('mapCanvas', { zoomControl: false, preferCanvas: true, minZoom: 7, maxZoom: 19, attributionControl: true, worldCopyJump: false })
@@ -5877,7 +5980,7 @@ function mapEnsure() {
       setTimeout(() => map.invalidateSize(), 60);
     });
     res();
-  });
+  }, 30)));
   return MP_READY;
 }
 function mapBase() {
@@ -5921,8 +6024,9 @@ function mapDraw() {
     const m = L.circleMarker(g.ll, Object.assign({ renderer: MP.renderer, bubblingMouseEvents: false, radius: 5 }, mpStyle(g)));
     m._g = g;
     const s0 = g.sites[0];
-    m.bindTooltip(esc(many ? (g.approx ? s0.c + ' · ' + g.sites.length + ' מוקדים במיקום משוער' : g.sites.length + ' מוקדים באותה כתובת · ' + (s0.s || s0.c)) : (s0.n || s0.s || 'מוקד') + ' · ' + s0.c) +
-      (g.n ? ' · ' + nf(g.n) + ' במאגר' : ''), { direction: 'top', offset: [0, -6], className: 'mptip' });
+    /* הטקסט של הריחוף נבנה רק כשמגיעים לנקודה (ולא ל-4,000 נקודות מראש) */
+    m.once('mouseover', () => { m.bindTooltip(esc(many ? (g.approx ? s0.c + ' · ' + g.sites.length + ' מוקדים במיקום משוער' : g.sites.length + ' מוקדים באותה כתובת · ' + (s0.s || s0.c)) : (s0.n || s0.s || 'מוקד') + ' · ' + s0.c) +
+      (g.n ? ' · ' + nf(g.n) + ' במאגר' : ''), { direction: 'top', offset: [0, -6], className: 'mptip' }).openTooltip(); });
     m.on('click', e => { L.DomEvent.stopPropagation(e); if (MP.pick) { mapPickAt(e.latlng); return; } mapSelGroup(g); });
     m.addTo(MP.layer);
     g.m = m;
@@ -7798,27 +7902,90 @@ ROUTE.events = {
   set: sub => { evRoute(sub); RENDER.events({ keepMode: true }); window.scrollTo({ top: 0 }); }
 };
 
+/* ---------- רשימת האירועים: חיפוש לפי שם, כרטיסים אנכיים, וטבלה של כל האירועים (בסגנון פניות הציבור) ---------- */
+Object.assign(E, { q: '', tf: 'all', srt: 'date' });
+const EV_GO = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg>';
+const evMatchQ = (e, q) => { if (!q) return true; const t = norm(q); return norm(e.name).includes(t) || norm(evPlace(e)).includes(t) || norm(evCity(e)).includes(t) || norm(evTag(e)).includes(t); };
+function evSoon(e) {
+  const d = evDay(e); if (!d) return ['', ''];
+  const k = Math.round((d.getTime() - new Date(new Date().setHours(0, 0, 0, 0)).getTime()) / 864e5);
+  return k < 0 ? ['past', 'עבר'] : k === 0 ? ['now', 'היום'] : k === 1 ? ['now', 'מחר'] : k < 8 ? ['soon', 'בעוד ' + k + ' ימים'] : ['', 'בעוד ' + k + ' ימים'];
+}
 function evCard(e, i) {
-  const d = evDay(e), past = evPast(e), n = evCount(e);
-  return '<button class="evc' + (past ? ' past' : '') + '" data-act="evOpen" data-v="' + e.id + '" style="animation-delay:' + Math.min(i, 12) * 50 + 'ms">' +
-    '<span class="evdt"><b class="num">' + (d ? d.getDate() : '—') + '</b><small>' + (d ? MON_S[d.getMonth()] : 'ללא תאריך') + '</small></span>' +
-    '<span class="evbd"><b class="evn">' + esc(e.name || 'אירוע ללא שם') + '</b>' +
+  const d = evDay(e), past = evPast(e), n = evCount(e), [sc, sl] = evSoon(e);
+  return '<button class="evv' + (past ? ' past' : '') + '" data-act="evOpen" data-v="' + e.id + '" style="animation-delay:' + Math.min(i, 12) * 50 + 'ms">' +
+    '<span class="evvt' + (e.img ? ' img' : '') + '">' + (e.img ? '<img src="' + esc(e.img) + '" alt="" loading="lazy">' : '') +
+      '<span class="evvd"><b class="num">' + (d ? d.getDate() : '—') + '</b><small>' + (d ? MON_S[d.getMonth()] + ' ' + d.getFullYear() : 'ללא תאריך') + '</small></span>' +
+      (sl ? '<span class="evvs ' + sc + '">' + sl + '</span>' : '') + '</span>' +
+    '<span class="evvb"><b class="evvn">' + esc(e.name || 'אירוע ללא שם') + '</b>' +
       '<span class="evm">' + EVI.clock + esc(evWhen(e).replace(/^יום /, '')) + '</span>' +
       (evPlace(e) ? '<span class="evm">' + EVI.pin + esc(evPlace(e)) + '</span>' : '') + '</span>' +
-    '<span class="evct"><b class="num">' + nf(n) + '</b><small>' + (n === 1 ? 'נרשם/ה' : 'נרשמו') + '</small></span></button>';
+    '<span class="evvf"><span class="evvc"><b class="num">' + nf(n) + '</b><small>' + (n === 1 ? 'נרשם/ה' : 'נרשמו') + '</small></span><span class="evvgo">פרטים' + EV_GO + '</span></span></button>';
+}
+function evState(e) {
+  if (e.matched) return '<span class="pill g">הותאם למאגר</span>';
+  if (evEnded(e)) return evOpenRows(e).length ? '<span class="pill y">ממתין להתאמה</span>' : '<span class="pill n">הסתיים</span>';
+  return e.code || !CLOUD ? '<span class="pill b">פתוח להרשמה</span>' : '<span class="pill n">בלי קישור הרשמה</span>';
+}
+function evGridHtml() {
+  const today = isoDay(new Date()), q = E.q.trim();
+  let list = q ? S.events.filter(e => evMatchQ(e, q)) : S.events.filter(e => !e.date || e.date >= today);
+  list = list.slice().sort((a, b) => { const pa = evPast(a), pb = evPast(b); if (pa !== pb) return pa ? 1 : -1; return pa ? (b.date || '').localeCompare(a.date || '') : (a.date || '9').localeCompare(b.date || '9') || (a.time || '').localeCompare(b.time || ''); });
+  return '<div class="evsec"><h3>' + (q ? 'תוצאות עבור „' + esc(q) + '”' : 'אירועים קרובים') + '<span class="num">' + nf(list.length) + '</span></h3>' +
+    (list.length ? '<div class="evgrid">' + list.map(evCard).join('') + '</div>' : '<div class="evnone">' + (q ? 'לא נמצאו אירועים בשם הזה.' : 'אין אירועים קרובים. יוצרים אחד ב„+ אירוע חדש”.') + '</div>') + '</div>';
+}
+function evTblHtml() {
+  const today = isoDay(new Date()), q = E.q.trim();
+  const all = S.events.filter(e => evMatchQ(e, q)), up = all.filter(e => !e.date || e.date >= today), past = all.filter(e => e.date && e.date < today);
+  let rows = E.tf === 'up' ? up : E.tf === 'past' ? past : all;
+  const by = { date: (a, b) => (b.date || '').localeCompare(a.date || '') || (b.time || '').localeCompare(a.time || ''), regs: (a, b) => evCount(b) - evCount(a), name: (a, b) => (a.name || '').localeCompare(b.name || '', 'he') };
+  rows = rows.slice().sort(by[E.srt] || by.date);
+  const tot = rows.reduce((n, e) => n + evCount(e), 0), nw = rows.reduce((n, e) => n + evNew(e), 0);
+  const tab = (k, l, n) => '<button class="pntab' + (E.tf === k ? ' on' : '') + '" data-act="evTf" data-v="' + k + '">' + l + '<span>' + nf(n) + '</span></button>';
+  return '<div class="evtblh"><h3>כל האירועים</h3><div class="pntabs">' + tab('all', 'הכול', all.length) + tab('up', 'קרובים', up.length) + tab('past', 'שעברו', past.length) + '</div></div>' +
+    '<div class="card pncard evtbl"><div class="pnbar">' +
+      '<label class="pnq">' + svg('search') + '<input type="search" id="evQ2" placeholder="חיפוש לפי שם אירוע, עיר או מקום" value="' + esc(E.q) + '" aria-label="חיפוש אירועים" autocomplete="off"></label>' +
+      '<label class="evsrt"><span>מיון</span><select id="evSrt" aria-label="מיון האירועים">' + [['date', 'לפי תאריך'], ['regs', 'הכי הרבה נרשמים'], ['name', 'לפי שם']].map(([k, l]) => '<option value="' + k + '"' + (E.srt === k ? ' selected' : '') + '>' + l + '</option>').join('') + '</select></label>' +
+      '<span class="pnsum">' + nf(rows.length) + ' אירועים · ' + nf(tot) + ' נרשמים' + (nw ? ' · ' + nf(nw) + ' חדשים במאגר' : '') + '</span></div>' +
+    (rows.length ? '<div class="tw"><table class="tbl pntbl"><thead><tr><th>תאריך ושעה</th><th>שם האירוע</th><th>מקום</th><th>נרשמו</th><th>חדשים במאגר</th><th>מצב</th><th></th></tr></thead><tbody>' +
+      rows.map(e => { const d = evDay(e);
+        return '<tr class="pnrow' + (evPast(e) ? ' evpast' : '') + '" data-act="evOpen" data-v="' + e.id + '" tabindex="0">' +
+          '<td class="pndt">' + (d ? fmtDate(e.date) + (e.time ? ' · ' + esc(e.time) : '') + '<small class="evwd">יום ' + WDAY[d.getDay()] + '</small>' : '<span class="mut">ללא תאריך</span>') + '</td>' +
+          '<td class="pnnm">' + esc(e.name || 'אירוע ללא שם') + '</td>' +
+          '<td>' + (esc(evPlace(e)) || '<span class="mut">—</span>') + '</td>' +
+          '<td><span class="evtn"><b class="num">' + nf(evCount(e)) + '</b>' + '<span class="evtb"><i style="width:' + (evCount(e) ? Math.max(4, Math.round(evCount(e) / Math.max(1, ...rows.map(evCount)) * 100)) : 0) + '%"></i></span>' + '</span></td>' +
+          '<td class="num">' + (e.matched ? nf(evNew(e)) : '<span class="mut">—</span>') + '</td>' +
+          '<td>' + evState(e) + '</td>' +
+          '<td class="pngo"><button class="pnbtn" data-act="evOpen" data-v="' + e.id + '">פרטים נוספים' + EV_GO + '</button></td></tr>'; }).join('') +
+      '</tbody></table></div>' : '<div class="empty"><b>' + (q ? 'לא נמצאו אירועים' : 'אין אירועים כאן') + '</b>' + (q ? 'נסו שם אחר או חלק ממנו.' : '') + '</div>') +
+    '</div>';
 }
 function renderEvList() {
-  const today = isoDay(new Date());
-  const up = S.events.filter(e => !e.date || e.date >= today).sort((a, b) => (a.date || '9').localeCompare(b.date || '9') || (a.time || '').localeCompare(b.time || ''));
-  const past = S.events.filter(e => e.date && e.date < today).sort((a, b) => b.date.localeCompare(a.date));
-  const sec = (t, list, empty) => '<div class="evsec"><h3>' + t + '<span class="num">' + nf(list.length) + '</span></h3>' +
-    (list.length ? '<div class="evlist">' + list.map(evCard).join('') + '</div>' : '<div class="evnone">' + empty + '</div>') + '</div>';
+  if (!S.events.length) {
+    $('#v-events').innerHTML = '<div class="evhd"><h2>אירועים ודפי נחיתה</h2><p>חוגי בית ואירועים — לכל אירוע קישור הרשמה לשליחה. חצי שעה אחרי תחילת האירוע הנרשמים מותאמים למאגר לבד</p>' +
+      '<div class="evtop"><button class="btn evadd" data-act="newEvent">+ אירוע חדש</button></div></div>' +
+      '<div class="card evempty"><div class="empty"><span class="evei">' + svg('cal') + '</span><b>עוד אין אירועים</b>יוצרים אירוע או חוג בית, שולחים את הקישור — וחצי שעה אחרי תחילת האירוע הנרשמים מותאמים למאגר.</div></div>';
+    return;
+  }
   $('#v-events').innerHTML =
     '<div class="evhd"><h2>אירועים ודפי נחיתה</h2><p>חוגי בית ואירועים — לכל אירוע קישור הרשמה לשליחה. חצי שעה אחרי תחילת האירוע הנרשמים מותאמים למאגר לבד</p>' +
-      '<button class="btn evadd" data-act="newEvent">+ אירוע חדש</button></div>' +
-    (S.events.length ? sec('אירועים קרובים', up, 'אין אירועים קרובים. יוצרים אחד ב„+ אירוע חדש”.') + (past.length ? sec('אירועים שעברו', past, '') : '') :
-      '<div class="card evempty"><div class="empty"><span class="evei">' + svg('cal') + '</span><b>עוד אין אירועים</b>יוצרים אירוע או חוג בית, שולחים את הקישור — וחצי שעה אחרי תחילת האירוע הנרשמים מותאמים למאגר.</div></div>');
+      '<div class="evtop"><button class="btn evadd" data-act="newEvent">+ אירוע חדש</button>' +
+        '<label class="evq">' + svg('search') + '<input type="search" id="evQ" placeholder="חיפוש אירוע לפי שם…" value="' + esc(E.q) + '" aria-label="חיפוש אירוע לפי שם" autocomplete="off"></label></div></div>' +
+    '<div id="evGrid">' + evGridHtml() + '</div>' +
+    '<div id="evTbl">' + evTblHtml() + '</div>';
+  if (typeof cselAll === 'function') cselAll($('#evTbl'));
 }
+/* חיפוש בזמן הקלדה — שתי תיבות החיפוש (למעלה ובטבלה) מראות את אותו טקסט */
+function evListRefresh(keep) {
+  const g = $('#evGrid'), t = $('#evTbl'); if (!g || !t) return;
+  const a = document.activeElement, id = a && a.id, pos = a && a.selectionStart;
+  g.innerHTML = evGridHtml(); $$('.evv', g).forEach(x => { x.style.animation = 'none'; });
+  t.innerHTML = evTblHtml(); if (typeof cselAll === 'function') cselAll(t);
+  const other = $('#evQ'); if (other && other !== a) other.value = E.q;
+  if (keep && id) { const el = document.getElementById(id); if (el) { el.focus(); try { el.setSelectionRange(pos, pos); } catch (e) { /* */ } } }
+}
+document.addEventListener('input', e => { if (e.target.id === 'evQ' || e.target.id === 'evQ2') { E.q = e.target.value; debounce('evq', () => evListRefresh(true), 120); } });
+document.addEventListener('change', e => { if (e.target.id === 'evSrt') { E.srt = e.target.value; evListRefresh(); } });
 
 function renderEvView() {
   const ev = evSel(), n = evCount(ev), past = evPast(ev), link = evLink(ev), open = evOpenRows(ev).length;
@@ -8246,6 +8413,7 @@ setTimeout(function first() { if (!CLOUD || ME) evSync(true); else setTimeout(fi
 /* ---- הפעולות (כפתורי data-act) של המסך הזה ---- */
 Object.assign(ACT, {
   newEvent: () => { E.draft = newEventObj(); E.isNew = true; E.mode = 'edit'; E.imgUrl = ''; if (S.view !== 'events') { S.view = 'events'; go('events', { keepMode: true }); } else RENDER.events({ keepMode: true }); window.scrollTo({ top: 0 }); setTimeout(() => { const n = $('#ed_name'); if (n) n.focus(); }, 80); },
+  evTf: el => { E.tf = el.dataset.v; evListRefresh(); },
   evOpen: el => { E.sel = el.dataset.v; E.mode = 'view'; E.simDone = false; RENDER.events({ keepMode: true }); window.scrollTo({ top: 0 }); },
   selEvent: el => ACT.evOpen(el),
   openEvent: el => { closeCard(true); go('events', { sel: el.dataset.v }); },
