@@ -75,8 +75,8 @@ input.bad{border-color:#C0392B;box-shadow:0 0 0 4px rgba(192,57,43,.1)}
 .fo{margin-top:auto;padding:16px;text-align:center;font-size:12.5px;color:var(--ink2);border-top:1px solid var(--line3)}
 .fo b{color:var(--navy)}
 .fo a{color:var(--ink2);text-underline-offset:3px}
-.cons{align-items:flex-start;font-size:14px;font-weight:500;line-height:1.6;color:var(--ink2);margin-top:2px;padding:12px 14px;border-radius:12px;background:var(--bbg)}
-.cons input{width:20px;height:20px;margin-top:1px}
+.cons{align-items:flex-start;gap:8px;font-size:12px;font-weight:500;line-height:1.55;color:var(--ink2);margin-top:0;padding:8px 10px;border-radius:10px;background:var(--bbg)}
+.cons input{width:16px;height:16px;margin-top:1px}
 .cons a{color:var(--navy);font-weight:700;text-decoration:underline;text-underline-offset:3px}
 .cons input.bad{outline:2px solid #C0392B;outline-offset:2px;box-shadow:none}
 a:focus-visible,button:focus-visible,.chk input:focus-visible{outline:3px solid var(--navy-l);outline-offset:2px}
@@ -107,7 +107,7 @@ a:focus-visible,button:focus-visible,.chk input:focus-visible{outline:3px solid 
   function when(e) { var d = day(e.date); return (d ? 'יום ' + WD[d.getDay()] + ', ' + d.getDate() + '.' + (d.getMonth() + 1) + '.' + d.getFullYear() : '') + (e.time ? ' · בשעה ' + e.time : ''); }
   function msg(icon, title, text) { app.innerHTML = '<div class="msg"><div class="ic">' + icon + '</div><b>' + esc(title) + '</b>' + esc(text || '') + '</div>' + foot(); }
   var PRIV = 'https://beytenu.org.il/privacypolicy/';
-  function foot() { return '<div class="fo"><b>ישראל ביתנו</b> · <a href="' + PRIV + '" target="_blank" rel="noopener">מדיניות פרטיות</a></div>'; }
+  function foot() { return '<div class="fo"><b>ישראל ביתנו</b></div>'; }
   function nph(v) { var d = String(v || '').replace(/\D/g, ''); if (d.indexOf('972') === 0) d = '0' + d.slice(3); if (d.length === 9 && d[0] === '5') d = '0' + d; return d; }
   function okId(v) { var d = String(v || '').replace(/\D/g, ''); if (!d || d.length > 9) return false; d = ('000000000' + d).slice(-9); var s = 0;
     for (var i = 0; i < 9; i++) { var n = +d[i] * (i % 2 + 1); s += n > 9 ? n - 9 : n; } return s % 10 === 0 && +d > 0; }
@@ -136,8 +136,8 @@ a:focus-visible,button:focus-visible,.chk input:focus-visible{outline:3px solid 
         if ((x.type === 'select' || x.type === 'multi') && x.options && x.options.length) return '<label>' + esc(x.label) + '<select name="' + x.k + '"><option value="">בחירה…</option>' + x.options.map(function (o) { return '<option>' + esc(o) + '</option>'; }).join('') + '</select></label>';
         return '<label>' + esc(x.label) + '<input name="' + x.k + '" type="' + (x.type === 'number' ? 'number' : x.type === 'date' ? 'date' : 'text') + '" maxlength="200"></label>';
       }).join('') +
-      /* הסכמה — חובה כדי להירשם (לא מסומנת מראש: הסכמה נחשבת רק כשהנרשם/ת מסמנ/ת בעצמו/ה) */
-      '<label class="chk cons"><input type="checkbox" name="consent" value="yes" required aria-required="true"><span>אני מאשר/ת את השימוש והשמירה של המידע האישי שלי בהתאם ל<a href="' + PRIV + '" target="_blank" rel="noopener">מדיניות הפרטיות</a>, וקבלת עדכונים ממפלגת ישראל ביתנו בהתאם לפרטים שמסרתי</span></label>' +
+      /* הסכמה — חובה כדי להירשם (מסומנת כברירת מחדל; מי שמוריד/ה את הסימון לא יכול/ה להירשם) */
+      '<label class="chk cons"><input type="checkbox" name="consent" value="yes" checked required aria-required="true"><span>אני מאשר/ת את השימוש והשמירה של המידע האישי שלי בהתאם ל<a href="' + PRIV + '" target="_blank" rel="noopener">מדיניות הפרטיות</a>, וקבלת עדכונים ממפלגת ישראל ביתנו בהתאם לפרטים שמסרתי</span></label>' +
       '<div id="er" role="alert" aria-live="assertive"></div><button class="go" type="submit">אני מגיע/ה</button></form>' + foot();
     var f = document.getElementById('f'), er = document.getElementById('er');
     f.addEventListener('input', function (ev) { ev.target.classList.remove('bad'); ev.target.removeAttribute('aria-invalid'); er.innerHTML = ''; });
