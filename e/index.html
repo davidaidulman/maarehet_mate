@@ -72,13 +72,19 @@ input.bad{border-color:#C0392B;box-shadow:0 0 0 4px rgba(192,57,43,.1)}
 .ld{flex:1;display:grid;place-items:center;padding:80px 0;color:var(--ink3)}
 .sp{width:34px;height:34px;border-radius:50%;border:3px solid var(--line3);border-top-color:var(--navy);animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-.fo{margin-top:auto;padding:16px;text-align:center;font-size:12.5px;color:var(--ink3);border-top:1px solid var(--line3)}
+.fo{margin-top:auto;padding:16px;text-align:center;font-size:12.5px;color:var(--ink2);border-top:1px solid var(--line3)}
 .fo b{color:var(--navy)}
+.fo a{color:var(--ink2);text-underline-offset:3px}
+.cons{align-items:flex-start;font-size:14px;font-weight:500;line-height:1.6;color:var(--ink2);margin-top:2px;padding:12px 14px;border-radius:12px;background:var(--bbg)}
+.cons input{width:20px;height:20px;margin-top:1px}
+.cons a{color:var(--navy);font-weight:700;text-decoration:underline;text-underline-offset:3px}
+.cons input.bad{outline:2px solid #C0392B;outline-offset:2px;box-shadow:none}
+a:focus-visible,button:focus-visible,.chk input:focus-visible{outline:3px solid var(--navy-l);outline-offset:2px}
 @media (prefers-reduced-motion:reduce){*{animation:none!important}}
 </style>
 </head>
 <body>
-<div class="pg"><main class="w" id="app"><div class="ld"><div class="sp" aria-label="טוען"></div></div></main></div>
+<div class="pg"><main class="w" id="app"><div class="ld" role="status"><div class="sp" aria-label="טוען"></div></div></main></div>
 <script>
 (function () {
   var SB = 'https://rgldmgpqebroqlkiudik.supabase.co', K = 'sb_publishable_rVIu5sxxCZ3EaiPn55Qf8A_Ih9I2jZa', CODE = /*@@CODE@@*/'';
@@ -100,7 +106,8 @@ input.bad{border-color:#C0392B;box-shadow:0 0 0 4px rgba(192,57,43,.1)}
   function pad(n) { return (n < 10 ? '0' : '') + n; }
   function when(e) { var d = day(e.date); return (d ? 'יום ' + WD[d.getDay()] + ', ' + d.getDate() + '.' + (d.getMonth() + 1) + '.' + d.getFullYear() : '') + (e.time ? ' · בשעה ' + e.time : ''); }
   function msg(icon, title, text) { app.innerHTML = '<div class="msg"><div class="ic">' + icon + '</div><b>' + esc(title) + '</b>' + esc(text || '') + '</div>' + foot(); }
-  function foot() { return '<div class="fo"><b>ישראל ביתנו</b></div>'; }
+  var PRIV = 'https://beytenu.org.il/privacypolicy/';
+  function foot() { return '<div class="fo"><b>ישראל ביתנו</b> · <a href="' + PRIV + '" target="_blank" rel="noopener">מדיניות פרטיות</a></div>'; }
   function nph(v) { var d = String(v || '').replace(/\D/g, ''); if (d.indexOf('972') === 0) d = '0' + d.slice(3); if (d.length === 9 && d[0] === '5') d = '0' + d; return d; }
   function okId(v) { var d = String(v || '').replace(/\D/g, ''); if (!d || d.length > 9) return false; d = ('000000000' + d).slice(-9); var s = 0;
     for (var i = 0; i < 9; i++) { var n = +d[i] * (i % 2 + 1); s += n > 9 ? n - 9 : n; } return s % 10 === 0 && +d > 0; }
@@ -119,7 +126,7 @@ input.bad{border-color:#C0392B;box-shadow:0 0 0 4px rgba(192,57,43,.1)}
       (e.place ? '<div class="wh">' + I.pin + '<span>' + esc(e.place) + '</span></div>' : '') +
       (e.desc ? '<p class="ds">' + esc(e.desc) + '</p>' : '') + '</header>';
     if (past) { app.innerHTML = head + '<div class="msg" style="padding:40px 28px"><b>האירוע כבר התקיים</b>תודה על ההתעניינות — נתראה באירועים הבאים.</div>' + foot(); return; }
-    var fld = function (k, lb, attrs) { return '<label>' + lb + '<input name="' + k + '" ' + attrs + ' required></label>'; };
+    var fld = function (k, lb, attrs) { return '<label>' + lb + '<input name="' + k + '" ' + attrs + ' required aria-required="true"></label>'; };
     app.innerHTML = head + '<form id="f" novalidate><p class="ft">מגיעים? נשמח לדעת</p>' +
       ((F.first || F.last) ? '<div class="two">' + (F.first ? fld('first', 'שם פרטי', 'type="text" autocomplete="given-name" maxlength="40"') : '') + (F.last ? fld('last', 'שם משפחה', 'type="text" autocomplete="family-name" maxlength="40"') : '') + '</div>' : '') +
       (F.phone ? fld('phone', 'טלפון נייד', 'type="tel" inputmode="tel" autocomplete="tel" class="ltr" maxlength="16"') : '') +
@@ -129,24 +136,27 @@ input.bad{border-color:#C0392B;box-shadow:0 0 0 4px rgba(192,57,43,.1)}
         if ((x.type === 'select' || x.type === 'multi') && x.options && x.options.length) return '<label>' + esc(x.label) + '<select name="' + x.k + '"><option value="">בחירה…</option>' + x.options.map(function (o) { return '<option>' + esc(o) + '</option>'; }).join('') + '</select></label>';
         return '<label>' + esc(x.label) + '<input name="' + x.k + '" type="' + (x.type === 'number' ? 'number' : x.type === 'date' ? 'date' : 'text') + '" maxlength="200"></label>';
       }).join('') +
-      '<div id="er"></div><button class="go" type="submit">אני מגיע/ה</button></form>' + foot();
+      /* הסכמה — חובה כדי להירשם (לא מסומנת מראש: הסכמה נחשבת רק כשהנרשם/ת מסמנ/ת בעצמו/ה) */
+      '<label class="chk cons"><input type="checkbox" name="consent" value="yes" required aria-required="true"><span>אני מאשר/ת את השימוש והשמירה של המידע האישי שלי בהתאם ל<a href="' + PRIV + '" target="_blank" rel="noopener">מדיניות הפרטיות</a>, וקבלת עדכונים ממפלגת ישראל ביתנו בהתאם לפרטים שמסרתי</span></label>' +
+      '<div id="er" role="alert" aria-live="assertive"></div><button class="go" type="submit">אני מגיע/ה</button></form>' + foot();
     var f = document.getElementById('f'), er = document.getElementById('er');
-    f.addEventListener('input', function (ev) { ev.target.classList.remove('bad'); er.innerHTML = ''; });
+    f.addEventListener('input', function (ev) { ev.target.classList.remove('bad'); ev.target.removeAttribute('aria-invalid'); er.innerHTML = ''; });
     f.addEventListener('submit', function (ev) {
       ev.preventDefault();
       var v = {}, bad = null;
       Array.prototype.forEach.call(f.elements, function (el) { if (el.name) v[el.name] = el.type === 'checkbox' ? (el.checked ? el.value : '') : el.value.trim(); });
-      var fail = function (n, t) { if (!bad) { bad = n; var el = f.elements[n]; if (el) { el.classList.add('bad'); el.focus(); } er.innerHTML = '<div class="err">' + esc(t) + '</div>'; } };
+      var fail = function (n, t) { if (!bad) { bad = n; var el = f.elements[n]; if (el) { el.classList.add('bad'); el.setAttribute('aria-invalid', 'true'); el.focus(); } er.innerHTML = '<div class="err">' + esc(t) + '</div>'; } };
       if (F.first && !v.first) fail('first', 'חסר שם פרטי');
       if (F.last && !v.last) fail('last', 'חסר שם משפחה');
       if (F.phone && !/^05\d{8}$/.test(nph(v.phone))) fail('phone', 'צריך מספר נייד תקין (10 ספרות, מתחיל ב-05)');
       if (F.tz && !okId(v.tz)) fail('tz', 'מספר תעודת הזהות לא תקין');
+      if (v.consent !== 'yes') fail('consent', 'כדי להירשם צריך לסמן את האישור למדיניות הפרטיות');
       if (bad) return;
       if (v.phone) v.phone = nph(v.phone);
       var b = f.querySelector('.go'); b.disabled = true; b.textContent = 'שולח…';
       rpc('register_event', { p_code: code, p_data: v }).then(function (r) {
         if (!r || !r.ok) {
-          var t = { closed: 'ההרשמה לאירוע נסגרה.', busy: 'יש עומס רגעי — נסו שוב בעוד דקה.', full: 'האירוע מלא.', phone: 'מספר הטלפון לא תקין.', tz: 'תעודת הזהות לא תקינה.' }[r && r.err] || 'משהו לא עבד — נסו שוב.';
+          var t = { closed: 'ההרשמה לאירוע נסגרה.', busy: 'יש עומס רגעי — נסו שוב בעוד דקה.', full: 'האירוע מלא.', phone: 'מספר הטלפון לא תקין.', tz: 'תעודת הזהות לא תקינה.', consent: 'כדי להירשם צריך לסמן את האישור למדיניות הפרטיות.' }[r && r.err] || 'משהו לא עבד — נסו שוב.';
           er.innerHTML = '<div class="err">' + esc(t) + '</div>'; b.disabled = false; b.textContent = 'אני מגיע/ה'; return;
         }
         var t0 = d ? d.getFullYear() + pad(d.getMonth() + 1) + pad(d.getDate()) : '';
